@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd"
+    default-lazy-init="true">
+
+	<!-- Hibernate4 -->
+	<!-- 加载资源文件  其中包含变量信息，必须在Spring配置文件的最前面加载，即第一个加载-->
+	<context:property-placeholder location="classpath:system.properties" />
+
+	<bean id="initialEnvironment" init-method="initialEnvironment"
+		 class="com.centit.framework.listener.InitialWebRuntimeEnvironment" 
+		 lazy-init="false" 
+		 scope="singleton">
+	</bean>
+	
+	<bean id="operationLogWriter" init-method="init"
+		 class="com.centit.framework.staticsystem.service.impl.TextOperationLogWriterImpl" 
+		 lazy-init="false" 
+		 scope="singleton">
+	</bean>
+	
+	<bean id="notificationCenter" 
+		 class="com.centit.framework.components.impl.NotificationCenterImpl" 
+		 init-method="initMsgSenders"  
+		 scope="singleton">
+	</bean>	
+	
+	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+	
+	<bean id="platformEnvironment" init-method="init"
+		 class="com.centit.framework.staticsystem.service.impl.StaticSystemConfigImpl" 
+		 lazy-init="false" 
+		 scope="singleton">
+		 <property name="passwordEncoder" ref="passwordEncoder" />
+	</bean>
+	
+
+    <context:component-scan base-package="com.centit.photowordbook.service">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<bean  class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+	
+	<context:annotation-config />
+	<!-- 文件上传，需要添加依赖 -->
+    <!--  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+	    <property name="maxUploadSize" value="10485760" />  
+	</bean> -->
+	<!-- 声明csrf -->
+	<bean id="csrfTokenRepository" class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository" />
+
+	<aop:aspectj-autoproxy />
+</beans>
