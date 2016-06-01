@@ -16,7 +16,6 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name = "D_DATABASE_INFO")
-
 public class DatabaseInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     public static String DESKEY="0123456789abcdefghijklmnopqrstuvwxyzABCDEF"; 

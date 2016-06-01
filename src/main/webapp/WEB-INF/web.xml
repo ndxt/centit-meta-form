@@ -84,6 +84,10 @@
     </filter>
     <filter-mapping>
         <filter-name>HiddenHttpMethodFilter</filter-name>
+        <url-pattern>/service/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>HiddenHttpMethodFilter</filter-name>
         <url-pattern>/system/*</url-pattern>
     </filter-mapping>
 
@@ -193,6 +197,23 @@
                 factory and the autowiring interceptors.  This only necessary starting with the Chapter Nine
                 version of the application, where Spring IoC is introduced.
     -->
+    
+    
+    <servlet>
+        <servlet-name>normal</servlet-name>
+        <servlet-class>com.centit.framework.core.controller.SimpleDispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath*:springmvc-config/normal-servlet.xml</param-value>
+        </init-param>        
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>normal</servlet-name>
+        <url-pattern>/service/*</url-pattern>
+    </servlet-mapping>
+    
     <servlet>
         <servlet-name>system</servlet-name>
         <servlet-class>com.centit.framework.core.controller.SimpleDispatcherServlet</servlet-class>
