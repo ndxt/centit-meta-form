@@ -2,7 +2,7 @@
 	"userInfos":[{"userCode":"u0000000",
 				  "userName":"管理员",
 				  "isValid":"T",
-				  "loginName":"admin",
+				  "loginName":"admin1",
 				  "userPin":"d92ec26dec6234c5c79dfae76d375736"}],
 	"optInfos":[{"optId":"LOGINCAS",
 				"optName":"CAS登录入口",

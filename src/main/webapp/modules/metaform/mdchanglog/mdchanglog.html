@@ -1,0 +1,52 @@
+
+<table url="${ctx}/service/metaform/mdchanglog"
+	idField="id" treeField="text"
+	rownumbers="false"
+	toolbar=".temp-toolbar" layoutH="0">
+    <thead>
+        <tr>
+        	<th data-options="field:'version'">版本号</th> 
+       		<th data-options="field:'changeId'">编号</th>
+       		<th data-options="field:'changeDate'">提交日期</th>
+       		<th data-options="field:'changer'">提交人</th>
+       		<th data-options="field:'changeTableSum'">更改表总数</th>
+       		<th data-options="field:'changeRelationSum'">更改关系总数</th>
+       		<th data-options="field:'changeScript'">更改脚本</th>
+       		<th data-options="field:'changeComment'">更改说明</th>
+       		<th data-options="field:'auditor'">审核人</th>
+       		<th data-options="field:'auditDate'">审核时间</th>
+       		
+        </tr>
+    </thead>
+</table>
+
+<div class="temp-toolbar">
+	<a iconCls="icon-add" href="modules/metaform/mdchanglog/mdchanglog-info.jsp" trigger="none"
+		target="dialog" rel="mdchanglog_add" title="新增元数据更改记录" width="640" height="480" btnValue="添加">新增</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/mdchanglog/mdchanglog-info.jsp" trigger="single"
+		target="dialog" rel="mdchanglog_edit" title="编辑 {{text}}" width="640" height="480" btnValue="更新">编辑</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/mdchanglog/mdchanglog-view.jsp" trigger="single"
+		target="dialog" rel="mdchanglog_view" title="查看 {{text}}" width="640" height="480" btnValue="查看">查看</a>
+	<hr>
+		
+	<a iconCls="icon-base icon-base-ban" trigger="single"
+		target="confirm" rel="mdchanglog_remove" title="是否确定删除 {{text}}？">删除</a>
+</div>
+
+<script>
+	$.parser.onComplete = function(panel) {
+		$.parser.onComplete = $.noop;
+		
+		requirejs([
+		           'modules/metaform/mdchanglog/ctrl/mdchanglog'
+		          ], function(MdChangLog) {
+			window.MdChangLog = new MdChangLog('mdchanglog', panel);
+			window.MdChangLog.load(panel);
+		});
+	};
+
+</script>
