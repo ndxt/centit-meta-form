@@ -55,8 +55,8 @@ public class DatabaseInfoController extends BaseController {
         }
 
         ResponseData resData = new ResponseData();
-        resData.addResponseData("OBJLIST", listObjects);
-        resData.addResponseData("PAGE_DESC", pageDesc);
+        resData.addResponseData(OBJLIST, listObjects);
+        resData.addResponseData(PAGE_DESC, pageDesc);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response, simplePropertyPreFilter);
     }

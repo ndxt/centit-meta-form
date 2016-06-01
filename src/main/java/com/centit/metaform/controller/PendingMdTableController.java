@@ -65,8 +65,8 @@ public class PendingMdTableController extends BaseController{
         }
         
         ResponseData resData = new ResponseData();
-        resData.addResponseData("OBJLIST", listObjects);
-        resData.addResponseData("PAGE_DESC", pageDesc);
+        resData.addResponseData(OBJECT, listObjects);
+        resData.addResponseData(PAGE_DESC, pageDesc);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
