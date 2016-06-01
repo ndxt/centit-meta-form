@@ -75,7 +75,7 @@ public class MdChangLog implements java.io.Serializable {
 	 * 更改脚本 null 
 	 */
 	@Column(name = "change_Script")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
 	private String  changeScript;
 	/**
 	 * 更改说明 null 
@@ -92,7 +92,7 @@ public class MdChangLog implements java.io.Serializable {
 	/**
 	 * 审核时间 null 
 	 */
-	@Column(name = "Audit_Date")
+	@Column(name = "AUDIT_DATE")
 	private Date  auditDate;
 
 	// Constructors

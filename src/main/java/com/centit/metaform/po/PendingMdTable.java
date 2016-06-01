@@ -66,14 +66,14 @@ public class PendingMdTable implements java.io.Serializable {
 	 */
 	@Column(name = "table_type")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  tableType;
 	/**
 	 * 状态 系统 S / R 查询(只读)/ N 新建(读写) 
 	 */
 	@Column(name = "table_state")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  tableState;
 	/**
 	 * 描述 null 
@@ -86,7 +86,7 @@ public class PendingMdTable implements java.io.Serializable {
 	 */
 	@Column(name = "Is_In_Workflow")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  isInWorkflow;
 	/**
 	 * 更改时间 null 

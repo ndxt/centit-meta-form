@@ -63,7 +63,7 @@ public class PendingMdRelation implements java.io.Serializable {
 	 */
 	@Column(name = "relation_state")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  relationState;
 	/**
 	 * 关联说明 null 
