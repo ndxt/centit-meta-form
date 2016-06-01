@@ -55,7 +55,7 @@ public class OsInfoContoller extends  BaseController {
         }
 
         ResponseData resData = new ResponseData();
-        resData.addResponseData(OBJECT, listObjects);
+        resData.addResponseData(OBJLIST, listObjects);
         resData.addResponseData(PAGE_DESC, pageDesc);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response, simplePropertyPreFilter);
