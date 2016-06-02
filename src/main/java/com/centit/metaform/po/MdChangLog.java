@@ -30,27 +30,23 @@ import org.hibernate.validator.constraints.NotBlank;
 public class MdChangLog implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
-
-
-	/**
-	 * 版本号 null 
-	 */
-	@Id
-	@Column(name = "version")
-	@GeneratedValue(generator = "assignedGenerator")
-	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
-	private Long version;
-
 	/**
 	 * 编号 null 
 	 */
+	@Id
 	@Column(name = "change_ID")
+	@GeneratedValue(generator = "assignedGenerator")
+	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
 	private Long  changeId;
+	/**
+	 * 版本号 null 
+	 */
+	@Column(name = "version")
+	private Long version;
 	/**
 	 * 提交日期 null 
 	 */
 	@Column(name = "change_Date")
-	@NotBlank(message = "字段不能为空")
 	private Date  changeDate;
 	/**
 	 * 提交人 null 
@@ -63,13 +59,11 @@ public class MdChangLog implements java.io.Serializable {
 	 * 更改表总数 null 
 	 */
 	@Column(name = "change_table_sum")
-	@NotBlank(message = "字段不能为空")
 	private Long  changeTableSum;
 	/**
 	 * 更改关系总数 null 
 	 */
 	@Column(name = "change_relation_sum")
-	@NotBlank(message = "字段不能为空")
 	private Long  changeRelationSum;
 	/**
 	 * 更改脚本 null 

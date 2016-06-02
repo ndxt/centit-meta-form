@@ -2,21 +2,24 @@ package com.centit.metaform.po;
 
 import java.util.Date;
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 
 
 import javax.persistence.Id;
-
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-
 import javax.persistence.GeneratedValue;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.centit.dde.po.DatabaseInfo;
 
 
 /**
@@ -44,9 +47,9 @@ public class PendingMdTable implements java.io.Serializable {
 	/**
 	 * 所属数据库ID null 
 	 */
-	@Column(name = "Database_Code")
-	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
-	private String  databaseCode;
+	@JoinColumn(name="Database_Code", nullable = true)  
+	@ManyToOne
+	private DatabaseInfo  databaseInfo;
 	/**
 	 * 表代码 null 
 	 */
@@ -100,6 +103,7 @@ public class PendingMdTable implements java.io.Serializable {
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 
+	
 	// Constructors
 	/** default constructor */
 	public PendingMdTable() {
@@ -127,7 +131,7 @@ public class PendingMdTable implements java.io.Serializable {
 	
 		this.tableId = tableId;		
 	
-		this.databaseCode= databaseCode;
+		this.setDatabaseCode(databaseCode);
 		this.tableName= tableName;
 		this.tableLabelName= tableLabelName;
 		this.tableType= tableType;
@@ -138,8 +142,15 @@ public class PendingMdTable implements java.io.Serializable {
 		this.recorder= recorder;		
 	}
 	
-
+	public DatabaseInfo getDatabaseInfo(){
+		if(null==this.databaseInfo)
+			this.databaseInfo=new DatabaseInfo();
+		return this.databaseInfo;
+	}
   
+	public void setDatabaseInfo(DatabaseInfo dbInfo){
+		this.databaseInfo=dbInfo;
+	}
 	public Long getTableId() {
 		return this.tableId;
 	}
@@ -150,11 +161,11 @@ public class PendingMdTable implements java.io.Serializable {
 	// Property accessors
   
 	public String getDatabaseCode() {
-		return this.databaseCode;
+		return this.getDatabaseInfo().getDatabaseCode();
 	}
 	
 	public void setDatabaseCode(String databaseCode) {
-		this.databaseCode = databaseCode;
+		this.databaseInfo=new DatabaseInfo(databaseCode);
 	}
   
 	public String getTableName() {
@@ -221,13 +232,16 @@ public class PendingMdTable implements java.io.Serializable {
 		this.recorder = recorder;
 	}
 
+	public String getDatabaseName(){
+		return getDatabaseInfo().getDatabaseName();
+	}
 
 
 	public PendingMdTable copy(PendingMdTable other){
   
 		this.setTableId(other.getTableId());
   
-		this.databaseCode= other.getDatabaseCode();  
+		this.setDatabaseInfo(other.getDatabaseInfo());
 		this.tableName= other.getTableName();  
 		this.tableLabelName= other.getTableLabelName();  
 		this.tableType= other.getTableType();  
@@ -246,7 +260,7 @@ public class PendingMdTable implements java.io.Serializable {
 		this.setTableId(other.getTableId());
   
 		if( other.getDatabaseCode() != null)
-			this.databaseCode= other.getDatabaseCode();  
+			this.databaseInfo=other.getDatabaseInfo(); 
 		if( other.getTableName() != null)
 			this.tableName= other.getTableName();  
 		if( other.getTableLabelName() != null)
@@ -269,7 +283,7 @@ public class PendingMdTable implements java.io.Serializable {
 
 	public PendingMdTable clearProperties(){
   
-		this.databaseCode= null;  
+		this.databaseInfo=null;
 		this.tableName= null;  
 		this.tableLabelName= null;  
 		this.tableType= null;  

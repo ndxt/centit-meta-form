@@ -1,6 +1,7 @@
 package com.centit.metaform.controller;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
@@ -57,7 +57,7 @@ public class PendingMdTableController extends BaseController{
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);        
         
-        JSONArray listObjects = pendingMdTableMag.listPendingMdTablesAsJson(field,searchColumn, pageDesc);
+        List<PendingMdTable> listObjects = pendingMdTableMag.listObjects(searchColumn, pageDesc);
 
         if (null == pageDesc) {
             JsonResultUtils.writeSingleDataJson(listObjects, response);

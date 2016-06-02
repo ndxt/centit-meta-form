@@ -1,12 +1,12 @@
-
+<html>
 <table url="service/metaform/pendingmdtable"
-	idField="id" treeField="text"
-	rownumbers="false"
+	idField="tableId"
 	toolbar=".temp-toolbar" layoutH="0">
-    <thead>
+    <thead data-options="frozen:true">
         <tr>
         	<th data-options="field:'tableId'">表ID</th> 
-       		<th data-options="field:'databaseCode'">所属数据库ID</th>
+       		<th data-options="field:'databaseCode'" hidden="true">所属数据库ID</th>
+       		<th data-options="field:'databaseName'">所属数据库</th>
        		<th data-options="field:'tableName'">表代码</th>
        		<th data-options="field:'tableLabelName'">表名称</th>
        		<th data-options="field:'tableType'">类别</th>
@@ -15,7 +15,6 @@
        		<th data-options="field:'isInWorkflow'">是否是流程中的业务表</th>
        		<th data-options="field:'lastModifyDate'">更改时间</th>
        		<th data-options="field:'recorder'">更改人员</th>
-       		
         </tr>
     </thead>
 </table>
@@ -50,3 +49,4 @@
 	};
 
 </script>
+</html>
