@@ -16,7 +16,7 @@ import com.centit.metaform.po.MdTable;
 /**
  * MdTableDao  Repository.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 表元数据表状态分为 系统/查询/更新
 系统，不可以做任何操作
 查询，仅用于通用查询模块，不可以更新

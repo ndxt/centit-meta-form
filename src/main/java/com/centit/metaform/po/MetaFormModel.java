@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,7 +24,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  
   通用模块管理null   
 */
@@ -45,8 +47,9 @@ public class MetaFormModel implements java.io.Serializable {
 	/**
 	 * 表ID 表单主表 
 	 */
-	@Column(name = "Table_ID")
-	private Long  tableId;
+	@JoinColumn(name="TABLE_ID")
+	@ManyToOne
+	private MdTable mdTable;
 	/**
 	 * 模快描述 null 
 	 */
@@ -64,13 +67,13 @@ public class MetaFormModel implements java.io.Serializable {
 	 * 存储类别 只读（视图、查询），新增（只能新增一条），修改，编辑列表（增删改） 
 	 */
 	@Column(name = "Access_Type")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  accessType;
 	/**
 	 * 与父模块关系 O 没有父模块  1  一对一，2 多对一 
 	 */
 	@Column(name = "Relation_type")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  relationType;
 	/**
 	 * 父模块代码 子模块必需对应父模块对应的子表 
@@ -124,7 +127,7 @@ public class MetaFormModel implements java.io.Serializable {
 	
 		this.modelCode = modelCode;		
 	
-		this.tableId= tableId;
+		this.setTableId(tableId);
 		this.modelComment= modelComment;
 		this.modelName= modelName;
 		this.accessType= accessType;
@@ -147,11 +150,21 @@ public class MetaFormModel implements java.io.Serializable {
 	// Property accessors
   
 	public Long getTableId() {
-		return this.tableId;
+		return this.getMdTable().getTableId();
 	}
 	
+	public MdTable getMdTable() {
+		if(null==this.mdTable)
+			this.mdTable=new MdTable();
+		return this.mdTable;
+	}
+	public void setMdTable(MdTable mdTable) {
+		this.mdTable = mdTable;
+	}
 	public void setTableId(Long tableId) {
-		this.tableId = tableId;
+		MdTable tb=new MdTable();
+		tb.setTableId(tableId);
+		this.setMdTable(tb);
 	}
   
 	public String getModelComment() {
@@ -378,7 +391,7 @@ public class MetaFormModel implements java.io.Serializable {
   
 		this.setModelCode(other.getModelCode());
   
-		this.tableId= other.getTableId();  
+		this.setTableId(other.getTableId());
 		this.modelComment= other.getModelComment();  
 		this.modelName= other.getModelName();  
 		this.accessType= other.getAccessType();  
@@ -399,7 +412,7 @@ public class MetaFormModel implements java.io.Serializable {
 		this.setModelCode(other.getModelCode());
   
 		if( other.getTableId() != null)
-			this.tableId= other.getTableId();  
+			this.setTableId(other.getTableId());
 		if( other.getModelComment() != null)
 			this.modelComment= other.getModelComment();  
 		if( other.getModelName() != null)
@@ -428,7 +441,7 @@ public class MetaFormModel implements java.io.Serializable {
 
 	public MetaFormModel clearProperties(){
   
-		this.tableId= null;  
+		this.setMdTable(null);;
 		this.modelComment= null;  
 		this.modelName= null;  
 		this.accessType= null;  

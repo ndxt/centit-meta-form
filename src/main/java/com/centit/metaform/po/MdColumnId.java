@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
 /**
  * MdColumnId  entity.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 字段元数据表null   
 */
 //字段元数据表 的主键

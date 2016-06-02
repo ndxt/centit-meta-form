@@ -10,7 +10,7 @@ import com.centit.metaform.po.MdRelDetial;
 /**
  * MdRelDetial  Service.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 表关联细节表null   
 */
 

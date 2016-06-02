@@ -27,7 +27,7 @@ import com.centit.metaform.service.MdRelDetialManager;
 /**
  * MdRelDetial  Controller.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 表关联细节表null   
 */
 
@@ -65,8 +65,8 @@ public class MdRelDetialController extends BaseController{
         }
         
         ResponseData resData = new ResponseData();
-        resData.addResponseData("OBJLIST", listObjects);
-        resData.addResponseData("PAGE_DESC", pageDesc);
+        resData.addResponseData(OBJLIST, listObjects);
+        resData.addResponseData(PAGE_DESC, pageDesc);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }

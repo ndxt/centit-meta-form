@@ -24,7 +24,7 @@ import com.centit.dde.po.DatabaseInfo;
 
 /**
  * create by scaffold 2016-06-01 
- * @author codefan@sina.com
+ 
  
   未落实表元数据表null   
 */

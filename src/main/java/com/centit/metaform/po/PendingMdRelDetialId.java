@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 /**
  * PendingMdRelDetialId  entity.
  * create by scaffold 2016-06-01 
- * @author codefan@sina.com
+ 
  * 未落实表关联细节表null   
 */
 //未落实表关联细节表 的主键

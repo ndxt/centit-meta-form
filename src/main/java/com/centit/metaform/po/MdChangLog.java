@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * create by scaffold 2016-06-01 
- * @author codefan@sina.com
+ 
  
   元数据更改记录null   
 */

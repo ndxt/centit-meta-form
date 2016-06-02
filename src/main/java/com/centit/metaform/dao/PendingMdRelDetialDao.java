@@ -16,7 +16,7 @@ import com.centit.metaform.po.PendingMdRelDetial;
 /**
  * PendingMdRelDetialDao  Repository.
  * create by scaffold 2016-06-01 
- * @author codefan@sina.com
+ 
  * 未落实表关联细节表null   
 */
 

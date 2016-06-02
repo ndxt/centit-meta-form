@@ -10,7 +10,7 @@ import com.centit.metaform.po.ModelDataField;
 /**
  * ModelDataField  Service.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 数据模板字段null   
 */
 

@@ -27,7 +27,7 @@ import com.centit.metaform.service.MetaFormModelManager;
 /**
  * MetaFormModel  Controller.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 通用模块管理null   
 */
 
@@ -65,8 +65,8 @@ public class MetaFormModelController extends BaseController{
         }
         
         ResponseData resData = new ResponseData();
-        resData.addResponseData("OBJLIST", listObjects);
-        resData.addResponseData("PAGE_DESC", pageDesc);
+        resData.addResponseData(OBJLIST, listObjects);
+        resData.addResponseData(PAGE_DESC, pageDesc);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }

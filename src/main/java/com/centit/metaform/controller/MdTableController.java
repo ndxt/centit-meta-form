@@ -1,6 +1,7 @@
 package com.centit.metaform.controller;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -27,7 +28,7 @@ import com.centit.metaform.service.MdTableManager;
 /**
  * MdTable  Controller.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 表元数据表状态分为 系统/查询/更新
 系统，不可以做任何操作
 查询，仅用于通用查询模块，不可以更新
@@ -61,7 +62,7 @@ public class MdTableController extends BaseController{
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);        
         
-        JSONArray listObjects = mdTableMag.listMdTablesAsJson(field,searchColumn, pageDesc);
+        List<MdTable> listObjects = mdTableMag.listObjects(searchColumn, pageDesc);
 
         if (null == pageDesc) {
             JsonResultUtils.writeSingleDataJson(listObjects, response);
@@ -69,8 +70,8 @@ public class MdTableController extends BaseController{
         }
         
         ResponseData resData = new ResponseData();
-        resData.addResponseData("OBJLIST", listObjects);
-        resData.addResponseData("PAGE_DESC", pageDesc);
+        resData.addResponseData(OBJLIST, listObjects);
+        resData.addResponseData(PAGE_DESC, pageDesc);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }

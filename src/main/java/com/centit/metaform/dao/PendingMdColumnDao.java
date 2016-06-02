@@ -16,7 +16,7 @@ import com.centit.metaform.po.PendingMdColumn;
 /**
  * PendingMdColumnDao  Repository.
  * create by scaffold 2016-06-01 
- * @author codefan@sina.com
+ 
  * 未落实字段元数据表null   
 */
 

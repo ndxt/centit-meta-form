@@ -22,7 +22,7 @@ import com.centit.metaform.service.MdChangLogManager;
 /**
  * MdChangLog  Service.
  * create by scaffold 2016-06-01 
- * @author codefan@sina.com
+ 
  * 元数据更改记录null   
 */
 @Service

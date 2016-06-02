@@ -22,7 +22,7 @@ import com.centit.metaform.service.ModelDataFieldManager;
 /**
  * ModelDataField  Service.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 数据模板字段null   
 */
 @Service

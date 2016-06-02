@@ -10,7 +10,7 @@ import com.centit.metaform.po.MetaFormModel;
 /**
  * MetaFormModel  Service.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 通用模块管理null   
 */
 

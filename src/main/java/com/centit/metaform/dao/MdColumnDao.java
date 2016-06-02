@@ -16,7 +16,7 @@ import com.centit.metaform.po.MdColumn;
 /**
  * MdColumnDao  Repository.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 字段元数据表null   
 */
 

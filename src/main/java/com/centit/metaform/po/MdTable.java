@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
@@ -22,7 +23,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  
   表元数据表状态分为 系统/查询/更新
 系统，不可以做任何操作
@@ -71,14 +72,14 @@ public class MdTable implements java.io.Serializable {
 	 */
 	@Column(name = "table_type")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  tableType;
 	/**
 	 * 状态 系统 S / R 查询(只读)/ N 新建(读写) 
 	 */
 	@Column(name = "table_state")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  tableState;
 	/**
 	 * 描述 null 
@@ -91,7 +92,7 @@ public class MdTable implements java.io.Serializable {
 	 */
 	@Column(name = "Is_In_Workflow")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  isInWorkflow;
 	/**
 	 * 更改时间 null 
@@ -105,14 +106,15 @@ public class MdTable implements java.io.Serializable {
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 	
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<MdColumn> mdColumns;
 	
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Transient
+	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<MdRelation> mdRelations;
 	
 	
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<MetaFormModel> metaFormModels;
 
 	// Constructors

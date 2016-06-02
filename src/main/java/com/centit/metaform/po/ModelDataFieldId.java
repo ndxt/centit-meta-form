@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
 /**
  * ModelDataFieldId  entity.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 数据模板字段null   
 */
 //数据模板字段 的主键

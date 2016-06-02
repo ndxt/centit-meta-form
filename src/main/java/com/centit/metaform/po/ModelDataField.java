@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 /**
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  
   数据模板字段null   
 */
@@ -27,7 +27,7 @@ public class ModelDataField implements java.io.Serializable {
 	 * 更改类别 只读/更改/隐藏 
 	 */
 	@Column(name = "Access_Type")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  accessType;
 	/**
 	 * 显示顺序 null 

@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -15,7 +17,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  
   表关联关系表null   
 */
@@ -35,6 +37,11 @@ public class MdRelation implements java.io.Serializable {
 	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
 	private Long relationId;
 
+	
+	
+	/*@JoinColumn(name="TABLE_ID")
+	@ManyToOne
+	private MdTable mdTable;*/
 	/**
 	 * 主表表ID 表单主键 
 	 */
@@ -57,7 +64,7 @@ public class MdRelation implements java.io.Serializable {
 	 */
 	@Column(name = "relation_state")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  relationState;
 	/**
 	 * 关联说明 null 

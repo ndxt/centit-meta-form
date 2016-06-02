@@ -22,7 +22,7 @@ import com.centit.metaform.service.MdColumnManager;
 /**
  * MdColumn  Service.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 字段元数据表null   
 */
 @Service

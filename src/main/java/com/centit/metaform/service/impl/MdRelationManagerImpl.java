@@ -22,7 +22,7 @@ import com.centit.metaform.service.MdRelationManager;
 /**
  * MdRelation  Service.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 表关联关系表null   
 */
 @Service

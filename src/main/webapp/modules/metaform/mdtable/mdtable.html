@@ -1,12 +1,12 @@
 
-<table url="${ctx}/service/metaform/mdtable"
-	idField="id" treeField="text"
+<table url="service/metaform/mdtable"
+	idField="tableId"
 	toolbar=".temp-toolbar" layoutH="0">
     <thead frozen="true">
         <tr>
         	<th data-options="field:'tableId'">表ID</th> 
        		<th data-options="field:'databaseCode'" hidden="true">所属数据库ID</th>
-       		<th data-options="field:'databaseName'">所属数据库</th>
+       		<!-- <th data-options="field:'databaseName'">所属数据库</th> -->
        		<th data-options="field:'tableName'">表代码</th>
        		<th data-options="field:'tableLabelName'">表名称</th>
        		<th data-options="field:'tableType'">类别</th>

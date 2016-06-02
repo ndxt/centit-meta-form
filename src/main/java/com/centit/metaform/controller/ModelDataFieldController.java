@@ -27,7 +27,7 @@ import com.centit.metaform.service.ModelDataFieldManager;
 /**
  * ModelDataField  Controller.
  * create by scaffold 2016-06-02 
- * @author codefan@sina.com
+ 
  * 数据模板字段null   
 */
 
@@ -65,8 +65,8 @@ public class ModelDataFieldController extends BaseController{
         }
         
         ResponseData resData = new ResponseData();
-        resData.addResponseData("OBJLIST", listObjects);
-        resData.addResponseData("PAGE_DESC", pageDesc);
+        resData.addResponseData(OBJLIST, listObjects);
+        resData.addResponseData(PAGE_DESC, pageDesc);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
