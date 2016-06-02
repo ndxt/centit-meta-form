@@ -6,6 +6,7 @@ public class ListView {
 	public ListView(){
 		
 	}
+	private List<FormField> filters;
 	
 	private List<ListColumn> columns;
 	
@@ -26,6 +27,13 @@ public class ListView {
 	public void setOperations(List<ModelOperation> operations) {
 		this.operations = operations;
 	}
-	
+
+	public List<FormField> getFilters() {
+		return filters;
+	}
+
+	public void setFilters(List<FormField> filters) {
+		this.filters = filters;
+	}
 	
 }
