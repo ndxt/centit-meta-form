@@ -14,14 +14,14 @@ import org.hibernate.validator.constraints.NotBlank;
 
 
 /**
- * create by scaffold 2016-06-01 
+ * create by scaffold 2016-06-02 
  * @author codefan@sina.com
  
-  未落实表关联关系表null   
+  表关联关系表null   
 */
 @Entity
-@Table(name = "F_PENDING_MD_RELATION")
-public class PendingMdRelation implements java.io.Serializable {
+@Table(name = "F_MD_RELATION")
+public class MdRelation implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 
@@ -57,7 +57,7 @@ public class PendingMdRelation implements java.io.Serializable {
 	 */
 	@Column(name = "relation_state")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
 	private String  relationState;
 	/**
 	 * 关联说明 null 
@@ -79,10 +79,10 @@ public class PendingMdRelation implements java.io.Serializable {
 
 	// Constructors
 	/** default constructor */
-	public PendingMdRelation() {
+	public MdRelation() {
 	}
 	/** minimal constructor */
-	public PendingMdRelation(
+	public MdRelation(
 		Long relationId		
 		,String  relationName,String  relationState) {
 	
@@ -94,7 +94,7 @@ public class PendingMdRelation implements java.io.Serializable {
 	}
 
 /** full constructor */
-	public PendingMdRelation(
+	public MdRelation(
 	 Long relationId		
 	,Long  parentTableId,Long  childTableId,String  relationName,String  relationState,String  relationComment,Date  lastModifyDate,String  recorder) {
 	
@@ -179,7 +179,7 @@ public class PendingMdRelation implements java.io.Serializable {
 
 
 
-	public PendingMdRelation copy(PendingMdRelation other){
+	public MdRelation copy(MdRelation other){
   
 		this.setRelationId(other.getRelationId());
   
@@ -194,7 +194,7 @@ public class PendingMdRelation implements java.io.Serializable {
 		return this;
 	}
 	
-	public PendingMdRelation copyNotNullProperty(PendingMdRelation other){
+	public MdRelation copyNotNullProperty(MdRelation other){
   
 	if( other.getRelationId() != null)
 		this.setRelationId(other.getRelationId());
@@ -217,7 +217,7 @@ public class PendingMdRelation implements java.io.Serializable {
 		return this;
 	}
 
-	public PendingMdRelation clearProperties(){
+	public MdRelation clearProperties(){
   
 		this.parentTableId= null;  
 		this.childTableId= null;  

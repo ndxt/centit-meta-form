@@ -1,0 +1,60 @@
+
+<table url="${ctx}/service/metaform/mdcolumn"
+	idField="id" treeField="text"
+	rownumbers="false"
+	toolbar=".temp-toolbar" layoutH="0">
+    <thead>
+        <tr>
+        	<th data-options="field:'tableId'">表ID</th> <th data-options="field:'columnName'">字段代码</th> 
+       		<th data-options="field:'fieldLabelName'">字段名称</th>
+       		<th data-options="field:'columnComment'">字段描述</th>
+       		<th data-options="field:'columnOrder'">显示次序</th>
+       		<th data-options="field:'columnType'">字段类型</th>
+       		<th data-options="field:'maxLength'">字段长度</th>
+       		<th data-options="field:'scale'">字段精度</th>
+       		<th data-options="field:'accessType'">字段类别</th>
+       		<th data-options="field:'mandatory'">是否必填</th>
+       		<th data-options="field:'primarykey'">是否为主键</th>
+       		<th data-options="field:'columnState'">状态</th>
+       		<th data-options="field:'referenceType'">引用类型</th>
+       		<th data-options="field:'referenceData'">引用数据</th>
+       		<th data-options="field:'validateRegex'">约束表达式</th>
+       		<th data-options="field:'validateInfo'">约束提示</th>
+       		<th data-options="field:'defaultValue'">默认值</th>
+       		<th data-options="field:'lastModifyDate'">更改时间</th>
+       		<th data-options="field:'recorder'">更改人员</th>
+       		
+        </tr>
+    </thead>
+</table>
+
+<div class="temp-toolbar">
+	<a iconCls="icon-add" href="modules/metaform/mdcolumn/mdcolumn-info.html" trigger="none"
+		target="dialog" rel="mdcolumn_add" title="新增字段元数据表" width="640" height="480" btnValue="添加">新增</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/mdcolumn/mdcolumn-info.html" trigger="single"
+		target="dialog" rel="mdcolumn_edit" title="编辑 {{text}}" width="640" height="480" btnValue="更新">编辑</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/mdcolumn/mdcolumn-view.html" trigger="single"
+		target="dialog" rel="mdcolumn_view" title="查看 {{text}}" width="640" height="480" btnValue="查看">查看</a>
+	<hr>
+		
+	<a iconCls="icon-base icon-base-ban" trigger="single"
+		target="confirm" rel="mdcolumn_remove" title="是否确定删除 {{text}}？">删除</a>
+</div>
+
+<script>
+	$.parser.onComplete = function(panel) {
+		$.parser.onComplete = $.noop;
+		
+		requirejs([
+		           'modules/metaform/mdcolumn/ctrl/mdcolumn'
+		          ], function(MdColumn) {
+			window.MdColumn = new MdColumn('mdcolumn', panel);
+			window.MdColumn.load(panel);
+		});
+	};
+
+</script>

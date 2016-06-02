@@ -3,45 +3,31 @@ package com.centit.metaform.po;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 
 /**
- * create by scaffold 2016-06-01 
+ * create by scaffold 2016-06-02 
  * @author codefan@sina.com
  
-  未落实字段元数据表null   
+  字段元数据表null   
 */
 @Entity
-@Table(name = "F_PENDING_MD_COLUMN")
-public class PendingMdColumn implements java.io.Serializable {
+@Table(name = "F_MD_COLUMN")
+public class MdColumn implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
+	@EmbeddedId
+	private com.centit.metaform.po.MdColumnId cid;
 
 
-	/**
-	 * 表ID 表单主键 
-	 */
-	@Id
-	@Column(name = "Table_ID")
-	@GeneratedValue(generator = "assignedGenerator")
-	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
-	private Long tableId;
-
-	/**
-	 * 字段代码 null 
-	 */
-	@Column(name = "column_Name")
-	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
-	private String  columnName;
 	/**
 	 * 字段名称 null 
 	 */
@@ -49,6 +35,11 @@ public class PendingMdColumn implements java.io.Serializable {
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
 	private String  fieldLabelName;
+	
+	@JoinColumn(name="TABLE_ID")
+	@ManyToOne
+	private MdTable mdTable;
+	
 	/**
 	 * 字段描述 null 
 	 */
@@ -82,32 +73,32 @@ public class PendingMdColumn implements java.io.Serializable {
 	 */
 	@Column(name = "access_type")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
 	private String  accessType;
 	/**
 	 * 是否必填 null 
 	 */
 	@Column(name = "mandatory")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
 	private String  mandatory;
 	/**
 	 * 是否为主键 null 
 	 */
 	@Column(name = "primarykey")
-	@Length(min = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
 	private String  primarykey;
 	/**
 	 * 状态 null 
 	 */
 	@Column(name = "column_state")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
 	private String  columnState;
 	/**
 	 * 引用类型 0：没有：1： 数据字典 2：JSON表达式 3：sql语句  Y：年份 M：月份 
 	 */
 	@Column(name = "reference_Type")
-	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0, max = 0, message = "字段长度不能小于{min}大于{max}")
 	private String  referenceType;
 	/**
 	 * 引用数据 根据paramReferenceType类型（1,2,3）填写对应值 
@@ -147,17 +138,15 @@ public class PendingMdColumn implements java.io.Serializable {
 
 	// Constructors
 	/** default constructor */
-	public PendingMdColumn() {
+	public MdColumn() {
 	}
 	/** minimal constructor */
-	public PendingMdColumn(
-		Long tableId		
-		,String  columnName,String  fieldLabelName,String  columnType,String  accessType,String  columnState) {
+	public MdColumn(com.centit.metaform.po.MdColumnId id 
+				
+		,String  fieldLabelName,String  columnType,String  accessType,String  columnState) {
+		this.cid = id; 
+			
 	
-	
-		this.tableId = tableId;		
-	
-		this.columnName= columnName; 
 		this.fieldLabelName= fieldLabelName; 
 		this.columnType= columnType; 
 		this.accessType= accessType; 
@@ -165,14 +154,12 @@ public class PendingMdColumn implements java.io.Serializable {
 	}
 
 /** full constructor */
-	public PendingMdColumn(
-	 Long tableId		
-	,String  columnName,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,Long  maxLength,Long  scale,String  accessType,String  mandatory,String  primarykey,String  columnState,String  referenceType,String  referenceData,String  validateRegex,String  validateInfo,String  defaultValue,Date  lastModifyDate,String  recorder) {
+	public MdColumn(com.centit.metaform.po.MdColumnId id
+			
+	,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,Long  maxLength,Long  scale,String  accessType,String  mandatory,String  primarykey,String  columnState,String  referenceType,String  referenceData,String  validateRegex,String  validateInfo,String  defaultValue,Date  lastModifyDate,String  recorder) {
+		this.cid = id; 
+			
 	
-	
-		this.tableId = tableId;		
-	
-		this.columnName= columnName;
 		this.fieldLabelName= fieldLabelName;
 		this.columnComment= columnComment;
 		this.columnOrder= columnOrder;
@@ -191,25 +178,42 @@ public class PendingMdColumn implements java.io.Serializable {
 		this.lastModifyDate= lastModifyDate;
 		this.recorder= recorder;		
 	}
-	
 
+	public com.centit.metaform.po.MdColumnId getCid() {
+		return this.cid;
+	}
+	
+	public void setCid(com.centit.metaform.po.MdColumnId id) {
+		this.cid = id;
+	}
   
 	public Long getTableId() {
-		return this.tableId;
+		if(this.cid==null)
+			this.cid = new com.centit.metaform.po.MdColumnId();
+		return this.cid.getTableId();
 	}
-
+	
 	public void setTableId(Long tableId) {
-		this.tableId = tableId;
+		if(this.cid==null)
+			this.cid = new com.centit.metaform.po.MdColumnId();
+		this.cid.setTableId(tableId);
 	}
-	// Property accessors
   
 	public String getColumnName() {
-		return this.columnName;
+		if(this.cid==null)
+			this.cid = new com.centit.metaform.po.MdColumnId();
+		return this.cid.getColumnName();
 	}
 	
 	public void setColumnName(String columnName) {
-		this.columnName = columnName;
+		if(this.cid==null)
+			this.cid = new com.centit.metaform.po.MdColumnId();
+		this.cid.setColumnName(columnName);
 	}
+	
+	
+
+	// Property accessors
   
 	public String getFieldLabelName() {
 		return this.fieldLabelName;
@@ -349,11 +353,11 @@ public class PendingMdColumn implements java.io.Serializable {
 
 
 
-	public PendingMdColumn copy(PendingMdColumn other){
+	public MdColumn copy(MdColumn other){
   
-		this.setTableId(other.getTableId());
+		this.setTableId(other.getTableId());  
+		this.setColumnName(other.getColumnName());
   
-		this.columnName= other.getColumnName();  
 		this.fieldLabelName= other.getFieldLabelName();  
 		this.columnComment= other.getColumnComment();  
 		this.columnOrder= other.getColumnOrder();  
@@ -375,13 +379,13 @@ public class PendingMdColumn implements java.io.Serializable {
 		return this;
 	}
 	
-	public PendingMdColumn copyNotNullProperty(PendingMdColumn other){
+	public MdColumn copyNotNullProperty(MdColumn other){
   
 	if( other.getTableId() != null)
-		this.setTableId(other.getTableId());
+		this.setTableId(other.getTableId());  
+	if( other.getColumnName() != null)
+		this.setColumnName(other.getColumnName());
   
-		if( other.getColumnName() != null)
-			this.columnName= other.getColumnName();  
 		if( other.getFieldLabelName() != null)
 			this.fieldLabelName= other.getFieldLabelName();  
 		if( other.getColumnComment() != null)
@@ -420,9 +424,8 @@ public class PendingMdColumn implements java.io.Serializable {
 		return this;
 	}
 
-	public PendingMdColumn clearProperties(){
+	public MdColumn clearProperties(){
   
-		this.columnName= null;  
 		this.fieldLabelName= null;  
 		this.columnComment= null;  
 		this.columnOrder= null;  

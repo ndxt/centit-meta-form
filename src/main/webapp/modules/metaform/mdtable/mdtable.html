@@ -1,0 +1,52 @@
+
+<table url="${ctx}/service/metaform/mdtable"
+	idField="id" treeField="text"
+	toolbar=".temp-toolbar" layoutH="0">
+    <thead frozen="true">
+        <tr>
+        	<th data-options="field:'tableId'">表ID</th> 
+       		<th data-options="field:'databaseCode'" hidden="true">所属数据库ID</th>
+       		<th data-options="field:'databaseName'">所属数据库</th>
+       		<th data-options="field:'tableName'">表代码</th>
+       		<th data-options="field:'tableLabelName'">表名称</th>
+       		<th data-options="field:'tableType'">类别</th>
+       		<th data-options="field:'tableState'">状态</th>
+       		<th data-options="field:'tableComment'">描述</th>
+       		<th data-options="field:'isInWorkflow'">是否是流程中的业务表</th>
+       		<th data-options="field:'lastModifyDate'">更改时间</th>
+       		<th data-options="field:'recorder'">更改人员</th>
+       		
+        </tr>
+    </thead>
+</table>
+
+<div class="temp-toolbar">
+	<a iconCls="icon-add" href="modules/metaform/mdtable/mdtable-info.html" trigger="none"
+		target="dialog" rel="mdtable_add" title="新增表元数据表" width="640" height="480" btnValue="添加">新增</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/mdtable/mdtable-info.html" trigger="single"
+		target="dialog" rel="mdtable_edit" title="编辑 {{text}}" width="640" height="480" btnValue="更新">编辑</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/mdtable/mdtable-view.html" trigger="single"
+		target="dialog" rel="mdtable_view" title="查看 {{text}}" width="640" height="480" btnValue="查看">查看</a>
+	<hr>
+		
+	<a iconCls="icon-base icon-base-ban" trigger="single"
+		target="confirm" rel="mdtable_remove" title="是否确定删除 {{text}}？">删除</a>
+</div>
+
+<script>
+	$.parser.onComplete = function(panel) {
+		$.parser.onComplete = $.noop;
+		
+		requirejs([
+		           'modules/metaform/mdtable/ctrl/mdtable'
+		          ], function(MdTable) {
+			window.MdTable = new MdTable('mdtable', panel);
+			window.MdTable.load(panel);
+		});
+	};
+
+</script>
