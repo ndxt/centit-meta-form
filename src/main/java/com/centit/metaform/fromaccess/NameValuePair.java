@@ -12,6 +12,11 @@ public class NameValuePair {
 		this.name = name;
 		this.value = value;
 	}
+	public NameValuePair(String name,String value,String group){
+		this.name = name;
+		this.value = value;
+		this.group = group;
+	}
 	
 	public String getName() {
 		return name;
