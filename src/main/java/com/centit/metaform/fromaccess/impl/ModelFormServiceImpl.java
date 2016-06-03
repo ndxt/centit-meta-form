@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.core.dao.PageDesc;
 import com.centit.metaform.fromaccess.ModelFormService;
 import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.support.database.DataSourceDescription;
@@ -68,6 +69,23 @@ public class ModelFormServiceImpl implements ModelFormService {
 			return null;
 		}
 	}
+	
+	@Override
+	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters, PageDesc pageDesc) {
+		JsonObjectDao dao = rc.getJsonObjectDao();
+		try {
+			JSONArray ja = dao.listObjectsByProperties(filters,
+					pageDesc.getPageNo()*pageDesc.getPageSize(),pageDesc.getPageSize());
+			Long ts = dao.fetchObjectsCount(filters);
+			if(ts!=null)
+				pageDesc.setTotalRows(ts.intValue());
+			return ja;
+		} catch (SQLException | IOException e) {
+			return null;
+		}
+	}
+	
+	
 	@Override
 	public JSONObject getObjectByProperties(ModelRuntimeContext rc,Map<String, Object> properties){
 		JsonObjectDao dao = rc.getJsonObjectDao();
@@ -80,20 +98,20 @@ public class ModelFormServiceImpl implements ModelFormService {
 
 	@Override
 	public void saveNewObject(ModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
-		// TODO Auto-generated method stub
-		
+		JsonObjectDao dao = rc.getJsonObjectDao();
+		dao.saveNewObject(object);
 	}
 
 	@Override
 	public void updateObject(ModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
-		// TODO Auto-generated method stub
-		
+		JsonObjectDao dao = rc.getJsonObjectDao();
+		dao.updateObject(object);
 	}
 
 	@Override
 	public void deleteObjectById(ModelRuntimeContext rc, Map<String, Object> keyValue) throws SQLException {
-		// TODO Auto-generated method stub
-		
+		JsonObjectDao dao = rc.getJsonObjectDao();
+		dao.deleteObjectById(keyValue);
 	}
-	
+
 }
