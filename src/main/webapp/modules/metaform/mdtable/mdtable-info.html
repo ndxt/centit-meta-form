@@ -1,32 +1,25 @@
 <form class="centit form" novalidate="true">
 
       <div class="fields three"> 	
-       	<div class="field required">
-       		<label>表ID</label>
-       		<input type="text" class="easyui-textbox" name="tableId"
-				required 
-			/>
-		</div>
-   		
    		<div class="field ">
        		<label>所属数据库ID</label>
        		<input class="easyui-combobox" name="databaseCode" required
 				url="service/sys/databaseinfo?pageNo=1&pageSize=100" method="get"
 				data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
 		</div>
-    	
    		<div class="field required">
        		<label>表代码</label>
        		<input type="text" class="easyui-textbox" 
        		name="tableName" required/>
 		</div>
-    </div>
-    <div class="fields three">	
-   		<div class="field required">
+		
+		<div class="field required">
        		<label>表名称</label>
        		<input type="text" class="easyui-textbox" 
        		name="tableLabelName" required/>
 		</div>
+    </div>
+    <div class="fields three">	
     	
    		<div class="field required">
        		<label>类别</label>
@@ -39,14 +32,15 @@
        		<input type="text" class="easyui-textbox" 
        		name="tableState" required/>
 		</div>
-    </div>	
-    <div class="fields three">
-   		
-    	<div class="field ">
+		<div class="field ">
        		<label>更改人员</label>
        		<input type="text" class="easyui-textbox" 
        		name="recorder" />
 		</div>
+    </div>	
+    <div class="fields three">
+   		
+    	
    		<div class="field required">
        		<label>是否是流程中的业务表</label>
        		<input type="text" class="easyui-textbox" 
