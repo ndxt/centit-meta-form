@@ -43,7 +43,7 @@ public class PendingMdTable implements java.io.Serializable {
 	@Id
 	@Column(name = "Table_ID")
 	@GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
-	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=0,
+	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=200000001,
 	pkColumnName="SEQ_NAME",pkColumnValue="pendingtableId",allocationSize=1,valueColumnName="SEQ_VALUE")
 	private Long tableId;
 
@@ -168,7 +168,8 @@ public class PendingMdTable implements java.io.Serializable {
 	}
 	
 	public void setDatabaseCode(String databaseCode) {
-		this.databaseInfo=new DatabaseInfo(databaseCode);
+		this.databaseInfo=new DatabaseInfo();
+		this.databaseInfo.setDatabaseCode(databaseCode);
 	}
   
 	public String getTableName() {
@@ -243,7 +244,6 @@ public class PendingMdTable implements java.io.Serializable {
 	public PendingMdTable copy(PendingMdTable other){
   
 		this.setTableId(other.getTableId());
-  
 		this.setDatabaseInfo(other.getDatabaseInfo());
 		this.tableName= other.getTableName();  
 		this.tableLabelName= other.getTableLabelName();  
@@ -253,7 +253,6 @@ public class PendingMdTable implements java.io.Serializable {
 		this.isInWorkflow= other.getIsInWorkflow();  
 		this.lastModifyDate= other.getLastModifyDate();  
 		this.recorder= other.getRecorder();
-
 		return this;
 	}
 	

@@ -50,7 +50,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	@Id
 	@Column(name = "Table_ID")
     @GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
-	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=0,
+	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=100000001,
 	pkColumnName="SEQ_NAME",pkColumnValue="tableId",allocationSize=1,valueColumnName="SEQ_VALUE")
 	private Long tableId;
 
@@ -189,7 +189,8 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	}
 	
 	public void setDatabaseCode(String databaseCode) {
-		this.databaseInfo=new DatabaseInfo(databaseCode);
+		this.databaseInfo=new DatabaseInfo();
+		this.setDatabaseCode(databaseCode);
 	}
   
 	public String getTableName() {

@@ -71,21 +71,25 @@ public class MdTableManagerImpl
 	}
 
 	@Override
+	@Transactional
 	public Serializable saveNewPendingMdTable(PendingMdTable pmt) {
 		return pendingMdTableDao.saveNewObject(pmt);
 	}
 
 	@Override
+	@Transactional
 	public void deletePendingMdTable(long tableId) {
 		pendingMdTableDao.deleteObjectById(tableId);
 	}
 
 	@Override
+	@Transactional
 	public PendingMdTable getPendingMdTable(long tableId) {
 		return pendingMdTableDao.getObjectById(tableId);
 	}
 
 	@Override
+	@Transactional
 	public void savePendingMdTable(PendingMdTable pmt) {
 		pendingMdTableDao.mergeObject(pmt);
 	}
@@ -96,6 +100,7 @@ public class MdTableManagerImpl
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public List<PendingMdTable> listDrafts(Map<String, Object> searchColumn,
 			PageDesc pageDesc) {
 		return pendingMdTableDao.listObjects(searchColumn, pageDesc);
