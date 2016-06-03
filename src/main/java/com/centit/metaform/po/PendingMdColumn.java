@@ -3,6 +3,7 @@ package com.centit.metaform.po;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -24,15 +25,13 @@ import org.hibernate.validator.constraints.NotBlank;
 public class PendingMdColumn implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
-
+	@EmbeddedId
+	private com.centit.metaform.po.PendingMdColumnId cid;
 
 	/**
 	 * 表ID 表单主键 
 	 */
-	@Id
 	@Column(name = "TABLE_ID")
-	@GeneratedValue(generator = "assignedGenerator")
-	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
 	private Long tableId;
 
 	/**
