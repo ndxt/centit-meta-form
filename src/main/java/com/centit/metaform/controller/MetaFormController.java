@@ -38,7 +38,7 @@ public class MetaFormController  extends BaseController{
         ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
         
         ResponseData resData = new ResponseData();
-        resData.addResponseData(OBJLIST, formService.listObjectsByFilter(rc, searchColumn));
+        resData.addResponseData(OBJLIST, formService.listObjectsByFilter(rc, searchColumn,pageDesc));
         resData.addResponseData(PAGE_DESC, pageDesc);
         rc.close();
         if(addMeta){

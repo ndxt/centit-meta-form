@@ -75,7 +75,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {
 			JSONArray ja = dao.listObjectsByProperties(filters,
-					pageDesc.getPageNo()*pageDesc.getPageSize(),pageDesc.getPageSize());
+						(pageDesc.getPageNo()-1)>0? (pageDesc.getPageNo()-1)*pageDesc.getPageSize():0,
+						pageDesc.getPageSize());
 			Long ts = dao.fetchObjectsCount(filters);
 			if(ts!=null)
 				pageDesc.setTotalRows(ts.intValue());
