@@ -95,12 +95,16 @@ public class MdTableManagerImpl
 	}
 
 	@Override
+	@Transactional
 	public String publishMdTable(Long tableId) {
-		
-		
-		
-		
-		return  "";
+		try{
+		PendingMdTable ptable=pendingMdTableDao.getObjectById(tableId);
+		MdTable table=new MdTable(ptable);
+		mdTableDao.mergeObject(table);
+		}catch(Exception e){
+			return "failed to publish!";
+		}
+		return "finished!";
 	}
 
 	@Override

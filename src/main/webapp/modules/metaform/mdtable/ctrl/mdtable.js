@@ -18,7 +18,7 @@ define(function(require) {
           new MdTableEdit('mdtable_edit'),
           new MdTableView('mdtable_view'),
           new MdTableRemove('mdtable_remove'),
-          new MdTableView('mdtable_publish')
+          new MdTablePublish('mdtable_publish')
     	]);
     	
     	// @override

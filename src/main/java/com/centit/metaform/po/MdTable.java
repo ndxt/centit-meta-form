@@ -122,6 +122,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 	
+	@Transient
 	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<MdColumn> mdColumns;
 	
