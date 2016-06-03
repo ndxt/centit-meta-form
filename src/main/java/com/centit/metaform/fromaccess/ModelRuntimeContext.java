@@ -52,7 +52,7 @@ public class ModelRuntimeContext {
 	
 	public JsonObjectDao getJsonObjectDao(){
 		if(dao==null){
-			switch(conn.getDatabaseType()){
+			switch(getConnection().getDatabaseType()){
 			case Oracle:
 		  		return new OracleJsonObjectDao(getConnection() ,tableinfo);
 		  	case DB2:
