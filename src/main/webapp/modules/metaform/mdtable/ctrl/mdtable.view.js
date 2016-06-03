@@ -11,7 +11,7 @@ define(function(require) {
 		this.load = function(panel, data) {
 			var form = panel.find('form');
 			
-			Core.ajax(Config.ContextPath+'service/metaform/mdtable/'+data.tableId, {
+			Core.ajax(Config.ContextPath+'service/metaform/mdtable/draft/'+data.tableId, {
 				type: 'json',
 				method: 'get' 
 			}).then(function(data) {

@@ -22,7 +22,7 @@ define(function(require) {
 			
 			if (isValid) {
 				form.form('ajax', {
-					url: Config.ContextPath + 'service/metaform/mdtable',
+					url: Config.ContextPath + 'service/metaform/mdtable/draft',
 					method: 'post'
 				}).then(closeCallback);
 			}

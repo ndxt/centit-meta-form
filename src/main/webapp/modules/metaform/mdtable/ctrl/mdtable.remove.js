@@ -8,7 +8,7 @@ define(function(require) {
 		
 		// @override
 		this.submit = function(table, data) {
-			Core.ajax(Config.ContextPath+'service/metaform/mdtable/'+data.tableId, {
+			Core.ajax(Config.ContextPath+'service/metaform/mdtable/draft/'+data.tableId, {
             	type: 'json',
                 method: 'post',
                 data: {
