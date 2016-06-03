@@ -18,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -49,9 +48,8 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	 */
 	@Id
 	@Column(name = "TABLE_ID")
-    @GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
-	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=100000001,
-	pkColumnName="SEQ_NAME",pkColumnValue="tableId",allocationSize=1,valueColumnName="SEQ_VALUE")
+	@GeneratedValue(generator = "assignedGenerator")
+	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
 	private Long tableId;
 
 	/**
@@ -139,6 +137,22 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	/** default constructor */
 	public MdTable() {
 	}
+	
+	
+	public MdTable(PendingMdTable ptable) {
+		this.tableId = ptable.getTableId();		
+		this.databaseInfo=ptable.getDatabaseInfo();
+		this.tableName= ptable.getTableName();
+		this.tableLabelName= ptable.getTableLabelName();
+		this.tableType=ptable.getTableType();
+		this.tableState= ptable.getTableState();
+		this.tableComment= ptable.getTableComment();
+		this.isInWorkflow= ptable.getIsInWorkflow();
+		this.lastModifyDate= ptable.getLastModifyDate();
+		this.recorder= ptable.getRecorder();
+	}
+	
+	
 	/** minimal constructor */
 	public MdTable(
 		Long tableId		

@@ -137,6 +137,19 @@ public class MdTableController extends BaseController{
         JsonResultUtils.writeSingleDataJson(pk,response);
     }
     
+    
+    /**
+     * 发布 表元数据表
+     *
+     * @param mdTable  {@link MdTable}
+     * @return
+     */
+    @RequestMapping(value="/publish/{ptableId}",method = {RequestMethod.POST})
+    public void publishMdTable(@PathVariable Long ptableId, HttpServletResponse response) {
+    	String msg=mdTableMag.publishMdTable(ptableId);
+        JsonResultUtils.writeSingleDataJson(msg,response);
+    }
+    
     /**
      * 删除单个  表元数据表 
 	

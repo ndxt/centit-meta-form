@@ -43,9 +43,9 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.hbm2dll.auto">update</prop>
 				<prop key="hibernate.dialect">${jdbc.dialect}</prop>
 				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.id.new_generator_mappings">true</prop>
 				<!--	
   	 			<prop key="hibernate.current_session_context_class">jta</prop>	    
 				<prop key="hibernate.format_sql">true</prop>

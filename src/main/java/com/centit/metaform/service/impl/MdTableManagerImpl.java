@@ -95,8 +95,12 @@ public class MdTableManagerImpl
 	}
 
 	@Override
-	public void publishMdTable(Long tableId) {
+	public String publishMdTable(Long tableId) {
 		
+		
+		
+		
+		return  "";
 	}
 
 	@Override

@@ -8,6 +8,7 @@ define(function(require) {
     var MdTableEdit = require('./mdtable.edit');
     var MdTableView = require('./mdtable.view');
     var MdTableRemove = require('./mdtable.remove');
+    var MdTablePublish = require('./mdtable.publish');
 
     // 业务信息
     var MdTable = Page.extend(function() {
@@ -16,7 +17,8 @@ define(function(require) {
           new MdTableAdd('mdtable_add'),
           new MdTableEdit('mdtable_edit'),
           new MdTableView('mdtable_view'),
-          new MdTableRemove('mdtable_remove')
+          new MdTableRemove('mdtable_remove'),
+          new MdTableView('mdtable_publish')
     	]);
     	
     	// @override

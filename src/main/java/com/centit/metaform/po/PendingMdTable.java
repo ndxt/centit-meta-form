@@ -1,23 +1,17 @@
 package com.centit.metaform.po;
 
 import java.util.Date;
-import java.sql.Timestamp;
 
 import javax.persistence.Column;
-
-
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.persistence.GeneratedValue;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -126,6 +120,7 @@ public class PendingMdTable implements java.io.Serializable {
 		this.isInWorkflow= isInWorkflow; 		
 	}
 
+	
 /** full constructor */
 	public PendingMdTable(
 	 Long tableId		

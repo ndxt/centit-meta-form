@@ -30,7 +30,7 @@ public interface MdTableManager extends BaseEntityManager<MdTable,java.lang.Long
 	public void deletePendingMdTable(long tableId);
 	public PendingMdTable getPendingMdTable(long tableId);
 	public void savePendingMdTable(PendingMdTable pmt);
-	public void publishMdTable(Long tableId);
+	public String publishMdTable(Long tableId);
 	public List<PendingMdTable> listDrafts(Map<String, Object> searchColumn,
 			PageDesc pageDesc);
 }
