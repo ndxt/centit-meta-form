@@ -10,6 +10,12 @@ public class ModelOperation {
 		
 	}
 
+	public ModelOperation(String modelCode, String operation,String label){
+		this.modelCode = modelCode;
+		this.operation = operation;
+		this.label = label;
+	}
+	
 	public String getModelCode() {
 		return modelCode;
 	}
