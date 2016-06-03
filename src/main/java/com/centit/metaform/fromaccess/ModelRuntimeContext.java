@@ -54,15 +54,15 @@ public class ModelRuntimeContext {
 		if(dao==null){
 			switch(conn.getDatabaseType()){
 			case Oracle:
-		  		return new OracleJsonObjectDao(conn,tableinfo);
+		  		return new OracleJsonObjectDao(getConnection() ,tableinfo);
 		  	case DB2:
-		  		return new DB2JsonObjectDao(conn,tableinfo);
+		  		return new DB2JsonObjectDao(getConnection() ,tableinfo);
 		  	case SqlServer:
-		  		return new SqlSvrJsonObjectDao(conn,tableinfo);
+		  		return new SqlSvrJsonObjectDao(getConnection() ,tableinfo);
 		  	case MySql:
-		  		return new MySqlJsonObjectDao(conn,tableinfo);
+		  		return new MySqlJsonObjectDao(getConnection() ,tableinfo);
 		  	default:
-		  		return new OracleJsonObjectDao(conn,tableinfo);
+		  		return new OracleJsonObjectDao(getConnection() ,tableinfo);
 			}
 		}
 		return dao;
