@@ -43,7 +43,8 @@ public class ModelFormServiceImpl implements ModelFormService {
     
 	@Override
 	public ModelRuntimeContext createRuntimeContext(String modelCode) {
-		ModelRuntimeContext rc = new ModelRuntimeContext();
+		
+		ModelRuntimeContext rc = new ModelRuntimeContext(modelCode);		
 		
 		DataSourceDescription dbc = new DataSourceDescription();	  
 		dbc.setConnUrl("jdbc:oracle:thin:@192.168.131.81:1521:orcl");
