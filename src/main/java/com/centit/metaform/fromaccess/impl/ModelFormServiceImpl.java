@@ -50,8 +50,14 @@ public class ModelFormServiceImpl implements ModelFormService {
 	public ModelRuntimeContext createRuntimeContext(String modelCode) {
 		
 		ModelRuntimeContext rc = new ModelRuntimeContext(modelCode);		
+		DataSourceDescription dbc = new DataSourceDescription();	  
+		dbc.setConnUrl("jdbc:oracle:thin:@192.168.131.81:1521:orcl");
+		dbc.setUsername("metaform");
+		dbc.setPassword("metaform");
+		rc.setDataSource(dbc);
 		
 		SimpleTableInfo tableInfo = new SimpleTableInfo("TEST_TABLE");
+		tableInfo.setTableLableName("通讯录");
 		SimpleTableField field = new SimpleTableField();
 		field.setColumnName("ID");
 		field.setColumnType("Number(10)");
