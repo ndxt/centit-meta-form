@@ -13,6 +13,8 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.centit.support.database.metadata.SimpleTableField;
+import com.centit.support.database.metadata.TableField;
 
 
 /**
@@ -23,7 +25,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 */
 @Entity
 @Table(name = "F_MD_COLUMN")
-public class MdColumn implements java.io.Serializable {
+public class MdColumn implements TableField,java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 	@EmbeddedId
@@ -33,7 +35,7 @@ public class MdColumn implements java.io.Serializable {
 	/**
 	 * 字段名称 null 
 	 */
-	@Column(name = "field_Label_Name")
+	@Column(name = "FIELD_LABEL_NAME")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
 	private String  fieldLabelName;
@@ -46,96 +48,96 @@ public class MdColumn implements java.io.Serializable {
 	/**
 	 * 字段描述 null 
 	 */
-	@Column(name = "column_Comment")
+	@Column(name = "COLUMN_COMMENT")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  columnComment;
 	/**
 	 * 显示次序 null 
 	 */
-	@Column(name = "column_Order")
+	@Column(name = "COLUMN_ORDER")
 	private Long  columnOrder;
 	/**
 	 * 字段类型 null 
 	 */
-	@Column(name = "column_Type")
+	@Column(name = "COLUMN_TYPE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
 	private String  columnType;
 	/**
 	 * 字段长度 precision 
 	 */
-	@Column(name = "max_Length")
+	@Column(name = "MAX_LENGTH")
 	private Long  maxLength;
 	/**
 	 * 字段精度 null 
 	 */
-	@Column(name = "scale")
+	@Column(name = "SCALE")
 	private Long  scale;
 	/**
 	 * 字段类别 null 
 	 */
-	@Column(name = "access_type")
+	@Column(name = "ACCESS_TYPE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  accessType;
 	/**
 	 * 是否必填 null 
 	 */
-	@Column(name = "mandatory")
+	@Column(name = "MANDATORY")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  mandatory;
 	/**
 	 * 是否为主键 null 
 	 */
-	@Column(name = "primarykey")
+	@Column(name = "PRIMARYKEY")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  primarykey;
 	/**
 	 * 状态 null 
 	 */
-	@Column(name = "column_state")
+	@Column(name = "COLUMN_STATE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  columnState;
 	/**
 	 * 引用类型 0：没有：1： 数据字典 2：JSON表达式 3：sql语句  Y：年份 M：月份 
 	 */
-	@Column(name = "reference_Type")
+	@Column(name = "REFERENCE_TYPE")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  referenceType;
 	/**
 	 * 引用数据 根据paramReferenceType类型（1,2,3）填写对应值 
 	 */
-	@Column(name = "reference_Data")
+	@Column(name = "REFERENCE_DATA")
 	@Length(min = 0, max = 1000, message = "字段长度不能小于{min}大于{max}")
 	private String  referenceData;
 	/**
 	 * 约束表达式 regex表达式 
 	 */
-	@Column(name = "Validate_Regex")
+	@Column(name = "VALIDATE_REGEX")
 	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
 	private String  validateRegex;
 	/**
 	 * 约束提示 约束不通过提示信息 
 	 */
-	@Column(name = "Validate_Info")
+	@Column(name = "VALIDATE_INFO")
 	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
 	private String  validateInfo;
 	/**
 	 * 默认值 参数默认值 
 	 */
-	@Column(name = "default_Value")
+	@Column(name = "DEFAULT_VALUE")
 	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
 	private String  defaultValue;
 	/**
 	 * 更改时间 null 
 	 */
-	@Column(name = "last_modify_Date")
+	@Column(name = "LAST_MODIFY_DATE")
 	private Date  lastModifyDate;
 	/**
 	 * 更改人员 null 
 	 */
-	@Column(name = "Recorder")
+	@Column(name = "RECORDER")
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 
@@ -250,19 +252,19 @@ public class MdColumn implements java.io.Serializable {
 		this.columnType = columnType;
 	}
   
-	public Long getMaxLength() {
+	public Long getStrMaxLength() {
 		return this.maxLength;
 	}
 	
-	public void setMaxLength(Long maxLength) {
+	public void setStrMaxLength(Long maxLength) {
 		this.maxLength = maxLength;
 	}
   
-	public Long getScale() {
+	public Long getNumberScale() {
 		return this.scale;
 	}
 	
-	public void setScale(Long scale) {
+	public void setNumberScale(Long scale) {
 		this.scale = scale;
 	}
   
@@ -365,8 +367,8 @@ public class MdColumn implements java.io.Serializable {
 		this.columnComment= other.getColumnComment();  
 		this.columnOrder= other.getColumnOrder();  
 		this.columnType= other.getColumnType();  
-		this.maxLength= other.getMaxLength();  
-		this.scale= other.getScale();  
+		this.maxLength= other.getStrMaxLength();  
+		this.scale= other.getNumberScale();  
 		this.accessType= other.getAccessType();  
 		this.mandatory= other.getMandatory();  
 		this.primarykey= other.getPrimarykey();  
@@ -397,10 +399,10 @@ public class MdColumn implements java.io.Serializable {
 			this.columnOrder= other.getColumnOrder();  
 		if( other.getColumnType() != null)
 			this.columnType= other.getColumnType();  
-		if( other.getMaxLength() != null)
-			this.maxLength= other.getMaxLength();  
-		if( other.getScale() != null)
-			this.scale= other.getScale();  
+		if( other.getStrMaxLength() != null)
+			this.maxLength= other.getStrMaxLength();  
+		if( other.getNumberScale() != null)
+			this.scale= other.getNumberScale();  
 		if( other.getAccessType() != null)
 			this.accessType= other.getAccessType();  
 		if( other.getMandatory() != null)
@@ -448,5 +450,34 @@ public class MdColumn implements java.io.Serializable {
 		this.recorder= null;
 
 		return this;
+	}
+	@Override
+	public String getPropertyName() {
+		return SimpleTableField.mapPropName(getColumnName());
+	}
+	@Override
+	public String getJavaType() {
+		return SimpleTableField.mapToJavaType(columnType,scale==null?0:scale.intValue());
+	}
+	@Override
+	public boolean isMandatory() {
+		return "T".equals(mandatory) ||  "Y".equals(mandatory) || "1".equals(mandatory);
+	}
+	
+	public boolean isPrimaryKey() {
+		return "T".equals(primarykey) ||  "Y".equals(primarykey) || "1".equals(primarykey);
+	}
+	
+	@Override
+	public int getMaxLength() {
+		return maxLength==null?0:maxLength.intValue();
+	}
+	@Override
+	public int getPrecision() {
+		return maxLength==null?0:maxLength.intValue();
+	}
+	@Override
+	public int getScale() {
+		return scale==null?0:scale.intValue();
 	}
 }

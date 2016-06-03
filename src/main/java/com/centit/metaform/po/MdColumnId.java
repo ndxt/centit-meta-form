@@ -19,14 +19,14 @@ public class MdColumnId implements java.io.Serializable {
 	/**
 	 * 表ID 表单主键 
 	 */
-	@Column(name = "Table_ID")
+	@Column(name = "TABLE_ID")
 	@NotBlank(message = "字段不能为空")
 	private Long tableId;
 
 	/**
 	 * 字段代码 null 
 	 */
-	@Column(name = "column_Name")
+	@Column(name = "COLUMN_NAME")
 	@NotBlank(message = "字段不能为空")
 	private String columnName;
 

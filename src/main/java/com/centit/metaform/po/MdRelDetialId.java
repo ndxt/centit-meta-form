@@ -19,14 +19,14 @@ public class MdRelDetialId implements java.io.Serializable {
 	/**
 	 * 关联代码 null 
 	 */
-	@Column(name = "relation_ID")
+	@Column(name = "RELATION_ID")
 	@NotBlank(message = "字段不能为空")
 	private String relationId;
 
 	/**
 	 * p字段代码 null 
 	 */
-	@Column(name = "parent_column_Name")
+	@Column(name = "PARENT_COLUMN_NAME")
 	@NotBlank(message = "字段不能为空")
 	private String parentColumnName;
 

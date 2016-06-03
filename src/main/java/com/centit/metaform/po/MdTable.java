@@ -21,6 +21,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.centit.support.database.metadata.TableField;
+import com.centit.support.database.metadata.TableInfo;
+import com.centit.support.database.metadata.TableReference;
+
 /**
  * create by scaffold 2016-06-02 
  
@@ -33,11 +37,8 @@ import org.hibernate.validator.constraints.NotBlank;
 */
 @Entity
 @Table(name = "F_MD_TABLE")
-public class MdTable implements java.io.Serializable {
+public class MdTable implements TableInfo,java.io.Serializable {
 	private static final long serialVersionUID =  1L;
-
-
-
 	/**
 	 * 表ID 表编号 
 	 */
@@ -552,5 +553,67 @@ public class MdTable implements java.io.Serializable {
 		this.mdRelations = new HashSet<MdRelation>();	
 		this.metaFormModels = new HashSet<MetaFormModel>();
 		return this;
+	}
+
+	@Override
+	public String getPkName() {
+		return "PK_"+ this.tableName;
+	}
+	@Override
+	public String getSchema() {
+		return null;
+	}
+	@Override
+	public TableField findFieldByName(String name) {
+		if(mdColumns==null)
+			return null;
+		for(MdColumn c: mdColumns){
+			if(c.getPropertyName().equals(name))
+				return c;
+		}
+		return null;
+	}
+	@Override
+	public TableField findFieldByColumn(String name) {
+		if(mdColumns==null)
+			return null;
+		for(MdColumn c: mdColumns){
+			if(c.getColumnName().equals(name))
+				return c;
+		}
+		return null;
+	}
+	@Override
+	public boolean isParmaryKey(String colname) {
+		if(mdColumns==null)
+			return false;
+		for(MdColumn c: mdColumns){
+			if(c.getColumnName().equals(colname)){
+				return c.isPrimaryKey();
+			}
+		}
+		return false;
+	}
+	@Override
+	public List<? extends TableField> getColumns() {
+		return new ArrayList<MdColumn>(mdColumns);
+	}
+	@Override
+	public List<String> getPkColumns() {
+		if(mdColumns==null)
+			return null;
+		
+		List<String> pks =  new ArrayList<>();
+		for(MdColumn c: mdColumns){
+			if(c.isPrimaryKey()){
+				pks.add(c.getColumnName());
+			}
+		}
+		return pks;
+	}
+	@Override
+	public List<? extends TableReference> getReferences() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
