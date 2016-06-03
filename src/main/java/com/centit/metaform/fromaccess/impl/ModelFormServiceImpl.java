@@ -4,15 +4,21 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.dde.dao.DatabaseInfoDao;
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.metaform.dao.MdColumnDao;
+import com.centit.metaform.dao.MdTableDao;
+import com.centit.metaform.dao.MetaFormModelDao;
+import com.centit.metaform.dao.ModelDataFieldDao;
 import com.centit.metaform.fromaccess.ModelFormService;
 import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.support.database.DataSourceDescription;
-import com.centit.support.database.DbcpConnectPools;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.SimpleTableInfo;
@@ -20,6 +26,21 @@ import com.centit.support.database.metadata.SimpleTableInfo;
 @Service
 public class ModelFormServiceImpl implements ModelFormService {
 
+    @Resource(name = "databaseInfoDao") 
+    private DatabaseInfoDao databaseInfoDao;
+
+    @Resource
+    private MdTableDao tableDao;
+
+    @Resource
+    private MdColumnDao columnDao;
+    
+    @Resource
+    private MetaFormModelDao formModelDao;
+    
+    @Resource
+    private ModelDataFieldDao formFieldDao;
+    
 	@Override
 	public ModelRuntimeContext createRuntimeContext(String modelCode) {
 		ModelRuntimeContext rc = new ModelRuntimeContext();
@@ -28,7 +49,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		dbc.setConnUrl("jdbc:oracle:thin:@192.168.131.81:1521:orcl");
 		dbc.setUsername("metaform");
 		dbc.setPassword("metaform");
-		rc.setConnection( DbcpConnectPools.getDbcpConnect(dbc));
+		rc.setDataSource(dbc);
 		
 		SimpleTableInfo tableInfo = new SimpleTableInfo("TEST_TABLE");
 		SimpleTableField field = new SimpleTableField();

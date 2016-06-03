@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.centit.framework.core.controller.BaseController;
 import com.centit.support.database.DBConnect;
+import com.centit.support.database.DataSourceDescription;
+import com.centit.support.database.DbcpConnectPools;
 import com.centit.support.database.jsonmaptable.DB2JsonObjectDao;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.jsonmaptable.MySqlJsonObjectDao;
@@ -17,6 +19,7 @@ public class ModelRuntimeContext {
 	private String  modelCode;
 	private DBConnect conn;
 	private TableInfo tableinfo;
+	private DataSourceDescription dataSource;
 	public ModelRuntimeContext(){
 		
 	}
@@ -25,14 +28,16 @@ public class ModelRuntimeContext {
 		this.modelCode = modelCode;
 	}
 	
-	
-	//TODO Add modelInfo
+
 	public DBConnect getConnection() {
+		if(conn==null){
+			 conn = DbcpConnectPools.getDbcpConnect(dataSource);
+		}
 		return conn;
 	}
 
-	public void setConnection(DBConnect conn) {
-		this.conn = conn;
+	public void setDataSource(DataSourceDescription dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	public TableInfo getTableinfo() {
