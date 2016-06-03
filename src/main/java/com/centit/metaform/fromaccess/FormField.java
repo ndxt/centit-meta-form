@@ -1,5 +1,6 @@
 package com.centit.metaform.fromaccess;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class FormField {
@@ -110,6 +111,12 @@ public class FormField {
 		this.validators = validators;
 	}
 
+	public void addValidator(String key, FieldValidator  validator) {
+		if(this.validators ==null)
+			this.validators = new HashMap<>();
+		this.validators.put(key, validator);
+	}
+	
 	public Long getRows() {
 		return rows;
 	}

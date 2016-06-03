@@ -20,6 +20,7 @@ public class ModelRuntimeContext {
 	private DBConnect conn;
 	private TableInfo tableinfo;
 	private DataSourceDescription dataSource;
+	private List<FormField> formFields; 
 	
 	public ModelRuntimeContext(){
 		
@@ -143,35 +144,17 @@ public class ModelRuntimeContext {
 	}
 	
 	public List<FormField> getFormFields(){
-		List<FormField> ffs = new ArrayList<>();
-		FormField ff = new FormField();
-		ff.setKey("id");
-		ff.setType("input");
-		FieldTemplateOptions templateOptions = new FieldTemplateOptions();
-		templateOptions.setLabel("编号：");
-		templateOptions.setPlaceholder("请输入数字。");
-		ff.setTemplateOptions(templateOptions);
-		ffs.add(ff);
 		
-		ff = new FormField();
-		ff.setKey("userName");
-		ff.setType("input");
-		templateOptions = new FieldTemplateOptions();
-		templateOptions.setLabel("姓名：");
-		templateOptions.setPlaceholder("请输入完整的姓名。");
-		ff.setTemplateOptions(templateOptions);
-		ffs.add(ff);
-		
+		return this.formFields;
+	}
 
-		ff = new FormField();
-		ff.setKey("userPhone");
-		ff.setType("input");
-		templateOptions = new FieldTemplateOptions();
-		templateOptions.setLabel("电话：");
-		templateOptions.setPlaceholder("请输入电话号码。");
-		ff.setTemplateOptions(templateOptions);
-		ffs.add(ff);
-		
-		return ffs;
+	public void addFormField(FormField ff){
+		if(formFields==null)
+			formFields = new ArrayList<>();
+		formFields.add(ff);
+	}
+
+	public void setFormFields(List<FormField> formFields) {
+		this.formFields = formFields;
 	}
 }

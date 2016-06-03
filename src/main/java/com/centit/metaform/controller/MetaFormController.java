@@ -60,14 +60,20 @@ public class MetaFormController  extends BaseController{
     	for(String pk: rc.getTableinfo().getPkColumns()){
     		TableField pkp = rc.getTableinfo().findFieldByColumn(pk);
     		Object pv = request.getParameter(pkp.getPropertyName());
-    		if("Date".equals(pkp.getJavaType())){
+    		switch(pkp.getJavaType()){
+			case "Date":
+			case "Timestamp":
     			jo.put(pkp.getPropertyName(), DatetimeOpt.castObjectToDate(pv));
-    		}else if("Long".equals(pkp.getJavaType())){
+    			break;
+			case "Long":
     			jo.put(pkp.getPropertyName(), NumberBaseOpt.castObjectToLong(pv));
-    		}else if("Double".equals(pkp.getJavaType())){
+    			break;
+			case "Double":
     			jo.put(pkp.getPropertyName(), NumberBaseOpt.castObjectToDouble(pv));
-    		}else{
+    			break;
+			default:
     			jo.put(pkp.getPropertyName(), StringBaseOpt.objectToString(pv));
+    			break;
     		}
     	}
 		ResponseData resData = new ResponseData();

@@ -589,7 +589,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 		return null;
 	}
 	@Override
-	public TableField findFieldByColumn(String name) {
+	public MdColumn findFieldByColumn(String name) {
 		if(mdColumns==null)
 			return null;
 		for(MdColumn c: mdColumns){
@@ -610,7 +610,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 		return false;
 	}
 	@Override
-	public List<? extends TableField> getColumns() {
+	public List<MdColumn> getColumns() {
 		return new ArrayList<MdColumn>(mdColumns);
 	}
 	@Override

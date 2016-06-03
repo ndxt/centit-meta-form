@@ -3,6 +3,7 @@ package com.centit.metaform.fromaccess.impl;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -19,10 +20,18 @@ import com.centit.metaform.dao.MdColumnDao;
 import com.centit.metaform.dao.MdTableDao;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.ModelDataFieldDao;
+import com.centit.metaform.fromaccess.FieldTemplateOptions;
+import com.centit.metaform.fromaccess.FieldValidator;
+import com.centit.metaform.fromaccess.FormField;
 import com.centit.metaform.fromaccess.ModelFormService;
 import com.centit.metaform.fromaccess.ModelRuntimeContext;
+import com.centit.metaform.po.MdColumn;
 import com.centit.metaform.po.MdTable;
 import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.ModelDataField;
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.metadata.SimpleTableField;
@@ -88,6 +97,36 @@ public class ModelFormServiceImpl implements ModelFormService {
 		tableInfo.getPkColumns().add("ID");
 		
 		rc.setTableinfo(tableInfo);
+		
+		
+		FormField ff = new FormField();
+		ff.setKey("id");
+		ff.setType("input");
+		FieldTemplateOptions templateOptions = new FieldTemplateOptions();
+		templateOptions.setLabel("编号：");
+		templateOptions.setPlaceholder("请输入数字。");
+		ff.setTemplateOptions(templateOptions);
+		rc.addFormField(ff);
+		
+		ff = new FormField();
+		ff.setKey("userName");
+		ff.setType("input");
+		templateOptions = new FieldTemplateOptions();
+		templateOptions.setLabel("姓名：");
+		templateOptions.setPlaceholder("请输入完整的姓名。");
+		ff.setTemplateOptions(templateOptions);
+		rc.addFormField(ff);
+		
+
+		ff = new FormField();
+		ff.setKey("userPhone");
+		ff.setType("input");
+		templateOptions = new FieldTemplateOptions();
+		templateOptions.setLabel("电话：");
+		templateOptions.setPlaceholder("请输入电话号码。");
+		ff.setTemplateOptions(templateOptions);
+		rc.addFormField(ff);
+		
 		return rc;
 	}
 	
@@ -98,8 +137,39 @@ public class ModelFormServiceImpl implements ModelFormService {
 		
 		MetaFormModel mfm = formModelDao.getObjectById(modelCode);
 		MdTable mtab = mfm.getMdTable();
-		rc.setTableinfo(mtab);
 		DatabaseInfo mdb = databaseInfoDao.getObjectById( mtab.getDatabaseCode());
+		
+		
+		Set<ModelDataField> fields = mfm.getModelDataFields();
+		for(ModelDataField field :fields){
+			FormField ff = new FormField();
+			MdColumn column = mtab.findFieldByColumn( field.getColumnName() );
+			ff.setKey(column.getPropertyName());
+			switch(column.getJavaType()){
+			case "Date":
+				ff.setType("input");
+				break;
+			default:
+				ff.setType("input");
+				break;
+			
+			}			
+			ff.setDefaultValue(column.getDefaultValue());
+			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
+			templateOptions.setLabel(column.getColumnName());
+			templateOptions.setPlaceholder(field.getInputHint());
+			templateOptions.setPattern(column.getValidateRegex());
+			ff.setTemplateOptions(templateOptions);
+			
+			FieldValidator  valid = new FieldValidator();
+			valid.setMessage(column.getValidateInfo());
+			ff.addValidator(column.getPropertyName(),valid);
+			rc.addFormField(ff);
+		}
+		
+		
+		rc.setTableinfo(mtab);
+		
 		
 		DataSourceDescription dbc = new DataSourceDescription();
 		dbc.setDatabaseCode(mdb.getDatabaseCode());
