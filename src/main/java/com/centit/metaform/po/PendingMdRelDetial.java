@@ -27,7 +27,7 @@ public class PendingMdRelDetial implements java.io.Serializable {
 	/**
 	 * C字段代码 null 
 	 */
-	@Column(name = "child_column_Name")
+	@Column(name = "CHILD_COLUMN_NAME")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
 	private String  childColumnName;

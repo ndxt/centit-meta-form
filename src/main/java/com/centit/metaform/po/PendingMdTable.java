@@ -41,7 +41,7 @@ public class PendingMdTable implements java.io.Serializable {
 	 * 表ID 表单主键 
 	 */
 	@Id
-	@Column(name = "Table_ID")
+	@Column(name = "TABLE_ID")
 	@GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
 	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=200000001,
 	pkColumnName="SEQ_NAME",pkColumnValue="pendingtableId",allocationSize=1,valueColumnName="SEQ_VALUE")
@@ -50,59 +50,59 @@ public class PendingMdTable implements java.io.Serializable {
 	/**
 	 * 所属数据库ID null 
 	 */
-	@JoinColumn(name="Database_Code", nullable = true)  
+	@JoinColumn(name="DATABASE_CODE", nullable = true)  
 	@ManyToOne
 	private DatabaseInfo  databaseInfo;
 	/**
 	 * 表代码 null 
 	 */
-	@Column(name = "Table_Name")
+	@Column(name = "TABLE_NAME")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
 	private String  tableName;
 	/**
 	 * 表名称 null 
 	 */
-	@Column(name = "Table_Label_Name")
+	@Column(name = "TABLE_LABEL_NAME")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
 	private String  tableLabelName;
 	/**
 	 * 类别 表/视图 目前只能是表 
 	 */
-	@Column(name = "table_type")
+	@Column(name = "TABLE_TYPE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  tableType;
 	/**
 	 * 状态 系统 S / R 查询(只读)/ N 新建(读写) 
 	 */
-	@Column(name = "table_state")
+	@Column(name = "TABLE_STATE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  tableState;
 	/**
 	 * 描述 null 
 	 */
-	@Column(name = "table_Comment")
+	@Column(name = "TABLE_COMMENT")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  tableComment;
 	/**
 	 * 是否是流程中的业务表 null 
 	 */
-	@Column(name = "Is_In_Workflow")
+	@Column(name = "IS_IN_WORKFLOW")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  isInWorkflow;
 	/**
 	 * 更改时间 null 
 	 */
-	@Column(name = "last_modify_Date")
+	@Column(name = "LAST_MODIFY_DATE")
 	private Date  lastModifyDate;
 	/**
 	 * 更改人员 null 
 	 */
-	@Column(name = "Recorder")
+	@Column(name = "RECORDER")
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 

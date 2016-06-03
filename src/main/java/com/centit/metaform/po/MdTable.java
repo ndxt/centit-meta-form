@@ -48,7 +48,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	 * 表ID 表编号 
 	 */
 	@Id
-	@Column(name = "Table_ID")
+	@Column(name = "TABLE_ID")
     @GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
 	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=100000001,
 	pkColumnName="SEQ_NAME",pkColumnValue="tableId",allocationSize=1,valueColumnName="SEQ_VALUE")
@@ -57,7 +57,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	/**
 	 * 所属数据库ID null 
 	 */
-	@JoinColumn(name="Database_Code", nullable = true)  
+	@JoinColumn(name="DATABASE_CODE", nullable = true)  
 	@ManyToOne
 	private DatabaseInfo  databaseInfo;
 	

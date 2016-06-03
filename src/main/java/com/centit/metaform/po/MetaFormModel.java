@@ -40,7 +40,7 @@ public class MetaFormModel implements java.io.Serializable {
 	 * 模块代码 null 
 	 */
 	@Id
-	@Column(name = "Model_Code")
+	@Column(name = "MODEL_CODE")
 	@GeneratedValue(generator = "assignedGenerator")
 	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
 	private String modelCode;
@@ -54,48 +54,48 @@ public class MetaFormModel implements java.io.Serializable {
 	/**
 	 * 模快描述 null 
 	 */
-	@Column(name = "Model_Comment")
+	@Column(name = "MODEL_COMMENT")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  modelComment;
 	/**
 	 * 模块名称 null 
 	 */
-	@Column(name = "Model_Name")
+	@Column(name = "MODEL_NAME")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
 	private String  modelName;
 	/**
 	 * 存储类别 只读（视图、查询），新增（只能新增一条），修改，编辑列表（增删改） 
 	 */
-	@Column(name = "Access_Type")
+	@Column(name = "ACCESS_TYPE")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  accessType;
 	/**
 	 * 与父模块关系 O 没有父模块  1  一对一，2 多对一 
 	 */
-	@Column(name = "Relation_type")
+	@Column(name = "RELATION_TYPE")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  relationType;
 	/**
 	 * 父模块代码 子模块必需对应父模块对应的子表 
 	 */
-	@Column(name = "Parent_Model_Code")
+	@Column(name = "PARENT_MODEL_CODE")
 	@Length(min = 0, max = 16, message = "字段长度不能小于{min}大于{max}")
 	private String  parentModelCode;
 	/**
 	 * 显示顺序 null 
 	 */
-	@Column(name = "Display_Order")
+	@Column(name = "DISPLAY_ORDER")
 	private Long  displayOrder;
 	/**
 	 * 更改时间 null 
 	 */
-	@Column(name = "last_modify_Date")
+	@Column(name = "LAST_MODIFY_DATE")
 	private Date  lastModifyDate;
 	/**
 	 * 更改人员 null 
 	 */
-	@Column(name = "Recorder")
+	@Column(name = "RECORDER")
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 	

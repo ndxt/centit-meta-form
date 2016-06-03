@@ -28,53 +28,53 @@ public class MdChangLog implements java.io.Serializable {
 	 * 编号 null 
 	 */
 	@Id
-	@Column(name = "change_ID")
+	@Column(name = "CHANGE_ID")
 	@GeneratedValue(generator = "assignedGenerator")
 	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
 	private Long  changeId;
 	/**
 	 * 版本号 null 
 	 */
-	@Column(name = "version")
+	@Column(name = "VERSION")
 	private Long version;
 	/**
 	 * 提交日期 null 
 	 */
-	@Column(name = "change_Date")
+	@Column(name = "CHANGE_DATE")
 	private Date  changeDate;
 	/**
 	 * 提交人 null 
 	 */
-	@Column(name = "changer")
+	@Column(name = "CHANGER")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 6, message = "字段长度不能小于{min}大于{max}")
 	private String  changer;
 	/**
 	 * 更改表总数 null 
 	 */
-	@Column(name = "change_table_sum")
+	@Column(name = "CHANGE_TABLE_SUM")
 	private Long  changeTableSum;
 	/**
 	 * 更改关系总数 null 
 	 */
-	@Column(name = "change_relation_sum")
+	@Column(name = "CHANGE_RELATION_SUM")
 	private Long  changeRelationSum;
 	/**
 	 * 更改脚本 null 
 	 */
-	@Column(name = "change_Script")
+	@Column(name = "CHANGE_SCRIPT")
 	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
 	private String  changeScript;
 	/**
 	 * 更改说明 null 
 	 */
-	@Column(name = "change_comment")
+	@Column(name = "CHANGE_COMMENT")
 	@Length(min = 0, max = 2048, message = "字段长度不能小于{min}大于{max}")
 	private String  changeComment;
 	/**
 	 * 审核人 null 
 	 */
-	@Column(name = "Auditor")
+	@Column(name = "AUDITOR")
 	@Length(min = 0, max = 6, message = "字段长度不能小于{min}大于{max}")
 	private String  auditor;
 	/**

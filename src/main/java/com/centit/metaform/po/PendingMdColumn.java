@@ -30,7 +30,7 @@ public class PendingMdColumn implements java.io.Serializable {
 	 * 表ID 表单主键 
 	 */
 	@Id
-	@Column(name = "Table_ID")
+	@Column(name = "TABLE_ID")
 	@GeneratedValue(generator = "assignedGenerator")
 	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
 	private Long tableId;
@@ -38,110 +38,110 @@ public class PendingMdColumn implements java.io.Serializable {
 	/**
 	 * 字段代码 null 
 	 */
-	@Column(name = "column_Name")
+	@Column(name = "COLUMN_NAME")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
 	private String  columnName;
 	/**
 	 * 字段名称 null 
 	 */
-	@Column(name = "field_Label_Name")
+	@Column(name = "FIELD_LABEL_NAME")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
 	private String  fieldLabelName;
 	/**
 	 * 字段描述 null 
 	 */
-	@Column(name = "column_Comment")
+	@Column(name = "COLUMN_COMMENT")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  columnComment;
 	/**
 	 * 显示次序 null 
 	 */
-	@Column(name = "column_Order")
+	@Column(name = "COLUMN_ORDER")
 	private Long  columnOrder;
 	/**
 	 * 字段类型 null 
 	 */
-	@Column(name = "column_Type")
+	@Column(name = "COLUMN_TYPE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
 	private String  columnType;
 	/**
 	 * 字段长度 precision 
 	 */
-	@Column(name = "max_Length")
+	@Column(name = "MAX_LENGTH")
 	private Long  maxLength;
 	/**
 	 * 字段精度 null 
 	 */
-	@Column(name = "scale")
+	@Column(name = "SCALE")
 	private Long  scale;
 	/**
 	 * 字段类别 null 
 	 */
-	@Column(name = "access_type")
+	@Column(name = "ACCESS_TYPE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
 	private String  accessType;
 	/**
 	 * 是否必填 null 
 	 */
-	@Column(name = "mandatory")
+	@Column(name = "MANDATORY")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  mandatory;
 	/**
 	 * 是否为主键 null 
 	 */
-	@Column(name = "primarykey")
+	@Column(name = "PRIMARYKEY")
 	@Length(min = 0, message = "字段长度不能小于{min}大于{max}")
 	private String  primarykey;
 	/**
 	 * 状态 null 
 	 */
-	@Column(name = "column_state")
+	@Column(name = "COLUMN_STATE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, message = "字段长度不能小于{min}大于{max}")
 	private String  columnState;
 	/**
 	 * 引用类型 0：没有：1： 数据字典 2：JSON表达式 3：sql语句  Y：年份 M：月份 
 	 */
-	@Column(name = "reference_Type")
+	@Column(name = "REFERENCE_TYPE")
 	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
 	private String  referenceType;
 	/**
 	 * 引用数据 根据paramReferenceType类型（1,2,3）填写对应值 
 	 */
-	@Column(name = "reference_Data")
+	@Column(name = "REFERENCE_DATA")
 	@Length(min = 0, max = 1000, message = "字段长度不能小于{min}大于{max}")
 	private String  referenceData;
 	/**
 	 * 约束表达式 regex表达式 
 	 */
-	@Column(name = "Validate_Regex")
+	@Column(name = "VALIDATE_REGEX")
 	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
 	private String  validateRegex;
 	/**
 	 * 约束提示 约束不通过提示信息 
 	 */
-	@Column(name = "Validate_Info")
+	@Column(name = "VALIDATE_INFO")
 	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
 	private String  validateInfo;
 	/**
 	 * 默认值 参数默认值 
 	 */
-	@Column(name = "default_Value")
+	@Column(name = "DEFAULT_VALUE")
 	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
 	private String  defaultValue;
 	/**
 	 * 更改时间 null 
 	 */
-	@Column(name = "last_modify_Date")
+	@Column(name = "LAST_MODIFY_DATE")
 	private Date  lastModifyDate;
 	/**
 	 * 更改人员 null 
 	 */
-	@Column(name = "Recorder")
+	@Column(name = "RECORDER")
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 

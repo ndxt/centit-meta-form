@@ -26,7 +26,7 @@ public class ModelDataField implements java.io.Serializable {
 	/**
 	 * 更改类别 只读/更改/隐藏 
 	 */
-	@Column(name = "Access_Type")
+//	@Column(name = "ACCESS_TYPE")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  accessType;
 	/**
@@ -37,13 +37,13 @@ public class ModelDataField implements java.io.Serializable {
 	/**
 	 * 输入说明 与系统关联，比如自动与登录用户代码关联，选择系统用户，选择系统机构，等等 
 	 */
-	@Column(name = "input_hint")
+	@Column(name = "INPUT_HINT")
 	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
 	private String  inputHint;
 	/**
 	 * 输入约束描述 null 
 	 */
-	@Column(name = "Validate_hint")
+	@Column(name = "VALIDATE_HINT")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  validateHint;
 	/**

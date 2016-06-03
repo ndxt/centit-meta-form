@@ -19,14 +19,14 @@ public class ModelDataFieldId implements java.io.Serializable {
 	/**
 	 * 模块代码 null 
 	 */
-	@Column(name = "Model_Code")
+	@Column(name = "MODEL_CODE")
 	@NotBlank(message = "字段不能为空")
 	private String modelCode;
 
 	/**
 	 * 字段代码 null 
 	 */
-	@Column(name = "column_Name")
+	@Column(name = "COLUMN_NAME")
 	@NotBlank(message = "字段不能为空")
 	private String columnName;
 

@@ -30,7 +30,7 @@ public class PendingMdRelation implements java.io.Serializable {
 	 * 关联代码 关联关系，类似与外键，但不创建外键 
 	 */
 	@Id
-	@Column(name = "relation_ID")
+	@Column(name = "RELATION_ID")
 	@GeneratedValue(generator = "assignedGenerator")
 	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
 	private Long relationId;
@@ -38,42 +38,42 @@ public class PendingMdRelation implements java.io.Serializable {
 	/**
 	 * 主表表ID 表单主键 
 	 */
-	@Column(name = "Parent_Table_ID")
+	@Column(name = "PARENT_TABLE_ID")
 	private Long  parentTableId;
 	/**
 	 * 从表表ID 表单主键 
 	 */
-	@Column(name = "Child_Table_ID")
+	@Column(name = "CHILD_TABLE_ID")
 	private Long  childTableId;
 	/**
 	 * 关联名称 null 
 	 */
-	@Column(name = "relation_name")
+	@Column(name = "RELATION_NAME")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
 	private String  relationName;
 	/**
 	 * 状态 null 
 	 */
-	@Column(name = "relation_state")
+	@Column(name = "RELATION_STATE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  relationState;
 	/**
 	 * 关联说明 null 
 	 */
-	@Column(name = "relation_comment")
+	@Column(name = "RELATION_COMMENT")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  relationComment;
 	/**
 	 * 更改时间 null 
 	 */
-	@Column(name = "last_modify_Date")
+	@Column(name = "LAST_MODIFY_DATE")
 	private Date  lastModifyDate;
 	/**
 	 * 更改人员 null 
 	 */
-	@Column(name = "Recorder")
+	@Column(name = "RECORDER")
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 
