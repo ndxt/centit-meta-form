@@ -40,8 +40,8 @@ public class MdColumn implements TableField,java.io.Serializable {
 	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
 	private String  fieldLabelName;
 	
-	@JoinColumn(name="TABLE_ID")
-	@ManyToOne
+	//@JoinColumn(name="TABLE_ID")
+	//@ManyToOne
 	@JSONField(serialize=false)
 	private MdTable mdTable;
 	
@@ -194,7 +194,7 @@ public class MdColumn implements TableField,java.io.Serializable {
   
 	public Long getTableId() {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.MdColumnId();
+			return null;
 		return this.cid.getTableId();
 	}
 	
