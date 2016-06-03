@@ -12,15 +12,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.centit.dde.po.DatabaseInfo;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.metadata.TableInfo;
 import com.centit.support.database.metadata.TableReference;
@@ -44,16 +49,28 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	 */
 	@Id
 	@Column(name = "Table_ID")
-	@GeneratedValue(generator = "assignedGenerator")
-	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
+    @GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
+	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=0,
+	pkColumnName="SEQ_NAME",pkColumnValue="tableId",allocationSize=1,valueColumnName="SEQ_VALUE")
 	private Long tableId;
 
 	/**
 	 * 所属数据库ID null 
 	 */
-	@Column(name = "Database_Code")
-	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
-	private String  databaseCode;
+	@JoinColumn(name="Database_Code", nullable = true)  
+	@ManyToOne
+	private DatabaseInfo  databaseInfo;
+	
+	
+	
+	public DatabaseInfo getDatabaseInfo() {
+		if(null==this.databaseInfo)
+			this.databaseInfo=new DatabaseInfo();
+		return databaseInfo;
+	}
+	public void setDatabaseInfo(DatabaseInfo databaseInfo) {
+		this.databaseInfo = databaseInfo;
+	}
 	/**
 	 * 表代码 null 
 	 */
@@ -145,7 +162,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	
 		this.tableId = tableId;		
 	
-		this.databaseCode= databaseCode;
+		this.setDatabaseCode(databaseCode);
 		this.tableName= tableName;
 		this.tableLabelName= tableLabelName;
 		this.tableType= tableType;
@@ -168,11 +185,11 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	// Property accessors
   
 	public String getDatabaseCode() {
-		return this.databaseCode;
+		return this.getDatabaseInfo().getDatabaseCode();
 	}
 	
 	public void setDatabaseCode(String databaseCode) {
-		this.databaseCode = databaseCode;
+		this.databaseInfo=new DatabaseInfo(databaseCode);
 	}
   
 	public String getTableName() {
@@ -477,10 +494,8 @@ public class MdTable implements TableInfo,java.io.Serializable {
 
 
 	public MdTable copy(MdTable other){
-  
 		this.setTableId(other.getTableId());
-  
-		this.databaseCode= other.getDatabaseCode();  
+		this.setDatabaseCode(other.getDatabaseCode());
 		this.tableName= other.getTableName();  
 		this.tableLabelName= other.getTableLabelName();  
 		this.tableType= other.getTableType();  
@@ -489,7 +504,6 @@ public class MdTable implements TableInfo,java.io.Serializable {
 		this.isInWorkflow= other.getIsInWorkflow();  
 		this.lastModifyDate= other.getLastModifyDate();  
 		this.recorder= other.getRecorder();
-	
 		this.mdColumns = other.getMdColumns();	
 		this.mdRelations = other.getMdRelations();	
 		this.mdRelations = other.getMdRelations();	
@@ -503,7 +517,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 		this.setTableId(other.getTableId());
   
 		if( other.getDatabaseCode() != null)
-			this.databaseCode= other.getDatabaseCode();  
+			this.setDatabaseCode(other.getDatabaseCode());
 		if( other.getTableName() != null)
 			this.tableName= other.getTableName();  
 		if( other.getTableLabelName() != null)
@@ -538,7 +552,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 
 	public MdTable clearProperties(){
   
-		this.databaseCode= null;  
+		this.setDatabaseCode(null);
 		this.tableName= null;  
 		this.tableLabelName= null;  
 		this.tableType= null;  

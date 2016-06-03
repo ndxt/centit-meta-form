@@ -22,6 +22,7 @@ import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.metaform.po.MdTable;
+import com.centit.metaform.po.PendingMdTable;
 import com.centit.metaform.service.MdTableManager;
 
 
@@ -76,6 +77,20 @@ public class MdTableController extends BaseController{
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
     
+    @RequestMapping(value="/draft",method = RequestMethod.GET)
+    public void listdraft(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> searchColumn = convertSearchColumn(request);        
+        List<PendingMdTable> listObjects = mdTableMag.listDrafts(searchColumn, pageDesc);
+        if (null == pageDesc) {
+            JsonResultUtils.writeSingleDataJson(listObjects, response);
+            return;
+        }
+        ResponseData resData = new ResponseData();
+        resData.addResponseData(OBJLIST, listObjects);
+        resData.addResponseData(PAGE_DESC, pageDesc);
+        JsonResultUtils.writeResponseDataAsJson(resData, response);
+    }
+    
     /**
      * 查询单个  表元数据表 
 	
@@ -90,31 +105,47 @@ public class MdTableController extends BaseController{
     	
     	MdTable mdTable =     			
     			mdTableMag.getObjectById( tableId);
-        
         JsonResultUtils.writeSingleDataJson(mdTable, response);
     }
     
     /**
-     * 新增 表元数据表
+     * 查询单个  表元数据表 
+	
+	 * @param tableId  Table_ID
+     * @param catalogCode 主键
+     * 
+     * @param response    {@link HttpServletResponse}
+     * @return {data:{}}
+     */
+    @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.GET})
+    public void getMdTableDraft(@PathVariable Long tableId, HttpServletResponse response) {
+    	
+    	PendingMdTable mdTable =     			
+    			mdTableMag.getPendingMdTable(tableId);
+        JsonResultUtils.writeSingleDataJson(mdTable, response);
+    }
+    
+    /**
+     * 新增 表元数据表 草稿
      *
      * @param mdTable  {@link MdTable}
      * @return
      */
-    @RequestMapping(method = {RequestMethod.POST})
-    public void createMdTable(@Valid MdTable mdTable, HttpServletResponse response) {
-    	Serializable pk = mdTableMag.saveNewObject(mdTable);
+    @RequestMapping(value="/draft",method = {RequestMethod.POST})
+    public void createMdTable(@Valid PendingMdTable mdTable, HttpServletResponse response) {
+    	Serializable pk = mdTableMag.saveNewPendingMdTable(mdTable);
         JsonResultUtils.writeSingleDataJson(pk,response);
     }
-
+    
     /**
      * 删除单个  表元数据表 
 	
 	 * @param tableId  Table_ID
      */
-    @RequestMapping(value = "/{tableId}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.DELETE})
     public void deleteMdTable(@PathVariable Long tableId, HttpServletResponse response) {
     	
-    	mdTableMag.deleteObjectById( tableId);
+    	mdTableMag.deletePendingMdTable(tableId);
         
         JsonResultUtils.writeBlankJson(response);
     } 
@@ -126,19 +157,17 @@ public class MdTableController extends BaseController{
 	 * @param mdTable  {@link MdTable}
      * @param response    {@link HttpServletResponse}
      */
-    @RequestMapping(value = "/{tableId}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.PUT})
     public void updateMdTable(@PathVariable Long tableId, 
-    	@Valid MdTable mdTable, HttpServletResponse response) {
+    	@Valid PendingMdTable mdTable, HttpServletResponse response) {
     	
     	
-    	MdTable dbMdTable  =     			
-    			mdTableMag.getObjectById( tableId);
+    	PendingMdTable dbMdTable  =     			
+    			mdTableMag.getPendingMdTable(tableId);
         
-        
-
         if (null != mdTable) {
         	dbMdTable .copy(mdTable);
-        	mdTableMag.mergeObject(dbMdTable);
+        	mdTableMag.savePendingMdTable(dbMdTable);
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);
             return;

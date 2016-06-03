@@ -1,12 +1,12 @@
 
-<table url="service/metaform/mdtable"
+<table url="service/metaform/mdtable/draft"
 	idField="tableId"
 	toolbar=".temp-toolbar" layoutH="0">
     <thead frozen="true">
         <tr>
         	<th data-options="field:'tableId'">表ID</th> 
        		<th data-options="field:'databaseCode'" hidden="true">所属数据库ID</th>
-       		<!-- <th data-options="field:'databaseName'">所属数据库</th> -->
+       		<th data-options="field:'databaseName'">所属数据库</th>
        		<th data-options="field:'tableName'">表代码</th>
        		<th data-options="field:'tableLabelName'">表名称</th>
        		<th data-options="field:'tableType'">类别</th>
@@ -22,15 +22,15 @@
 
 <div class="temp-toolbar">
 	<a iconCls="icon-add" href="modules/metaform/mdtable/mdtable-info.html" trigger="none"
-		target="dialog" rel="mdtable_add" title="新增表元数据表" width="640" height="480" btnValue="添加">新增</a>
+		target="dialog" rel="mdtable_add" title="新增表元数据表" width="640" height="480" btnValue="提交">新增</a>
 	<hr>
 
 	<a iconCls="icon-edit" href="modules/metaform/mdtable/mdtable-info.html" trigger="single"
-		target="dialog" rel="mdtable_edit" title="编辑 {{text}}" width="640" height="480" btnValue="更新">编辑</a>
+		target="dialog" rel="mdtable_edit" title="编辑 {{text}}" width="640" height="480" btnValue="提交">编辑</a>
 	<hr>
 
 	<a iconCls="icon-edit" href="modules/metaform/mdtable/mdtable-view.html" trigger="single"
-		target="dialog" rel="mdtable_view" title="查看 {{text}}" width="640" height="480" btnValue="查看">查看</a>
+		target="dialog" rel="mdtable_view" title="查看 {{text}}" width="640" height="480" btnValue="确定">查看</a>
 	<hr>
 		
 	<a iconCls="icon-base icon-base-ban" trigger="single"

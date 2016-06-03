@@ -1,5 +1,7 @@
 package com.centit.metaform.service.impl;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -16,7 +18,9 @@ import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MdTableDao;
+import com.centit.metaform.dao.PendingMdTableDao;
 import com.centit.metaform.po.MdTable;
+import com.centit.metaform.po.PendingMdTable;
 import com.centit.metaform.service.MdTableManager;
 
 /**
@@ -47,6 +51,8 @@ public class MdTableManagerImpl
 		setBaseDao(this.mdTableDao);
 	}
 	
+	@Resource
+	private PendingMdTableDao pendingMdTableDao;
 /*
  	@PostConstruct
     public void init() {
@@ -62,6 +68,37 @@ public class MdTableManagerImpl
 			
 		return SysDaoOptUtils.listObjectsAsJson(baseDao, fields, MdTable.class,
     			filterMap, pageDesc);
+	}
+
+	@Override
+	public Serializable saveNewPendingMdTable(PendingMdTable pmt) {
+		return pendingMdTableDao.saveNewObject(pmt);
+	}
+
+	@Override
+	public void deletePendingMdTable(long tableId) {
+		pendingMdTableDao.deleteObjectById(tableId);
+	}
+
+	@Override
+	public PendingMdTable getPendingMdTable(long tableId) {
+		return pendingMdTableDao.getObjectById(tableId);
+	}
+
+	@Override
+	public void savePendingMdTable(PendingMdTable pmt) {
+		pendingMdTableDao.mergeObject(pmt);
+	}
+
+	@Override
+	public void publishMdTable(Long tableId) {
+		
+	}
+
+	@Override
+	public List<PendingMdTable> listDrafts(Map<String, Object> searchColumn,
+			PageDesc pageDesc) {
+		return pendingMdTableDao.listObjects(searchColumn, pageDesc);
 	}
 	
 }
