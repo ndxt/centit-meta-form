@@ -12,6 +12,8 @@ import javax.persistence.Table;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 
 /**
  * create by scaffold 2016-06-02 
@@ -38,6 +40,7 @@ public class MdColumn implements java.io.Serializable {
 	
 	@JoinColumn(name="TABLE_ID")
 	@ManyToOne
+	@JSONField(serialize=false)
 	private MdTable mdTable;
 	
 	/**
