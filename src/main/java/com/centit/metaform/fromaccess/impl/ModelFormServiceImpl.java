@@ -59,6 +59,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		field.setScale(0);
 		field.setMandatory(true);
 		field.setPropertyName("id");
+		field.mapToMetadata();
 		tableInfo.getColumns().add(field);
 		
 		field = new SimpleTableField();
@@ -66,6 +67,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		field.setColumnType("varchar2");
 		field.setPropertyName("userName");
 		field.setMaxLength(50);
+		field.mapToMetadata();
 		tableInfo.getColumns().add(field);
 		
 		field = new SimpleTableField();
@@ -74,9 +76,11 @@ public class ModelFormServiceImpl implements ModelFormService {
 		field.setMaxLength(20);
 		field.setPropertyName("userPhone");
 		field.setDefaultValue("'110'");
+		field.mapToMetadata();
 		tableInfo.getColumns().add(field);			
 		
 		tableInfo.getPkColumns().add("ID");
+		
 		rc.setTableinfo(tableInfo);
 		return rc;
 	}

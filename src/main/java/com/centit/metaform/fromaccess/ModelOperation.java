@@ -3,6 +3,7 @@ package com.centit.metaform.fromaccess;
 public class ModelOperation {
 	private String modelCode;
 	private String operation;
+	private String method;
 	private String label;
 	private String url;
 	
@@ -10,9 +11,10 @@ public class ModelOperation {
 		
 	}
 
-	public ModelOperation(String modelCode, String operation,String label){
+	public ModelOperation(String modelCode, String operation, String method,String label){
 		this.modelCode = modelCode;
 		this.operation = operation;
+		this.method = method;
 		this.label = label;
 	}
 	
@@ -46,6 +48,14 @@ public class ModelOperation {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 	
 }

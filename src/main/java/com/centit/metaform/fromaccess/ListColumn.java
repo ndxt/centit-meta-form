@@ -4,6 +4,7 @@ public class ListColumn {
 	private String name;
 	private String label;
 	private String url;
+	private Boolean primaryKey;
 	
 	public ListColumn(){
 		
@@ -35,6 +36,12 @@ public class ListColumn {
 	}
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	public Boolean getPrimaryKey() {
+		return primaryKey;
+	}
+	public void setPrimaryKey(Boolean primaryKey) {
+		this.primaryKey = primaryKey;
 	}
 	
 	

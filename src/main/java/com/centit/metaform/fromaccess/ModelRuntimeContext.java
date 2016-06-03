@@ -122,13 +122,14 @@ public class ModelRuntimeContext {
 		templateOptions.setPlaceholder("请输入完整的姓名。");
 		ff.setTemplateOptions(templateOptions);
 		lv.addFilter(ff);
-		
-		lv.addColumn(new ListColumn("id","编号"));
+		ListColumn id = new ListColumn("id","编号");
+		id.setPrimaryKey(true);
+		lv.addColumn(id);
 		lv.addColumn(new ListColumn("userName","用户姓名"));
 		lv.addColumn(new ListColumn("userPhone","电话"));
 		
-		lv.addOperation(new ModelOperation(modelCode,"view","查看"));
-		lv.addOperation(new ModelOperation(modelCode,"edit","编辑"));
+		lv.addOperation(new ModelOperation(modelCode,"view","get","查看"));
+		lv.addOperation(new ModelOperation(modelCode,"edit","get","编辑"));
 		return lv;
 	}
 

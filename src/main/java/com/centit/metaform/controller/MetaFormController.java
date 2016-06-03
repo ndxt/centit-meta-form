@@ -1,6 +1,7 @@
 package com.centit.metaform.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -23,6 +24,10 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.metaform.fromaccess.ModelFormService;
 import com.centit.metaform.fromaccess.ModelRuntimeContext;
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.database.metadata.TableField;
 
 @Controller
 @RequestMapping("/metaform/formaccess")
@@ -47,11 +52,24 @@ public class MetaFormController  extends BaseController{
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 	
-	@RequestMapping(value = "/view/{modelCode}",method = RequestMethod.GET)
-	public void view(@PathVariable String modelCode, @RequestBody String jsonStr, HttpServletRequest request, HttpServletResponse response) {
-    	JSONObject jo = JSON.parseObject(jsonStr);
-    	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+	@RequestMapping(value = "/get/{modelCode}",method = RequestMethod.GET)
+	public void view(@PathVariable String modelCode, HttpServletRequest request, HttpServletResponse response) {
     	
+    	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	Map<String,Object> jo = new HashMap<>();
+    	for(String pk: rc.getTableinfo().getPkColumns()){
+    		TableField pkp = rc.getTableinfo().findFieldByColumn(pk);
+    		Object pv = request.getParameter(pkp.getPropertyName());
+    		if("Date".equals(pkp.getJavaType())){
+    			jo.put(pkp.getPropertyName(), DatetimeOpt.castObjectToDate(pv));
+    		}else if("Long".equals(pkp.getJavaType())){
+    			jo.put(pkp.getPropertyName(), NumberBaseOpt.castObjectToLong(pv));
+    		}else if("Double".equals(pkp.getJavaType())){
+    			jo.put(pkp.getPropertyName(), NumberBaseOpt.castObjectToDouble(pv));
+    		}else{
+    			jo.put(pkp.getPropertyName(), StringBaseOpt.objectToString(pv));
+    		}
+    	}
 		ResponseData resData = new ResponseData();
 		resData.addResponseData("fields", rc.getFormFields());
 		resData.addResponseData("obj", formService.getObjectByProperties(rc, jo));
