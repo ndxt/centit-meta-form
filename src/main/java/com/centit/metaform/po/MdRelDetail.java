@@ -17,11 +17,11 @@ import org.hibernate.validator.constraints.NotBlank;
 */
 @Entity
 @Table(name = "F_MD_REL_DETIAL")
-public class MdRelDetial implements java.io.Serializable {
+public class MdRelDetail implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 	@EmbeddedId
-	private com.centit.metaform.po.MdRelDetialId cid;
+	private com.centit.metaform.po.MdRelDetiaild cid;
 
 
 	/**
@@ -34,10 +34,10 @@ public class MdRelDetial implements java.io.Serializable {
 
 	// Constructors
 	/** default constructor */
-	public MdRelDetial() {
+	public MdRelDetail() {
 	}
 	/** minimal constructor */
-	public MdRelDetial(com.centit.metaform.po.MdRelDetialId id 
+	public MdRelDetail(com.centit.metaform.po.MdRelDetiaild id 
 				
 		,String  childColumnName) {
 		this.cid = id; 
@@ -48,35 +48,35 @@ public class MdRelDetial implements java.io.Serializable {
 
 
 
-	public com.centit.metaform.po.MdRelDetialId getCid() {
+	public com.centit.metaform.po.MdRelDetiaild getCid() {
 		return this.cid;
 	}
 	
-	public void setCid(com.centit.metaform.po.MdRelDetialId id) {
+	public void setCid(com.centit.metaform.po.MdRelDetiaild id) {
 		this.cid = id;
 	}
   
 	public String getRelationId() {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.MdRelDetialId();
+			this.cid = new com.centit.metaform.po.MdRelDetiaild();
 		return this.cid.getRelationId();
 	}
 	
 	public void setRelationId(String relationId) {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.MdRelDetialId();
+			this.cid = new com.centit.metaform.po.MdRelDetiaild();
 		this.cid.setRelationId(relationId);
 	}
   
 	public String getParentColumnName() {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.MdRelDetialId();
+			this.cid = new com.centit.metaform.po.MdRelDetiaild();
 		return this.cid.getParentColumnName();
 	}
 	
 	public void setParentColumnName(String parentColumnName) {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.MdRelDetialId();
+			this.cid = new com.centit.metaform.po.MdRelDetiaild();
 		this.cid.setParentColumnName(parentColumnName);
 	}
 	
@@ -94,7 +94,7 @@ public class MdRelDetial implements java.io.Serializable {
 
 
 
-	public MdRelDetial copy(MdRelDetial other){
+	public MdRelDetail copy(MdRelDetail other){
   
 		this.setRelationId(other.getRelationId());  
 		this.setParentColumnName(other.getParentColumnName());
@@ -104,7 +104,7 @@ public class MdRelDetial implements java.io.Serializable {
 		return this;
 	}
 	
-	public MdRelDetial copyNotNullProperty(MdRelDetial other){
+	public MdRelDetail copyNotNullProperty(MdRelDetail other){
   
 	if( other.getRelationId() != null)
 		this.setRelationId(other.getRelationId());  
@@ -117,7 +117,7 @@ public class MdRelDetial implements java.io.Serializable {
 		return this;
 	}
 
-	public MdRelDetial clearProperties(){
+	public MdRelDetail clearProperties(){
   
 		this.childColumnName= null;
 

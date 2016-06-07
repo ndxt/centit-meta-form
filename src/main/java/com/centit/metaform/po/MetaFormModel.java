@@ -12,11 +12,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -41,8 +43,9 @@ public class MetaFormModel implements java.io.Serializable {
 	 */
 	@Id
 	@Column(name = "MODEL_CODE")
-	@GeneratedValue(generator = "assignedGenerator")
-	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
+	@GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
+	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=200000001,
+	pkColumnName="SEQ_NAME",pkColumnValue="pendingtableId",allocationSize=1,valueColumnName="SEQ_VALUE")
 	private String modelCode;
 
 	/**

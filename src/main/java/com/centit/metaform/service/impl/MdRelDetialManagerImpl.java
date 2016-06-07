@@ -16,7 +16,7 @@ import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MdRelDetialDao;
-import com.centit.metaform.po.MdRelDetial;
+import com.centit.metaform.po.MdRelDetail;
 import com.centit.metaform.service.MdRelDetialManager;
 
 /**
@@ -27,7 +27,7 @@ import com.centit.metaform.service.MdRelDetialManager;
 */
 @Service
 public class MdRelDetialManagerImpl 
-		extends BaseEntityManagerImpl<MdRelDetial,com.centit.metaform.po.MdRelDetialId,MdRelDetialDao>
+		extends BaseEntityManagerImpl<MdRelDetail,com.centit.metaform.po.MdRelDetiaild,MdRelDetialDao>
 	implements MdRelDetialManager{
 
 	public static final Log log = LogFactory.getLog(MdRelDetialManager.class);
@@ -56,7 +56,7 @@ public class MdRelDetialManagerImpl
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 			
-		return SysDaoOptUtils.listObjectsAsJson(baseDao, fields, MdRelDetial.class,
+		return SysDaoOptUtils.listObjectsAsJson(baseDao, fields, MdRelDetail.class,
     			filterMap, pageDesc);
 	}
 	

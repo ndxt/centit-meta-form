@@ -9,7 +9,7 @@ define(function(require) {
     var MdTableView = require('./mdtable.view');
     var MdTableRemove = require('./mdtable.remove');
     var MdTablePublish = require('./mdtable.publish');
-
+    
     // 业务信息
     var MdTable = Page.extend(function() {
     	
@@ -19,6 +19,7 @@ define(function(require) {
           new MdTableView('mdtable_view'),
           new MdTableRemove('mdtable_remove'),
           new MdTablePublish('mdtable_publish')
+         
     	]);
     	
     	// @override

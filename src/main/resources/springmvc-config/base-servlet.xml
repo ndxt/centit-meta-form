@@ -13,24 +13,11 @@
 			    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
     
 	<mvc:annotation-driven >
-		<mvc:message-converters>  
-			<!-- class="
-			com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter
-			org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" -->
-	         <bean 
-	             class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-	             <property name="objectMapper">  
-	                 <bean class="com.fasterxml.jackson.databind.ObjectMapper">  
-	                     <property name="dateFormat">  
-	                     	<!-- <bean class="java.text.SimpleDateFormat">   -->
-	                         <bean class="com.centit.framework.core.controller.SmartDateFormat">  
-	                             <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />  
-	                         </bean>  
-	                     </property>  
-	                 </bean>  
-	             </property>  
-	         </bean>  
-	     </mvc:message-converters>  
+		<mvc:message-converters register-defaults="true">
+			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes" value="application/json"/>
+			</bean>
+		</mvc:message-converters>  
     </mvc:annotation-driven>
 
     <aop:aspectj-autoproxy />

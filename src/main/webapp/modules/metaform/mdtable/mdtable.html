@@ -1,5 +1,5 @@
 
-<table url="service/metaform/mdtable/draft"
+<table url="service/metaform/mdtable/draft" id="mdtable"
 	idField="tableId"
 	toolbar=".temp-toolbar" layoutH="0">
     <thead frozen="true">
@@ -21,12 +21,12 @@
 </table>
 
 <div class="temp-toolbar">
-	<a iconCls="icon-add" href="modules/metaform/mdtable/mdtable-info.html" trigger="none"
-		target="dialog" rel="mdtable_add" title="新增表元数据表" width="640" height="480" btnValue="提交">新增</a>
+	<a iconCls="icon-add" href="/centit-meta-form/modules/metaform/mdtable/mdtable-info.html" trigger="none"
+		target="tab" rel="mdtable_add" title="新增表元数据表" width="640" height="480" btnValue="提交">新增</a>
 	<hr>
 
-	<a iconCls="icon-edit" href="modules/metaform/mdtable/mdtable-info.html" trigger="single"
-		target="dialog" rel="mdtable_edit" title="编辑 {{text}}" width="640" height="480" btnValue="提交">编辑</a>
+	<a iconCls="icon-edit" href="/centit-meta-form/modules/metaform/mdtable/mdtable-info.html" trigger="single"
+		target="tab" rel="mdtable_edit" title="编辑 {{text}}" width="640" height="480" btnValue="提交">编辑</a>
 	<hr>
 
 	<a iconCls="icon-edit" href="modules/metaform/mdtable/mdtable-view.html" trigger="single"
@@ -50,5 +50,4 @@
 			window.MdTable.load(panel);
 		});
 	};
-
 </script>

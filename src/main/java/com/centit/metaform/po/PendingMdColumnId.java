@@ -3,8 +3,13 @@ package com.centit.metaform.po;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * MdColumnId  entity.
@@ -20,9 +25,10 @@ public class PendingMdColumnId implements java.io.Serializable {
 	/**
 	 * 表ID 表单主键 
 	 */
-	@Column(name = "TABLE_ID")
-	@NotBlank(message = "字段不能为空")
-	private Long tableId;
+	@JoinColumn(name = "TABLE_ID",nullable=false)
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JSONField(serialize=false)
+	private PendingMdTable mdTable;
 
 	/**
 	 * 字段代码 null 
@@ -36,19 +42,25 @@ public class PendingMdColumnId implements java.io.Serializable {
 	public PendingMdColumnId() {
 	}
 	/** full constructor */
-	public PendingMdColumnId(Long tableId, String columnName) {
-
-		this.tableId = tableId;
+	public PendingMdColumnId(PendingMdTable mdTable, String columnName) {
+		this.setMdTable(mdTable);
 		this.columnName = columnName;	
 	}
 
-  
+	public PendingMdTable getMdTable() {
+		if(null==this.mdTable)
+			this.mdTable=new PendingMdTable();
+		return mdTable;
+	}
+	public void setMdTable(PendingMdTable mdTable) {
+		this.mdTable = mdTable;
+	}
 	public Long getTableId() {
-		return this.tableId;
+		return this.getMdTable().getTableId();
 	}
 
 	public void setTableId(Long tableId) {
-		this.tableId = tableId;
+		this.getMdTable().setTableId(tableId);
 	}
   
 	public String getColumnName() {

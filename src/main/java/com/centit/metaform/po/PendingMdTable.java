@@ -1,6 +1,8 @@
 package com.centit.metaform.po;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -106,8 +108,12 @@ public class PendingMdTable implements java.io.Serializable {
 	private String  recorder;
 
 	
-	@Transient
-	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	//@JoinColumn(name="TABLE_ID")
+	/*@JoinColumns({
+	       @JoinColumn(name="wfcode", referencedColumnName="wfcode"),
+	       @JoinColumn(name="version", referencedColumnName="version")
+	    })*/
 	private Set<PendingMdColumn> mdColumns;
 	
 	@Transient
@@ -115,8 +121,6 @@ public class PendingMdTable implements java.io.Serializable {
 	private Set<PendingMdRelation> mdRelations;
 	
 	
-	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<MetaFormModel> metaFormModels;
 	
 	
 	// Constructors
@@ -139,7 +143,7 @@ public class PendingMdTable implements java.io.Serializable {
 	}
 
 	
-/** full constructor */
+	/** full constructor */
 	public PendingMdTable(
 	 Long tableId		
 	,String  databaseCode,String  tableName,String  tableLabelName,String  tableType,String  tableState,String  tableComment,String  isInWorkflow,Date  lastModifyDate,String  recorder) {
@@ -157,6 +161,35 @@ public class PendingMdTable implements java.io.Serializable {
 		this.lastModifyDate= lastModifyDate;
 		this.recorder= recorder;		
 	}
+	
+	
+	public Set<PendingMdColumn> getMdColumns() {
+		if(null==this.mdColumns)
+			this.mdColumns=new HashSet<PendingMdColumn>();
+		return mdColumns;
+	}
+	public void setMdColumns(Set<PendingMdColumn> mdColumns1) {
+		this.getMdColumns().clear();
+		Iterator<PendingMdColumn> itr=mdColumns1.iterator();
+		while(itr.hasNext()){
+			itr.next().getCid().setMdTable(this);
+		}
+		this.getMdColumns().addAll(mdColumns1);
+	}
+	/*public void setMdColumns(List<PendingMdColumn> mdColumns) {
+		if(null==this.mdColumns)
+			this.mdColumns=new HashSet<PendingMdColumn>();
+		this.mdColumns.clear();
+		this.mdColumns.addAll(mdColumns);
+	}*/
+	public Set<PendingMdRelation> getMdRelations() {
+		return mdRelations;
+	}
+	public void setMdRelations(Set<PendingMdRelation> mdRelations) {
+		this.mdRelations = mdRelations;
+	}
+	
+	
 	
 	public DatabaseInfo getDatabaseInfo(){
 		if(null==this.databaseInfo)
@@ -255,7 +288,7 @@ public class PendingMdTable implements java.io.Serializable {
 
 
 	public PendingMdTable copy(PendingMdTable other){
-  
+		this.setMdColumns(other.getMdColumns());
 		this.setTableId(other.getTableId());
 		this.setDatabaseInfo(other.getDatabaseInfo());
 		this.tableName= other.getTableName();  
@@ -271,9 +304,10 @@ public class PendingMdTable implements java.io.Serializable {
 	
 	public PendingMdTable copyNotNullProperty(PendingMdTable other){
   
-	if( other.getTableId() != null)
-		this.setTableId(other.getTableId());
-  
+		if( other.getTableId() != null)
+			this.setTableId(other.getTableId());
+		if(other.getMdColumns()!=null)
+			this.setMdColumns(other.getMdColumns());
 		if( other.getDatabaseCode() != null)
 			this.databaseInfo=other.getDatabaseInfo(); 
 		if( other.getTableName() != null)
@@ -292,7 +326,6 @@ public class PendingMdTable implements java.io.Serializable {
 			this.lastModifyDate= other.getLastModifyDate();  
 		if( other.getRecorder() != null)
 			this.recorder= other.getRecorder();		
-
 		return this;
 	}
 

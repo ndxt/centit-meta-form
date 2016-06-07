@@ -5,7 +5,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.core.service.BaseEntityManager;
-import com.centit.metaform.po.MdRelDetial;
+import com.centit.metaform.po.MdRelDetail;
 
 /**
  * MdRelDetial  Service.
@@ -14,7 +14,7 @@ import com.centit.metaform.po.MdRelDetial;
  * 表关联细节表null   
 */
 
-public interface MdRelDetialManager extends BaseEntityManager<MdRelDetial,com.centit.metaform.po.MdRelDetialId> 
+public interface MdRelDetialManager extends BaseEntityManager<MdRelDetail,com.centit.metaform.po.MdRelDetiaild> 
 {
 	
 	public JSONArray listMdRelDetialsAsJson(

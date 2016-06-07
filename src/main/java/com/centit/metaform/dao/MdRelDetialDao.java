@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
-import com.centit.metaform.po.MdRelDetial;
+import com.centit.metaform.po.MdRelDetail;
 
 
 
@@ -21,7 +21,7 @@ import com.centit.metaform.po.MdRelDetial;
 */
 
 @Repository
-public class MdRelDetialDao extends BaseDaoImpl<MdRelDetial,com.centit.metaform.po.MdRelDetialId>
+public class MdRelDetialDao extends BaseDaoImpl<MdRelDetail,com.centit.metaform.po.MdRelDetiaild>
 	{
 
 	public static final Log log = LogFactory.getLog(MdRelDetialDao.class);

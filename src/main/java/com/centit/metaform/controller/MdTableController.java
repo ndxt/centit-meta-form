@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -132,7 +133,7 @@ public class MdTableController extends BaseController{
      * @return
      */
     @RequestMapping(value="/draft",method = {RequestMethod.POST})
-    public void createMdTable(@Valid PendingMdTable mdTable, HttpServletResponse response) {
+    public void createMdTable(@RequestBody @Valid PendingMdTable mdTable, HttpServletResponse response) {
     	Serializable pk = mdTableMag.saveNewPendingMdTable(mdTable);
         JsonResultUtils.writeSingleDataJson(pk,response);
     }
@@ -172,14 +173,14 @@ public class MdTableController extends BaseController{
      */
     @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.PUT})
     public void updateMdTable(@PathVariable Long tableId, 
-    	@Valid PendingMdTable mdTable, HttpServletResponse response) {
+    	@RequestBody @Valid PendingMdTable mdTable, HttpServletResponse response) {
     	
     	
     	PendingMdTable dbMdTable  =     			
     			mdTableMag.getPendingMdTable(tableId);
         
         if (null != mdTable) {
-        	dbMdTable .copy(mdTable);
+        	dbMdTable .copyNotNullProperty(mdTable);
         	mdTableMag.savePendingMdTable(dbMdTable);
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);

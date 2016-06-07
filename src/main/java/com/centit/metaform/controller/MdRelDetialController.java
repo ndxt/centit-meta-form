@@ -20,7 +20,7 @@ import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.metaform.po.MdRelDetial;
+import com.centit.metaform.po.MdRelDetail;
 import com.centit.metaform.service.MdRelDetialManager;
 
 
@@ -84,8 +84,8 @@ public class MdRelDetialController extends BaseController{
     @RequestMapping(value = "/{relationId}/{parentColumnName}", method = {RequestMethod.GET})
     public void getMdRelDetial(@PathVariable String relationId,@PathVariable String parentColumnName, HttpServletResponse response) {
     	
-    	MdRelDetial mdRelDetial =     			
-    			mdRelDetialMag.getObjectById(new com.centit.metaform.po.MdRelDetialId(  relationId, parentColumnName) );
+    	MdRelDetail mdRelDetial =     			
+    			mdRelDetialMag.getObjectById(new com.centit.metaform.po.MdRelDetiaild(  relationId, parentColumnName) );
     	
         JsonResultUtils.writeSingleDataJson(mdRelDetial, response);
     }
@@ -93,11 +93,11 @@ public class MdRelDetialController extends BaseController{
     /**
      * 新增 表关联细节表
      *
-     * @param mdRelDetial  {@link MdRelDetial}
+     * @param mdRelDetial  {@link MdRelDetail}
      * @return
      */
     @RequestMapping(method = {RequestMethod.POST})
-    public void createMdRelDetial(@Valid MdRelDetial mdRelDetial, HttpServletResponse response) {
+    public void createMdRelDetial(@Valid MdRelDetail mdRelDetial, HttpServletResponse response) {
     	Serializable pk = mdRelDetialMag.saveNewObject(mdRelDetial);
         JsonResultUtils.writeSingleDataJson(pk,response);
     }
@@ -111,7 +111,7 @@ public class MdRelDetialController extends BaseController{
     @RequestMapping(value = "/{relationId}/{parentColumnName}", method = {RequestMethod.DELETE})
     public void deleteMdRelDetial(@PathVariable String relationId,@PathVariable String parentColumnName, HttpServletResponse response) {
     	
-    	mdRelDetialMag.deleteObjectById(new com.centit.metaform.po.MdRelDetialId(  relationId, parentColumnName) );
+    	mdRelDetialMag.deleteObjectById(new com.centit.metaform.po.MdRelDetiaild(  relationId, parentColumnName) );
     	
         JsonResultUtils.writeBlankJson(response);
     } 
@@ -121,16 +121,16 @@ public class MdRelDetialController extends BaseController{
     
 	 * @param relationId  relation_ID
 	 * @param parentColumnName  parent_column_Name
-	 * @param mdRelDetial  {@link MdRelDetial}
+	 * @param mdRelDetial  {@link MdRelDetail}
      * @param response    {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{relationId}/{parentColumnName}", method = {RequestMethod.PUT})
     public void updateMdRelDetial(@PathVariable String relationId,@PathVariable String parentColumnName, 
-    	@Valid MdRelDetial mdRelDetial, HttpServletResponse response) {
+    	@Valid MdRelDetail mdRelDetial, HttpServletResponse response) {
     	
     	
-    	MdRelDetial dbMdRelDetial =     			
-    			mdRelDetialMag.getObjectById(new com.centit.metaform.po.MdRelDetialId(  relationId, parentColumnName) );
+    	MdRelDetail dbMdRelDetial =     			
+    			mdRelDetialMag.getObjectById(new com.centit.metaform.po.MdRelDetiaild(  relationId, parentColumnName) );
     	
         
 
