@@ -15,18 +15,18 @@ import com.centit.support.database.jsonmaptable.OracleJsonObjectDao;
 import com.centit.support.database.jsonmaptable.SqlSvrJsonObjectDao;
 import com.centit.support.database.metadata.TableInfo;
 
-public class ModelRuntimeContext {
+public class JdbcModelRuntimeContext {
 	private String  modelCode;
 	private DBConnect conn;
 	private TableInfo tableinfo;
 	private DataSourceDescription dataSource;
 	private List<FormField> formFields; 
 	
-	public ModelRuntimeContext(){
+	public JdbcModelRuntimeContext(){
 		
 	}
 	
-	public ModelRuntimeContext(String  modelCode){
+	public JdbcModelRuntimeContext(String  modelCode){
 		this.modelCode = modelCode;
 	}
 	

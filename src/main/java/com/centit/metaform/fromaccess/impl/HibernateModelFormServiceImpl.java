@@ -24,7 +24,7 @@ import com.centit.metaform.fromaccess.FieldTemplateOptions;
 import com.centit.metaform.fromaccess.FieldValidator;
 import com.centit.metaform.fromaccess.FormField;
 import com.centit.metaform.fromaccess.ModelFormService;
-import com.centit.metaform.fromaccess.ModelRuntimeContext;
+import com.centit.metaform.fromaccess.JdbcModelRuntimeContext;
 import com.centit.metaform.po.MdColumn;
 import com.centit.metaform.po.MdTable;
 import com.centit.metaform.po.MetaFormModel;
@@ -37,8 +37,8 @@ import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.SimpleTableInfo;
 
-@Service
-public class ModelFormServiceImpl implements ModelFormService {
+@Service(value="hibernateModelFormService")
+public class HibernateModelFormServiceImpl implements ModelFormService {
 
     @Resource(name = "databaseInfoDao") 
     private DatabaseInfoDao databaseInfoDao;
@@ -56,9 +56,9 @@ public class ModelFormServiceImpl implements ModelFormService {
     private ModelDataFieldDao formFieldDao;
     
 	@Override
-	public ModelRuntimeContext createRuntimeContext(String modelCode) {
+	public JdbcModelRuntimeContext createRuntimeContext(String modelCode) {
 		
-		ModelRuntimeContext rc = new ModelRuntimeContext(modelCode);		
+		JdbcModelRuntimeContext rc = new JdbcModelRuntimeContext(modelCode);		
 		DataSourceDescription dbc = new DataSourceDescription();	  
 		dbc.setConnUrl("jdbc:oracle:thin:@192.168.131.81:1521:orcl");
 		dbc.setUsername("metaform");
@@ -131,9 +131,9 @@ public class ModelFormServiceImpl implements ModelFormService {
 	}
 	
 	@Transactional(readOnly=true,propagation=Propagation.REQUIRED)
-	public ModelRuntimeContext createRuntimeContextFromDB(String modelCode) {
+	public JdbcModelRuntimeContext createRuntimeContextFromDB(String modelCode) {
 		
-		ModelRuntimeContext rc = new ModelRuntimeContext(modelCode);		
+		JdbcModelRuntimeContext rc = new JdbcModelRuntimeContext(modelCode);		
 		
 		MetaFormModel mfm = formModelDao.getObjectById(modelCode);
 		MdTable mtab = mfm.getMdTable();
@@ -183,7 +183,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 	}
 
 	@Override
-	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters) {
+	public JSONArray listObjectsByFilter(JdbcModelRuntimeContext rc, Map<String, Object> filters) {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {
 			return dao.listObjectsByProperties(filters);
@@ -193,7 +193,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 	}
 	
 	@Override
-	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters, PageDesc pageDesc) {
+	public JSONArray listObjectsByFilter(JdbcModelRuntimeContext rc, Map<String, Object> filters, PageDesc pageDesc) {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {
 			JSONArray ja = dao.listObjectsByProperties(filters,
@@ -210,7 +210,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 	
 	
 	@Override
-	public JSONObject getObjectByProperties(ModelRuntimeContext rc,Map<String, Object> properties){
+	public JSONObject getObjectByProperties(JdbcModelRuntimeContext rc,Map<String, Object> properties){
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {
 			return dao.getObjectByProperties(properties);
@@ -220,19 +220,19 @@ public class ModelFormServiceImpl implements ModelFormService {
 	}
 
 	@Override
-	public void saveNewObject(ModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
+	public void saveNewObject(JdbcModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		dao.saveNewObject(object);
 	}
 
 	@Override
-	public void updateObject(ModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
+	public void updateObject(JdbcModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		dao.updateObject(object);
 	}
 
 	@Override
-	public void deleteObjectById(ModelRuntimeContext rc, Map<String, Object> keyValue) throws SQLException {
+	public void deleteObjectById(JdbcModelRuntimeContext rc, Map<String, Object> keyValue) throws SQLException {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		dao.deleteObjectById(keyValue);
 	}
