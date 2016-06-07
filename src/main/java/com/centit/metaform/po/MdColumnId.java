@@ -2,6 +2,8 @@ package com.centit.metaform.po;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -19,9 +21,10 @@ public class MdColumnId implements java.io.Serializable {
 	/**
 	 * 表ID 表单主键 
 	 */
-	@Column(name = "TABLE_ID")
+	@JoinColumn(name = "TABLE_ID")
 	@NotBlank(message = "字段不能为空")
-	private Long tableId;
+	@ManyToOne
+	private MdTable mdTable;
 
 	/**
 	 * 字段代码 null 
@@ -30,24 +33,36 @@ public class MdColumnId implements java.io.Serializable {
 	@NotBlank(message = "字段不能为空")
 	private String columnName;
 
+	
+	
+	
+	
 	// Constructors
 	/** default constructor */
 	public MdColumnId() {
 	}
 	/** full constructor */
-	public MdColumnId(Long tableId, String columnName) {
+	public MdColumnId(MdTable mdTable1, String columnName) {
 
-		this.tableId = tableId;
+		this.mdTable = mdTable1;
 		this.columnName = columnName;	
 	}
 
-  
+	
+	public MdTable getMdTable() {
+		if(null==mdTable)
+			mdTable=new MdTable();
+		return mdTable;
+	}
+	public void setMdTable(MdTable mdTable) {
+		this.mdTable = mdTable;
+	}
 	public Long getTableId() {
-		return this.tableId;
+		return this.getMdTable().getTableId();
 	}
 
 	public void setTableId(Long tableId) {
-		this.tableId = tableId;
+		this.getMdTable().setTableId(tableId);
 	}
   
 	public String getColumnName() {

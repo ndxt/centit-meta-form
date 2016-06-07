@@ -122,7 +122,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 	
-	@Transient
+	
 	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<MdColumn> mdColumns;
 	
@@ -279,8 +279,13 @@ public class MdTable implements TableInfo,java.io.Serializable {
 		return this.mdColumns;
 	}
 
-	public void setMdColumns(Set<MdColumn> mdColumns) {
-		this.mdColumns = mdColumns;
+	public void setMdColumns(Set<MdColumn> mdColumns1) {
+		this.getMdColumns().clear();
+		Iterator<MdColumn> itr=mdColumns1.iterator();
+		while(itr.hasNext()){
+			itr.next().getCid().setMdTable(this);
+		}
+		this.getMdColumns().addAll(mdColumns1);
 	}	
 
 	public void addMdColumn(MdColumn mdColumn ){
@@ -510,6 +515,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 
 
 	public MdTable copy(MdTable other){
+		this.mdColumns=other.getMdColumns();
 		this.setTableId(other.getTableId());
 		this.setDatabaseCode(other.getDatabaseCode());
 		this.tableName= other.getTableName();  
@@ -529,9 +535,10 @@ public class MdTable implements TableInfo,java.io.Serializable {
 	
 	public MdTable copyNotNullProperty(MdTable other){
   
-	if( other.getTableId() != null)
-		this.setTableId(other.getTableId());
-  
+		if(null!=other.getMdColumns())
+			this.setMdColumns(other.getMdColumns());
+		if( other.getTableId() != null)
+			this.setTableId(other.getTableId());
 		if( other.getDatabaseCode() != null)
 			this.setDatabaseCode(other.getDatabaseCode());
 		if( other.getTableName() != null)
@@ -552,16 +559,16 @@ public class MdTable implements TableInfo,java.io.Serializable {
 			this.recorder= other.getRecorder();		
 	
 		//this.mdColumns = other.getMdColumns();
-        replaceMdColumns(other.getMdColumns());
+		//replaceMdColumns(other.getMdColumns());
 			
 		//this.mdRelations = other.getMdRelations();
-        replaceMdRelations(other.getMdRelations());
+        //replaceMdRelations(other.getMdRelations());
 			
 		//this.mdRelations = other.getMdRelations();
-        replaceMdRelations(other.getMdRelations());
+        //replaceMdRelations(other.getMdRelations());
 			
 		//this.metaFormModels = other.getMetaFormModels();
-        replaceMetaFormModels(other.getMetaFormModels());
+        //replaceMetaFormModels(other.getMetaFormModels());
 		
 		return this;
 	}

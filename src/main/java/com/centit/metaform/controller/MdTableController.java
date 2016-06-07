@@ -24,6 +24,7 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.metaform.po.MdTable;
 import com.centit.metaform.po.PendingMdTable;
+import com.centit.metaform.service.MdChangLogManager;
 import com.centit.metaform.service.MdTableManager;
 
 
@@ -52,6 +53,41 @@ public class MdTableController extends BaseController{
 		//this.setBaseEntityManager(mdTableMag);
 	}*/
 
+	@Resource
+	private MdChangLogManager mdChangLogMag;	
+	/*public void setMdChangLogMag(MdChangLogManager basemgr)
+	{
+		mdChangLogMag = basemgr;
+		//this.setBaseEntityManager(mdChangLogMag);
+	}*/
+
+    /**
+     * 查询所有   元数据更改记录  列表
+     *
+     * @param field    json中只保存需要的属性名
+     * @param request  {@link HttpServletRequest}
+     * @param response {@link HttpServletResponse}
+     * @return {data:[]}
+     */
+    @RequestMapping(value="/log",method = RequestMethod.GET)
+    public void loglist(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> searchColumn = convertSearchColumn(request);        
+        
+        JSONArray listObjects = mdChangLogMag.listMdChangLogsAsJson(field,searchColumn, pageDesc);
+
+        if (null == pageDesc) {
+            JsonResultUtils.writeSingleDataJson(listObjects, response);
+            return;
+        }
+        
+        ResponseData resData = new ResponseData();
+        resData.addResponseData(OBJLIST, listObjects);
+        resData.addResponseData(PAGE_DESC, pageDesc);
+
+        JsonResultUtils.writeResponseDataAsJson(resData, response);
+    }
+	
+	
     /**
      * 查询所有   表元数据表  列表
      *

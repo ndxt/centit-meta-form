@@ -176,12 +176,6 @@ public class PendingMdTable implements java.io.Serializable {
 		}
 		this.getMdColumns().addAll(mdColumns1);
 	}
-	/*public void setMdColumns(List<PendingMdColumn> mdColumns) {
-		if(null==this.mdColumns)
-			this.mdColumns=new HashSet<PendingMdColumn>();
-		this.mdColumns.clear();
-		this.mdColumns.addAll(mdColumns);
-	}*/
 	public Set<PendingMdRelation> getMdRelations() {
 		return mdRelations;
 	}
