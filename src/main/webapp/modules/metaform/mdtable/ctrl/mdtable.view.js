@@ -10,7 +10,10 @@ define(function(require) {
 		// @override
 		this.load = function(panel, data) {
 			var form = panel.find('form');
-			
+			var mdtable_columns=panel.find("#mdtable_columns_view");
+			mdtable_columns.cdatagrid({
+				controller:_self
+			})
 			Core.ajax(Config.ContextPath+'service/metaform/mdtable/draft/'+data.tableId, {
 				type: 'json',
 				method: 'get' 
@@ -20,6 +23,7 @@ define(function(require) {
 				form.form('load', data)
 					.form('disableValidation')
 					.form('focus');
+				mdtable_columns.datagrid('loadData',data.mdColumns);
 			});
 		};
 	});

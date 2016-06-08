@@ -1,67 +1,136 @@
 
-<form class="centit form" novalidate="true">
+<div class="easyui-tabs" style="width:100%;">
+	<div title="1.表元详细信息">
+	     <form class="centit form" novalidate="true" style="width:98%;">
 
-  	
-       	<div class="field required">
-       		<label>表ID</label>
-       		<input type="text" class="easyui-textbox" name="tableId"
-				readonly="readonly" 
-			/>
-		</div>
-       	
-   		
-   		<div class="field ">
-       		<label>所属数据库ID</label>
-       		<input type="text" class="easyui-textbox"
-       		 name="databaseCode" readonly="readonly" />
-		</div>
-    	
-   		<div class="field required">
-       		<label>表代码</label>
-       		<input type="text" class="easyui-textbox"
-       		 name="tableName" readonly="readonly" />
-		</div>
-    	
-   		<div class="field required">
-       		<label>表名称</label>
-       		<input type="text" class="easyui-textbox"
-       		 name="tableLabelName" readonly="readonly" />
-		</div>
-    	
-   		<div class="field required">
-       		<label>类别</label>
-       		<input type="text" class="easyui-textbox"
-       		 name="tableType" readonly="readonly" />
-		</div>
-    	
-   		<div class="field required">
-       		<label>状态</label>
-       		<input type="text" class="easyui-textbox"
-       		 name="tableState" readonly="readonly" />
-		</div>
-    	
-   		<div class="field ">
-       		<label>描述</label>
-       		<input type="text" class="easyui-textbox"
-       		 name="tableComment" readonly="readonly" />
-		</div>
-    	
-   		<div class="field required">
-       		<label>是否是流程中的业务表</label>
-       		<input type="text" class="easyui-textbox"
-       		 name="isInWorkflow" readonly="readonly" />
-		</div>
-    	
-   		<div class="field ">
-       		<label>更改时间</label>
-       		<input type="text" class="easyui-textbox"
-       		 name="lastModifyDate" readonly="readonly" />
-		</div>
-    	
-   		<div class="field ">
-       		<label>更改人员</label>
-       		<input type="text" class="easyui-textbox"
-       		 name="recorder" readonly="readonly" />
-		</div>
-    	
-</form>
+		      <div class="fields three"> 	
+		   		<div class="field ">
+		       		<label>所属数据库ID</label>
+		       		<input class="easyui-combobox" name="databaseCode" readonly="readonly"
+						url="service/sys/databaseinfo?pageNo=1&pageSize=100" method="get"
+						data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
+				</div>
+		   		<div class="field required">
+		       		<label>表代码</label>
+		       		<input type="text" class="easyui-textbox" readonly="readonly"
+		       		name="tableName" required/>
+				</div>
+				
+				<div class="field required">
+		       		<label>表名称</label>
+		       		<input type="text" class="easyui-textbox" readonly="readonly"
+		       		name="tableLabelName" required/>
+				</div>
+		    </div>
+		    <div class="fields three">	
+		    	
+		   		<div class="field required">
+		       		<label>类别</label>
+		       		<input type="text" class="easyui-textbox" readonly="readonly"
+		       		name="tableType" required/>
+				</div>
+		    	
+		   		<div class="field required">
+		       		<label>状态</label>
+		       		<input type="text" class="easyui-textbox" readonly="readonly"
+		       		name="tableState" required/>
+				</div>
+				<div class="field ">
+		       		<label>更改人员</label>
+		       		<input type="text" class="easyui-textbox" readonly="readonly"
+		       		name="recorder" />
+				</div>
+		    </div>	
+		    <div class="fields three">
+		   		
+		    	
+		   		<div class="field required">
+		       		<label>是否是流程中的业务表</label>
+		       		<input type="text" class="easyui-textbox" readonly="readonly"
+		       		name="isInWorkflow" required/>
+				</div>
+		    	
+		   		<div class="field ">
+		       		<label>更改时间</label>
+		       		<input type="text" class="easyui-datebox" readonly="readonly"
+		       		name="lastModifyDate" />
+				</div>
+				<div class="field ">
+		       		<label>描述</label>
+		       		<input type="text" class="easyui-textbox" readonly="readonly"
+		       		name="tableComment" />
+			</div>
+		    </div>	
+		    
+		</form>
+
+		<table title="表字段" idField="tableId" id="mdtable_columns_view" 
+		style="height:300px;width:98%;">
+		    <thead data-options="frozen:true">
+		        <tr>
+		        	<th data-options="field:'tableId'" hidden="true">表ID</th>
+					<th data-options="field:'columnName'">字段代码</th> 
+		       		<th data-options="field:'fieldLabelName'">字段名称</th>
+		       		<th data-options="field:'columnOrder'">显示次序</th>
+		       		<th data-options="field:'columnType'">字段类型</th>
+		       		<th data-options="field:'maxLength'">字段长度</th>
+		       		<th data-options="field:'scale',editor:{type:'textbox',options:{}}">字段精度</th>
+		       		<th data-options="field:'accessType',editor:{type:'textbox',options:{}}">字段类别</th>
+		       		<th data-options="field:'mandatory',
+						formatter:function(value, rowData, rowIndex){
+						  	if(value=='')return '否';else
+						  	if(value=='T')return '是';else
+						  	if(value=='F')return '否';
+						  }
+						,editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',
+							data:[
+							{value:'T',label:'是'},
+							{value:'F',label:'否'}]}}">是否必填</th>
+		       		<th data-options="field:'primarykey',
+						formatter:function(value, rowData, rowIndex){
+						  	if(value=='')return '否';else
+						  	if(value=='T')return '是';else
+						  	if(value=='F')return '否';
+						  }
+						,editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',
+							data:[
+							{value:'T',label:'是'},
+							{value:'F',label:'否'}]}}">是否为主键</th>
+		       		<th data-options="field:'columnState'">状态</th>
+		       		<th data-options="field:'referenceType',
+					formatter:function(value, rowData, rowIndex){
+					  	if(value==undefined)return '无';else
+					  	if(value=='0')return '无';else
+					  	if(value=='1')return '数据字典';else
+					  	if(value=='2')return 'JSON表达式';else
+					  	if(value=='3')return 'sql语句';else
+					  	if(value=='Y')return '年份';else
+					  	if(value=='M')return '月份';
+					  }
+					,editor:{ type:'combobox',
+					  options:{valueField:'value',textField:'label',
+						data:[
+						{value:'0',label:'无'},
+						{value:'1',label:'数据字典 '},
+						{value:'2',label:'JSON表达式 '},
+						{value:'3',label:'sql语句'},
+						{value:'Y',label:'年份'},
+						{value:'M',label:'月份'}]}}">引用类型</th>
+		       		<th data-options="field:'referenceData',editor:{type:'textbox',options:{}}">引用数据</th>
+		       		<th data-options="field:'validateRegex',editor:{type:'textbox',options:{}}">约束表达式</th>
+		       		<th data-options="field:'validateInfo',editor:{type:'textbox',options:{}}">约束提示</th>
+		       		<th data-options="field:'defaultValue',editor:{type:'textbox',options:{}}">默认值</th>
+		       		<th data-options="field:'columnComment',editor:{type:'textbox',options:{}}">字段描述</th>
+		       		
+		        </tr>
+		    </thead>
+		</table>
+		
+		
+		
+	</div>
+	
+</div>
+

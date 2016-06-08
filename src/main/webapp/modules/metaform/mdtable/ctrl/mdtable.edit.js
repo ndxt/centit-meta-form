@@ -9,6 +9,7 @@ define(function(require) {
 		// @override
 		this.load = function(panel, data) {
 			var form = panel.find('form');
+			form.form('disableValidation');
 			var mdtable_columns=panel.find("#mdtable_columns");
 			mdtable_columns.cdatagrid({
 				controller:_self
