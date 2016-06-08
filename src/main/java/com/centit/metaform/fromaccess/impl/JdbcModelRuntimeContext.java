@@ -1,10 +1,16 @@
-package com.centit.metaform.fromaccess;
+package com.centit.metaform.fromaccess.impl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.centit.framework.core.controller.BaseController;
+import com.centit.metaform.fromaccess.FieldTemplateOptions;
+import com.centit.metaform.fromaccess.FormField;
+import com.centit.metaform.fromaccess.ListColumn;
+import com.centit.metaform.fromaccess.ListViewDescription;
+import com.centit.metaform.fromaccess.ModelOperation;
+import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.support.database.DBConnect;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.DbcpConnectPools;
@@ -15,7 +21,7 @@ import com.centit.support.database.jsonmaptable.OracleJsonObjectDao;
 import com.centit.support.database.jsonmaptable.SqlSvrJsonObjectDao;
 import com.centit.support.database.metadata.TableInfo;
 
-public class JdbcModelRuntimeContext {
+public class JdbcModelRuntimeContext implements ModelRuntimeContext{
 	private String  modelCode;
 	private DBConnect conn;
 	private TableInfo tableinfo;

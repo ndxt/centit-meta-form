@@ -1,4 +1,4 @@
-package com.centit.metaform.fromaccess;
+package com.centit.metaform.fromaccess.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,16 @@ import java.util.List;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.JsonObjectWork;
+import com.centit.metaform.fromaccess.FieldTemplateOptions;
+import com.centit.metaform.fromaccess.FormField;
+import com.centit.metaform.fromaccess.ListColumn;
+import com.centit.metaform.fromaccess.ListViewDescription;
+import com.centit.metaform.fromaccess.ModelOperation;
+import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.metadata.TableInfo;
 
-public class HibernateModelRuntimeContext {
+public class HibernateModelRuntimeContext implements ModelRuntimeContext {
 	private String  modelCode;
 	public void setBaseObjectDao(BaseDaoImpl<?, ?> baseObjectDao) {
 		this.baseObjectDao = baseObjectDao;

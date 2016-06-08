@@ -23,7 +23,6 @@ import com.centit.metaform.dao.ModelDataFieldDao;
 import com.centit.metaform.fromaccess.FieldTemplateOptions;
 import com.centit.metaform.fromaccess.FieldValidator;
 import com.centit.metaform.fromaccess.FormField;
-import com.centit.metaform.fromaccess.JdbcModelRuntimeContext;
 import com.centit.metaform.fromaccess.ModelFormService;
 import com.centit.metaform.po.MdColumn;
 import com.centit.metaform.po.MdTable;

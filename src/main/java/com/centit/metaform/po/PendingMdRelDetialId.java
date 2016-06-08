@@ -1,9 +1,8 @@
 package com.centit.metaform.po;
 
-import java.util.Date;
-import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
