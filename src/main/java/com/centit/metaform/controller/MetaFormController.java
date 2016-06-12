@@ -8,8 +8,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +21,6 @@ import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.metaform.fromaccess.ModelFormService;
-import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.metaform.fromaccess.impl.JdbcModelRuntimeContext;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -33,7 +30,7 @@ import com.centit.support.database.metadata.TableField;
 @Controller
 @RequestMapping("/metaform/formaccess")
 public class MetaFormController  extends BaseController{
-	private static final Log log = LogFactory.getLog(MetaFormController.class);
+	//private static final Log log = LogFactory.getLog(MetaFormController.class);
 
 	@Resource(name="jdbcModelFormService")
 	private ModelFormService formService;
