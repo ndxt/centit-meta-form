@@ -18,9 +18,7 @@ public interface ModelFormService {
 	
 	public JSONObject getObjectByProperties(JdbcModelRuntimeContext rc,Map<String, Object> properties);
 	
-	
 	public void saveNewObject(JdbcModelRuntimeContext rc, Map<String, Object> object) throws SQLException;
-	
 	
 	public void updateObject(JdbcModelRuntimeContext rc, Map<String, Object> object) throws SQLException;
 	
