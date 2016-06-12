@@ -34,7 +34,7 @@ import com.centit.support.database.metadata.TableField;
 public class MetaFormController  extends BaseController{
 	private static final Log log = LogFactory.getLog(MetaFormController.class);
 
-	@Resource(name="hibernateModelFormService")
+	@Resource(name="jdbcModelFormService")
 	private ModelFormService formService;
 	
 	@RequestMapping(value = "/list/{modelCode}",method = RequestMethod.GET)
