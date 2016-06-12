@@ -16,4 +16,5 @@ public interface ModelRuntimeContext {
 	public ListViewDescription getListViewDesc();
 	
 	public TableInfo getTableinfo();
+	
 }

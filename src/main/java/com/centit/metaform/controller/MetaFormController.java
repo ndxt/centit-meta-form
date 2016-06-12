@@ -23,6 +23,7 @@ import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.metaform.fromaccess.ModelFormService;
+import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.metaform.fromaccess.impl.JdbcModelRuntimeContext;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -40,7 +41,7 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/list/{modelCode}",method = RequestMethod.GET)
 	public void list(@PathVariable String modelCode,boolean addMeta, PageDesc pageDesc ,HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
-        JdbcModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+        JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
         
         ResponseData resData = new ResponseData();
         resData.addResponseData(OBJLIST, formService.listObjectsByFilter(rc, searchColumn,pageDesc));
@@ -55,7 +56,7 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/get/{modelCode}",method = RequestMethod.GET)
 	public void view(@PathVariable String modelCode, HttpServletRequest request, HttpServletResponse response) {
     	
-    	JdbcModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	Map<String,Object> jo = new HashMap<>();
     	for(String pk: rc.getTableinfo().getPkColumns()){
     		TableField pkp = rc.getTableinfo().findFieldByColumn(pk);
@@ -85,7 +86,7 @@ public class MetaFormController  extends BaseController{
 	
 	@RequestMapping(value = "/meta/{modelCode}",method = RequestMethod.GET)
 	public void meta(@PathVariable String modelCode,  HttpServletRequest request, HttpServletResponse response) {
-		JdbcModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+		JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
 		ResponseData resData = new ResponseData();
 	    resData.addResponseData("fields", rc.getFormFields());
 	    rc.close();
@@ -95,7 +96,7 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/create/{modelCode}",method = RequestMethod.POST)
 	public void create(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
 		JSONObject jo = JSON.parseObject(jsonStr);
-    	JdbcModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	try {
 			formService.saveNewObject(rc, jo);
 			rc.commitAndClose();
@@ -111,7 +112,7 @@ public class MetaFormController  extends BaseController{
 	public void update(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
         
 		JSONObject jo = JSON.parseObject(jsonStr);
-    	JdbcModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	try {
 			formService.updateObject(rc, jo);
 			rc.commitAndClose();
@@ -126,7 +127,7 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/delete/{modelCode}",method = RequestMethod.DELETE)
 	public void delete(@PathVariable String modelCode,  @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
 		JSONObject jo = JSON.parseObject(jsonStr);
-    	JdbcModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	try {
 			formService.deleteObjectById(rc, jo);
 			rc.commitAndClose();

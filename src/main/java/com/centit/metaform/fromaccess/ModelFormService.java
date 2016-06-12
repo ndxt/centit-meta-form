@@ -10,7 +10,7 @@ import com.centit.metaform.fromaccess.impl.JdbcModelRuntimeContext;
 
 public interface ModelFormService {
 	
-	public JdbcModelRuntimeContext createRuntimeContext(String modelCode);
+	public ModelRuntimeContext createRuntimeContext(String modelCode);
 	
 	public JSONArray listObjectsByFilter(JdbcModelRuntimeContext rc,Map<String, Object> filters);
 	
