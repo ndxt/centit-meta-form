@@ -35,7 +35,7 @@ public class MetaFormController  extends BaseController{
 	@Resource(name="jdbcModelFormService")
 	private ModelFormService formService;
 	
-	@RequestMapping(value = "/list/{modelCode}",method = RequestMethod.GET)
+	@RequestMapping(value = "/{modelCode}/list",method = RequestMethod.GET)
 	public void list(@PathVariable String modelCode,boolean addMeta, PageDesc pageDesc ,HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
         JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
@@ -45,14 +45,13 @@ public class MetaFormController  extends BaseController{
         resData.addResponseData(PAGE_DESC, pageDesc);
         rc.close();
         if(addMeta){
-        	resData.addResponseData("listDesc", rc.getListViewDesc()); 
+        	resData.addResponseData("listDesc", rc.getListViewModel()); 
         }
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 	
-	@RequestMapping(value = "/get/{modelCode}",method = RequestMethod.GET)
+	@RequestMapping(value = "/{modelCode}/get",method = RequestMethod.GET)
 	public void view(@PathVariable String modelCode, HttpServletRequest request, HttpServletResponse response) {
-    	
     	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	Map<String,Object> jo = new HashMap<>();
     	for(String pk: rc.getTableinfo().getPkColumns()){
@@ -75,24 +74,23 @@ public class MetaFormController  extends BaseController{
     		}
     	}
 		ResponseData resData = new ResponseData();
-		resData.addResponseData("fields", rc.getFormFields());
+		resData.addResponseData("fields", rc.getFormModle("view").getFilters());
 		resData.addResponseData("obj", formService.getObjectByProperties(rc, jo));
 		rc.close();
 		JsonResultUtils.writeResponseDataAsJson(resData, response);
 	}
 	
-	@RequestMapping(value = "/meta/{modelCode}/{metaType}",method = RequestMethod.GET)
+	@RequestMapping(value = "/{modelCode}/meta/{metaType}",method = RequestMethod.GET)
 	public void meta(@PathVariable String modelCode,  @PathVariable String metaType, 
 			HttpServletRequest request, HttpServletResponse response) {
 		JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
-		ResponseData resData = new ResponseData();
-	    resData.addResponseData("fields", rc.getFormFields());
+		JsonResultUtils.writeSingleDataJson(rc.getFormModle(metaType), response);
 	    rc.close();
-	    JsonResultUtils.writeResponseDataAsJson(resData, response);
 	}
 	
-	@RequestMapping(value = "/create/{modelCode}",method = RequestMethod.POST)
-	public void create(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/{modelCode}/create",method = RequestMethod.GET)
+	public void create(@PathVariable String modelCode, @RequestBody String jsonStr,
+			boolean createPk, HttpServletRequest request, HttpServletResponse response) {
 		JSONObject jo = JSON.parseObject(jsonStr);
     	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	try {
@@ -106,7 +104,54 @@ public class MetaFormController  extends BaseController{
 		}		
 	}
 	
-	@RequestMapping(value = "/edit/{modelCode}",method = RequestMethod.PUT)
+	@RequestMapping(value = "/{modelCode}/createpk",method = RequestMethod.GET)
+	public void createPk(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
+		JSONObject jo = JSON.parseObject(jsonStr);
+    	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
+    	try {
+			formService.saveNewObject(rc, jo);
+			rc.commitAndClose();
+			JsonResultUtils.writeSuccessJson(response);
+		} catch (SQLException e) {
+			JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
+			rc.rollbackAndClose();
+			e.printStackTrace();
+		}		
+	}
+	
+	@RequestMapping(value = "/{modelCode}/save",method = RequestMethod.POST)
+	public void saveNew(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
+		JSONObject jo = JSON.parseObject(jsonStr);
+    	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
+    	try {
+			formService.saveNewObject(rc, jo);
+			rc.commitAndClose();
+			JsonResultUtils.writeSuccessJson(response);
+		} catch (SQLException e) {
+			JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
+			rc.rollbackAndClose();
+			e.printStackTrace();
+		}		
+	}
+	
+	@RequestMapping(value = "/{modelCode}/edit",method = RequestMethod.PUT)
+	public void edit(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
+        
+		JSONObject jo = JSON.parseObject(jsonStr);
+    	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
+    	try {
+			formService.updateObject(rc, jo);
+			rc.commitAndClose();
+			JsonResultUtils.writeSuccessJson(response);
+		} catch (SQLException e) {
+			JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
+			rc.rollbackAndClose();
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@RequestMapping(value = "/{modelCode}/update",method = RequestMethod.PUT)
 	public void update(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
         
 		JSONObject jo = JSON.parseObject(jsonStr);
@@ -122,7 +167,7 @@ public class MetaFormController  extends BaseController{
 		}
 	}
 	
-	@RequestMapping(value = "/delete/{modelCode}",method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{modelCode}/delete",method = RequestMethod.DELETE)
 	public void delete(@PathVariable String modelCode,  @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
 		JSONObject jo = JSON.parseObject(jsonStr);
     	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
@@ -137,9 +182,16 @@ public class MetaFormController  extends BaseController{
 		}		
 	}
 	
-	@RequestMapping(value = "/submit/{modelCode}",method = RequestMethod.POST)
+	@RequestMapping(value = "/{modelCode}/submit",method = RequestMethod.POST)
 	public void submit(@PathVariable String modelCode,  @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
        
+		
+	}
+	
+	
+	@RequestMapping(value = "/multimodelopt",method = RequestMethod.POST)
+	public void multiModelOpt(@PathVariable String modelCode,  @RequestBody String jsonStr, 
+			HttpServletRequest request, HttpServletResponse response) {
 		
 	}
 	

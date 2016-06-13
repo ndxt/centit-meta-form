@@ -24,6 +24,7 @@ import com.centit.metaform.fromaccess.FieldTemplateOptions;
 import com.centit.metaform.fromaccess.FieldValidator;
 import com.centit.metaform.fromaccess.FormField;
 import com.centit.metaform.fromaccess.ModelFormService;
+import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.metaform.po.MdColumn;
 import com.centit.metaform.po.MdTable;
 import com.centit.metaform.po.MetaFormModel;
@@ -179,7 +180,7 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 	}
 
 	@Override
-	public JSONArray listObjectsByFilter(JdbcModelRuntimeContext rc, Map<String, Object> filters) {
+	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters) {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {
 			return dao.listObjectsByProperties(filters);
@@ -189,7 +190,7 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 	}
 	
 	@Override
-	public JSONArray listObjectsByFilter(JdbcModelRuntimeContext rc, Map<String, Object> filters, PageDesc pageDesc) {
+	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters, PageDesc pageDesc) {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {
 			JSONArray ja = dao.listObjectsByProperties(filters,
@@ -206,7 +207,7 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 	
 	
 	@Override
-	public JSONObject getObjectByProperties(JdbcModelRuntimeContext rc,Map<String, Object> properties){
+	public JSONObject getObjectByProperties(ModelRuntimeContext rc,Map<String, Object> properties){
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {
 			return dao.getObjectByProperties(properties);
@@ -216,21 +217,27 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 	}
 
 	@Override
-	public void saveNewObject(JdbcModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
+	public void saveNewObject(ModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		dao.saveNewObject(object);
 	}
 
 	@Override
-	public void updateObject(JdbcModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
+	public void updateObject(ModelRuntimeContext rc, Map<String, Object> object) throws SQLException {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		dao.updateObject(object);
 	}
 
 	@Override
-	public void deleteObjectById(JdbcModelRuntimeContext rc, Map<String, Object> keyValue) throws SQLException {
+	public void deleteObjectById(ModelRuntimeContext rc, Map<String, Object> keyValue) throws SQLException {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		dao.deleteObjectById(keyValue);
+	}
+
+	@Override
+	public Map<String, Object> createNewPk(ModelRuntimeContext rc) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

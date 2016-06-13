@@ -1,7 +1,5 @@
 package com.centit.metaform.fromaccess;
 
-import java.util.List;
-
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.metadata.TableInfo;
 
@@ -11,10 +9,9 @@ public interface ModelRuntimeContext {
 	
 	public String getModelCode();
 	
-	public List<FormField> getFormFields();
+	public MateFormModel getFormModle(String operation);
 	
-	public ListViewModel getListViewDesc();
+	public ListViewModel getListViewModel();
 	
 	public TableInfo getTableinfo();
-	
 }

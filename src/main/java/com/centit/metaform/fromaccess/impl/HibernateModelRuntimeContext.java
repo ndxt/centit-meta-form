@@ -10,6 +10,7 @@ import com.centit.metaform.fromaccess.FieldTemplateOptions;
 import com.centit.metaform.fromaccess.FormField;
 import com.centit.metaform.fromaccess.ListColumn;
 import com.centit.metaform.fromaccess.ListViewModel;
+import com.centit.metaform.fromaccess.MateFormModel;
 import com.centit.metaform.fromaccess.ModelOperation;
 import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
@@ -63,7 +64,7 @@ public class HibernateModelRuntimeContext implements ModelRuntimeContext {
 		
 	}
 	
-	public ListViewModel getListViewDesc(){
+	public ListViewModel getListViewModel(){
 		ListViewModel lv = new ListViewModel();
 		FormField ff = new FormField();
 		ff.setKey(BaseController.SEARCH_STRING_PREFIX + "userName");
@@ -92,9 +93,9 @@ public class HibernateModelRuntimeContext implements ModelRuntimeContext {
 		this.modelCode = modelCode;
 	}
 	
-	public List<FormField> getFormFields(){
-		
-		return this.formFields;
+	@Override
+	public MateFormModel getFormModle(String operation){
+		return new MateFormModel(formFields);
 	}
 
 	public void addFormField(FormField ff){
