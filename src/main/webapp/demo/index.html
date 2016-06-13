@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="metaForm">
+<head>
+    <meta charset="UTF-8">
+    <title>表单</title>
+
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../bower_components/angular-toastr/dist/angular-toastr.css"/>
+    <link rel="stylesheet" href="../bower_components/angular-loading-bar/build/loading-bar.css"/>
+    <link rel="stylesheet" href="../bower_components/angular-busy/dist/angular-busy.css"/>
+</head>
+<body>
+
+    <div class="wrapper">
+        <header></header>
+
+        <section class="container" ui-view="main"></section>
+
+        <footer></footer>
+    </div>
+
+    <div cg-busy="busyPromise"></div>
+
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/lodash/dist/lodash.js"></script>
+    <script src="../bower_components/api-check/dist/api-check.js"></script>
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-animate/angular-animate.js"></script>
+    <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="../bower_components/angular-formly/dist/formly.js"></script>
+    <script src="../bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js"></script>
+    <script src="../bower_components/restangular/dist/restangular.js"></script>
+    <script src="../bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+    <script src="../bower_components/angular-loading-bar/build/loading-bar.js"></script>
+    <script src="../bower_components/angular-busy/dist/angular-busy.js"></script>
+
+    <script src="app.js"></script>
+    <script src="config/route.config.js"></script>
+    <script src="config/restangular.config.js"></script>
+    <script src="config/toastr.config.js"></script>
+    <script src="api/form.service.js"></script>
+    <script src="pages/list.ctrl.js"></script>
+    <script src="pages/info.ctrl.js"></script>
+
+</body>
+</html>
