@@ -81,8 +81,9 @@ public class MetaFormController  extends BaseController{
 		JsonResultUtils.writeResponseDataAsJson(resData, response);
 	}
 	
-	@RequestMapping(value = "/meta/{modelCode}",method = RequestMethod.GET)
-	public void meta(@PathVariable String modelCode,  HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/meta/{modelCode}/{metaType}",method = RequestMethod.GET)
+	public void meta(@PathVariable String modelCode,  @PathVariable String metaType, 
+			HttpServletRequest request, HttpServletResponse response) {
 		JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
 		ResponseData resData = new ResponseData();
 	    resData.addResponseData("fields", rc.getFormFields());

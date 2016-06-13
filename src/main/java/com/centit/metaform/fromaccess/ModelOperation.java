@@ -6,6 +6,12 @@ public class ModelOperation {
 	private String method;
 	private String label;
 	private String url;
+	private Long displayOrder;
+	private String openType;
+	private String returnOperation;
+	private String optHintType;
+	private String optHintInfo;
+	private String extendOptions;
 	
 	public ModelOperation(){
 		
@@ -16,6 +22,54 @@ public class ModelOperation {
 		this.operation = operation;
 		this.method = method;
 		this.label = label;
+	}
+	
+	public Long getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Long displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
+	public String getOpenType() {
+		return openType;
+	}
+
+	public void setOpenType(String openType) {
+		this.openType = openType;
+	}
+
+	public String getReturnOperation() {
+		return returnOperation;
+	}
+
+	public void setReturnOperation(String returnOperation) {
+		this.returnOperation = returnOperation;
+	}
+
+	public String getOptHintType() {
+		return optHintType;
+	}
+
+	public void setOptHintType(String optHintType) {
+		this.optHintType = optHintType;
+	}
+
+	public String getOptHintInfo() {
+		return optHintInfo;
+	}
+
+	public void setOptHintInfo(String optHintInfo) {
+		this.optHintInfo = optHintInfo;
+	}
+
+	public String getExtendOptions() {
+		return extendOptions;
+	}
+
+	public void setExtendOptions(String extendOptions) {
+		this.extendOptions = extendOptions;
 	}
 	
 	public String getModelCode() {
@@ -56,6 +110,5 @@ public class ModelOperation {
 
 	public void setMethod(String method) {
 		this.method = method;
-	}
-	
+	}	
 }

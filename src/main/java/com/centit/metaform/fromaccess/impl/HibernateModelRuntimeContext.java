@@ -9,7 +9,7 @@ import com.centit.framework.hibernate.dao.JsonObjectWork;
 import com.centit.metaform.fromaccess.FieldTemplateOptions;
 import com.centit.metaform.fromaccess.FormField;
 import com.centit.metaform.fromaccess.ListColumn;
-import com.centit.metaform.fromaccess.ListViewDescription;
+import com.centit.metaform.fromaccess.ListViewModel;
 import com.centit.metaform.fromaccess.ModelOperation;
 import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
@@ -63,8 +63,8 @@ public class HibernateModelRuntimeContext implements ModelRuntimeContext {
 		
 	}
 	
-	public ListViewDescription getListViewDesc(){
-		ListViewDescription lv = new ListViewDescription();
+	public ListViewModel getListViewDesc(){
+		ListViewModel lv = new ListViewModel();
 		FormField ff = new FormField();
 		ff.setKey(BaseController.SEARCH_STRING_PREFIX + "userName");
 		ff.setType("input");

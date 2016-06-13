@@ -13,7 +13,7 @@ public interface ModelRuntimeContext {
 	
 	public List<FormField> getFormFields();
 	
-	public ListViewDescription getListViewDesc();
+	public ListViewModel getListViewDesc();
 	
 	public TableInfo getTableinfo();
 	
