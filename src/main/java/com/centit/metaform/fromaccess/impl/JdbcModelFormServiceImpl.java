@@ -92,6 +92,7 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		tableInfo.getColumns().add(field);			
 		
 		tableInfo.getPkColumns().add("ID");
+		tableInfo.setPkName("id");
 		
 		rc.setTableinfo(tableInfo);
 		
@@ -236,6 +237,13 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 
 	@Override
 	public Map<String, Object> createNewPk(ModelRuntimeContext rc) throws SQLException {
+		//rc.getTableinfo().getPkColumns()
+		//TableField findFieldByColumn(String name)
+		return null;
+	}
+
+	@Override
+	public JSONObject createInitialObject(ModelRuntimeContext rc) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -24,4 +24,6 @@ public interface ModelFormService {
 	public void deleteObjectById(ModelRuntimeContext rc,Map<String,Object> keyValue) throws SQLException;
 	
 	public Map<String,Object> createNewPk(ModelRuntimeContext rc ) throws SQLException;
+	
+	public JSONObject createInitialObject(ModelRuntimeContext rc ) throws SQLException;
 }

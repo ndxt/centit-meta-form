@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.centit.support.algorithm.UuidOpt;
 import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.TableField;
 
@@ -121,12 +122,20 @@ public class MdColumn implements TableField,java.io.Serializable {
 	@Column(name = "VALIDATE_INFO")
 	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
 	private String  validateInfo;
+	
 	/**
-	 * 默认值 参数默认值 
+	 * 自动生成规则   C 常量  U uuid S sequence
 	 */
-	@Column(name = "DEFAULT_VALUE")
+	@Column(name = "AUTO_CREATE_RULE")
 	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
-	private String  defaultValue;
+	private String  autoCreateRule;
+	
+	/**
+	 * 自动生成参数
+	 */
+	@Column(name = "AUTO_CREATE_PARAM")
+	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
+	private String  autoCreateParam;
 	/**
 	 * 更改时间 null 
 	 */
@@ -157,9 +166,12 @@ public class MdColumn implements TableField,java.io.Serializable {
 	}
 
 /** full constructor */
-	public MdColumn(com.centit.metaform.po.MdColumnId id
-			
-	,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,Long  maxLength,Long  scale,String  accessType,String  mandatory,String  primarykey,String  columnState,String  referenceType,String  referenceData,String  validateRegex,String  validateInfo,String  defaultValue,Date  lastModifyDate,String  recorder) {
+	public MdColumn(com.centit.metaform.po.MdColumnId id			
+	,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,
+	Long  maxLength,Long  scale,String  accessType,String  mandatory,
+	String  primarykey,String  columnState,String  referenceType,String  referenceData,
+	String  validateRegex,String  validateInfo,String  autoCreateRule,String  autoCreateParam,
+	Date  lastModifyDate,String  recorder) {
 		this.cid = id; 
 			
 	
@@ -177,7 +189,8 @@ public class MdColumn implements TableField,java.io.Serializable {
 		this.referenceData= referenceData;
 		this.validateRegex= validateRegex;
 		this.validateInfo= validateInfo;
-		this.defaultValue= defaultValue;
+		this.autoCreateRule= autoCreateRule;
+		this.autoCreateParam= autoCreateParam;
 		this.lastModifyDate= lastModifyDate;
 		this.recorder= recorder;		
 	}
@@ -331,13 +344,18 @@ public class MdColumn implements TableField,java.io.Serializable {
 	}
   
 	public String getDefaultValue() {
-		return this.defaultValue;
+		switch(autoCreateRule){
+		case "C":
+			return autoCreateParam;
+		case "U":
+			return UuidOpt.getUuidAsString();
+		case "S"://展示不支持
+			return null;
+		default:
+			return null;
+		}
 	}
-	
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
-  
+ 
 	public Date getLastModifyDate() {
 		return this.lastModifyDate;
 	}
@@ -356,6 +374,24 @@ public class MdColumn implements TableField,java.io.Serializable {
 
 
 
+	public String getAutoCreateRule() {
+		return autoCreateRule;
+	}
+	public void setAutoCreateRule(String autoCreateRule) {
+		this.autoCreateRule = autoCreateRule;
+	}
+	public String getAutoCreateParam() {
+		return autoCreateParam;
+	}
+	public void setAutoCreateParam(String autoCreateParam) {
+		this.autoCreateParam = autoCreateParam;
+	}
+	public void setMaxLength(Long maxLength) {
+		this.maxLength = maxLength;
+	}
+	public void setScale(Long scale) {
+		this.scale = scale;
+	}
 	public MdColumn copy(MdColumn other){
   
 		this.setTableId(other.getTableId());  
@@ -375,7 +411,8 @@ public class MdColumn implements TableField,java.io.Serializable {
 		this.referenceData= other.getReferenceData();  
 		this.validateRegex= other.getValidateRegex();  
 		this.validateInfo= other.getValidateInfo();  
-		this.defaultValue= other.getDefaultValue();  
+		this.autoCreateRule= other.getAutoCreateRule();  
+		this.autoCreateParam= other.getAutoCreateParam();  
 		this.lastModifyDate= other.getLastModifyDate();  
 		this.recorder= other.getRecorder();
 
@@ -416,9 +453,11 @@ public class MdColumn implements TableField,java.io.Serializable {
 		if( other.getValidateRegex() != null)
 			this.validateRegex= other.getValidateRegex();  
 		if( other.getValidateInfo() != null)
-			this.validateInfo= other.getValidateInfo();  
-		if( other.getDefaultValue() != null)
-			this.defaultValue= other.getDefaultValue();  
+			this.validateInfo= other.getValidateInfo();
+		if( other.getAutoCreateRule() != null)
+			this.autoCreateRule= other.getAutoCreateRule();  
+		if( other.getAutoCreateParam() != null)
+			this.autoCreateParam= other.getAutoCreateParam();  
 		if( other.getLastModifyDate() != null)
 			this.lastModifyDate= other.getLastModifyDate();  
 		if( other.getRecorder() != null)
@@ -443,7 +482,7 @@ public class MdColumn implements TableField,java.io.Serializable {
 		this.referenceData= null;  
 		this.validateRegex= null;  
 		this.validateInfo= null;  
-		this.defaultValue= null;  
+		this.autoCreateRule= null;  
 		this.lastModifyDate= null;  
 		this.recorder= null;
 

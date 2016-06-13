@@ -35,7 +35,7 @@ import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.SimpleTableInfo;
 
 @Service(value="hibernateModelFormService")
-public class HibernateModelFormServiceImpl implements ModelFormService {
+public abstract class HibernateModelFormServiceImpl implements ModelFormService {
 
     @Resource(name = "databaseInfoDao") 
     private DatabaseInfoDao databaseInfoDao;

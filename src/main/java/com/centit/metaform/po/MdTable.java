@@ -601,7 +601,7 @@ public class MdTable implements TableInfo,java.io.Serializable {
 		return null;
 	}
 	@Override
-	public TableField findFieldByName(String name) {
+	public MdColumn findFieldByName(String name) {
 		if(mdColumns==null)
 			return null;
 		for(MdColumn c: mdColumns){
