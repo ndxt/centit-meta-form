@@ -138,6 +138,7 @@ public class JdbcModelRuntimeContext implements ModelRuntimeContext{
 		
 		lv.addOperation(new ModelOperation(modelCode,"view","get","查看"));
 		lv.addOperation(new ModelOperation(modelCode,"edit","get","编辑"));
+		lv.addOperation(new ModelOperation(modelCode,"delete","get","删除"));
 		return lv;
 	}
 
