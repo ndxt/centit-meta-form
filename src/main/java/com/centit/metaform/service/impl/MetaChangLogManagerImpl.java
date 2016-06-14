@@ -33,14 +33,14 @@ public class MetaChangLogManagerImpl
 	public static final Log log = LogFactory.getLog(MetaChangLogManager.class);
 
 	
-	private MetaChangLogDao mdChangLogDao ;
+	private MetaChangLogDao metaChangLogDao ;
 	
-	@Resource(name = "mdChangLogDao")
+	@Resource(name = "metaChangLogDao")
     @NotNull
 	public void setMdChangLogDao(MetaChangLogDao baseDao)
 	{
-		this.mdChangLogDao = baseDao;
-		setBaseDao(this.mdChangLogDao);
+		this.metaChangLogDao = baseDao;
+		setBaseDao(this.metaChangLogDao);
 	}
 	
 /*

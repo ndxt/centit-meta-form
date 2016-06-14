@@ -41,14 +41,14 @@ public class MetaTableManagerImpl
 	public static final Log log = LogFactory.getLog(MetaTableManager.class);
 
 	
-	private MetaTableDao mdTableDao ;
+	private MetaTableDao metaTableDao ;
 	
-	@Resource(name = "mdTableDao")
+	@Resource(name = "metaTableDao")
     @NotNull
 	public void setMdTableDao(MetaTableDao baseDao)
 	{
-		this.mdTableDao = baseDao;
-		setBaseDao(this.mdTableDao);
+		this.metaTableDao = baseDao;
+		setBaseDao(this.metaTableDao);
 	}
 	
 	@Resource
@@ -100,7 +100,7 @@ public class MetaTableManagerImpl
 		try{
 		PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
 		MetaTable table=new MetaTable(ptable);
-		mdTableDao.mergeObject(table);
+		metaTableDao.mergeObject(table);
 		}catch(Exception e){
 			return "failed to publish!";
 		}

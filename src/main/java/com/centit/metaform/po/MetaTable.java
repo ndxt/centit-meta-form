@@ -102,12 +102,20 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  tableComment;
 	/**
-	 * 是否是流程中的业务表 null 
+	 * 与流程中业务关联关系
+	 * 0: 不关联工作流 1：和流程业务关联 2： 和流程过程关联
 	 */
-	@Column(name = "Is_In_Workflow")
+	@Column(name = "Workflow_OPT_TYPE")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
-	private String  isInWorkflow;
+	@Length(min = 0, max=1, message = "字段长度不能小于{min}大于{max}")
+	private String  workFlowOptType;
+	
+	//Y/N 更新时是否校验时间戳 添加 Last_modify_time datetime
+	@Column(name = "update_check_timestamp")
+	@NotBlank(message = "字段不能为空")
+	@Length(min = 0, max=1, message = "字段长度不能小于{min}大于{max}")
+	private String  updateCheckTimeStamp;
+	
 	/**
 	 * 更改时间 null 
 	 */
@@ -146,7 +154,6 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.tableType=ptable.getTableType();
 		this.tableState= ptable.getTableState();
 		this.tableComment= ptable.getTableComment();
-		this.isInWorkflow= ptable.getIsInWorkflow();
 		this.lastModifyDate= ptable.getLastModifyDate();
 		this.recorder= ptable.getRecorder();
 	}
@@ -155,7 +162,7 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	/** minimal constructor */
 	public MetaTable(
 		Long tableId		
-		,String  tableName,String  tableLabelName,String  tableType,String  tableState,String  isInWorkflow) {
+		,String  tableName,String  tableLabelName,String  tableType,String  tableState,String workFlowOptType,String updateCheckTimeStamp) {
 	
 	
 		this.tableId = tableId;		
@@ -164,13 +171,16 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.tableLabelName= tableLabelName; 
 		this.tableType= tableType; 
 		this.tableState= tableState; 
-		this.isInWorkflow= isInWorkflow; 		
+		this.workFlowOptType=workFlowOptType;
+		this.updateCheckTimeStamp=updateCheckTimeStamp;
 	}
 
-/** full constructor */
+/** full constructor 
+ * @param workFlowOptType 
+ * @param updateCheckTimeStamp */
 	public MetaTable(
 	 Long tableId		
-	,String  databaseCode,String  tableName,String  tableLabelName,String  tableType,String  tableState,String  tableComment,String  isInWorkflow,Date  lastModifyDate,String  recorder) {
+	,String  databaseCode,String  tableName,String  tableLabelName,String  tableType,String  tableState,String  tableComment,String  isInWorkflow,Date  lastModifyDate,String  recorder, String workFlowOptType, String updateCheckTimeStamp) {
 	
 	
 		this.tableId = tableId;		
@@ -181,7 +191,8 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.tableType= tableType;
 		this.tableState= tableState;
 		this.tableComment= tableComment;
-		this.isInWorkflow= isInWorkflow;
+		this.workFlowOptType=workFlowOptType;
+		this.updateCheckTimeStamp=updateCheckTimeStamp;
 		this.lastModifyDate= lastModifyDate;
 		this.recorder= recorder;		
 	}
@@ -246,14 +257,20 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.tableComment = tableComment;
 	}
   
-	public String getIsInWorkflow() {
-		return this.isInWorkflow;
-	}
 	
-	public void setIsInWorkflow(String isInWorkflow) {
-		this.isInWorkflow = isInWorkflow;
-	}
   
+	public String getWorkFlowOptType() {
+		return workFlowOptType;
+	}
+	public void setWorkFlowOptType(String workFlowOptType) {
+		this.workFlowOptType = workFlowOptType;
+	}
+	public String getUpdateCheckTimeStamp() {
+		return updateCheckTimeStamp;
+	}
+	public void setUpdateCheckTimeStamp(String updateCheckTimeStamp) {
+		this.updateCheckTimeStamp = updateCheckTimeStamp;
+	}
 	public Date getLastModifyDate() {
 		return this.lastModifyDate;
 	}
@@ -521,7 +538,8 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.tableType= other.getTableType();  
 		this.tableState= other.getTableState();  
 		this.tableComment= other.getTableComment();  
-		this.isInWorkflow= other.getIsInWorkflow();  
+		this.workFlowOptType=other.getWorkFlowOptType();
+		this.updateCheckTimeStamp=other.getUpdateCheckTimeStamp();
 		this.lastModifyDate= other.getLastModifyDate();  
 		this.recorder= other.getRecorder();
 		this.mdColumns = other.getMdColumns();	
@@ -549,13 +567,14 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 			this.tableState= other.getTableState();  
 		if( other.getTableComment() != null)
 			this.tableComment= other.getTableComment();  
-		if( other.getIsInWorkflow() != null)
-			this.isInWorkflow= other.getIsInWorkflow();  
+		if( other.getWorkFlowOptType() != null)
+			this.workFlowOptType= other.getWorkFlowOptType();  
 		if( other.getLastModifyDate() != null)
 			this.lastModifyDate= other.getLastModifyDate();  
 		if( other.getRecorder() != null)
 			this.recorder= other.getRecorder();		
-	
+		if(other.getUpdateCheckTimeStamp()!=null)
+			this.updateCheckTimeStamp=other.getUpdateCheckTimeStamp();
 		//this.mdColumns = other.getMdColumns();
 		//replaceMdColumns(other.getMdColumns());
 			
@@ -579,7 +598,8 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.tableType= null;  
 		this.tableState= null;  
 		this.tableComment= null;  
-		this.isInWorkflow= null;  
+		this.workFlowOptType=null;
+		this.updateCheckTimeStamp=null;
 		this.lastModifyDate= null;  
 		this.recorder= null;
 	
