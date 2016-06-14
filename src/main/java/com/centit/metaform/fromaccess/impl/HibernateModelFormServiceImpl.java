@@ -93,7 +93,7 @@ public abstract class HibernateModelFormServiceImpl implements ModelFormService 
 		
 		tableInfo.getPkColumns().add("ID");
 		
-		rc.setTableinfo(tableInfo);
+		rc.setTableInfo(tableInfo);
 		
 		
 		FormField ff = new FormField();
@@ -165,7 +165,7 @@ public abstract class HibernateModelFormServiceImpl implements ModelFormService 
 		}
 		
 		
-		rc.setTableinfo(mtab);
+		rc.setTableInfo(mtab);
 		
 		
 		DataSourceDescription dbc = new DataSourceDescription();

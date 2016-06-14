@@ -343,17 +343,21 @@ public class MdColumn implements TableField,java.io.Serializable {
 		this.validateInfo = validateInfo;
 	}
   
+	/**
+	 * 这个是用于生产数据库表创建语句的，不是用来生成表单默认值的
+	 */
 	public String getDefaultValue() {
-		switch(autoCreateRule){
+		return "C".equals(autoCreateRule)?autoCreateParam:null;
+		/*switch(autoCreateRule){
 		case "C":
 			return autoCreateParam;
 		case "U":
 			return UuidOpt.getUuidAsString();
-		case "S"://展示不支持
+		case "S":
 			return null;
 		default:
 			return null;
-		}
+		}*/
 	}
  
 	public Date getLastModifyDate() {

@@ -1,17 +1,7 @@
 package com.centit.metaform.fromaccess.impl;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.centit.framework.core.controller.BaseController;
-import com.centit.metaform.fromaccess.FieldTemplateOptions;
-import com.centit.metaform.fromaccess.FormField;
-import com.centit.metaform.fromaccess.ListColumn;
-import com.centit.metaform.fromaccess.ListViewModel;
-import com.centit.metaform.fromaccess.MateFormModel;
-import com.centit.metaform.fromaccess.ModelOperation;
-import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.support.database.DBConnect;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.DbcpConnectPools;
@@ -20,21 +10,18 @@ import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.jsonmaptable.MySqlJsonObjectDao;
 import com.centit.support.database.jsonmaptable.OracleJsonObjectDao;
 import com.centit.support.database.jsonmaptable.SqlSvrJsonObjectDao;
-import com.centit.support.database.metadata.TableInfo;
 
-public class JdbcModelRuntimeContext implements ModelRuntimeContext{
-	private String  modelCode;
+public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
+
 	private DBConnect conn;
-	private TableInfo tableinfo;
 	private DataSourceDescription dataSource;
-	private List<FormField> formFields; 
-	
+
 	public JdbcModelRuntimeContext(){
 		
 	}
 	
 	public JdbcModelRuntimeContext(String  modelCode){
-		this.modelCode = modelCode;
+		super(modelCode);
 	}
 	
 
@@ -49,13 +36,7 @@ public class JdbcModelRuntimeContext implements ModelRuntimeContext{
 		this.dataSource = dataSource;
 	}
 
-	public TableInfo getTableinfo() {
-		return tableinfo;
-	}
-
-	public void setTableinfo(TableInfo tableinfo) {
-		this.tableinfo = tableinfo;
-	}
+	
 	
 	private JsonObjectDao dao = null;
 	
@@ -63,19 +44,20 @@ public class JdbcModelRuntimeContext implements ModelRuntimeContext{
 		if(dao==null){
 			switch(getConnection().getDatabaseType()){
 			case Oracle:
-		  		return new OracleJsonObjectDao(getConnection() ,tableinfo);
+		  		return new OracleJsonObjectDao(getConnection() ,getTableInfo());
 		  	case DB2:
-		  		return new DB2JsonObjectDao(getConnection() ,tableinfo);
+		  		return new DB2JsonObjectDao(getConnection() ,getTableInfo());
 		  	case SqlServer:
-		  		return new SqlSvrJsonObjectDao(getConnection() ,tableinfo);
+		  		return new SqlSvrJsonObjectDao(getConnection() ,getTableInfo());
 		  	case MySql:
-		  		return new MySqlJsonObjectDao(getConnection() ,tableinfo);
+		  		return new MySqlJsonObjectDao(getConnection() ,getTableInfo());
 		  	default:
-		  		return new OracleJsonObjectDao(getConnection() ,tableinfo);
+		  		return new OracleJsonObjectDao(getConnection() ,getTableInfo());
 			}
 		}
 		return dao;
 	}
+	
 	public void close(){
 		if(conn!=null){			
 			try {
@@ -119,49 +101,5 @@ public class JdbcModelRuntimeContext implements ModelRuntimeContext{
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public ListViewModel getListViewModel(){
-		ListViewModel lv = new ListViewModel();
-		FormField ff = new FormField();
-		ff.setKey(BaseController.SEARCH_STRING_PREFIX + "userName");
-		ff.setType("input");
-		FieldTemplateOptions templateOptions = new FieldTemplateOptions();
-		templateOptions.setLabel("姓名：");
-		templateOptions.setPlaceholder("请输入完整的姓名。");
-		ff.setTemplateOptions(templateOptions);
-		lv.addFilter(ff);
-		ListColumn id = new ListColumn("id","编号");
-		id.setPrimaryKey(true);
-		lv.addColumn(id);
-		lv.addColumn(new ListColumn("userName","用户姓名"));
-		lv.addColumn(new ListColumn("userPhone","电话"));
-		
-		lv.addOperation(new ModelOperation(modelCode,"view","get","查看"));
-		lv.addOperation(new ModelOperation(modelCode,"edit","get","编辑"));
-		return lv;
-	}
-
-	public String getModelCode() {
-		return modelCode;
-	}
-
-	public void setModelCode(String modelCode) {
-		this.modelCode = modelCode;
-	}
-	
-	@Override
-	public MateFormModel getFormModle(String operation){
-		return new MateFormModel(formFields);
-	}
-
-	public void addFormField(FormField ff){
-		if(formFields==null)
-			formFields = new ArrayList<>();
-		formFields.add(ff);
-	}
-
-	public void setFormFields(List<FormField> formFields) {
-		this.formFields = formFields;
-	}
+	}	
 }

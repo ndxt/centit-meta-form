@@ -21,6 +21,7 @@ import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.metaform.fromaccess.ModelFormService;
+import com.centit.metaform.fromaccess.ModelRuntimeContext;
 import com.centit.metaform.fromaccess.impl.JdbcModelRuntimeContext;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -41,21 +42,23 @@ public class MetaFormController  extends BaseController{
         JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
         
         ResponseData resData = new ResponseData();
-        resData.addResponseData(OBJLIST, formService.listObjectsByFilter(rc, searchColumn,pageDesc));
+        resData.addResponseData(OBJLIST, formService.listObjectsByFilter(rc, searchColumn, pageDesc));
         resData.addResponseData(PAGE_DESC, pageDesc);
         rc.close();
         if(addMeta){
-        	resData.addResponseData("listDesc", rc.getListViewModel()); 
+        	resData.addResponseData("formModel", rc.getListViewModel()); 
         }
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 	
+	
+	
 	@RequestMapping(value = "/{modelCode}/get",method = RequestMethod.GET)
-	public void view(@PathVariable String modelCode, HttpServletRequest request, HttpServletResponse response) {
+	public void view(@PathVariable String modelCode, boolean addMeta, HttpServletRequest request, HttpServletResponse response) {
     	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	Map<String,Object> jo = new HashMap<>();
-    	for(String pk: rc.getTableinfo().getPkColumns()){
-    		TableField pkp = rc.getTableinfo().findFieldByColumn(pk);
+    	for(String pk: rc.getTableInfo().getPkColumns()){
+    		TableField pkp = rc.getTableInfo().findFieldByColumn(pk);
     		Object pv = request.getParameter(pkp.getPropertyName());
     		switch(pkp.getJavaType()){
 			case "Date":

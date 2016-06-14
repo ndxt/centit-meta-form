@@ -94,7 +94,7 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		tableInfo.getPkColumns().add("ID");
 		tableInfo.setPkName("id");
 		
-		rc.setTableinfo(tableInfo);
+		rc.setTableInfo(tableInfo);
 		
 		
 		FormField ff = new FormField();
@@ -166,7 +166,7 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		}
 		
 		
-		rc.setTableinfo(mtab);
+		rc.setTableInfo(mtab);
 		
 		
 		DataSourceDescription dbc = new DataSourceDescription();
@@ -244,7 +244,7 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 
 	@Override
 	public JSONObject createInitialObject(ModelRuntimeContext rc) throws SQLException {
-		// TODO Auto-generated method stub
+		// 查找所有 有自动生成策略的字段，并生成对应的值
 		return null;
 	}
 
