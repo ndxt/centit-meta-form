@@ -118,6 +118,8 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		ff.setTemplateOptions(templateOptions);
 		rc.addFormField(ff);
 		
+		rc.setMetaFormModel(new MetaFormModel());
+		
 		return rc;
 	}
 	
