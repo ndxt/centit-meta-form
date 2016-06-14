@@ -76,7 +76,7 @@ public class MetaFormController  extends BaseController{
     		}
     	}
 		ResponseData resData = new ResponseData();
-		resData.addResponseData("fields", rc.getFormModle("view").getFilters());
+		resData.addResponseData("fields", rc.getFormDefine("view").getFilters());
 		resData.addResponseData("obj", formService.getObjectByProperties(rc, jo));
 		rc.close();
 		JsonResultUtils.writeResponseDataAsJson(resData, response);
@@ -86,7 +86,7 @@ public class MetaFormController  extends BaseController{
 	public void meta(@PathVariable String modelCode,  @PathVariable String metaType, 
 			HttpServletRequest request, HttpServletResponse response) {
 		JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
-		JsonResultUtils.writeSingleDataJson(rc.getFormModle(metaType), response);
+		JsonResultUtils.writeSingleDataJson(rc.getFormDefine(metaType), response);
 	    rc.close();
 	}
 	
