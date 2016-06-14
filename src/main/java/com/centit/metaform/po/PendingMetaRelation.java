@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.NotBlank;
   未落实表关联关系表null   
 */
 @Entity
-@Table(name = "F_PENDING_MD_RELATION")
+@Table(name = "F_PENDING_META_RELATION")
 public class PendingMetaRelation implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 

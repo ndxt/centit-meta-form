@@ -23,7 +23,7 @@ import com.centit.support.database.metadata.TableReference;
   表关联关系表null   
 */
 @Entity
-@Table(name = "F_MD_RELATION")
+@Table(name = "F_META_RELATION")
 public class MetaRelation implements TableReference, java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 

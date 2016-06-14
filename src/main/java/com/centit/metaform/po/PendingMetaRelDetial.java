@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
   未落实表关联细节表null   
 */
 @Entity
-@Table(name = "F_PENDING_MD_REL_DETIAL")
+@Table(name = "F_PENDING_META_REL_DETIAL")
 public class PendingMetaRelDetial implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 

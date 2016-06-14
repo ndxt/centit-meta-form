@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
   表关联细节表null   
 */
 @Entity
-@Table(name = "F_MD_REL_DETIAL")
+@Table(name = "F_META_REL_DETIAL")
 public class MetaRelDetail implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 

@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.NotBlank;
   元数据更改记录null   
 */
 @Entity
-@Table(name = "F_MD_CHANG_LOG")
+@Table(name = "F_META_CHANG_LOG")
 public class MetaChangLog implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 

@@ -12,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,7 +24,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.centit.dde.po.DatabaseInfo;
-import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.metadata.TableInfo;
 import com.centit.support.database.metadata.TableReference;
 
@@ -40,7 +38,7 @@ import com.centit.support.database.metadata.TableReference;
    
 */
 @Entity
-@Table(name = "F_MD_TABLE")
+@Table(name = "F_META_TABLE")
 public class MetaTable implements TableInfo,java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 	/**

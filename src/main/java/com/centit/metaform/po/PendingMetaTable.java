@@ -32,7 +32,7 @@ import com.centit.dde.po.DatabaseInfo;
   未落实表元数据表null   
 */
 @Entity
-@Table(name = "F_PENDING_MD_TABLE")
+@Table(name = "F_PENDING_META_TABLE")
 public class PendingMetaTable implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 

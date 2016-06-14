@@ -5,11 +5,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -21,7 +18,7 @@ import org.hibernate.validator.constraints.NotBlank;
   未落实字段元数据表null   
 */
 @Entity
-@Table(name = "F_PENDING_MD_COLUMN")
+@Table(name = "F_PENDING_META_COLUMN")
 public class PendingMetaColumn implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 

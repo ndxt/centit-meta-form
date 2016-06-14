@@ -11,7 +11,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.centit.support.algorithm.UuidOpt;
 import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.TableField;
 
@@ -23,7 +22,7 @@ import com.centit.support.database.metadata.TableField;
   字段元数据表null   
 */
 @Entity
-@Table(name = "F_MD_COLUMN")
+@Table(name = "F_META_COLUMN")
 public class MetaColumn implements TableField,java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
