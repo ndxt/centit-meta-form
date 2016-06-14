@@ -98,9 +98,22 @@ public class MetaFormModel implements java.io.Serializable {
 	 * 更改人员 null 
 	 */
 	@Column(name = "RECORDER")
-	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 8, message = "字段长度不能大于{max}")
 	private String  recorder;
 	
+	@Column(name = "EXTEND_OPTIONS")
+	@Length(max = 800, message = "字段长度不能大于{max}")
+	private String  extendOptions;
+	
+	@Column(name = "EXTEND_OPT_BEAN")
+	@Length(max = 64, message = "字段长度不能大于{max}")
+	private String  extendOptBean;
+	
+	@Column(name = "EXTEND_OPT_BEAN_PARAM")
+	@Length(max = 800, message = "字段长度不能大于{max}")
+	private String  extendOptBeanParam;
+
+
 	@Transient
 	@OneToMany(mappedBy="",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<ModelDataField> modelDataFields;
@@ -390,7 +403,28 @@ public class MetaFormModel implements java.io.Serializable {
 				addMetaFormModel(newdt);
 		} 	
 	}	
+	
+	public String getExtendOptions() {
+		return extendOptions;
+	}
+	public void setExtendOptions(String extendOptions) {
+		this.extendOptions = extendOptions;
+	}
 
+	public String getExtendOptBean() {
+		return extendOptBean;
+	}
+	public void setExtendOptBean(String extendOptBean) {
+		this.extendOptBean = extendOptBean;
+	}
+	
+	public String getExtendOptBeanParam() {
+		return extendOptBeanParam;
+	}
+	
+	public void setExtendOptBeanParam(String extendOptBeanParam) {
+		this.extendOptBeanParam = extendOptBeanParam;
+	}
 
 	public MetaFormModel copy(MetaFormModel other){
   
@@ -404,12 +438,15 @@ public class MetaFormModel implements java.io.Serializable {
 		this.parentModelCode= other.getParentModelCode();  
 		this.displayOrder= other.getDisplayOrder();  
 		this.lastModifyDate= other.getLastModifyDate();  
-		this.recorder= other.getRecorder();
-	
-		this.modelDataFields = other.getModelDataFields();	
-		this.metaFormModels = other.getMetaFormModels();
+		this.recorder= other.getRecorder();	
+		this.modelDataFields = other.getModelDataFields();
+		
+		this.metaFormModels = other.getMetaFormModels();		
+		this.extendOptBean = other.getExtendOptBean();
+		this.extendOptBeanParam = other.getExtendOptBeanParam();
 		return this;
 	}
+	
 	
 	public MetaFormModel copyNotNullProperty(MetaFormModel other){
   
@@ -433,8 +470,15 @@ public class MetaFormModel implements java.io.Serializable {
 		if( other.getLastModifyDate() != null)
 			this.lastModifyDate= other.getLastModifyDate();  
 		if( other.getRecorder() != null)
-			this.recorder= other.getRecorder();		
-	
+			this.recorder= other.getRecorder();
+		
+		if( other.getMetaFormModels() != null)
+		this.metaFormModels = other.getMetaFormModels();
+		if( other.getExtendOptBean() != null)
+			this.extendOptBean = other.getExtendOptBean();
+		if( other.getExtendOptBeanParam() != null)
+			this.extendOptBeanParam = other.getExtendOptBeanParam();
+		
 		//this.modelDataFields = other.getModelDataFields();
         replaceModelDataFields(other.getModelDataFields());
 			
