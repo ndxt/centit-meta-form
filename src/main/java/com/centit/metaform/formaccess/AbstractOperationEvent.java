@@ -2,46 +2,56 @@ package com.centit.metaform.formaccess;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 public abstract class AbstractOperationEvent implements OperationEvent {
 
 	@Override
-	public void beforeSave(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam)
-			throws Exception {
+	public int beforeSave(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return 0;
 	}
 
 	@Override
-	public void afterSave(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam)
-			throws Exception {
+	public int afterSave(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return 0;
 	}
 
 	@Override
-	public void beforeUpdate(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam)
-			throws Exception {
+	public int beforeUpdate(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return 0;
 	}
 
 	@Override
-	public void afterUpdate(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam)
-			throws Exception {
+	public int afterUpdate(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return 0;
 	}
 
 	@Override
-	public void beforeDelete(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam)
-			throws Exception {
+	public int beforeDelete(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return 0;
 	}
 
 	@Override
-	public void afterDelete(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam)
-			throws Exception {
+	public int afterDelete(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return 0;
 	}
 
 	@Override
-	public void beforeSubmit(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam)
-			throws Exception {
+	public int beforeSubmit(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return 0;
 	}
 
 	@Override
-	public void afterSubmit(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam)
-			throws Exception {
+	public int afterSubmit(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return 0;
 	}
 
 }
