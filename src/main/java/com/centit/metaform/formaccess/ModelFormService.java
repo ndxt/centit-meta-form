@@ -3,6 +3,8 @@ package com.centit.metaform.formaccess;
 import java.sql.SQLException;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.core.dao.PageDesc;
@@ -17,13 +19,21 @@ public interface ModelFormService {
 	
 	public JSONObject getObjectByProperties(ModelRuntimeContext rc,Map<String, Object> properties);
 	
-	public void saveNewObject(ModelRuntimeContext rc, Map<String, Object> object) throws SQLException;
-	
-	public void updateObject(ModelRuntimeContext rc, Map<String, Object> object) throws SQLException;
-	
-	public void deleteObjectById(ModelRuntimeContext rc,Map<String,Object> keyValue) throws SQLException;
-	
 	public Map<String,Object> createNewPk(ModelRuntimeContext rc ) throws SQLException;
 	
 	public JSONObject createInitialObject(ModelRuntimeContext rc ) throws SQLException;
+	
+	public MateFormDefine getFormDefine(ModelRuntimeContext rc,String operation);
+	
+	public ListViewDefine getListViewModel(ModelRuntimeContext rc);
+	
+	public int saveNewObject(ModelRuntimeContext rc, 
+			Map<String, Object> object, HttpServletResponse response) throws Exception;
+	
+	public int updateObject(ModelRuntimeContext rc,
+			Map<String, Object> object, HttpServletResponse response) throws Exception;
+	
+	public int deleteObjectById(ModelRuntimeContext rc,
+			Map<String,Object> keyValue, HttpServletResponse response) throws Exception;
+
 }

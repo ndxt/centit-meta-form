@@ -14,15 +14,17 @@ public interface ModelRuntimeContext {
 	
 	public String getModelCode();
 	
-	public MateFormDefine getFormDefine(String operation);
-	
-	public ListViewDefine getListViewModel();
-	
 	public MetaFormModel getMetaFormModel();
 	
 	public MetaTable getTableInfo();
 	
 	public Map<String,Object> fetchPkFromRequest( HttpServletRequest request);
 	
-	public Map<String,Object> fetchObjectFromRequest( HttpServletRequest request);
+	public Map<String,Object> fetchObjectFromRequest( HttpServletRequest request);	
+	
+	public void close();
+	
+	public void commitAndClose();
+	
+	public void rollbackAndClose();
 }
