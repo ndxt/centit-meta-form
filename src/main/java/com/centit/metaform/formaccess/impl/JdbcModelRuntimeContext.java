@@ -2,6 +2,7 @@ package com.centit.metaform.formaccess.impl;
 
 import java.sql.SQLException;
 
+import com.centit.metaform.po.MetaFormModel;
 import com.centit.support.database.DBConnect;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.DbcpConnectPools;
@@ -101,5 +102,11 @@ public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public MetaFormModel getMetaFormModel() {
+		// TODO Auto-generated method stub
+		return null;
 	}	
 }

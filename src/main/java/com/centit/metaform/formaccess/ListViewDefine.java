@@ -3,25 +3,25 @@ package com.centit.metaform.formaccess;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListViewModel extends  MateFormModel{
+public class ListViewDefine extends  MateFormDefine{
 	
-	public ListViewModel(){
+	public ListViewDefine(){
 		
 	}
 	
-	public ListViewModel(String modelName){
+	public ListViewDefine(String modelName){
 		super(modelName);
 	}
 
-	public ListViewModel(List<FormField> filters){
+	public ListViewDefine(List<FormField> filters){
 		super(filters);
 	}
 	
-	public ListViewModel(List<FormField> filters,List<ModelOperation> operations){
+	public ListViewDefine(List<FormField> filters,List<ModelOperation> operations){
 		super(filters,operations);
 	}
 	
-	public ListViewModel(List<FormField> filters,List<ModelOperation> operations,
+	public ListViewDefine(List<FormField> filters,List<ModelOperation> operations,
 				List<ListColumn> columns){
 		super(filters,operations);
 		this.columns = columns;

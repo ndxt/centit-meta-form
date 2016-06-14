@@ -4,8 +4,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.MetaTable;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
-import com.centit.support.database.metadata.TableInfo;
 
 public interface ModelRuntimeContext {
 	
@@ -13,11 +14,13 @@ public interface ModelRuntimeContext {
 	
 	public String getModelCode();
 	
-	public MateFormModel getFormModle(String operation);
+	public MateFormDefine getFormDefine(String operation);
 	
-	public ListViewModel getListViewModel();
+	public ListViewDefine getListViewModel();
 	
-	public TableInfo getTableInfo();
+	public MetaFormModel getMetaFormModel();
+	
+	public MetaTable getTableInfo();
 	
 	public Map<String,Object> fetchPkFromRequest( HttpServletRequest request);
 	

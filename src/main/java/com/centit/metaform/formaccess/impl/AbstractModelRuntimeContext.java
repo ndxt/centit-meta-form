@@ -11,19 +11,22 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.metaform.formaccess.FieldTemplateOptions;
 import com.centit.metaform.formaccess.FormField;
 import com.centit.metaform.formaccess.ListColumn;
-import com.centit.metaform.formaccess.ListViewModel;
-import com.centit.metaform.formaccess.MateFormModel;
+import com.centit.metaform.formaccess.ListViewDefine;
+import com.centit.metaform.formaccess.MateFormDefine;
 import com.centit.metaform.formaccess.ModelOperation;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
+import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.MetaTable;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.database.metadata.TableField;
-import com.centit.support.database.metadata.TableInfo;
 
 public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext{
 	private String  modelCode;
-	private TableInfo tableInfo;
+	private MetaTable tableInfo;
+	private MetaFormModel metaFormModel;
+	
 	private List<FormField> formFields; 
 	
 	public AbstractModelRuntimeContext(){
@@ -35,16 +38,16 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 	}
 	
 
-	public TableInfo getTableInfo() {
+	public MetaTable getTableInfo() {
 		return tableInfo;
 	}
 
-	public void setTableInfo(TableInfo tableinfo) {
+	public void setTableInfo(MetaTable tableinfo) {
 		this.tableInfo = tableinfo;
 	}
 		
-	public ListViewModel getListViewModel(){
-		ListViewModel lv = new ListViewModel();
+	public ListViewDefine getListViewModel(){
+		ListViewDefine lv = new ListViewDefine();
 		FormField ff = new FormField();
 		ff.setKey(BaseController.SEARCH_STRING_PREFIX + "userName");
 		ff.setType("input");
@@ -73,8 +76,8 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 	}
 	
 	@Override
-	public MateFormModel getFormModle(String operation){
-		return new MateFormModel(formFields);
+	public MateFormDefine getFormDefine(String operation){
+		return new MateFormDefine(formFields);
 	}
 
 	public void addFormField(FormField ff){
@@ -133,4 +136,15 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
     	}
 		return jo;
 	}
+
+	@Override
+	public MetaFormModel getMetaFormModel() {
+		return metaFormModel;
+	}
+
+	public void setMetaFormModel(MetaFormModel metaFormModel) {
+		this.metaFormModel = metaFormModel;
+	}
+
+
 }

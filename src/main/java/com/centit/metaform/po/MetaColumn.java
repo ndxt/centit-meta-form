@@ -65,12 +65,12 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	 * 字段长度 precision 
 	 */
 	@Column(name = "MAX_LENGTH")
-	private Long  maxLength;
+	private Integer  maxLength;
 	/**
 	 * 字段精度 null 
 	 */
 	@Column(name = "SCALE")
-	private Long  scale;
+	private Integer  scale;
 	/**
 	 * 字段类别 null 
 	 */
@@ -167,7 +167,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 /** full constructor */
 	public MetaColumn(com.centit.metaform.po.MetaColumnId id			
 	,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,
-	Long  maxLength,Long  scale,String  accessType,String  mandatory,
+	Integer  maxLength,Integer  scale,String  accessType,String  mandatory,
 	String  primarykey,String  columnState,String  referenceType,String  referenceData,
 	String  validateRegex,String  validateInfo,String  autoCreateRule,String  autoCreateParam,
 	Date  lastModifyDate,String  recorder) {
@@ -261,23 +261,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	public void setColumnType(String columnType) {
 		this.columnType = columnType;
 	}
-  
-	public Long getStrMaxLength() {
-		return this.maxLength;
-	}
-	
-	public void setStrMaxLength(Long maxLength) {
-		this.maxLength = maxLength;
-	}
-  
-	public Long getNumberScale() {
-		return this.scale;
-	}
-	
-	public void setNumberScale(Long scale) {
-		this.scale = scale;
-	}
-  
+
 	public String getAccessType() {
 		return this.accessType;
 	}
@@ -389,12 +373,13 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	public void setAutoCreateParam(String autoCreateParam) {
 		this.autoCreateParam = autoCreateParam;
 	}
-	public void setMaxLength(Long maxLength) {
+	public void setMaxLength(Integer maxLength) {
 		this.maxLength = maxLength;
 	}
-	public void setScale(Long scale) {
+	public void setScale(Integer scale) {
 		this.scale = scale;
 	}
+	
 	public MetaColumn copy(MetaColumn other){
   
 		this.setTableId(other.getTableId());  
@@ -404,8 +389,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.columnComment= other.getColumnComment();  
 		this.columnOrder= other.getColumnOrder();  
 		this.columnType= other.getColumnType();  
-		this.maxLength= other.getStrMaxLength();  
-		this.scale= other.getNumberScale();  
+		this.maxLength= other.getMaxLength();  
+		this.scale= other.getScale();  
 		this.accessType= other.getAccessType();  
 		this.mandatory= other.getMandatory();  
 		this.primarykey= other.getPrimarykey();  
@@ -424,11 +409,11 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	
 	public MetaColumn copyNotNullProperty(MetaColumn other){
   
-	if( other.getTableId() != null)
-		this.setTableId(other.getTableId());  
-	if( other.getColumnName() != null)
-		this.setColumnName(other.getColumnName());
-  
+		if( other.getTableId() != null)
+			this.setTableId(other.getTableId());  
+		if( other.getColumnName() != null)
+			this.setColumnName(other.getColumnName());
+		
 		if( other.getFieldLabelName() != null)
 			this.fieldLabelName= other.getFieldLabelName();  
 		if( other.getColumnComment() != null)
@@ -437,10 +422,9 @@ public class MetaColumn implements TableField,java.io.Serializable {
 			this.columnOrder= other.getColumnOrder();  
 		if( other.getColumnType() != null)
 			this.columnType= other.getColumnType();  
-		if( other.getStrMaxLength() != null)
-			this.maxLength= other.getStrMaxLength();  
-		if( other.getNumberScale() != null)
-			this.scale= other.getNumberScale();  
+		//if( other.getMaxLength() != null)
+		this.maxLength= other.getMaxLength();  
+		this.scale= other.getScale();  
 		if( other.getAccessType() != null)
 			this.accessType= other.getAccessType();  
 		if( other.getMandatory() != null)

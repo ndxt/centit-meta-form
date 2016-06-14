@@ -3,7 +3,7 @@ package com.centit.metaform.formaccess;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MateFormModel {
+public class MateFormDefine {
 	private String modelName;
 	private String extendOptBean;
 	private String extendOptBeanParam;
@@ -13,19 +13,19 @@ public class MateFormModel {
 	private List<ModelOperation> operations;
 	
 	
-	public MateFormModel(){
+	public MateFormDefine(){
 		
 	}
 		
-	public MateFormModel(String modelName){
+	public MateFormDefine(String modelName){
 		this.modelName = modelName;
 	}
 
-	public MateFormModel(List<FormField> filters){
+	public MateFormDefine(List<FormField> filters){
 		this.filters = filters;
 	}
 	
-	public MateFormModel(List<FormField> filters,List<ModelOperation> operations){
+	public MateFormDefine(List<FormField> filters,List<ModelOperation> operations){
 		this.filters = filters;
 		this.operations = operations;
 	}

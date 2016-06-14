@@ -17,8 +17,8 @@ import com.centit.dde.dao.DatabaseInfoDao;
 import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.metaform.dao.MetaColumnDao;
-import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.MetaFormModelDao;
+import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.ModelDataFieldDao;
 import com.centit.metaform.formaccess.FieldTemplateOptions;
 import com.centit.metaform.formaccess.FieldValidator;
@@ -26,13 +26,11 @@ import com.centit.metaform.formaccess.FormField;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
 import com.centit.metaform.po.MetaColumn;
-import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.ModelDataField;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
-import com.centit.support.database.metadata.SimpleTableField;
-import com.centit.support.database.metadata.SimpleTableInfo;
 
 @Service(value="jdbcModelFormService")
 public class JdbcModelFormServiceImpl implements ModelFormService {
@@ -62,37 +60,32 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		dbc.setPassword("metaform");
 		rc.setDataSource(dbc);
 		
-		SimpleTableInfo tableInfo = new SimpleTableInfo("TEST_TABLE");
-		tableInfo.setTableLableName("通讯录");
-		SimpleTableField field = new SimpleTableField();
+		MetaTable tableInfo = new MetaTable();
+		tableInfo.setTableName("TEST_TABLE");
+		tableInfo.setTableLabelName("通讯录");
+		MetaColumn field = new MetaColumn();
 		field.setColumnName("ID");
 		field.setColumnType("Number(10)");
-		field.setPrecision(10);
+		field.setMaxLength(10);
 		field.setScale(0);
-		field.setMandatory(true);
-		field.setPropertyName("id");
-		field.mapToMetadata();
+		field.setMandatory("T");
 		tableInfo.getColumns().add(field);
 		
-		field = new SimpleTableField();
+		field = new MetaColumn();
 		field.setColumnName("USER_NAME");
 		field.setColumnType("varchar2");
-		field.setPropertyName("userName");
 		field.setMaxLength(50);
-		field.mapToMetadata();
 		tableInfo.getColumns().add(field);
 		
-		field = new SimpleTableField();
+		field = new MetaColumn();
 		field.setColumnName("USER_PHONE");
 		field.setColumnType("varchar2");
 		field.setMaxLength(20);
-		field.setPropertyName("userPhone");
-		field.setDefaultValue("'110'");
-		field.mapToMetadata();
+		field.setAutoCreateRule("C");
+		field.setAutoCreateParam("'110'");
 		tableInfo.getColumns().add(field);			
 		
 		tableInfo.getPkColumns().add("ID");
-		tableInfo.setPkName("id");
 		
 		rc.setTableInfo(tableInfo);
 		
