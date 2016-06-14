@@ -20,9 +20,9 @@ import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.metaform.fromaccess.ModelFormService;
-import com.centit.metaform.fromaccess.ModelRuntimeContext;
-import com.centit.metaform.fromaccess.impl.JdbcModelRuntimeContext;
+import com.centit.metaform.formaccess.ModelFormService;
+import com.centit.metaform.formaccess.ModelRuntimeContext;
+import com.centit.metaform.formaccess.impl.JdbcModelRuntimeContext;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -137,7 +137,7 @@ public class MetaFormController  extends BaseController{
 		}		
 	}
 	
-	@RequestMapping(value = "/{modelCode}/edit",method = RequestMethod.PUT)
+	@RequestMapping(value = "/{modelCode}/edit",method = RequestMethod.GET)
 	public void edit(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
         
 		JSONObject jo = JSON.parseObject(jsonStr);

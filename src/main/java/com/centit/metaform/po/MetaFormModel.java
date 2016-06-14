@@ -53,7 +53,7 @@ public class MetaFormModel implements java.io.Serializable {
 	 */
 	@JoinColumn(name="TABLE_ID")
 	@ManyToOne
-	private MdTable mdTable;
+	private MetaTable mdTable;
 	/**
 	 * 模快描述 null 
 	 */
@@ -159,16 +159,16 @@ public class MetaFormModel implements java.io.Serializable {
 		return this.getMdTable().getTableId();
 	}
 	
-	public MdTable getMdTable() {
+	public MetaTable getMdTable() {
 		if(null==this.mdTable)
-			this.mdTable=new MdTable();
+			this.mdTable=new MetaTable();
 		return this.mdTable;
 	}
-	public void setMdTable(MdTable mdTable) {
+	public void setMdTable(MetaTable mdTable) {
 		this.mdTable = mdTable;
 	}
 	public void setTableId(Long tableId) {
-		MdTable tb=new MdTable();
+		MetaTable tb=new MetaTable();
 		tb.setTableId(tableId);
 		this.setMdTable(tb);
 	}

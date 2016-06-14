@@ -1,6 +1,7 @@
 package com.centit.metaform.fromaccess;
 
 import com.alibaba.fastjson.JSON;
+import com.centit.metaform.formaccess.FormField;
 
 public class TestJSON {
 
