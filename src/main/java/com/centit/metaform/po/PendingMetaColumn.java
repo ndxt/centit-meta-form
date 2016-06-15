@@ -110,12 +110,7 @@ public class PendingMetaColumn implements java.io.Serializable {
 	@Column(name = "VALIDATE_INFO")
 	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
 	private String  validateInfo;
-	/**
-	 * 默认值 参数默认值 
-	 */
-	@Column(name = "DEFAULT_VALUE")
-	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
-	private String  defaultValue;
+	
 	/**
 	 * 更改时间 null 
 	 */
@@ -162,7 +157,6 @@ public class PendingMetaColumn implements java.io.Serializable {
 		this.referenceData= referenceData;
 		this.validateRegex= validateRegex;
 		this.validateInfo= validateInfo;
-		this.defaultValue= defaultValue;
 		this.lastModifyDate= lastModifyDate;
 		this.recorder= recorder;		
 	}
@@ -300,13 +294,6 @@ public class PendingMetaColumn implements java.io.Serializable {
 		this.validateInfo = validateInfo;
 	}
   
-	public String getDefaultValue() {
-		return this.defaultValue;
-	}
-	
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
   
 	public Date getLastModifyDate() {
 		return this.lastModifyDate;
@@ -354,7 +341,6 @@ public class PendingMetaColumn implements java.io.Serializable {
 		this.referenceData= other.getReferenceData();  
 		this.validateRegex= other.getValidateRegex();  
 		this.validateInfo= other.getValidateInfo();  
-		this.defaultValue= other.getDefaultValue();  
 		this.lastModifyDate= other.getLastModifyDate();  
 		this.recorder= other.getRecorder();
 
@@ -394,8 +380,6 @@ public class PendingMetaColumn implements java.io.Serializable {
 			this.validateRegex= other.getValidateRegex();  
 		if( other.getValidateInfo() != null)
 			this.validateInfo= other.getValidateInfo();  
-		if( other.getDefaultValue() != null)
-			this.defaultValue= other.getDefaultValue();  
 		if( other.getLastModifyDate() != null)
 			this.lastModifyDate= other.getLastModifyDate();  
 		if( other.getRecorder() != null)
@@ -420,7 +404,6 @@ public class PendingMetaColumn implements java.io.Serializable {
 		this.referenceData= null;  
 		this.validateRegex= null;  
 		this.validateInfo= null;  
-		this.defaultValue= null;  
 		this.lastModifyDate= null;  
 		this.recorder= null;
 
