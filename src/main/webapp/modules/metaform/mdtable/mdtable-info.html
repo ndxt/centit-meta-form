@@ -26,7 +26,8 @@
 		    	
 		   		<div class="field required">
 		       		<label>类别</label>
-		       		<input type="text" class="easyui-textbox" 
+		       		<input type="text" class="easyui-combobox" 
+		       		data-options="valueField:'value',textField:'text',data:[{value:'0',text:'类别0'},{value:'1',text:'类别1'},{value:'2',text:'类别2'}]"
 		       		name="tableType" required/>
 				</div>
 		    	
@@ -35,27 +36,22 @@
 		       		<input type="text" class="easyui-textbox" 
 		       		name="tableState" required/>
 				</div>
-				<div class="field ">
-		       		<label>更改人员</label>
-		       		<input type="text" class="easyui-textbox" 
-		       		name="recorder" />
-				</div>
-		    </div>	
-		    <div class="fields three">
-		   		
-		    	
-		   		<div class="field required">
+				<div class="field required">
 		       		<label>是否是流程中的业务表</label>
-		       		<input type="text" class="easyui-textbox" 
+		       		<input type="text" class="easyui-combobox" 
+		       		data-options="valueField:'value',textField:'text',data:[{value:'0',text:'不关联工作流'},{value:'1',text:'和流程业务关联'},{value:'2',text:'和流程过程关联'}]"
 		       		name="isInWorkflow" required/>
 				</div>
-		    	
-		   		<div class="field ">
-		       		<label>更改时间</label>
-		       		<input type="text" class="easyui-datebox" 
-		       		name="lastModifyDate" />
+				
+		    </div>	
+		    <div class="fields three">
+		   		<div class="field required">
+		       		<label>更新时是否校验时间戳</label>
+		       		<input type="text" class="easyui-combobox" 
+		       		data-options="valueField:'value',textField:'text',data:[{value:'Y',text:'是'},{value:'N',text:'否'}]"
+		       		name="updateCheckTimeStamp" required/>
 				</div>
-				<div class="field ">
+		    	<div class="field ">
 		       		<label>描述</label>
 		       		<input type="text" class="easyui-textbox" 
 		       		name="tableComment" />

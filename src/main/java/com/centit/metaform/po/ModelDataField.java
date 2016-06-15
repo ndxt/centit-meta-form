@@ -23,10 +23,20 @@ public class ModelDataField implements java.io.Serializable {
 	private com.centit.metaform.po.ModelDataFieldId cid;
 
 
+	
+	
+	/**
+	 * 字段类别 ，关联只读字段（reference_Data 中为关联SQL语句）
+	 */
+    @Column(name = "COLUMN_TYPE")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	private String  columnType;
+	
+	
 	/**
 	 * 更改类别 只读/更改/隐藏 
 	 */
-//	@Column(name = "ACCESS_TYPE")
+    @Column(name = "ACCESS_TYPE")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  accessType;
 	/**
@@ -40,57 +50,135 @@ public class ModelDataField implements java.io.Serializable {
 	@Column(name = "INPUT_HINT")
 	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
 	private String  inputHint;
+	
+	
+	
 	/**
-	 * 输入约束描述 null 
+	 * 引用类型 0：没有：1： 数据字典 2：JSON表达式 3：sql语句  Y：年份 M：月份 
 	 */
-	@Column(name = "VALIDATE_HINT")
+	@Column(name = "REFERENCE_TYPE")
+	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
+	private String  referenceType;
+	
+	/**
+	 * 引用数据 根据paramReferenceType类型（1,2,3）填写对应值 
+	 */
+	@Column(name = "REFERENCE_DATA")
+	@Length(min = 0, max = 1000, message = "字段长度不能小于{min}大于{max}")
+	private String  referenceData;
+	
+	
+	
+	/**
+	 * 输入约束描述
+	 */
+	@Column(name = "Validate_hint")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  validateHint;
+	
+	/**
+	 * 约束提示
+	 */
+	@Column(name = "Validate_Info")
+	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	private String  validateInfo;
+	
+	/**
+	 * 约束表达式
+	 */
+	@Column(name = "Validate_Regex")
+	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	private String  validateRegex;
+	
+	/**
+	 * 默认值
+	 */
+	@Column(name = "default_Value")
+	private String defaultValue;
+	
+	
+	/**
+	 * 过滤类别
+	 */
+	@Column(name = "filter_type")
+	private String filterType;
+	
+	/**
+	 * 过滤类别
+	 */
+	@Column(name = "mandatory")
+	private String mandatory;
+	
+	/**
+	 * 过滤类别
+	 */
+	@Column(name = "focus")
+	private String focus;
+	
+	/**
+	 * 过滤类别
+	 */
+	@Column(name = "url")
+	private String url;
+	
+	/**
+	 * 过滤类别
+	 */
+	@Column(name = "extend_Options")
+	private String extendOptions;
+	
 	/**
 	 * 字段高度 null 
 	 */
 	@Column(name = "Field_Height")
 	private Long  fieldHeight;
-	/**
-	 * 标签长度 null 
-	 */
-	@Column(name = "Label_Length")
-	private Long  labelLength;
+	
 	/**
 	 * 字段长度 null 
 	 */
-	@Column(name = "Field_Length")
-	private Long  fieldLength;
+	@Column(name = "field_width")
+	private Long  fieldWidth;
 
 	// Constructors
 	/** default constructor */
 	public ModelDataField() {
 	}
 	/** minimal constructor */
-	public ModelDataField(com.centit.metaform.po.ModelDataFieldId id 
-				
-		) {
-		this.cid = id; 
-			
-			
+	public ModelDataField(ModelDataFieldId cid, String columnType) {
+		super();
+		this.cid = cid;
+		this.columnType = columnType;
 	}
 
-/** full constructor */
-	public ModelDataField(com.centit.metaform.po.ModelDataFieldId id
-			
-	,String  accessType,Long  displayOrder,String  inputHint,String  validateHint,Long  fieldHeight,Long  labelLength,Long  fieldLength) {
-		this.cid = id; 
-			
+	/** full constructor */
+	public ModelDataField(ModelDataFieldId cid, String columnType,
+			String accessType, Long displayOrder, String inputHint,
+			String referenceType, String referenceData, String validateHint,
+			String validateInfo, String validateRegex, String defaultValue,
+			String filterType, String mandatory, String focus, String url,
+			String extendOptions, Long fieldHeight, Long fieldWidth) {
+		super();
+		this.cid = cid;
+		this.columnType = columnType;
+		this.accessType = accessType;
+		this.displayOrder = displayOrder;
+		this.inputHint = inputHint;
+		this.referenceType = referenceType;
+		this.referenceData = referenceData;
+		this.validateHint = validateHint;
+		this.validateInfo = validateInfo;
+		this.validateRegex = validateRegex;
+		this.defaultValue = defaultValue;
+		this.filterType = filterType;
+		this.mandatory = mandatory;
+		this.focus = focus;
+		this.url = url;
+		this.extendOptions = extendOptions;
+		this.fieldHeight = fieldHeight;
+		this.fieldWidth = fieldWidth;
+	}
+
 	
-		this.accessType= accessType;
-		this.displayOrder= displayOrder;
-		this.inputHint= inputHint;
-		this.validateHint= validateHint;
-		this.fieldHeight= fieldHeight;
-		this.labelLength= labelLength;
-		this.fieldLength= fieldLength;		
-	}
-
 	public com.centit.metaform.po.ModelDataFieldId getCid() {
 		return this.cid;
 	}
@@ -167,21 +255,81 @@ public class ModelDataField implements java.io.Serializable {
 		this.fieldHeight = fieldHeight;
 	}
   
-	public Long getLabelLength() {
-		return this.labelLength;
-	}
 	
-	public void setLabelLength(Long labelLength) {
-		this.labelLength = labelLength;
-	}
   
-	public Long getFieldLength() {
-		return this.fieldLength;
+	public String getColumnType() {
+		return columnType;
+	}
+	public void setColumnType(String columnType) {
+		this.columnType = columnType;
+	}
+	public String getReferenceType() {
+		return referenceType;
+	}
+	public void setReferenceType(String referenceType) {
+		this.referenceType = referenceType;
+	}
+	public String getReferenceData() {
+		return referenceData;
+	}
+	public void setReferenceData(String referenceData) {
+		this.referenceData = referenceData;
+	}
+	public String getValidateInfo() {
+		return validateInfo;
+	}
+	public void setValidateInfo(String validateInfo) {
+		this.validateInfo = validateInfo;
+	}
+	public String getValidateRegex() {
+		return validateRegex;
+	}
+	public void setValidateRegex(String validateRegex) {
+		this.validateRegex = validateRegex;
+	}
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+	public String getFilterType() {
+		return filterType;
+	}
+	public void setFilterType(String filterType) {
+		this.filterType = filterType;
+	}
+	public String getMandatory() {
+		return mandatory;
+	}
+	public void setMandatory(String mandatory) {
+		this.mandatory = mandatory;
+	}
+	public String getFocus() {
+		return focus;
+	}
+	public void setFocus(String focus) {
+		this.focus = focus;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	public String getExtendOptions() {
+		return extendOptions;
+	}
+	public void setExtendOptions(String extendOptions) {
+		this.extendOptions = extendOptions;
+	}
+	public Long getFieldWidth() {
+		return fieldWidth;
+	}
+	public void setFieldWidth(Long fieldWidth) {
+		this.fieldWidth = fieldWidth;
 	}
 	
-	public void setFieldLength(Long fieldLength) {
-		this.fieldLength = fieldLength;
-	}
 
 
 
@@ -189,53 +337,84 @@ public class ModelDataField implements java.io.Serializable {
   
 		this.setModelCode(other.getModelCode());  
 		this.setColumnName(other.getColumnName());
-  
 		this.accessType= other.getAccessType();  
-		this.displayOrder= other.getDisplayOrder();  
-		this.inputHint= other.getInputHint();  
-		this.validateHint= other.getValidateHint();  
-		this.fieldHeight= other.getFieldHeight();  
-		this.labelLength= other.getLabelLength();  
-		this.fieldLength= other.getFieldLength();
-
+		this.columnType=other.getColumnType();
+		this.defaultValue=other.getDefaultValue();
+		this.displayOrder=other.getDisplayOrder();
+		this.extendOptions=other.getExtendOptions();
+		this.fieldHeight=other.getFieldHeight();
+		this.fieldWidth=other.getFieldWidth();
+		this.filterType=other.getFilterType();
+		this.inputHint=other.getInputHint();
+		this.mandatory=other.getMandatory();
+		this.referenceData=other.getReferenceData();
+		this.referenceType=other.getReferenceType();
+		this.url=other.getUrl();
+		this.validateHint=other.getValidateHint();
+		this.validateInfo=other.getValidateInfo();
+		this.validateRegex=other.getValidateRegex();
 		return this;
 	}
 	
 	public ModelDataField copyNotNullProperty(ModelDataField other){
-  
-	if( other.getModelCode() != null)
-		this.setModelCode(other.getModelCode());  
-	if( other.getColumnName() != null)
-		this.setColumnName(other.getColumnName());
-  
-		if( other.getAccessType() != null)
-			this.accessType= other.getAccessType();  
-		if( other.getDisplayOrder() != null)
-			this.displayOrder= other.getDisplayOrder();  
-		if( other.getInputHint() != null)
-			this.inputHint= other.getInputHint();  
-		if( other.getValidateHint() != null)
-			this.validateHint= other.getValidateHint();  
-		if( other.getFieldHeight() != null)
-			this.fieldHeight= other.getFieldHeight();  
-		if( other.getLabelLength() != null)
-			this.labelLength= other.getLabelLength();  
-		if( other.getFieldLength() != null)
-			this.fieldLength= other.getFieldLength();		
-
+		if( other.getModelCode() != null)
+			this.setModelCode(other.getModelCode());  
+		if( other.getColumnName() != null)
+			this.setColumnName(other.getColumnName());
+		if(other.getAccessType()!= null)
+		this.accessType= other.getAccessType();  
+		if(other.getColumnType()!= null)
+		this.columnType=other.getColumnType();
+		if(other.getDefaultValue()!= null)
+		this.defaultValue=other.getDefaultValue();
+		if(other.getDisplayOrder()!= null)
+		this.displayOrder=other.getDisplayOrder();
+		if(other.getExtendOptions()!= null)
+		this.extendOptions=other.getExtendOptions();
+		if(other.getFieldHeight()!= null)
+		this.fieldHeight=other.getFieldHeight();
+		if(other.getFieldWidth()!= null)
+		this.fieldWidth=other.getFieldWidth();
+		if(other.getFilterType()!= null)
+		this.filterType=other.getFilterType();
+		if(other.getInputHint()!= null)
+		this.inputHint=other.getInputHint();
+		if(other.getMandatory()!= null)
+		this.mandatory=other.getMandatory();
+		if(other.getReferenceData()!= null)
+		this.referenceData=other.getReferenceData();
+		if(other.getReferenceType()!= null)
+		this.referenceType=other.getReferenceType();
+		if(other.getUrl()!= null)
+		this.url=other.getUrl();
+		if(other.getValidateHint()!= null)
+		this.validateHint=other.getValidateHint();
+		if(other.getValidateInfo()!= null)
+		this.validateInfo=other.getValidateInfo();
+		if(other.getValidateRegex()!= null)
+		this.validateRegex=other.getValidateRegex();
 		return this;
 	}
 
 	public ModelDataField clearProperties(){
-  
+		this.cid=null;
 		this.accessType= null;  
-		this.displayOrder= null;  
-		this.inputHint= null;  
-		this.validateHint= null;  
-		this.fieldHeight= null;  
-		this.labelLength= null;  
-		this.fieldLength= null;
-
+		this.columnType=null; 
+		this.defaultValue=null; 
+		this.displayOrder=null; 
+		this.extendOptions=null; 
+		this.fieldHeight=null; 
+		this.fieldWidth=null; 
+		this.filterType=null; 
+		this.inputHint=null; 
+		this.mandatory=null; 
+		this.referenceData=null; 
+		this.referenceType=null; 
+		this.url=null; 
+		this.validateHint=null; 
+		this.validateInfo=null; 
+		this.validateRegex=null; 
 		return this;
 	}
+	
 }

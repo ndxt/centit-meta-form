@@ -38,10 +38,6 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
 	private String  fieldLabelName;
 	
-	//@JoinColumn(name="TABLE_ID")
-	//@ManyToOne
-	@JSONField(serialize=false)
-	private MetaTable mdTable;
 	
 	/**
 	 * 字段描述 null 

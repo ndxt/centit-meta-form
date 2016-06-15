@@ -72,6 +72,21 @@ public class MetaFormModel implements java.io.Serializable {
 	@Column(name = "ACCESS_TYPE")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  accessType;
+	
+	/**
+	 * 表单模板
+	 */
+	@Column(name = "form_template")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	private String  formTemplate;
+	
+	/**
+	 * 是否是树形结构
+	 */
+	@Column(name = "list_as_tree")
+	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	private String  listAsTree;
+	
 	/**
 	 * 与父模块关系 O 没有父模块  1  一对一，2 多对一 
 	 */
@@ -137,23 +152,31 @@ public class MetaFormModel implements java.io.Serializable {
 		this.modelName= modelName; 		
 	}
 
-/** full constructor */
-	public MetaFormModel(
-	 String modelCode		
-	,Long  tableId,String  modelComment,String  modelName,String  accessType,String  relationType,String  parentModelCode,Long  displayOrder,Date  lastModifyDate,String  recorder) {
-	
-	
-		this.modelCode = modelCode;		
-	
-		this.setTableId(tableId);
-		this.modelComment= modelComment;
-		this.modelName= modelName;
-		this.accessType= accessType;
-		this.relationType= relationType;
-		this.parentModelCode= parentModelCode;
-		this.displayOrder= displayOrder;
-		this.lastModifyDate= lastModifyDate;
-		this.recorder= recorder;		
+	/** full constructor */
+	public MetaFormModel(String modelCode, MetaTable mdTable,
+			String modelComment, String modelName, String accessType,
+			String formTemplate, String listAsTree, String relationType,
+			String parentModelCode, Long displayOrder, Date lastModifyDate,
+			String recorder, String extendOptions, String extendOptBean,
+			String extendOptBeanParam) {
+		super();
+		this.modelCode = modelCode;
+		this.mdTable = mdTable;
+		this.modelComment = modelComment;
+		this.modelName = modelName;
+		this.accessType = accessType;
+		this.formTemplate = formTemplate;
+		this.listAsTree = listAsTree;
+		this.relationType = relationType;
+		this.parentModelCode = parentModelCode;
+		this.displayOrder = displayOrder;
+		this.lastModifyDate = lastModifyDate;
+		this.recorder = recorder;
+		this.extendOptions = extendOptions;
+		this.extendOptBean = extendOptBean;
+		this.extendOptBeanParam = extendOptBeanParam;
+		this.modelDataFields = new HashSet<ModelDataField>();
+		this.metaFormModels = new HashSet<MetaFormModel>();
 	}
 	
 
@@ -162,6 +185,7 @@ public class MetaFormModel implements java.io.Serializable {
 		return this.modelCode;
 	}
 
+	
 	public void setModelCode(String modelCode) {
 		this.modelCode = modelCode;
 	}
@@ -217,6 +241,18 @@ public class MetaFormModel implements java.io.Serializable {
 		this.relationType = relationType;
 	}
   
+	public String getFormTemplate() {
+		return formTemplate;
+	}
+	public void setFormTemplate(String formTemplate) {
+		this.formTemplate = formTemplate;
+	}
+	public String getListAsTree() {
+		return listAsTree;
+	}
+	public void setListAsTree(String listAsTree) {
+		this.listAsTree = listAsTree;
+	}
 	public String getParentModelCode() {
 		return this.parentModelCode;
 	}
@@ -437,10 +473,11 @@ public class MetaFormModel implements java.io.Serializable {
 		this.relationType= other.getRelationType();  
 		this.parentModelCode= other.getParentModelCode();  
 		this.displayOrder= other.getDisplayOrder();  
+		this.formTemplate=other.getFormTemplate();
+		this.listAsTree=other.getListAsTree();
 		this.lastModifyDate= other.getLastModifyDate();  
 		this.recorder= other.getRecorder();	
 		this.modelDataFields = other.getModelDataFields();
-		
 		this.metaFormModels = other.getMetaFormModels();		
 		this.extendOptBean = other.getExtendOptBean();
 		this.extendOptBeanParam = other.getExtendOptBeanParam();
@@ -463,6 +500,10 @@ public class MetaFormModel implements java.io.Serializable {
 			this.accessType= other.getAccessType();  
 		if( other.getRelationType() != null)
 			this.relationType= other.getRelationType();  
+		if( other.getFormTemplate() != null)
+			this.formTemplate=other.getFormTemplate();
+		if( other.getListAsTree() != null)
+			this.listAsTree=other.getListAsTree();
 		if( other.getParentModelCode() != null)
 			this.parentModelCode= other.getParentModelCode();  
 		if( other.getDisplayOrder() != null)
