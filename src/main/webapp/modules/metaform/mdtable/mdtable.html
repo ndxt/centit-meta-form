@@ -12,7 +12,12 @@
        		<th data-options="field:'tableType'">类别</th>
        		<th data-options="field:'tableState'">状态</th>
        		<th data-options="field:'tableComment'">描述</th>
-       		<th data-options="field:'isInWorkflow'">是否是流程中的业务表</th>
+       		<th data-options="field:'workFlowOptType',
+						formatter:function(value, rowData, rowIndex){
+						  	if(value=='0')return '不关联工作流';else
+						  	if(value=='1')return '和流程业务关联';else
+						  	if(value=='2')return '和流程过程关联';
+						  }">与流程中业务关联关系</th>
        		<th data-options="field:'lastModifyDate'">更改时间</th>
        		<th data-options="field:'recorder'">更改人员</th>
        		
