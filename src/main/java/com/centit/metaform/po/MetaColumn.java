@@ -146,6 +146,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	// Constructors
 	/** default constructor */
 	public MetaColumn() {
+		this.columnState="0";
 	}
 	/** minimal constructor */
 	public MetaColumn(com.centit.metaform.po.MetaColumnId id 

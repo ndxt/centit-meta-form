@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -55,6 +57,7 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	 */
 	@JoinColumn(name="DATABASE_CODE", nullable = true)  
 	@ManyToOne
+	@NotFound(action=NotFoundAction.IGNORE)
 	private DatabaseInfo  databaseInfo;
 	
 	

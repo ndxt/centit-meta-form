@@ -7,6 +7,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -83,8 +84,8 @@ public class PendingMetaColumn implements java.io.Serializable {
 	 * 状态 null 
 	 */
 	@Column(name = "COLUMN_STATE")
-	/*@NotBlank(message = "字段不能为空")
-	@Length(min = 0, message = "字段长度不能小于{min}大于{max}")*/
+	//@NotBlank(message = "字段不能为空")
+	@Length(min = 0, message = "字段长度不能小于{min}大于{max}")
 	private String  columnState;
 	/**
 	 * 引用类型 0：没有：1： 数据字典 2：JSON表达式 3：sql语句  Y：年份 M：月份 
@@ -126,6 +127,7 @@ public class PendingMetaColumn implements java.io.Serializable {
 	// Constructors
 	/** default constructor */
 	public PendingMetaColumn() {
+		this.columnState="0";
 	}
 	/** minimal constructor */
 	public PendingMetaColumn(
