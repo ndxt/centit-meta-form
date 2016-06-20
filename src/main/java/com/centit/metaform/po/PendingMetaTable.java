@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
@@ -45,9 +46,13 @@ public class PendingMetaTable implements java.io.Serializable {
 	 */
 	@Id
 	@Column(name = "TABLE_ID")
-	@GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
+	//1.用一张hibernate_sequences表管理主键,需要建hibernate_sequences表
+	/*@GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
 	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=200000001,
-	pkColumnName="SEQ_NAME",pkColumnValue="pendingtableId",allocationSize=1,valueColumnName="SEQ_VALUE")
+	pkColumnName="SEQ_NAME",pkColumnValue="pendingtableId",allocationSize=1,valueColumnName="SEQ_VALUE")*/
+	//2.用序列
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seqgen")
+	@SequenceGenerator(sequenceName="SEQ_PENDINGTABLEID",name="seqgen",allocationSize=1,initialValue=1)
 	private Long tableId;
 
 	/**
