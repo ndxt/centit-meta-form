@@ -75,15 +75,18 @@
 		       		<th data-options="field:'accessType',editor:{type:'textbox',options:{}}">字段类别</th>
 		       		<th data-options="field:'mandatory',
 						formatter:function(value, rowData, rowIndex){
+							if(null==value)
+								return '否';
 						  	if(value=='')return '否';else
 						  	if(value=='T')return '是';else
 						  	if(value=='F')return '否';
-						  }
-						,editor:{ type:'combobox',
+						  },
+						  editor:{ type:'combobox',
 						  options:{valueField:'value',textField:'label',
 							data:[
 							{value:'T',label:'是'},
-							{value:'F',label:'否'}]}}">是否必填</th>
+							{value:'F',label:'否'}],
+							}}">是否必填</th>
 		       		<th data-options="field:'primarykey',
 						formatter:function(value, rowData, rowIndex){
 						  	if(value=='')return '否';else
