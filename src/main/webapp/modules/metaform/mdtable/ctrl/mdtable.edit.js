@@ -37,7 +37,7 @@ define(function(require) {
 				var mdtablecolumns=mdtable_columns.datagrid('getRows');
 				var mdtable=form.form('value');
 				$.extend(mdtable,{mdColumns:mdtablecolumns})
-				if (isValid) {
+				if (isValid && mdtable_columns.cdatagrid('endEdit')) {
 					
 					$.ajax({
 						type: 'put',
