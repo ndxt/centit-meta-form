@@ -101,7 +101,7 @@ public class MetaRelation implements TableReference, java.io.Serializable {
 		this.relationState= relationState; 		
 	}
 
-/** full constructor */
+	/** full constructor */
 	public MetaRelation(
 	 Long relationId		
 	,Long  parentTableId,Long  childTableId,String  relationName,String  relationState,String  relationComment,Date  lastModifyDate,String  recorder) {
