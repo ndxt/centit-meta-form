@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.NotFound;
@@ -26,6 +25,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.centit.dde.po.DatabaseInfo;
+import com.centit.framework.core.po.EntityWithTimestamp;
 
 
 /**
@@ -36,7 +36,7 @@ import com.centit.dde.po.DatabaseInfo;
 */
 @Entity
 @Table(name = "F_PENDING_META_TABLE")
-public class PendingMetaTable implements java.io.Serializable {
+public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 

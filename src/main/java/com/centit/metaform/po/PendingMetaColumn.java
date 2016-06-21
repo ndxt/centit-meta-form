@@ -7,9 +7,10 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.centit.framework.core.po.EntityWithTimestamp;
 
 
 /**
@@ -20,7 +21,7 @@ import org.hibernate.validator.constraints.NotBlank;
 */
 @Entity
 @Table(name = "F_PENDING_META_COLUMN")
-public class PendingMetaColumn implements java.io.Serializable {
+public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 	@EmbeddedId

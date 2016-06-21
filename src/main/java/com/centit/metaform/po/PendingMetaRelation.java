@@ -12,6 +12,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.centit.framework.core.po.EntityWithTimestamp;
+
 
 /**
  * create by scaffold 2016-06-01 
@@ -21,7 +23,7 @@ import org.hibernate.validator.constraints.NotBlank;
 */
 @Entity
 @Table(name = "F_PENDING_META_RELATION")
-public class PendingMetaRelation implements java.io.Serializable {
+public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 
