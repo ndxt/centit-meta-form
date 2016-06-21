@@ -42,8 +42,8 @@ import com.centit.support.algorithm.UuidOpt;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 
-@Service(value="jdbcModelFormService")
-public class JdbcModelFormServiceImpl implements ModelFormService {
+@Service(value="modelFormService")
+public class ModelFormServiceImpl implements ModelFormService {
 
     @Resource(name = "databaseInfoDao") 
     private DatabaseInfoDao databaseInfoDao;
@@ -61,7 +61,7 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
     private ModelDataFieldDao formFieldDao;
     
 	@Override
-	public JdbcModelRuntimeContext createRuntimeContext(String modelCode) {
+	public ModelRuntimeContext createRuntimeContext(String modelCode) {
 		
 		JdbcModelRuntimeContext rc = new JdbcModelRuntimeContext(modelCode);		
 		DataSourceDescription dbc = new DataSourceDescription();	  
@@ -108,7 +108,7 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 	}
 	
 	@Transactional(readOnly=true)
-	public JdbcModelRuntimeContext createRuntimeContextFromDB(String modelCode) {
+	public JdbcModelRuntimeContext createJdbcRuntimeContext(String modelCode) {
 		
 		JdbcModelRuntimeContext rc = new JdbcModelRuntimeContext(modelCode);		
 		
@@ -126,6 +126,22 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		dbc.setPassword(mdb.getPassword());		
 		rc.setDataSource(dbc);
 
+		return rc;
+	}
+
+	@Transactional(readOnly=true)
+	public HibernateModelRuntimeContext createHibernateRuntimeContext(String modelCode) {
+		
+		HibernateModelRuntimeContext rc = new HibernateModelRuntimeContext(modelCode);		
+		
+		MetaFormModel mfm = formModelDao.getObjectById(modelCode);
+		MetaTable mtab = mfm.getMdTable();
+
+		rc.setTableInfo(mtab);
+		rc.setMetaFormModel(mfm);
+		
+		rc.setBaseObjectDao(tableDao);
+		
 		return rc;
 	}
 

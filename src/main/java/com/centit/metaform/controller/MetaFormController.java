@@ -27,7 +27,7 @@ import com.centit.metaform.formaccess.impl.JdbcModelRuntimeContext;
 public class MetaFormController  extends BaseController{
 	//private static final Log log = LogFactory.getLog(MetaFormController.class);
 
-	@Resource(name="jdbcModelFormService")
+	@Resource(name="modelFormService")
 	private ModelFormService formService;	
 	
 	@RequestMapping(value = "/{modelCode}/list",method = RequestMethod.GET)
