@@ -173,6 +173,8 @@ public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializa
 	
 	
 	public void setTableId(Long tableId) {
+		if(null==this.cid)
+			this.cid=new PendingMetaColumnId();
 		this.cid.setTableId(tableId);
 	}
 	// Property accessors

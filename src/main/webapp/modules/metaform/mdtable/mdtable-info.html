@@ -4,12 +4,6 @@
 	     <form class="centit form" novalidate="true" style="width:98%;">
 
 		      <div class="fields three"> 	
-		   		<div class="field ">
-		       		<label>所属数据库ID</label>
-		       		<input class="easyui-combobox" name="databaseCode" required
-						url="service/sys/databaseinfo?pageNo=1&pageSize=100" method="get"
-						data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
-				</div>
 		   		<div class="field required">
 		       		<label>表代码</label>
 		       		<input type="text" class="easyui-textbox" 
@@ -21,20 +15,25 @@
 		       		<input type="text" class="easyui-textbox" 
 		       		name="tableLabelName" required/>
 				</div>
-		    </div>
-		    <div class="fields three">	
-		    	
-		   		<div class="field required">
+				<div class="field required">
 		       		<label>类别</label>
 		       		<input type="text" class="easyui-combobox" 
 		       		data-options="valueField:'value',textField:'text',data:[{value:'0',text:'类别0'},{value:'1',text:'类别1'},{value:'2',text:'类别2'}]"
 		       		name="tableType" required/>
 				</div>
+		    </div>
+		    <div class="fields three">	
 		    	
 		   		<div class="field required">
 		       		<label>状态</label>
 		       		<input type="text" class="easyui-textbox" 
 		       		name="tableState" required/>
+				</div>
+				<div class="field ">
+		       		<label>所属数据库ID</label>
+		       		<input class="easyui-combobox" name="databaseCode" required
+						url="service/sys/databaseinfo?pageNo=1&pageSize=100" method="get"
+						data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
 				</div>
 				<div class="field required">
 		       		<label>与流程中业务关联关系</label>
@@ -69,10 +68,10 @@
 					<th data-options="field:'columnName',editor:{type:'textbox',options:{required: true}}">字段代码</th> 
 		       		<th data-options="field:'fieldLabelName',editor:{type:'textbox',options:{required: true}}">字段名称</th>
 		       		<th data-options="field:'columnOrder',editor:{type:'textbox',options:{}}">显示次序</th>
-		       		<th data-options="field:'columnType',editor:{type:'textbox',options:{}}">字段类型</th>
+		       		<th data-options="field:'columnType',editor:{type:'textbox',options:{required: true}}">字段类型</th>
 		       		<th data-options="field:'maxLength',editor:{type:'textbox',options:{}}">字段长度</th>
 		       		<th data-options="field:'scale',editor:{type:'textbox',options:{}}">字段精度</th>
-		       		<th data-options="field:'accessType',editor:{type:'textbox',options:{}}">字段类别</th>
+		       		<th data-options="field:'accessType',editor:{type:'textbox',options:{required: true}}">字段类别</th>
 		       		<th data-options="field:'mandatory',
 						formatter:function(value, rowData, rowIndex){
 							if(null==value)

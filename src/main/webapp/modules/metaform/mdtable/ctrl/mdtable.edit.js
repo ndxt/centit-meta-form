@@ -48,7 +48,6 @@ define(function(require) {
 							var parentTable=_self.parent.panel.find('#mdtable');
 							parentTable.datagrid('reload');
 						},
-					    dataType: 'application/json',
 					    contentType:'application/json'
 
 					});
