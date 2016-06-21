@@ -38,6 +38,7 @@ import com.centit.metaform.formaccess.OperationEvent;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
+import com.centit.support.algorithm.UuidOpt;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 
@@ -113,32 +114,76 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		
 		MetaFormModel mfm = formModelDao.getObjectById(modelCode);
 		MetaTable mtab = mfm.getMdTable();
+
+		rc.setTableInfo(mtab);
+		rc.setMetaFormModel(mfm);
+		
 		DatabaseInfo mdb = databaseInfoDao.getObjectById( mtab.getDatabaseCode());		
-		rc.setTableInfo(mtab);		
 		DataSourceDescription dbc = new DataSourceDescription();
 		dbc.setDatabaseCode(mdb.getDatabaseCode());
 		dbc.setConnUrl(mdb.getDatabaseUrl());
 		dbc.setUsername(mdb.getUsername());
-		dbc.setPassword(mdb.getPassword());
-		
+		dbc.setPassword(mdb.getPassword());		
 		rc.setDataSource(dbc);
-		
+
 		return rc;
 	}
 
 	@Override
 	@Transactional
 	public Map<String, Object> createNewPk(ModelRuntimeContext rc) throws SQLException {
-		//rc.getTableinfo().getPkColumns()
+		JSONObject pk = new JSONObject();
+		for(String pkCol:rc.getTableInfo().getPkColumns()){
+			MetaColumn field = rc.getTableInfo().findFieldByColumn(pkCol);
+			String autoCreateRule = field.getAutoCreateRule();
+			switch(autoCreateRule){
+			case "C":
+				pk.put(field.getPropertyName(), field.getAutoCreateParam());
+				break;
+			case "U":
+				pk.put(field.getPropertyName(), UuidOpt.getUuidAsString());
+				break;
+			case "S":
+				try {
+					pk.put(field.getPropertyName(),
+							rc.getJsonObjectDao().getSequenceNextValue( field.getAutoCreateParam()));
+				} catch (IOException e) {
+				}
+				break;
+			default:
+				break;
+			}
+		}
 		//TableField findFieldByColumn(String name)
-		return null;
+		return pk;
 	}
 
 	@Override
 	@Transactional
 	public JSONObject createInitialObject(ModelRuntimeContext rc) throws SQLException {
-		// 查找所有 有自动生成策略的字段，并生成对应的值
-		return null;
+		JSONObject object = new JSONObject();
+		for(MetaColumn field :rc.getTableInfo().getMdColumns()){			
+			String autoCreateRule = field.getAutoCreateRule();
+			switch(autoCreateRule){
+			case "C":
+				object.put(field.getPropertyName(), field.getAutoCreateParam());
+				break;
+			case "U":
+				object.put(field.getPropertyName(), UuidOpt.getUuidAsString());
+				break;
+			case "S":
+				try {
+					object.put(field.getPropertyName(),
+							rc.getJsonObjectDao().getSequenceNextValue( field.getAutoCreateParam()));
+				} catch (IOException e) {
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		//TableField findFieldByColumn(String name)
+		return object;
 	}
 
 	@Override
