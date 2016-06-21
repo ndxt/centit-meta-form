@@ -154,7 +154,6 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 				break;
 			}
 		}
-		//TableField findFieldByColumn(String name)
 		return pk;
 	}
 
@@ -182,13 +181,19 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 				break;
 			}
 		}
-		//TableField findFieldByColumn(String name)
 		return object;
 	}
 
+	/**
+	 * @param operation 取值范围：view,create,edit,list(ListViewDefine)
+	 */
 	@Override
 	@Transactional(readOnly=true)
 	public MateFormDefine getFormDefine(ModelRuntimeContext rc,String operation) {
+		
+		//MetaFormModel mfm = rc.getMetaFormModel();
+		//mfm.getMetaFormModels()
+		
 		List<FormField> fields = new ArrayList<>();
 		FormField ff = new FormField();
 		ff.setKey("id");

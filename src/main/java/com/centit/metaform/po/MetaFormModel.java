@@ -34,9 +34,6 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name = "M_META_FORM_MODEL")
 public class MetaFormModel implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
-
-
-
 	/**
 	 * 模块代码 null 
 	 */
