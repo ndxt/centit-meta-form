@@ -3,8 +3,10 @@ package com.centit.metaform.formaccess.impl;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -67,6 +69,8 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		dbc.setPassword("metaform");
 		rc.setDataSource(dbc);
 		
+		Set<MetaColumn> cols = new HashSet<MetaColumn>();
+		 
 		MetaTable tableInfo = new MetaTable();
 		tableInfo.setTableName("TEST_TABLE");
 		tableInfo.setTableLabelName("通讯录");
@@ -76,13 +80,14 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		field.setMaxLength(10);
 		field.setScale(0);
 		field.setMandatory("T");
-		tableInfo.getColumns().add(field);
+		field.setPrimarykey("Y");
+		cols.add(field);
 		
 		field = new MetaColumn();
 		field.setColumnName("USER_NAME");
 		field.setColumnType("varchar2");
 		field.setMaxLength(50);
-		tableInfo.getColumns().add(field);
+		cols.add(field);
 		
 		field = new MetaColumn();
 		field.setColumnName("USER_PHONE");
@@ -90,9 +95,9 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		field.setMaxLength(20);
 		field.setAutoCreateRule("C");
 		field.setAutoCreateParam("'110'");
-		tableInfo.getColumns().add(field);			
+		cols.add(field);			
 		
-		tableInfo.getPkColumns().add("ID");
+		tableInfo.setMdColumns(cols);
 		
 		rc.setTableInfo(tableInfo);
 		
@@ -192,8 +197,9 @@ public class JdbcModelFormServiceImpl implements ModelFormService {
 		lv.addOperation(new ModelOperation(rc.getModelCode(),"view","get","查看"));
 		lv.addOperation(new ModelOperation(rc.getModelCode(),"edit","get","编辑"));
 		return lv;
-	}	
-	
+	}
+/*--------------------------------------------------------------------------------------------
+*/	
 	@Override
 	@Transactional
 	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters) {

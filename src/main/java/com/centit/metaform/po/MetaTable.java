@@ -652,10 +652,12 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		}
 		return false;
 	}
+	
 	@Override
 	public List<MetaColumn> getColumns() {
 		return new ArrayList<MetaColumn>(mdColumns);
 	}
+	
 	@Override
 	public List<String> getPkColumns() {
 		if(mdColumns==null)
