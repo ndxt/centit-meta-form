@@ -14,6 +14,12 @@ define(function(require) {
 			mdtable_columns.cdatagrid({
 				controller:_self
 			})
+			
+			var mdtable_subtables=panel.find("#mdtable_subtables");
+			mdtable_subtables.cdatagrid({
+				controller:_self
+			});
+			
 			Core.ajax(Config.ContextPath+'service/metaform/mdtable/draft/'+data.tableId, {
 				type: 'json',
 				method: 'get' 
@@ -25,6 +31,7 @@ define(function(require) {
 					.form('readonly', 'tableId')
 					.form('focus');
 				mdtable_columns.datagrid('loadData',data.mdColumns);
+				mdtable_subtables.datagrid('loadData',data.mdRelations);
 			});
 			
 			
@@ -33,11 +40,15 @@ define(function(require) {
 				// 开启校验
 				form.form('enableValidation');
 				var isValid = form.form('validate');
+				var mdtable=form.form('value');
 				var mdtable_columns=panel.find("#mdtable_columns");
 				var mdtablecolumns=mdtable_columns.datagrid('getRows');
-				var mdtable=form.form('value');
-				$.extend(mdtable,{mdColumns:mdtablecolumns})
-				if (isValid && mdtable_columns.cdatagrid('endEdit')) {
+				var mdtable_subtables=panel.find("#mdtable_subtables");
+				var mdtablesubtables=mdtable_subtables.datagrid('getRows');
+				
+				
+				$.extend(mdtable,{mdColumns:mdtablecolumns,mdRelations:mdtablesubtables})
+				if (isValid && mdtable_columns.cdatagrid('endEdit') && mdtable_subtables.cdatagrid('endEdit')) {
 					
 					$.ajax({
 						type: 'put',

@@ -5,13 +5,17 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.core.po.EntityWithTimestamp;
 
 
@@ -33,20 +37,25 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	 */
 	@Id
 	@Column(name = "RELATION_ID")
-	@GeneratedValue(generator = "assignedGenerator")
-	@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
+	@GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
+	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=1,
+	pkColumnName="SEQ_NAME",pkColumnValue="relationId",allocationSize=1,valueColumnName="SEQ_VALUE")
 	private Long relationId;
 
 	/**
 	 * 主表表ID 表单主键 
 	 */
-	@Column(name = "PARENT_TABLE_ID")
-	private Long  parentTableId;
+	@JoinColumn(name = "PARENT_TABLE_ID")
+	@ManyToOne
+	@JSONField(serialize=false)
+	private PendingMetaTable  parentTable;
 	/**
 	 * 从表表ID 表单主键 
 	 */
-	@Column(name = "CHILD_TABLE_ID")
-	private Long  childTableId;
+	@JoinColumn(name = "CHILD_TABLE_ID")
+	@ManyToOne
+	@JSONField(serialize=false)
+	private PendingMetaTable  childTable;
 	/**
 	 * 关联名称 null 
 	 */
@@ -58,7 +67,6 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	 * 状态 null 
 	 */
 	@Column(name = "RELATION_STATE")
-	@NotBlank(message = "字段不能为空")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  relationState;
 	/**
@@ -95,16 +103,13 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 		this.relationState= relationState; 		
 	}
 
-/** full constructor */
+	/** full constructor */
 	public PendingMetaRelation(
 	 Long relationId		
-	,Long  parentTableId,Long  childTableId,String  relationName,String  relationState,String  relationComment,Date  lastModifyDate,String  recorder) {
-	
-	
+	,PendingMetaTable  parentTable,PendingMetaTable  childTable,String  relationName,String  relationState,String  relationComment,Date  lastModifyDate,String  recorder) {
+		this.parentTable=parentTable;
+		this.childTable=childTable;
 		this.relationId = relationId;		
-	
-		this.parentTableId= parentTableId;
-		this.childTableId= childTableId;
 		this.relationName= relationName;
 		this.relationState= relationState;
 		this.relationComment= relationComment;
@@ -112,8 +117,31 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 		this.recorder= recorder;		
 	}
 	
-
-  
+	public Long getChildTableId(){
+    	if(null!=this.getChildTable())
+    		return this.getChildTable().getTableId();
+    	return null;
+    }
+    public String getChildTableName(){
+    	if(null!=this.getChildTable())
+    		return this.getChildTable().getTableLabelName();
+    	return null;
+    }
+	public PendingMetaTable getParentTable() {
+		return parentTable;
+	}
+	public void setParentTable(PendingMetaTable parentTable) {
+		
+		this.parentTable = parentTable;
+	}
+	public PendingMetaTable getChildTable() {
+		return childTable;
+	}
+	public void setChildTable(PendingMetaTable childTable) {
+		if(null==this.childTable)
+			this.childTable=new PendingMetaTable();
+		this.childTable = childTable;
+	}
 	public Long getRelationId() {
 		return this.relationId;
 	}
@@ -123,24 +151,20 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	}
 	// Property accessors
   
-	public Long getParentTableId() {
-		return this.parentTableId;
-	}
-	
-	public void setParentTableId(Long parentTableId) {
-		this.parentTableId = parentTableId;
-	}
-  
-	public Long getChildTableId() {
-		return this.childTableId;
-	}
-	
-	public void setChildTableId(Long childTableId) {
-		this.childTableId = childTableId;
-	}
-  
 	public String getRelationName() {
 		return this.relationName;
+	}
+	
+	public void setChildTableId(Long childTableId){
+		if(null==this.childTable)
+			this.childTable=new PendingMetaTable();
+		this.childTable.setTableId(childTableId);
+	}
+	
+	public void setParentTableId(Long parentTableId){
+		if(null==this.parentTable)
+			this.parentTable=new PendingMetaTable();
+		this.parentTable.setTableId(parentTableId);
 	}
 	
 	public void setRelationName(String relationName) {
@@ -185,8 +209,8 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
   
 		this.setRelationId(other.getRelationId());
   
-		this.parentTableId= other.getParentTableId();  
-		this.childTableId= other.getChildTableId();  
+		this.childTable=other.getChildTable();
+		this.parentTable=other.getParentTable();
 		this.relationName= other.getRelationName();  
 		this.relationState= other.getRelationState();  
 		this.relationComment= other.getRelationComment();  
@@ -201,10 +225,10 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	if( other.getRelationId() != null)
 		this.setRelationId(other.getRelationId());
   
-		if( other.getParentTableId() != null)
-			this.parentTableId= other.getParentTableId();  
-		if( other.getChildTableId() != null)
-			this.childTableId= other.getChildTableId();  
+		if( other.getParentTable() != null)
+			this.parentTable= other.getParentTable();  
+		if( other.getChildTable() != null)
+			this.childTable= other.getChildTable();  
 		if( other.getRelationName() != null)
 			this.relationName= other.getRelationName();  
 		if( other.getRelationState() != null)
@@ -220,15 +244,13 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	}
 
 	public PendingMetaRelation clearProperties(){
-  
-		this.parentTableId= null;  
-		this.childTableId= null;  
+		this.parentTable= null;  
+		this.childTable= null;  
 		this.relationName= null;  
 		this.relationState= null;  
 		this.relationComment= null;  
 		this.lastModifyDate= null;  
 		this.recorder= null;
-
 		return this;
 	}
 }

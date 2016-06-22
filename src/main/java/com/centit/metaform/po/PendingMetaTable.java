@@ -24,6 +24,7 @@ import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.core.po.EntityWithTimestamp;
 
@@ -131,8 +132,9 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
 	    })*/
 	private Set<PendingMetaColumn> mdColumns;
 	
-	@Transient
-	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	
+	
+	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<PendingMetaRelation> mdRelations;
 	
 	
@@ -197,11 +199,20 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
 		}
 		this.getMdColumns().addAll(mdColumns1);
 	}
+	
 	public Set<PendingMetaRelation> getMdRelations() {
+		if(null==this.mdRelations)
+			this.mdRelations=new HashSet<PendingMetaRelation>();
 		return mdRelations;
 	}
+	
 	public void setMdRelations(Set<PendingMetaRelation> mdRelations) {
-		this.mdRelations = mdRelations;
+		this.getMdRelations().clear();
+		Iterator<PendingMetaRelation> itr=mdRelations.iterator();
+		while(itr.hasNext()){
+			itr.next().setParentTable(this);
+		}
+		this.getMdRelations().addAll(mdRelations);
 	}
 	
 	
@@ -310,6 +321,7 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
 
 	public PendingMetaTable copy(PendingMetaTable other){
 		this.setMdColumns(other.getMdColumns());
+		this.setMdRelations(other.getMdRelations());
 		this.setTableId(other.getTableId());
 		this.setDatabaseInfo(other.getDatabaseInfo());
 		this.tableName= other.getTableName();  
@@ -328,6 +340,8 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
   
 		if( other.getTableId() != null)
 			this.setTableId(other.getTableId());
+		if(other.getMdRelations()!=null)
+			this.setMdRelations(other.getMdRelations());
 		if(other.getMdColumns()!=null)
 			this.setMdColumns(other.getMdColumns());
 		if( other.getDatabaseCode() != null)
@@ -354,7 +368,8 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
 	}
 
 	public PendingMetaTable clearProperties(){
-  
+		this.mdColumns=null;
+		this.mdRelations=null;
 		this.databaseInfo=null;
 		this.tableName= null;  
 		this.tableLabelName= null;  

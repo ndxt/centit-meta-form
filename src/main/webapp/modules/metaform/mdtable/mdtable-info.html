@@ -61,6 +61,7 @@
 
 		<table title="表字段" idField="tableId" id="mdtable_columns" style="height:300px;width:98%;"
 			editable="true"
+			pagination="false"
 			toolbar=".temp-toolbar_mdtable_columns">
 		    <thead data-options="frozen:true">
 		        <tr>
@@ -135,8 +136,63 @@
 			<a iconCls="icon-base icon-base-ban" trigger="single"
 				target="confirm" rel="mdtable_column_remove" title="确定删除吗？">删除</a>
 		</div>
-		<div style="width:98%;"><input type="button" value="提交" id="mdtable_sub" style="position:relative;float:right;width:80px;height:30px;"/></div>
+		
 	</div>
-	
+	<div  title="2.relations">
+			<table title="子表" idField="tableId" id="mdtable_subtables" style="height:300px;width:98%;"
+				editable="true"
+				pagination="false"
+				toolbar=".temp-toolbar_mdtable_subtables">
+			    <thead data-options="frozen:true">
+			        <tr>
+			        	<th data-options="field:'childTableId',
+			        	 formatter:function(value,rec){
+				        	 var _self=this;
+				        	 if(null==this.data)
+				        		{
+				        			$.ajax({
+										type: 'get',
+										async:false, 
+									    url: '/centit-meta-form/service/metaform/mdtable/draft?pageNo=1&pageSize=100&field=tableId&field=tableLabelName',
+									    success: function(res){
+									    	var list={};
+									    	$.each(res.data.objList,function(index){
+									    		var obj=res.data.objList[index];
+									    		list[obj.tableId]=obj.tableLabelName;
+									    	});
+									    	$.extend(_self,{data:list});
+										},
+									    contentType:'application/json'
+										});
+								}
+			        		console.log(_self);
+			        		return _self.data[value];
+			        	 },
+			        	 editor:{type:'combobox',options:{
+			        	 valueField: 'tableId',
+                         textField: 'tableLabelName',
+                         url: 'service/metaform/mdtable/draft?pageNo=1&pageSize=100&field=tableId&field=tableLabelName',
+                         loadFilter:function(data){
+                         	return data.objList;
+                         },
+                         	
+			        	}}">子表名称</th>
+			       		<th data-options="field:'relationName',editor:{type:'textbox',options:{}}">关系名称</th>
+			       		<th data-options="field:'relationComment',editor:{type:'textbox',options:{}}">关系说明</th>
+			       		<th data-options="field:'recorder',editor:{type:'textbox',options:{}}">更改人</th>
+			       		<th data-options="field:'lastModifyDate',editor:{type:'textbox',options:{}}">更改时间</th>
+			        </tr>
+			    </thead>
+			</table>
+			
+			<div class="temp-toolbar_mdtable_subtables">
+				<a iconCls="icon-add" trigger="none"
+					target="custom" rel="mdtable_subtable_add" >新增</a>
+				<hr>
+			
+				<a iconCls="icon-base icon-base-ban" trigger="single"
+					target="confirm" rel="mdtable_subtable_remove" title="确定删除吗？">删除</a>
+			</div>
+	</div>
 </div>
-
+<div style="width:98%;"><input type="button" value="提交" id="mdtable_sub" style="position:relative;float:right;width:80px;height:30px;"/></div>

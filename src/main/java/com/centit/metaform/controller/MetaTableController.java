@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
@@ -118,6 +120,9 @@ public class MetaTableController extends BaseController{
     public void listdraft(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);        
         List<PendingMetaTable> listObjects = mdTableMag.listDrafts(searchColumn, pageDesc);
+        SimplePropertyPreFilter simplePropertyPreFilter = null;
+        
+        
         if (null == pageDesc) {
             JsonResultUtils.writeSingleDataJson(listObjects, response);
             return;
@@ -125,7 +130,14 @@ public class MetaTableController extends BaseController{
         ResponseData resData = new ResponseData();
         resData.addResponseData(OBJLIST, listObjects);
         resData.addResponseData(PAGE_DESC, pageDesc);
-        JsonResultUtils.writeResponseDataAsJson(resData, response);
+        if (ArrayUtils.isNotEmpty(field)) {
+            simplePropertyPreFilter = new SimplePropertyPreFilter(PendingMetaTable.class, field);
+            JsonResultUtils.writeResponseDataAsJson(resData, response,simplePropertyPreFilter);
+        }
+        else{
+        	JsonResultUtils.writeResponseDataAsJson(resData, response);
+        }
+        
     }
     
     /**
@@ -146,7 +158,7 @@ public class MetaTableController extends BaseController{
     }
     
     /**
-     * 查询单个  表元数据表 
+     * 查询单个  表元数据表  草稿
 	
 	 * @param tableId  Table_ID
      * @param catalogCode 主键
@@ -170,6 +182,7 @@ public class MetaTableController extends BaseController{
      */
     @RequestMapping(value="/draft",method = {RequestMethod.POST})
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
+    	
     	Serializable pk = mdTableMag.saveNewPendingMdTable(mdTable);
         JsonResultUtils.writeSingleDataJson(pk,response);
     }

@@ -3,6 +3,8 @@ define(function(require) {
 	var Page = require('core/page');
 	var MdtableColumnAdd=require("./mdtable.column.add");
 	var MdtableColumnRemove=require("./mdtable.column.remove");
+	var MdtableSubtableAdd=require("./mdtable.subtable.add");
+	var MdtableSubtableRemove=require("./mdtable.subtable.remove");
 	var Core = require('core/core');
 	
 	var MdTableAdd = Page.extend(function() {
@@ -11,7 +13,9 @@ define(function(require) {
 		// @override
 		this.injecte([
 		              new MdtableColumnAdd('mdtable_column_add'),
-		              new MdtableColumnRemove('mdtable_column_remove')
+		              new MdtableColumnRemove('mdtable_column_remove'),
+		              new MdtableSubtableAdd('mdtable_subtable_add'),
+		              new MdtableSubtableRemove('mdtable_subtable_remove')
 		        	]);
 		
 		// @override
@@ -19,6 +23,11 @@ define(function(require) {
 			var form = panel.find('form');
 			var mdtable_columns=panel.find("#mdtable_columns");
 			mdtable_columns.cdatagrid({
+				controller:_self
+			});
+			
+			var mdtable_subtables=panel.find("#mdtable_subtables");
+			mdtable_subtables.cdatagrid({
 				controller:_self
 			});
 			
