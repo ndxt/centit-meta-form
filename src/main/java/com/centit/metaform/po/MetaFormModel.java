@@ -134,6 +134,11 @@ public class MetaFormModel implements java.io.Serializable {
 	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<MetaFormModel> metaFormModels;
 
+	
+	@Transient
+	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<ModelOperation> modelOperations;
+	
 	// Constructors
 	/** default constructor */
 	public MetaFormModel() {
@@ -305,6 +310,8 @@ public class MetaFormModel implements java.io.Serializable {
 		this.modelDataFields.remove(modelDataField);
 	}
 	
+	
+	
 	public ModelDataField newModelDataField(){
 		ModelDataField res = new ModelDataField();
   
@@ -434,6 +441,81 @@ public class MetaFormModel implements java.io.Serializable {
 			}
 			if(! found)
 				addMetaFormModel(newdt);
+		} 	
+	}	
+	
+	public Set<ModelOperation> getModelOperations() {
+		if(this.modelOperations==null)
+			this.modelOperations = new HashSet<ModelOperation>();
+		return modelOperations;
+	}
+	
+	public void setModelOperations(Set<ModelOperation> modelOperations) {
+		this.modelOperations = modelOperations;
+	}
+	
+	public void addModelOperation(ModelOperation modelOperation ){
+		if(this.modelOperations==null)
+			this.modelOperations = new HashSet<ModelOperation>();
+		this.modelOperations.add(modelOperation);
+	}
+	
+	public void removeModelOperation(ModelOperation modelOperation ){
+		if (this.modelOperations==null)
+			return;
+		this.modelOperations.remove(modelOperation);
+	}
+	
+	public ModelOperation newModelOperation(){
+		ModelOperation res = new ModelOperation();  
+		res.setModelCode(this.getModelCode());
+		return res;
+	}
+	/**
+	 * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
+	 * 
+	 */
+	public void replaceModelOperations(Set<ModelOperation> set) {
+		List<ModelOperation> newObjs = new ArrayList<ModelOperation>();
+		for(ModelOperation p :set){
+			if(p==null)
+				continue;
+			ModelOperation newdt = newModelOperation();
+			newdt.copyNotNullProperty(p);
+			newObjs.add(newdt);
+		}
+		//delete
+		boolean found = false;
+		Set<ModelOperation> oldObjs = new HashSet<ModelOperation>();
+		oldObjs.addAll(getModelOperations());
+		
+		for(Iterator<ModelOperation> it=oldObjs.iterator(); it.hasNext();){
+			ModelOperation odt = it.next();
+			found = false;
+			for(ModelOperation newdt :newObjs){
+				if(odt.getCid().equals( newdt.getCid())){
+					found = true;
+					break;
+				}
+			}
+			if(! found)
+				removeModelOperation(odt);
+		}
+		oldObjs.clear();
+		//insert or update
+		for(ModelOperation newdt :newObjs){
+			found = false;
+			for(Iterator<ModelOperation> it=getModelOperations().iterator();
+			 it.hasNext();){
+				ModelOperation odt = it.next();
+				if(odt.getCid().equals( newdt.getCid())){
+					odt.copy(newdt);
+					found = true;
+					break;
+				}
+			}
+			if(! found)
+				addModelOperation(newdt);
 		} 	
 	}	
 	

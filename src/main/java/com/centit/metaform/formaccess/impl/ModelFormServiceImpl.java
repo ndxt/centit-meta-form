@@ -374,7 +374,9 @@ public class ModelFormServiceImpl implements ModelFormService {
 
 			ff.setTemplateOptions(templateOptions);
 			mff.addFilter(ff);
-		}		
+		}
+		for(ModelOperation mo :mfm.getModelOperations())	
+			mff.addOperation(mo);
 		return mff;
 	}
 
@@ -413,10 +415,19 @@ public class ModelFormServiceImpl implements ModelFormService {
 		mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
 		
 		for(ModelDataField field:mfm.getModelDataFields()){
+			MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
+			if(!"H".equals(field.getAccessType())){
+				ListColumn col = new ListColumn(
+						SimpleTableField.mapPropName(field.getColumnName()),
+						mc.getFieldLabelName());
+				if(mc.isPrimaryKey())
+					col.setPrimaryKey(true);
+				mff.addColumn(col);
+			}
+			
 			if("NO".equals(field.getFilterType()))
 				continue;
-			FormField ff = new FormField();
-			MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
+			FormField ff = new FormField();			
 			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
 			ff.setType("input");
 			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
@@ -530,6 +541,9 @@ public class ModelFormServiceImpl implements ModelFormService {
 			mff.addFilter(ff);
 		}
 		
+		for(ModelOperation mo :mfm.getModelOperations())	
+			mff.addOperation(mo);
+
 		return mff;
 	}
 /*--------------------------------------------------------------------------------------------
