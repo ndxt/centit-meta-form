@@ -1,22 +1,11 @@
 package com.centit.metaform.po;
 
-import java.util.Date;
-import java.sql.Timestamp;
 import javax.persistence.Column;
-
 import javax.persistence.EmbeddedId;
-
-
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-import javax.persistence.GeneratedValue;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 
 /**
@@ -93,14 +82,18 @@ public class ModelOperation implements java.io.Serializable {
 	public ModelOperation() {
 	}
 	/** minimal constructor */
-	public ModelOperation(com.centit.metaform.po.ModelOperationId id 
+	public ModelOperation(ModelOperationId id 
 				
 		) {
-		this.cid = id; 
-			
-			
+		this.cid = id;
 	}
 
+	public ModelOperation(String modelCode, String operation, String method,String label){
+		this.cid =  new ModelOperationId( modelCode,operation);
+		this.method = method;
+		this.label = label;
+	}
+	
 /** full constructor */
 	public ModelOperation(com.centit.metaform.po.ModelOperationId id
 			

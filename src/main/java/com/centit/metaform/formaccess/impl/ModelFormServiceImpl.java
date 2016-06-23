@@ -3,6 +3,7 @@ package com.centit.metaform.formaccess.impl;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ContextLoaderListener;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.dde.dao.DatabaseInfoDao;
@@ -32,15 +34,20 @@ import com.centit.metaform.formaccess.ListColumn;
 import com.centit.metaform.formaccess.ListViewDefine;
 import com.centit.metaform.formaccess.MateFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
-import com.centit.metaform.formaccess.ModelOperation;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
+import com.centit.metaform.formaccess.NameValuePair;
 import com.centit.metaform.formaccess.OperationEvent;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
+import com.centit.metaform.po.ModelDataField;
+import com.centit.metaform.po.ModelOperation;
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.UuidOpt;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
+import com.centit.support.database.metadata.SimpleTableField;
 
 @Service(value="modelFormService")
 public class ModelFormServiceImpl implements ModelFormService {
@@ -138,8 +145,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		MetaTable mtab = mfm.getMdTable();
 
 		rc.setTableInfo(mtab);
-		rc.setMetaFormModel(mfm);
-		
+		rc.setMetaFormModel(mfm);		
 		rc.setBaseObjectDao(tableDao);
 		
 		return rc;
@@ -242,6 +248,137 @@ public class ModelFormServiceImpl implements ModelFormService {
 		return new MateFormDefine(fields);
 	}
 
+	/**
+	 * @param operation 取值范围：view,create,edit,list(ListViewDefine)
+	 */
+	@Transactional(readOnly=true)
+	public MateFormDefine getFormDefineDB(ModelRuntimeContext rc,String operation) {
+		MetaFormModel mfm = rc.getMetaFormModel();
+		MetaTable tableInfo = rc.getTableInfo();
+		MateFormDefine mff = new MateFormDefine(mfm.getModelName());
+		mff.setAccessType(mfm.getAccessType()); 
+		mff.setExtendOptBean(mfm.getExtendOptBean());
+		mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
+		
+		for(ModelDataField field:mfm.getModelDataFields()){
+			FormField ff = new FormField();
+			MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
+			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
+			ff.setType("input");
+			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
+			templateOptions.setLabel(mc.getFieldLabelName());
+			templateOptions.setPlaceholder(field.getInputHint());
+			ff.setValidatorHint(field.getValidateHint());
+			if(field.isFocus())
+				templateOptions.setFocus(true);
+			if(field.isMandatory())
+				templateOptions.setRequired(true);
+			
+			switch(field.getReferenceType()){
+			case "1":{//数据字典（列表）
+				String sql = "select datacode,datavalue from f_datadictionary where catalogcode=?";
+				List<Object[]> datas;
+				try {
+					datas = rc.getJsonObjectDao().findObjectsBySql(
+							sql,
+							new Object[]{field.getReferenceData()});
+				
+					for (Object[] data : datas) {
+						templateOptions.addOption(new NameValuePair(
+								StringBaseOpt.objectToString(data[1]),
+								StringBaseOpt.objectToString(data[0])));
+					}
+				} catch (SQLException | IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			case "2":{//数据字典（树）
+				String sql = "select datacode,datavalue,extracode from f_datadictionary where catalogcode=?";
+				List<Object[]> datas;
+				try {
+					datas = rc.getJsonObjectDao().findObjectsBySql(
+							sql,
+							new Object[]{field.getReferenceData()});
+				
+					for (Object[] data : datas) {
+						templateOptions.addOption(new NameValuePair(
+								StringBaseOpt.objectToString(data[1]),
+								StringBaseOpt.objectToString(data[0]),
+								StringBaseOpt.objectToString(data[2])));
+					}
+				} catch (SQLException | IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			case "3"://JSON
+				templateOptions.setOptions(
+						JSON.parseArray(field.getReferenceData(),NameValuePair.class));
+				break;
+			case "4":{//SQL语句（列表）
+				String sql = field.getReferenceData();
+				List<Object[]> datas;
+				try {
+					datas = rc.getJsonObjectDao().findObjectsBySql(
+							sql,null);				
+					for (Object[] data : datas) {
+						templateOptions.addOption(new NameValuePair(
+								StringBaseOpt.objectToString(data[1]),
+								StringBaseOpt.objectToString(data[0])));
+					}
+				} catch (SQLException | IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			case "5":{//SQL语句（树）
+				String sql = field.getReferenceData();
+				List<Object[]> datas;
+				try {
+					datas = rc.getJsonObjectDao().findObjectsBySql(
+							sql,null);				
+					for (Object[] data : datas) {
+						templateOptions.addOption(new NameValuePair(
+								StringBaseOpt.objectToString(data[1]),
+								StringBaseOpt.objectToString(data[0]),
+								StringBaseOpt.objectToString(data[2])));
+					}
+				} catch (SQLException | IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			case "Y":{//年
+				int currYear = DatetimeOpt.getYear(new Date());
+				for (int i = 5; i > -45; i--) {
+					templateOptions.addOption(new NameValuePair(
+							String.valueOf(currYear + i) + "年",
+							String.valueOf(currYear + i)));
+				}			
+				break;
+			}
+			case "M"://月
+				for (int i = 1; i < 13; i++) {
+					templateOptions.addOption(new NameValuePair(
+							String.valueOf(i) + "月",
+							String.valueOf(i)));
+				}
+				break;
+			case "F"://文件
+				//文件类型特殊属相
+				break;
+			default:
+				break;
+			}
+
+			ff.setTemplateOptions(templateOptions);
+			mff.addFilter(ff);
+		}		
+		return mff;
+	}
+
+
 	@Override
 	@Transactional(readOnly=true)
 	public ListViewDefine getListViewModel(ModelRuntimeContext rc){
@@ -263,6 +400,137 @@ public class ModelFormServiceImpl implements ModelFormService {
 		lv.addOperation(new ModelOperation(rc.getModelCode(),"view","get","查看"));
 		lv.addOperation(new ModelOperation(rc.getModelCode(),"edit","get","编辑"));
 		return lv;
+	}
+	
+	@Transactional(readOnly=true)
+	public ListViewDefine getListViewModelDB(ModelRuntimeContext rc){
+		
+		MetaFormModel mfm = rc.getMetaFormModel();
+		MetaTable tableInfo = rc.getTableInfo();
+		ListViewDefine mff = new ListViewDefine(mfm.getModelName());
+		mff.setAccessType(mfm.getAccessType()); 
+		mff.setExtendOptBean(mfm.getExtendOptBean());
+		mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
+		
+		for(ModelDataField field:mfm.getModelDataFields()){
+			if("NO".equals(field.getFilterType()))
+				continue;
+			FormField ff = new FormField();
+			MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
+			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
+			ff.setType("input");
+			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
+			templateOptions.setLabel(mc.getFieldLabelName());
+			templateOptions.setPlaceholder(field.getInputHint());
+			ff.setValidatorHint(field.getValidateHint());
+			if(field.isFocus())
+				templateOptions.setFocus(true);
+			if(field.isMandatory())
+				templateOptions.setRequired(true);
+			
+			switch(field.getReferenceType()){
+			case "1":{//数据字典（列表）
+				String sql = "select datacode,datavalue from f_datadictionary where catalogcode=?";
+				List<Object[]> datas;
+				try {
+					datas = rc.getJsonObjectDao().findObjectsBySql(
+							sql,
+							new Object[]{field.getReferenceData()});
+				
+					for (Object[] data : datas) {
+						templateOptions.addOption(new NameValuePair(
+								StringBaseOpt.objectToString(data[1]),
+								StringBaseOpt.objectToString(data[0])));
+					}
+				} catch (SQLException | IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			case "2":{//数据字典（树）
+				String sql = "select datacode,datavalue,extracode from f_datadictionary where catalogcode=?";
+				List<Object[]> datas;
+				try {
+					datas = rc.getJsonObjectDao().findObjectsBySql(
+							sql,
+							new Object[]{field.getReferenceData()});
+				
+					for (Object[] data : datas) {
+						templateOptions.addOption(new NameValuePair(
+								StringBaseOpt.objectToString(data[1]),
+								StringBaseOpt.objectToString(data[0]),
+								StringBaseOpt.objectToString(data[2])));
+					}
+				} catch (SQLException | IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			case "3"://JSON
+				templateOptions.setOptions(
+						JSON.parseArray(field.getReferenceData(),NameValuePair.class));
+				break;
+			case "4":{//SQL语句（列表）
+				String sql = field.getReferenceData();
+				List<Object[]> datas;
+				try {
+					datas = rc.getJsonObjectDao().findObjectsBySql(
+							sql,null);				
+					for (Object[] data : datas) {
+						templateOptions.addOption(new NameValuePair(
+								StringBaseOpt.objectToString(data[1]),
+								StringBaseOpt.objectToString(data[0])));
+					}
+				} catch (SQLException | IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			case "5":{//SQL语句（树）
+				String sql = field.getReferenceData();
+				List<Object[]> datas;
+				try {
+					datas = rc.getJsonObjectDao().findObjectsBySql(
+							sql,null);				
+					for (Object[] data : datas) {
+						templateOptions.addOption(new NameValuePair(
+								StringBaseOpt.objectToString(data[1]),
+								StringBaseOpt.objectToString(data[0]),
+								StringBaseOpt.objectToString(data[2])));
+					}
+				} catch (SQLException | IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			case "Y":{//年
+				int currYear = DatetimeOpt.getYear(new Date());
+				for (int i = 5; i > -45; i--) {
+					templateOptions.addOption(new NameValuePair(
+							String.valueOf(currYear + i) + "年",
+							String.valueOf(currYear + i)));
+				}			
+				break;
+			}
+			case "M"://月
+				for (int i = 1; i < 13; i++) {
+					templateOptions.addOption(new NameValuePair(
+							String.valueOf(i) + "月",
+							String.valueOf(i)));
+				}
+				break;
+			case "F"://文件
+				//文件类型特殊属相
+				break;
+			default:
+				break;
+			}
+
+			ff.setTemplateOptions(templateOptions);
+			mff.addFilter(ff);
+		}
+		
+		return mff;
 	}
 /*--------------------------------------------------------------------------------------------
 */	

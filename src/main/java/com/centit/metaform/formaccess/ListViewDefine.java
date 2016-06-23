@@ -3,6 +3,8 @@ package com.centit.metaform.formaccess;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.centit.metaform.po.ModelOperation;
+
 public class ListViewDefine extends  MateFormDefine{
 	
 	public ListViewDefine(){

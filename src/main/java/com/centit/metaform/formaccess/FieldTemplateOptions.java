@@ -1,5 +1,6 @@
 package com.centit.metaform.formaccess;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FieldTemplateOptions {
@@ -46,6 +47,12 @@ public class FieldTemplateOptions {
 		this.options = options;
 	}
 
+	public void addOption(NameValuePair option) {
+		if(this.options == null)
+			this.options = new ArrayList<>();
+		this.options.add(option);
+	}
+	
 	public String getPlaceholder() {
 		return placeholder;
 	}

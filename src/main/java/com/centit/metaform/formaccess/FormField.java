@@ -117,6 +117,12 @@ public class FormField {
 		this.validators.put(key, validator);
 	}
 	
+	public void setValidatorHint(String setValidatorHint) {
+		if(this.validators ==null)
+			this.validators = new HashMap<>();
+		this.validators.put(key, new FieldValidator(setValidatorHint));
+	}
+	
 	public Long getRows() {
 		return rows;
 	}

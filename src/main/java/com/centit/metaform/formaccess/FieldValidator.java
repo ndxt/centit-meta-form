@@ -6,6 +6,10 @@ public class FieldValidator {
 	public FieldValidator(){
 		
 	}
+	
+	public FieldValidator(String message) {
+		this.message = message;
+	}
 
 	public String getMessage() {
 		return message;
