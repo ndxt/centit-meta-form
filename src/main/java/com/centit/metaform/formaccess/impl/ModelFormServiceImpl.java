@@ -239,8 +239,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		templateOptions.setLabel("姓名：");
 		templateOptions.setPlaceholder("请输入完整的姓名。");
 		ff.setTemplateOptions(templateOptions);
-		fields.add(ff);
-		
+		fields.add(ff);		
 
 		ff = new FormField();
 		ff.setKey("userPhone");
