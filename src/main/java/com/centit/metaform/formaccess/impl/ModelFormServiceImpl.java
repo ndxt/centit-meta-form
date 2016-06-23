@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ContextLoaderListener;
@@ -43,9 +45,13 @@ import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.ModelDataField;
 import com.centit.metaform.po.ModelOperation;
 import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.UuidOpt;
 import com.centit.support.database.DataSourceDescription;
+import com.centit.support.database.DatabaseAccess;
+import com.centit.support.database.QueryUtils;
+import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.metadata.SimpleTableField;
 
@@ -536,9 +542,20 @@ public class ModelFormServiceImpl implements ModelFormService {
 			default:
 				break;
 			}
-
+						
 			ff.setTemplateOptions(templateOptions);
-			mff.addFilter(ff);
+			
+			if("BT".equals(field.getFilterType())){
+				ff.setKey(SimpleTableField.mapPropName("l_"+field.getColumnName()));			
+				ff.getTemplateOptions().setLabel(templateOptions.getLabel()+" 从" );				
+				mff.addFilter(ff);
+				FormField ffu = new FormField();
+				BeanUtils.copyProperties(ff, ffu);
+				ffu.getTemplateOptions().setLabel("到" );
+				ffu.setKey(SimpleTableField.mapPropName("t_"+field.getColumnName()));
+				mff.addFilter(ffu);
+			}else	
+				mff.addFilter(ff);
 		}
 		
 		for(ModelOperation mo :mfm.getModelOperations())	
@@ -547,13 +564,98 @@ public class ModelFormServiceImpl implements ModelFormService {
 		return mff;
 	}
 /*--------------------------------------------------------------------------------------------
-*/	
+*/
+	
+	public static String buildFilterSql(ModelRuntimeContext rc,String alias,
+			Map<String, Object> filters){
+		MetaTable ti = rc.getTableInfo();		
+		StringBuilder sBuilder= new StringBuilder();
+		int i=0;		
+		MetaFormModel mfm = rc.getMetaFormModel();	
+		
+		for(ModelDataField field:mfm.getModelDataFields()){
+			MetaColumn col = ti.findFieldByColumn(field.getColumnName());
+			if(filters.get( col.getPropertyName()) !=null){
+				if(i>0)
+					sBuilder.append(" and ");
+	
+				switch(field.getFilterType()){
+				case "MC":
+					if(StringUtils.isNotBlank(alias))
+						sBuilder.append(alias).append('.');
+					sBuilder.append(col.getColumnName()).append(" like :").append(col.getPropertyName());
+					filters.put(col.getPropertyName(), QueryUtils.getMatchString(
+							StringBaseOpt.objectToString(filters.get( col.getPropertyName()))));
+					break;
+				case "LT":
+					if(StringUtils.isNotBlank(alias))
+						sBuilder.append(alias).append('.');
+					sBuilder.append(col.getColumnName()).append(" < :").append(col.getPropertyName());
+					break;
+				case "GT":
+					if(StringUtils.isNotBlank(alias))
+						sBuilder.append(alias).append('.');
+					sBuilder.append(col.getColumnName()).append(" > :").append(col.getPropertyName());
+					break;
+				/*case "BT":
+					break;*/
+				case "LE":
+					if(StringUtils.isNotBlank(alias))
+						sBuilder.append(alias).append('.');
+					sBuilder.append(col.getColumnName()).append(" <= :").append(col.getPropertyName());
+					break;
+				case "GE":
+					if(StringUtils.isNotBlank(alias))
+						sBuilder.append(alias).append('.');
+					sBuilder.append(col.getColumnName()).append(" >= :").append(col.getPropertyName());
+					break;
+				default:
+					if(StringUtils.isNotBlank(alias))
+						sBuilder.append(alias).append('.');
+					sBuilder.append(col.getColumnName()).append(" = :").append(col.getPropertyName());
+					break;
+				}
+				i++;
+			}
+			if("BT".equals(field.getFilterType())){
+				String skey = SimpleTableField.mapPropName("l_"+field.getColumnName());	
+				if(filters.get(skey) !=null){
+					if(i>0)
+						sBuilder.append(" and ");
+					if(StringUtils.isNotBlank(alias))
+						sBuilder.append(alias).append('.');
+					sBuilder.append(col.getColumnName()).append(" >= :").append(skey);
+					i++;
+				}
+				skey = SimpleTableField.mapPropName("t_"+field.getColumnName());				
+				if(filters.get(skey) !=null){
+					if(i>0)
+						sBuilder.append(" and ");
+					if(StringUtils.isNotBlank(alias))
+						sBuilder.append(alias).append('.');
+					sBuilder.append(col.getColumnName()).append(" < :").append(skey);
+					i++;
+				}
+			}
+				
+		}
+		return sBuilder.toString();
+	}
+	
 	@Override
 	@Transactional
 	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters) {
 		JsonObjectDao dao = rc.getJsonObjectDao();
-		try {
-			return dao.listObjectsByProperties(filters);
+		try {			
+			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSql(rc.getTableInfo(),null);
+			String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
+			String filter = buildFilterSql(rc,null,filters);
+			if(StringUtils.isNotBlank(filter))
+				sql = sql + " where " + filter;	
+			return dao.findObjectsByNamedSqlAsJSON(
+					 sql,
+					 filters,
+					 q.getRight());
 		} catch (SQLException | IOException e) {
 			return null;
 		}
@@ -564,12 +666,26 @@ public class ModelFormServiceImpl implements ModelFormService {
 	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters, PageDesc pageDesc) {
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {
-			JSONArray ja = dao.listObjectsByProperties(filters,
+			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSql(rc.getTableInfo(),null);
+			String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
+			String filter = buildFilterSql(rc,null,filters);
+			if(StringUtils.isNotBlank(filter))
+				sql = sql + " where " + filter;
+
+			JSONArray ja = dao.findObjectsByNamedSqlAsJSON(sql,filters,q.getRight(),
 						(pageDesc.getPageNo()-1)>0? (pageDesc.getPageNo()-1)*pageDesc.getPageSize():0,
 						pageDesc.getPageSize());
-			Long ts = dao.fetchObjectsCount(filters);
+			
+			sql = "select count(1) as rs from " +rc.getTableInfo().getTableName();
+			if(StringUtils.isNotBlank(filter))
+				sql = sql + " where " + filter;	
+			List<Object[]> objList = dao.findObjectsByNamedSql(sql,filters);
+			Long ts = NumberBaseOpt.castObjectToLong(
+					DatabaseAccess.fetchScalarObject(objList));			
 			if(ts!=null)
 				pageDesc.setTotalRows(ts.intValue());
+			else
+				pageDesc.setTotalRows(ja.size());
 			return ja;
 		} catch (SQLException | IOException e) {
 			return null;
