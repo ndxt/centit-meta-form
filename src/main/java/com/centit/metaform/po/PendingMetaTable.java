@@ -58,7 +58,7 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
 	 * 所属数据库ID null 
 	 */
 	@JoinColumn(name="DATABASE_CODE", nullable = true)  
-	@ManyToOne
+	@ManyToOne()
 	@NotFound(action=NotFoundAction.IGNORE)
 	private DatabaseInfo  databaseInfo;
 	/**
@@ -122,7 +122,7 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
 	private String  recorder;
 
 	
-	@OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	//@JoinColumn(name="TABLE_ID")
 	/*@JoinColumns({
 	       @JoinColumn(name="wfcode", referencedColumnName="wfcode"),
@@ -132,7 +132,7 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
 	
 	
 	
-	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<PendingMetaRelation> mdRelations;
 	
 	

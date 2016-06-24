@@ -182,8 +182,9 @@ public class MetaTableController extends BaseController{
      */
     @RequestMapping(value="/draft",method = {RequestMethod.POST})
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
-    	
-    	Serializable pk = mdTableMag.saveNewPendingMdTable(mdTable);
+    	PendingMetaTable table=new PendingMetaTable();
+    	table.copyNotNullProperty(mdTable);
+    	Serializable pk = mdTableMag.saveNewPendingMdTable(table);
         JsonResultUtils.writeSingleDataJson(pk,response);
     }
     
