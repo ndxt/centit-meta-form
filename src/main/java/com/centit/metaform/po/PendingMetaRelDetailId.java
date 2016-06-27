@@ -2,8 +2,12 @@ package com.centit.metaform.po;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * PendingMdRelDetialId  entity.
@@ -13,15 +17,16 @@ import org.hibernate.validator.constraints.NotBlank;
 */
 //未落实表关联细节表 的主键
 @Embeddable
-public class PendingMetaRelDetialId implements java.io.Serializable {
+public class PendingMetaRelDetailId implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 	/**
 	 * 关联代码 null 
 	 */
-	@Column(name = "RELATION_ID")
-	@NotBlank(message = "字段不能为空")
-	private String relationId;
+	@JoinColumn(name = "RELATION_ID")
+	@ManyToOne
+	@JSONField(serialize=false)
+	private PendingMetaRelation relation;
 
 	/**
 	 * p字段代码 null 
@@ -32,22 +37,33 @@ public class PendingMetaRelDetialId implements java.io.Serializable {
 
 	// Constructors
 	/** default constructor */
-	public PendingMetaRelDetialId() {
+	public PendingMetaRelDetailId() {
 	}
 	/** full constructor */
-	public PendingMetaRelDetialId(String relationId, String parentColumnName) {
+	public PendingMetaRelDetailId(Long relationId, String parentColumnName) {
 
-		this.relationId = relationId;
+		this.setRelationId(relationId);
 		this.parentColumnName = parentColumnName;	
 	}
 
+	
+	
   
-	public String getRelationId() {
-		return this.relationId;
+	public PendingMetaRelation getRelation() {
+		return relation;
+	}
+	public void setRelation(PendingMetaRelation relation) {
+		this.relation = relation;
+	}
+	public Long getRelationId() {
+		if(null==this.relation)
+			return null;
+		return this.relation.getRelationId();
 	}
 
-	public void setRelationId(String relationId) {
-		this.relationId = relationId;
+	public void setRelationId(Long relationId) {
+			this.relation=new PendingMetaRelation();
+			this.relation.setRelationId(relationId);
 	}
   
 	public String getParentColumnName() {
@@ -64,10 +80,10 @@ public class PendingMetaRelDetialId implements java.io.Serializable {
 			return true;
 		if ((other == null))
 			return false;
-		if (!(other instanceof PendingMetaRelDetialId))
+		if (!(other instanceof PendingMetaRelDetailId))
 			return false;
 		
-		PendingMetaRelDetialId castOther = (PendingMetaRelDetialId) other;
+		PendingMetaRelDetailId castOther = (PendingMetaRelDetailId) other;
 		boolean ret = true;
   
 		ret = ret && ( this.getRelationId() == castOther.getRelationId() ||

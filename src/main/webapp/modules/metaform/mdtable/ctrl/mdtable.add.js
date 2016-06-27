@@ -5,6 +5,7 @@ define(function(require) {
 	var MdtableColumnRemove=require("./mdtable.column.remove");
 	var MdtableSubtableAdd=require("./mdtable.subtable.add");
 	var MdtableSubtableRemove=require("./mdtable.subtable.remove");
+	var MdtableSubtableDetails=require("./mdtable.subtable.details");
 	var Core = require('core/core');
 	
 	var MdTableAdd = Page.extend(function() {
@@ -15,7 +16,8 @@ define(function(require) {
 		              new MdtableColumnAdd('mdtable_column_add'),
 		              new MdtableColumnRemove('mdtable_column_remove'),
 		              new MdtableSubtableAdd('mdtable_subtable_add'),
-		              new MdtableSubtableRemove('mdtable_subtable_remove')
+		              new MdtableSubtableRemove('mdtable_subtable_remove'),
+		              new MdtableSubtableDetails('mdtable_subtable_details')
 		        	]);
 		
 		// @override
@@ -44,8 +46,10 @@ define(function(require) {
 				var mdtable_columns=panel.find("#mdtable_columns");
 				var mdtablecolumns=mdtable_columns.datagrid('getRows');
 				var mdtable=form.form('value');
-				$.extend(mdtable,{mdColumns:mdtablecolumns})
-				if (isValid && mdtable_columns.cdatagrid('endEdit')) {
+				var mdtable_subtables=panel.find("#mdtable_subtables");
+				var mdtablesubtables=mdtable_subtables.datagrid('getRows');
+				$.extend(mdtable,{mdColumns:mdtablecolumns,mdRelations:mdtablesubtables})
+				if (isValid && mdtable_columns.cdatagrid('endEdit') && mdtable_subtables.cdatagrid('endEdit')) {
 					$.ajax({
 						type: 'POST',
 					    url: Config.ContextPath + 'service/metaform/mdtable/draft/' ,

@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
 */
 //表关联细节表 的主键
 @Embeddable
-public class MetaRelDetiaild implements java.io.Serializable {
+public class MetaRelDetailId implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 	/**
@@ -32,10 +32,10 @@ public class MetaRelDetiaild implements java.io.Serializable {
 
 	// Constructors
 	/** default constructor */
-	public MetaRelDetiaild() {
+	public MetaRelDetailId() {
 	}
 	/** full constructor */
-	public MetaRelDetiaild(String relationId, String parentColumnName) {
+	public MetaRelDetailId(String relationId, String parentColumnName) {
 
 		this.relationId = relationId;
 		this.parentColumnName = parentColumnName;	
@@ -64,10 +64,10 @@ public class MetaRelDetiaild implements java.io.Serializable {
 			return true;
 		if ((other == null))
 			return false;
-		if (!(other instanceof MetaRelDetiaild))
+		if (!(other instanceof MetaRelDetailId))
 			return false;
 		
-		MetaRelDetiaild castOther = (MetaRelDetiaild) other;
+		MetaRelDetailId castOther = (MetaRelDetailId) other;
 		boolean ret = true;
   
 		ret = ret && ( this.getRelationId() == castOther.getRelationId() ||

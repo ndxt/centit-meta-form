@@ -17,11 +17,11 @@ import org.hibernate.validator.constraints.NotBlank;
 */
 @Entity
 @Table(name = "F_PENDING_META_REL_DETIAL")
-public class PendingMetaRelDetial implements java.io.Serializable {
+public class PendingMetaRelDetail implements java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 	@EmbeddedId
-	private com.centit.metaform.po.PendingMetaRelDetialId cid;
+	private com.centit.metaform.po.PendingMetaRelDetailId cid;
 
 
 	/**
@@ -34,10 +34,10 @@ public class PendingMetaRelDetial implements java.io.Serializable {
 
 	// Constructors
 	/** default constructor */
-	public PendingMetaRelDetial() {
+	public PendingMetaRelDetail() {
 	}
 	/** minimal constructor */
-	public PendingMetaRelDetial(com.centit.metaform.po.PendingMetaRelDetialId id 
+	public PendingMetaRelDetail(com.centit.metaform.po.PendingMetaRelDetailId id 
 				
 		,String  childColumnName) {
 		this.cid = id; 
@@ -48,35 +48,35 @@ public class PendingMetaRelDetial implements java.io.Serializable {
 
 
 
-	public com.centit.metaform.po.PendingMetaRelDetialId getCid() {
+	public com.centit.metaform.po.PendingMetaRelDetailId getCid() {
 		return this.cid;
 	}
 	
-	public void setCid(com.centit.metaform.po.PendingMetaRelDetialId id) {
+	public void setCid(com.centit.metaform.po.PendingMetaRelDetailId id) {
 		this.cid = id;
 	}
   
-	public String getRelationId() {
+	public Long getRelationId() {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.PendingMetaRelDetialId();
+			this.cid = new com.centit.metaform.po.PendingMetaRelDetailId();
 		return this.cid.getRelationId();
 	}
 	
-	public void setRelationId(String relationId) {
+	public void setRelationId(Long relationId) {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.PendingMetaRelDetialId();
+			this.cid = new com.centit.metaform.po.PendingMetaRelDetailId();
 		this.cid.setRelationId(relationId);
 	}
   
 	public String getParentColumnName() {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.PendingMetaRelDetialId();
+			this.cid = new com.centit.metaform.po.PendingMetaRelDetailId();
 		return this.cid.getParentColumnName();
 	}
 	
 	public void setParentColumnName(String parentColumnName) {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.PendingMetaRelDetialId();
+			this.cid = new com.centit.metaform.po.PendingMetaRelDetailId();
 		this.cid.setParentColumnName(parentColumnName);
 	}
 	
@@ -94,7 +94,7 @@ public class PendingMetaRelDetial implements java.io.Serializable {
 
 
 
-	public PendingMetaRelDetial copy(PendingMetaRelDetial other){
+	public PendingMetaRelDetail copy(PendingMetaRelDetail other){
   
 		this.setRelationId(other.getRelationId());  
 		this.setParentColumnName(other.getParentColumnName());
@@ -104,7 +104,7 @@ public class PendingMetaRelDetial implements java.io.Serializable {
 		return this;
 	}
 	
-	public PendingMetaRelDetial copyNotNullProperty(PendingMetaRelDetial other){
+	public PendingMetaRelDetail copyNotNullProperty(PendingMetaRelDetail other){
   
 	if( other.getRelationId() != null)
 		this.setRelationId(other.getRelationId());  
@@ -117,7 +117,7 @@ public class PendingMetaRelDetial implements java.io.Serializable {
 		return this;
 	}
 
-	public PendingMetaRelDetial clearProperties(){
+	public PendingMetaRelDetail clearProperties(){
   
 		this.childColumnName= null;
 

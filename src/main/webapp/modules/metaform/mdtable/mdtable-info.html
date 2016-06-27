@@ -175,7 +175,7 @@
                          loadFilter:function(data){
                          	return data.objList;
                          },
-                         	
+                         required: true
 			        	}}">子表名称</th>
 			       		<th data-options="field:'relationName',editor:{type:'textbox',options:{}}">关系名称</th>
 			       		<th data-options="field:'relationComment',editor:{type:'textbox',options:{}}">关系说明</th>
@@ -187,11 +187,15 @@
 			
 			<div class="temp-toolbar_mdtable_subtables">
 				<a iconCls="icon-add" trigger="none"
-					target="custom" rel="mdtable_subtable_add" >新增</a>
+					target="custom" rel="mdtable_subtable_add" >add</a>
 				<hr>
 			
+				<a iconCls="icon-edit" href="modules/metaform/mdtable/mdtable-subtable-details.html" trigger="single"
+					target="dialog" rel="mdtable_subtable_details" style="width:600px;height:500px;" title="relationdetails">relationdetails</a>
+				<hr>
+				
 				<a iconCls="icon-base icon-base-ban" trigger="single"
-					target="confirm" rel="mdtable_subtable_remove" title="确定删除吗？">删除</a>
+					target="confirm" rel="mdtable_subtable_remove" title="确定删除吗？">delete</a>
 			</div>
 	</div>
 </div>

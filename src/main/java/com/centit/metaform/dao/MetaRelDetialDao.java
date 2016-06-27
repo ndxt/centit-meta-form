@@ -21,7 +21,7 @@ import com.centit.metaform.po.MetaRelDetail;
 */
 
 @Repository
-public class MetaRelDetialDao extends BaseDaoImpl<MetaRelDetail,com.centit.metaform.po.MetaRelDetiaild>
+public class MetaRelDetialDao extends BaseDaoImpl<MetaRelDetail,com.centit.metaform.po.MetaRelDetailId>
 	{
 
 	public static final Log log = LogFactory.getLog(MetaRelDetialDao.class);
