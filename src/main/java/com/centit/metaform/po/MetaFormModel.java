@@ -19,10 +19,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
 
+import oracle.jdbc.proxy.annotation.GetCreator;
+
+import org.hibernate.annotations.GeneratorType;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * create by scaffold 2016-06-02 
@@ -39,9 +44,8 @@ public class MetaFormModel implements java.io.Serializable {
 	 */
 	@Id
 	@Column(name = "MODEL_CODE")
-	@GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
-	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=200000001,
-	pkColumnName="SEQ_NAME",pkColumnValue="pendingtableId",allocationSize=1,valueColumnName="SEQ_VALUE")
+	@GeneratedValue(generator = "paymentableGenerator")     
+	@GenericGenerator(name = "paymentableGenerator", strategy = "assigned") 
 	private String modelCode;
 
 	/**
@@ -49,6 +53,7 @@ public class MetaFormModel implements java.io.Serializable {
 	 */
 	@JoinColumn(name="TABLE_ID")
 	@ManyToOne
+	@JSONField(serialize=false)
 	private MetaTable mdTable;
 	/**
 	 * 模快描述 null 
@@ -93,9 +98,10 @@ public class MetaFormModel implements java.io.Serializable {
 	/**
 	 * 父模块代码 子模块必需对应父模块对应的子表 
 	 */
-	@Column(name = "PARENT_MODEL_CODE")
-	@Length(min = 0, max = 16, message = "字段长度不能小于{min}大于{max}")
-	private String  parentModelCode;
+	@JoinColumn(name = "PARENT_MODEL_CODE")
+	@ManyToOne
+	@JSONField(serialize=false)
+	private MetaFormModel  parentModel;
 	/**
 	 * 显示顺序 null 
 	 */
@@ -125,18 +131,18 @@ public class MetaFormModel implements java.io.Serializable {
 	@Length(max = 800, message = "字段长度不能大于{max}")
 	private String  extendOptBeanParam;
 
-
-	@Transient
-	@OneToMany(mappedBy="",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	
+	
+	@OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<ModelDataField> modelDataFields;
 	
-	@Transient
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<MetaFormModel> metaFormModels;
+	
+	@OneToMany(mappedBy="parentModel",fetch = FetchType.LAZY)
+	private Set<MetaFormModel> childFormModels;
 
 	
-	@Transient
-	@OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	
+	@OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<ModelOperation> modelOperations;
 	
 	// Constructors
@@ -170,7 +176,7 @@ public class MetaFormModel implements java.io.Serializable {
 		this.formTemplate = formTemplate;
 		this.listAsTree = listAsTree;
 		this.relationType = relationType;
-		this.parentModelCode = parentModelCode;
+		this.setParentModelCode(parentModelCode);
 		this.displayOrder = displayOrder;
 		this.lastModifyDate = lastModifyDate;
 		this.recorder = recorder;
@@ -178,11 +184,35 @@ public class MetaFormModel implements java.io.Serializable {
 		this.extendOptBean = extendOptBean;
 		this.extendOptBeanParam = extendOptBeanParam;
 		this.modelDataFields = new HashSet<ModelDataField>();
-		this.metaFormModels = new HashSet<MetaFormModel>();
+		this.childFormModels = new HashSet<MetaFormModel>();
 	}
 	
 
+	
+	public String getTableLabelName(){
+			if(null==this.mdTable)
+				return null;
+			return this.mdTable.getTableLabelName();
+	}
+	
+	public Long getTableId(){
+		if(null==this.mdTable)
+			return null;
+		return this.mdTable.getTableId();
+	}
   
+	public MetaFormModel getParentModel() {
+		return parentModel;
+	}
+	public void setParentModel(MetaFormModel parentModel) {
+		this.parentModel = parentModel;
+	}
+	public Set<MetaFormModel> getChildFormModels() {
+		return childFormModels;
+	}
+	public void setChildFormModels(Set<MetaFormModel> childFormModels) {
+		this.childFormModels = childFormModels;
+	}
 	public String getModelCode() {
 		return this.modelCode;
 	}
@@ -191,12 +221,7 @@ public class MetaFormModel implements java.io.Serializable {
 	public void setModelCode(String modelCode) {
 		this.modelCode = modelCode;
 	}
-	// Property accessors
   
-	public Long getTableId() {
-		return this.getMdTable().getTableId();
-	}
-	
 	public MetaTable getMdTable() {
 		if(null==this.mdTable)
 			this.mdTable=new MetaTable();
@@ -256,11 +281,14 @@ public class MetaFormModel implements java.io.Serializable {
 		this.listAsTree = listAsTree;
 	}
 	public String getParentModelCode() {
-		return this.parentModelCode;
+		if(null==this.parentModel)
+			return null;
+		return this.parentModel.getModelCode();
 	}
 	
 	public void setParentModelCode(String parentModelCode) {
-		this.parentModelCode = parentModelCode;
+		this.parentModel=new MetaFormModel();
+		this.parentModel.setModelCode(parentModelCode);
 	}
   
 	public Long getDisplayOrder() {
@@ -295,7 +323,13 @@ public class MetaFormModel implements java.io.Serializable {
 	}
 
 	public void setModelDataFields(Set<ModelDataField> modelDataFields) {
-		this.modelDataFields = modelDataFields;
+		this.getModelDataFields().clear();
+		Iterator<ModelDataField> it=modelDataFields.iterator();
+		while(it.hasNext())
+		{
+			it.next().getCid().setMetaFormModel(this);
+		}
+		this.getModelDataFields().addAll(modelDataFields);
 	}	
 
 	public void addModelDataField(ModelDataField modelDataField ){
@@ -368,25 +402,25 @@ public class MetaFormModel implements java.io.Serializable {
 	}	
 
 	public Set<MetaFormModel> getMetaFormModels(){
-		if(this.metaFormModels==null)
-			this.metaFormModels = new HashSet<MetaFormModel>();
-		return this.metaFormModels;
+		if(this.childFormModels==null)
+			this.childFormModels = new HashSet<MetaFormModel>();
+		return this.childFormModels;
 	}
 
 	public void setMetaFormModels(Set<MetaFormModel> metaFormModels) {
-		this.metaFormModels = metaFormModels;
+		this.childFormModels = metaFormModels;
 	}	
 
 	public void addMetaFormModel(MetaFormModel metaFormModel ){
-		if (this.metaFormModels==null)
-			this.metaFormModels = new HashSet<MetaFormModel>();
-		this.metaFormModels.add(metaFormModel);
+		if (this.childFormModels==null)
+			this.childFormModels = new HashSet<MetaFormModel>();
+		this.childFormModels.add(metaFormModel);
 	}
 	
 	public void removeMetaFormModel(MetaFormModel metaFormModel ){
-		if (this.metaFormModels==null)
+		if (this.childFormModels==null)
 			return;
-		this.metaFormModels.remove(metaFormModel);
+		this.childFormModels.remove(metaFormModel);
 	}
 	
 	public MetaFormModel newMetaFormModel(){
@@ -451,7 +485,13 @@ public class MetaFormModel implements java.io.Serializable {
 	}
 	
 	public void setModelOperations(Set<ModelOperation> modelOperations) {
-		this.modelOperations = modelOperations;
+		this.getModelOperations().clear();
+		Iterator<ModelOperation> it=modelOperations.iterator();
+		while(it.hasNext())
+		{
+			it.next().getCid().setMetaFormModel(this);
+		}
+		this.getModelOperations().addAll(modelOperations);
 	}
 	
 	public void addModelOperation(ModelOperation modelOperation ){
@@ -545,21 +585,24 @@ public class MetaFormModel implements java.io.Serializable {
   
 		this.setModelCode(other.getModelCode());
   
-		this.setTableId(other.getTableId());
+		this.setMdTable(other.getMdTable());
 		this.modelComment= other.getModelComment();  
 		this.modelName= other.getModelName();  
 		this.accessType= other.getAccessType();  
 		this.relationType= other.getRelationType();  
-		this.parentModelCode= other.getParentModelCode();  
+		this.setParentModel(other.getParentModel());
 		this.displayOrder= other.getDisplayOrder();  
 		this.formTemplate=other.getFormTemplate();
 		this.listAsTree=other.getListAsTree();
 		this.lastModifyDate= other.getLastModifyDate();  
 		this.recorder= other.getRecorder();	
 		this.modelDataFields = other.getModelDataFields();
-		this.metaFormModels = other.getMetaFormModels();		
+		this.childFormModels = other.getMetaFormModels();		
 		this.extendOptBean = other.getExtendOptBean();
 		this.extendOptBeanParam = other.getExtendOptBeanParam();
+		
+		this.setModelOperations(other.getModelOperations());
+		this.setModelDataFields(other.getModelDataFields());
 		return this;
 	}
 	
@@ -569,8 +612,8 @@ public class MetaFormModel implements java.io.Serializable {
 	if( other.getModelCode() != null)
 		this.setModelCode(other.getModelCode());
   
-		if( other.getTableId() != null)
-			this.setTableId(other.getTableId());
+		if( other.getMdTable()!= null)
+			this.setMdTable(other.getMdTable());
 		if( other.getModelComment() != null)
 			this.modelComment= other.getModelComment();  
 		if( other.getModelName() != null)
@@ -583,45 +626,42 @@ public class MetaFormModel implements java.io.Serializable {
 			this.formTemplate=other.getFormTemplate();
 		if( other.getListAsTree() != null)
 			this.listAsTree=other.getListAsTree();
-		if( other.getParentModelCode() != null)
-			this.parentModelCode= other.getParentModelCode();  
 		if( other.getDisplayOrder() != null)
 			this.displayOrder= other.getDisplayOrder();  
 		if( other.getLastModifyDate() != null)
 			this.lastModifyDate= other.getLastModifyDate();  
 		if( other.getRecorder() != null)
 			this.recorder= other.getRecorder();
-		
+		if(null!=other.getParentModel())
+			this.setParentModel(other.getParentModel());
 		if( other.getMetaFormModels() != null)
-		this.metaFormModels = other.getMetaFormModels();
+		this.childFormModels = other.getMetaFormModels();
 		if( other.getExtendOptBean() != null)
 			this.extendOptBean = other.getExtendOptBean();
 		if( other.getExtendOptBeanParam() != null)
 			this.extendOptBeanParam = other.getExtendOptBeanParam();
 		
-		//this.modelDataFields = other.getModelDataFields();
-        replaceModelDataFields(other.getModelDataFields());
-			
-		//this.metaFormModels = other.getMetaFormModels();
-        replaceMetaFormModels(other.getMetaFormModels());
-		
+		if(null!=other.getModelDataFields())
+			this.setModelDataFields(other.getModelDataFields());
+		if(null!=other.getModelOperations())
+			this.setModelOperations(other.getModelOperations());
 		return this;
 	}
 
 	public MetaFormModel clearProperties(){
   
-		this.setMdTable(null);;
+		this.setMdTable(null);
 		this.modelComment= null;  
 		this.modelName= null;  
 		this.accessType= null;  
 		this.relationType= null;  
-		this.parentModelCode= null;  
+		this.parentModel=null;
 		this.displayOrder= null;  
 		this.lastModifyDate= null;  
 		this.recorder= null;
 	
 		this.modelDataFields = new HashSet<ModelDataField>();	
-		this.metaFormModels = new HashSet<MetaFormModel>();
+		this.childFormModels = new HashSet<MetaFormModel>();
 		return this;
 	}
 }

@@ -179,35 +179,35 @@ public class ModelDataField implements java.io.Serializable {
 	}
 
 	
-	public com.centit.metaform.po.ModelDataFieldId getCid() {
+	public ModelDataFieldId getCid() {
 		return this.cid;
 	}
 	
-	public void setCid(com.centit.metaform.po.ModelDataFieldId id) {
+	public void setCid(ModelDataFieldId id) {
 		this.cid = id;
 	}
   
 	public String getModelCode() {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.ModelDataFieldId();
+			return null;
 		return this.cid.getModelCode();
 	}
 	
 	public void setModelCode(String modelCode) {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.ModelDataFieldId();
+			this.cid = new ModelDataFieldId();
 		this.cid.setModelCode(modelCode);
 	}
   
 	public String getColumnName() {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.ModelDataFieldId();
+			this.cid = new ModelDataFieldId();
 		return this.cid.getColumnName();
 	}
 	
 	public void setColumnName(String columnName) {
 		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.ModelDataFieldId();
+			this.cid = new ModelDataFieldId();
 		this.cid.setColumnName(columnName);
 	}
 	

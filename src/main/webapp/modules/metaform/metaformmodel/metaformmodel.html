@@ -1,12 +1,12 @@
 
-<table url="service/service/metaform/metaformmodel"
+<table url="service/metaform/metaformmodel"
 	idField="id" treeField="text"
-	rownumbers="true"
+	rownumbers="true" id="metaformtable"
 	toolbar=".temp-toolbar" layoutH="0">
     <thead frozen="true">
         <tr>
         	<th data-options="field:'modelCode'">模块代码</th> 
-       		<th data-options="field:'tableId'">表ID</th>
+       		<th data-options="field:'tableLabelName'">表</th>
        		<th data-options="field:'modelComment'">模快描述</th>
        		<th data-options="field:'modelName'">模块名称</th>
        		<th data-options="field:'accessType'">存储类别</th>
@@ -21,20 +21,20 @@
 </table>
 
 <div class="temp-toolbar">
-	<a iconCls="icon-add" href="modules/metaform/metaformmodel/metaformmodel-info.html" trigger="none"
-		target="dialog" rel="metaformmodel_add" title="新增通用模块管理" width="640" height="480" btnValue="添加">新增</a>
+	<a iconCls="icon-add" href="/centit-meta-form/modules/metaform/metaformmodel/metaformmodel-info.html" trigger="none"
+		target="tab" rel="metaformmodel_add" title="新增通用模块管理" >新增</a>
 	<hr>
 
-	<a iconCls="icon-edit" href="modules/metaform/metaformmodel/metaformmodel-info.html" trigger="single"
-		target="dialog" rel="metaformmodel_edit" title="编辑 {{text}}" width="640" height="480" btnValue="更新">编辑</a>
+	<a iconCls="icon-edit" href="/centit-meta-form/modules/metaform/metaformmodel/metaformmodel-info.html" trigger="single"
+		target="tab" rel="metaformmodel_edit" title="编辑 {{modelName}}" width="640" height="480" btnValue="更新">编辑</a>
 	<hr>
 
 	<a iconCls="icon-edit" href="modules/metaform/metaformmodel/metaformmodel-view.html" trigger="single"
-		target="dialog" rel="metaformmodel_view" title="查看 {{text}}" width="640" height="480" btnValue="查看">查看</a>
+		target="dialog" rel="metaformmodel_view" title="查看 {{modelName}}" width="640" height="480" btnValue="查看">查看</a>
 	<hr>
 		
 	<a iconCls="icon-base icon-base-ban" trigger="single"
-		target="confirm" rel="metaformmodel_remove" title="是否确定删除 {{text}}？">删除</a>
+		target="confirm" rel="metaformmodel_remove" title="是否确定删除 {{modelName}}？">删除</a>
 </div>
 
 <script>

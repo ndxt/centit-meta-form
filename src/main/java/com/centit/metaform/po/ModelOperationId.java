@@ -2,8 +2,12 @@ package com.centit.metaform.po;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * ModelOperationId  entity.
@@ -19,9 +23,10 @@ public class ModelOperationId implements java.io.Serializable {
 	/**
 	 * 模块代码 所属（关联） 
 	 */
-	@Column(name = "Model_Code")
-	@NotBlank(message = "字段不能为空")
-	private String modelCode;
+	@JoinColumn(name = "Model_Code")
+	@ManyToOne
+	@JSONField(serialize=false)
+	private MetaFormModel metaFormModel;
 
 	/**
 	 * 操作 null 
@@ -35,19 +40,33 @@ public class ModelOperationId implements java.io.Serializable {
 	public ModelOperationId() {
 	}
 	/** full constructor */
-	public ModelOperationId(String modelCode, String operation) {
+	public ModelOperationId(MetaFormModel metaFormModel, String operation) {
 
-		this.modelCode = modelCode;
+		this.metaFormModel=metaFormModel;
 		this.operation = operation;	
 	}
 
   
+	public MetaFormModel getMetaFormModel() {
+		return metaFormModel;
+	}
+	public void setMetaFormModel(MetaFormModel metaFormModel) {
+		this.metaFormModel = metaFormModel;
+	}
+	public ModelOperationId(String modelCode, String operation2) {
+		this.setModelCode(modelCode);
+		this.setOperation(operation2);
+	}
 	public String getModelCode() {
-		return this.modelCode;
+		if(null==this.metaFormModel)
+			return null;
+		return this.metaFormModel.getModelCode();
 	}
 
 	public void setModelCode(String modelCode) {
-		this.modelCode = modelCode;
+		if(null==this.metaFormModel)
+			this.metaFormModel=new MetaFormModel();
+		this.metaFormModel.setModelCode(modelCode);
 	}
   
 	public String getOperation() {

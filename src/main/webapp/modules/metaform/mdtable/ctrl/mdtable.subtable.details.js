@@ -19,7 +19,8 @@ define(function(require) {
 				async:false, 
 			    url: '/centit-meta-form/service/metaform/mdtable/draft/'+data.childTableId,
 			    success: function(res){
-			    	list=res.data.mdColumns;
+			    	if(null!=res.data && null!=res.data.mdColumns)
+			    		list=res.data.mdColumns;
 				},
 			    contentType:'application/json'
 				});
