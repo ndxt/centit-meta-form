@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
+import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.PendingMetaTableDao;
 import com.centit.metaform.po.MetaTable;
@@ -53,6 +54,9 @@ public class MetaTableManagerImpl
 	
 	@Resource
 	private PendingMetaTableDao pendingMdTableDao;
+	
+	@Resource
+	private MetaChangLogDao metaChangLogDao;
 /*
  	@PostConstruct
     public void init() {
@@ -94,6 +98,10 @@ public class MetaTableManagerImpl
 		pendingMdTableDao.mergeObject(pmt);
 	}
 
+	/**
+	 * 对比pendingMetaTable和MetaTable中的字段信息，并对数据库中的表进行重构，
+	 * 重构成功后将对应的表结构信息同步到 MetaTable中，并在MetaChangeLog中记录信息
+	 */
 	@Override
 	@Transactional
 	public String publishMetaTable(Long tableId) {

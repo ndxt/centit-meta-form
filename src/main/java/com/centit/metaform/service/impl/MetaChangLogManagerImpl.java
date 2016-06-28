@@ -22,7 +22,7 @@ import com.centit.metaform.service.MetaChangLogManager;
 /**
  * MdChangLog  Service.
  * create by scaffold 2016-06-01 
- 
+ * 这个 表信息只能查看不能修改和删除，它的内容是在 publishMetaTable 中记录的日志信息
  * 元数据更改记录null   
 */
 @Service
@@ -33,7 +33,7 @@ public class MetaChangLogManagerImpl
 	public static final Log log = LogFactory.getLog(MetaChangLogManager.class);
 
 	
-	private MetaChangLogDao metaChangLogDao ;
+	private MetaChangLogDao metaChangLogDao;
 	
 	@Resource(name = "metaChangLogDao")
     @NotNull
