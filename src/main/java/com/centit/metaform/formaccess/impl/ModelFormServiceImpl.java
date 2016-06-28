@@ -37,7 +37,7 @@ import com.centit.metaform.formaccess.ListViewDefine;
 import com.centit.metaform.formaccess.MateFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
-import com.centit.metaform.formaccess.NameValuePair;
+import com.centit.metaform.formaccess.OptionItem;
 import com.centit.metaform.formaccess.OperationEvent;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
@@ -289,7 +289,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 							new Object[]{field.getReferenceData()});
 				
 					for (Object[] data : datas) {
-						templateOptions.addOption(new NameValuePair(
+						templateOptions.addOption(new OptionItem(
 								StringBaseOpt.objectToString(data[1]),
 								StringBaseOpt.objectToString(data[0])));
 					}
@@ -307,7 +307,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 							new Object[]{field.getReferenceData()});
 				
 					for (Object[] data : datas) {
-						templateOptions.addOption(new NameValuePair(
+						templateOptions.addOption(new OptionItem(
 								StringBaseOpt.objectToString(data[1]),
 								StringBaseOpt.objectToString(data[0]),
 								StringBaseOpt.objectToString(data[2])));
@@ -319,7 +319,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			}
 			case "3"://JSON
 				templateOptions.setOptions(
-						JSON.parseArray(field.getReferenceData(),NameValuePair.class));
+						JSON.parseArray(field.getReferenceData(),OptionItem.class));
 				break;
 			case "4":{//SQL语句（列表）
 				String sql = field.getReferenceData();
@@ -328,7 +328,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 					datas = rc.getJsonObjectDao().findObjectsBySql(
 							sql,null);				
 					for (Object[] data : datas) {
-						templateOptions.addOption(new NameValuePair(
+						templateOptions.addOption(new OptionItem(
 								StringBaseOpt.objectToString(data[1]),
 								StringBaseOpt.objectToString(data[0])));
 					}
@@ -344,7 +344,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 					datas = rc.getJsonObjectDao().findObjectsBySql(
 							sql,null);				
 					for (Object[] data : datas) {
-						templateOptions.addOption(new NameValuePair(
+						templateOptions.addOption(new OptionItem(
 								StringBaseOpt.objectToString(data[1]),
 								StringBaseOpt.objectToString(data[0]),
 								StringBaseOpt.objectToString(data[2])));
@@ -357,7 +357,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			case "Y":{//年
 				int currYear = DatetimeOpt.getYear(new Date());
 				for (int i = 5; i > -45; i--) {
-					templateOptions.addOption(new NameValuePair(
+					templateOptions.addOption(new OptionItem(
 							String.valueOf(currYear + i) + "年",
 							String.valueOf(currYear + i)));
 				}			
@@ -365,7 +365,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			}
 			case "M"://月
 				for (int i = 1; i < 13; i++) {
-					templateOptions.addOption(new NameValuePair(
+					templateOptions.addOption(new OptionItem(
 							String.valueOf(i) + "月",
 							String.valueOf(i)));
 				}
@@ -454,7 +454,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 							new Object[]{field.getReferenceData()});
 				
 					for (Object[] data : datas) {
-						templateOptions.addOption(new NameValuePair(
+						templateOptions.addOption(new OptionItem(
 								StringBaseOpt.objectToString(data[1]),
 								StringBaseOpt.objectToString(data[0])));
 					}
@@ -472,7 +472,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 							new Object[]{field.getReferenceData()});
 				
 					for (Object[] data : datas) {
-						templateOptions.addOption(new NameValuePair(
+						templateOptions.addOption(new OptionItem(
 								StringBaseOpt.objectToString(data[1]),
 								StringBaseOpt.objectToString(data[0]),
 								StringBaseOpt.objectToString(data[2])));
@@ -484,7 +484,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			}
 			case "3"://JSON
 				templateOptions.setOptions(
-						JSON.parseArray(field.getReferenceData(),NameValuePair.class));
+						JSON.parseArray(field.getReferenceData(),OptionItem.class));
 				break;
 			case "4":{//SQL语句（列表）
 				String sql = field.getReferenceData();
@@ -493,7 +493,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 					datas = rc.getJsonObjectDao().findObjectsBySql(
 							sql,null);				
 					for (Object[] data : datas) {
-						templateOptions.addOption(new NameValuePair(
+						templateOptions.addOption(new OptionItem(
 								StringBaseOpt.objectToString(data[1]),
 								StringBaseOpt.objectToString(data[0])));
 					}
@@ -509,7 +509,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 					datas = rc.getJsonObjectDao().findObjectsBySql(
 							sql,null);				
 					for (Object[] data : datas) {
-						templateOptions.addOption(new NameValuePair(
+						templateOptions.addOption(new OptionItem(
 								StringBaseOpt.objectToString(data[1]),
 								StringBaseOpt.objectToString(data[0]),
 								StringBaseOpt.objectToString(data[2])));
@@ -522,7 +522,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			case "Y":{//年
 				int currYear = DatetimeOpt.getYear(new Date());
 				for (int i = 5; i > -45; i--) {
-					templateOptions.addOption(new NameValuePair(
+					templateOptions.addOption(new OptionItem(
 							String.valueOf(currYear + i) + "年",
 							String.valueOf(currYear + i)));
 				}			
@@ -530,7 +530,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			}
 			case "M"://月
 				for (int i = 1; i < 13; i++) {
-					templateOptions.addOption(new NameValuePair(
+					templateOptions.addOption(new OptionItem(
 							String.valueOf(i) + "月",
 							String.valueOf(i)));
 				}

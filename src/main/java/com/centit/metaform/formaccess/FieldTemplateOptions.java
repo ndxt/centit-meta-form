@@ -7,7 +7,7 @@ public class FieldTemplateOptions {
 	
 	private String label;
 	private Boolean required;
-	private List<NameValuePair> options;
+	private List<OptionItem> options;
 	private String placeholder;
 	private String description;
 	private Boolean focus;
@@ -39,15 +39,15 @@ public class FieldTemplateOptions {
 		this.required = required;
 	}
 
-	public List<NameValuePair> getOptions() {
+	public List<OptionItem> getOptions() {
 		return options;
 	}
 
-	public void setOptions(List<NameValuePair> options) {
+	public void setOptions(List<OptionItem> options) {
 		this.options = options;
 	}
 
-	public void addOption(NameValuePair option) {
+	public void addOption(OptionItem option) {
 		if(this.options == null)
 			this.options = new ArrayList<>();
 		this.options.add(option);

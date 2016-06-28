@@ -1,20 +1,20 @@
 package com.centit.metaform.formaccess;
 
-public class NameValuePair {
+public class OptionItem {
 	private String name;
 	private String value;
 	private String group;
 	
-	public NameValuePair(){
+	public OptionItem(){
 		
 	}
 	
-	public NameValuePair(String name,String value){
+	public OptionItem(String name,String value){
 		this.name = name;
 		this.value = value;
 	}
 	
-	public NameValuePair(String name,String value,String group){
+	public OptionItem(String name,String value,String group){
 		this.name = name;
 		this.value = value;
 		this.group = group;
