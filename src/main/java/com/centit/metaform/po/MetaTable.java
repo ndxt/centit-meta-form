@@ -140,7 +140,7 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	private Set<MetaRelation> mdRelations;
 	
 	
-	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Transient
 	private Set<MetaFormModel> metaFormModels;
 
 	// Constructors

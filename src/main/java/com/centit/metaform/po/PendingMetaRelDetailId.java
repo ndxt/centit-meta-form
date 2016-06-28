@@ -1,5 +1,6 @@
 package com.centit.metaform.po;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -23,7 +24,7 @@ public class PendingMetaRelDetailId implements java.io.Serializable {
 	/**
 	 * 关联代码 null 
 	 */
-	@JoinColumn(name = "RELATION_ID")
+	@JoinColumn(name = "RELATION_ID",nullable=false)
 	@ManyToOne
 	@JSONField(serialize=false)
 	private PendingMetaRelation relation;
@@ -74,38 +75,4 @@ public class PendingMetaRelDetailId implements java.io.Serializable {
 		this.parentColumnName = parentColumnName;
 	}
 
-
-	public boolean equals(Object other) {
-		if ((this == other))
-			return true;
-		if ((other == null))
-			return false;
-		if (!(other instanceof PendingMetaRelDetailId))
-			return false;
-		
-		PendingMetaRelDetailId castOther = (PendingMetaRelDetailId) other;
-		boolean ret = true;
-  
-		ret = ret && ( this.getRelationId() == castOther.getRelationId() ||
-					   (this.getRelationId() != null && castOther.getRelationId() != null
-							   && this.getRelationId().equals(castOther.getRelationId())));
-  
-		ret = ret && ( this.getParentColumnName() == castOther.getParentColumnName() ||
-					   (this.getParentColumnName() != null && castOther.getParentColumnName() != null
-							   && this.getParentColumnName().equals(castOther.getParentColumnName())));
-
-		return ret;
-	}
-	
-	public int hashCode() {
-		int result = 17;
-  
-		result = 37 * result +
-		 	(this.getRelationId() == null ? 0 :this.getRelationId().hashCode());
-  
-		result = 37 * result +
-		 	(this.getParentColumnName() == null ? 0 :this.getParentColumnName().hashCode());
-	
-		return result;
-	}
 }

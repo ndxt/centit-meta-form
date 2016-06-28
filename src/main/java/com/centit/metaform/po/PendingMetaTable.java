@@ -132,7 +132,7 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
 	
 	
 	
-	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<PendingMetaRelation> mdRelations;
 	
 	

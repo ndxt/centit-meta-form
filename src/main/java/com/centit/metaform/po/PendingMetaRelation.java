@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -43,9 +44,8 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	 */
 	@Id
 	@Column(name = "RELATION_ID")
-	@GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
-	@TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=1,
-	pkColumnName="SEQ_NAME",pkColumnValue="relationId",allocationSize=1,valueColumnName="SEQ_VALUE")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seqgen")
+	@SequenceGenerator(sequenceName="SEQ_PENDINGRELATIONID",name="seqgen",allocationSize=1,initialValue=1)
 	private Long relationId;
 
 	/**

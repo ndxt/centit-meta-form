@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * MdColumnId  entity.
  * create by scaffold 2016-06-02 
@@ -22,8 +24,8 @@ public class MetaColumnId implements java.io.Serializable {
 	 * 表ID 表单主键 
 	 */
 	@JoinColumn(name = "TABLE_ID")
-	@NotBlank(message = "字段不能为空")
 	@ManyToOne
+	@JSONField(serialize=false)
 	private MetaTable mdTable;
 
 	/**
