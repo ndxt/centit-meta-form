@@ -23,6 +23,7 @@ import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.PendingMetaTableDao;
+import com.centit.metaform.po.MetaChangLog;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaColumn;
@@ -170,8 +171,12 @@ public class MetaTableManagerImpl
 			
 		}
 		
+		
+		
 		MetaTable table= new MetaTable(ptable);
 		metaTableDao.mergeObject(table);
+		//MetaChangLog chgLog = new MetaChangLog();		
+		//metaChangLogDao.saveNewObject(chgLog);
 		}catch(Exception e){
 			return "failed to publish!";
 		}
