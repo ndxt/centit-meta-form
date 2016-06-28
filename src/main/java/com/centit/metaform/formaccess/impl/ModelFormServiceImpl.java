@@ -58,7 +58,7 @@ import com.centit.support.database.metadata.SimpleTableField;
 @Service(value="modelFormService")
 public class ModelFormServiceImpl implements ModelFormService {
 
-    @Resource(name = "databaseInfoDao") 
+    @Resource
     private DatabaseInfoDao databaseInfoDao;
 
     @Resource

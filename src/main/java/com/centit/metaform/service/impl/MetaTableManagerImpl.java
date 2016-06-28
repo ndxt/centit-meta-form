@@ -1,6 +1,7 @@
 package com.centit.metaform.service.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +15,32 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
+import com.centit.dde.dao.DatabaseInfoDao;
+import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.PendingMetaTableDao;
+import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
+import com.centit.metaform.po.PendingMetaColumn;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.metaform.service.MetaTableManager;
+import com.centit.support.database.DataSourceDescription;
+import com.centit.support.database.DbcpConnect;
+import com.centit.support.database.DbcpConnectPools;
+import com.centit.support.database.ddl.DB2DDLOperations;
+import com.centit.support.database.ddl.DDLOperations;
+import com.centit.support.database.ddl.MySqlDDLOperations;
+import com.centit.support.database.ddl.OracleDDLOperations;
+import com.centit.support.database.ddl.SqlSvrDDLOperations;
+import com.centit.support.database.jsonmaptable.DB2JsonObjectDao;
+import com.centit.support.database.jsonmaptable.JsonObjectDao;
+import com.centit.support.database.jsonmaptable.MySqlJsonObjectDao;
+import com.centit.support.database.jsonmaptable.OracleJsonObjectDao;
+import com.centit.support.database.jsonmaptable.SqlSvrJsonObjectDao;
 
 /**
  * MdTable  Service.
@@ -57,6 +75,9 @@ public class MetaTableManagerImpl
 	
 	@Resource
 	private MetaChangLogDao metaChangLogDao;
+	
+	@Resource
+    private DatabaseInfoDao databaseInfoDao;
 /*
  	@PostConstruct
     public void init() {
@@ -107,6 +128,48 @@ public class MetaTableManagerImpl
 	public String publishMetaTable(Long tableId) {
 		try{
 		PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
+		MetaTable stable = metaTableDao.getObjectById(tableId);
+		DatabaseInfo mdb = databaseInfoDao.getObjectById(stable.getDatabaseCode());		
+		DataSourceDescription dbc = new DataSourceDescription();
+		dbc.setDatabaseCode(mdb.getDatabaseCode());
+		dbc.setConnUrl(mdb.getDatabaseUrl());
+		dbc.setUsername(mdb.getUsername());
+		dbc.setPassword(mdb.getPassword());		
+		DbcpConnect conn = DbcpConnectPools.getDbcpConnect(dbc);
+		JsonObjectDao jsonDao=null;
+		DDLOperations ddlOpt = null;
+		switch(conn.getDatabaseType()){
+		case Oracle:
+			jsonDao = new OracleJsonObjectDao(conn,stable);
+			ddlOpt = new OracleDDLOperations();
+			break;
+	  	case DB2:
+	  		jsonDao = new DB2JsonObjectDao(conn,stable);
+	  		ddlOpt = new DB2DDLOperations();
+	  		break;
+	  	case SqlServer:
+	  		jsonDao = new SqlSvrJsonObjectDao(conn,stable);
+	  		ddlOpt = new SqlSvrDDLOperations();
+	  		break;
+	  	case MySql:
+	  		jsonDao = new MySqlJsonObjectDao(conn,stable);
+	  		ddlOpt = new MySqlDDLOperations();
+	  		break;
+	  	default:
+	  		jsonDao = new OracleJsonObjectDao(conn,stable);
+	  		ddlOpt = new OracleDDLOperations();
+	  		break;
+		}
+		
+		List<String> sqls = new ArrayList<>();
+		for(PendingMetaColumn pcol : ptable.getMdColumns()){
+			
+		}
+			
+		for(MetaColumn pcol : stable.getMdColumns()){
+			
+		}
+		
 		MetaTable table= new MetaTable(ptable);
 		metaTableDao.mergeObject(table);
 		}catch(Exception e){
