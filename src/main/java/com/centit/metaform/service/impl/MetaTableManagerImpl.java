@@ -45,7 +45,7 @@ public class MetaTableManagerImpl
 	
 	@Resource(name = "metaTableDao")
     @NotNull
-	public void setMdTableDao(MetaTableDao baseDao)
+	public void setMetaTableDao(MetaTableDao baseDao)
 	{
 		this.metaTableDao = baseDao;
 		setBaseDao(this.metaTableDao);
@@ -72,34 +72,34 @@ public class MetaTableManagerImpl
 
 	@Override
 	@Transactional
-	public Serializable saveNewPendingMdTable(PendingMetaTable pmt) {
+	public Serializable saveNewPendingMetaTable(PendingMetaTable pmt) {
 		return pendingMdTableDao.saveNewObject(pmt);
 	}
 
 	@Override
 	@Transactional
-	public void deletePendingMdTable(long tableId) {
+	public void deletePendingMetaTable(long tableId) {
 		pendingMdTableDao.deleteObjectById(tableId);
 	}
 
 	@Override
 	@Transactional
-	public PendingMetaTable getPendingMdTable(long tableId) {
+	public PendingMetaTable getPendingMetaTable(long tableId) {
 		return pendingMdTableDao.getObjectById(tableId);
 	}
 
 	@Override
 	@Transactional
-	public void savePendingMdTable(PendingMetaTable pmt) {
+	public void savePendingMetaTable(PendingMetaTable pmt) {
 		pendingMdTableDao.mergeObject(pmt);
 	}
 
 	@Override
 	@Transactional
-	public String publishMdTable(Long tableId) {
+	public String publishMetaTable(Long tableId) {
 		try{
 		PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
-		MetaTable table=new MetaTable(ptable);
+		MetaTable table= new MetaTable(ptable);
 		metaTableDao.mergeObject(table);
 		}catch(Exception e){
 			return "failed to publish!";

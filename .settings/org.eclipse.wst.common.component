@@ -7,12 +7,6 @@
         <dependent-module archiveName="framework-staticsystem-3.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-staticsystem/framework-staticsystem">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="framework-base-view-easyui-3.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-base-view-easyui/framework-base-view-easyui">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="framework-hibernate-3.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/framework-hibernate/framework-hibernate">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="context-root" value="centit-meta-form"/>
         <property name="java-output-path" value="/centit-meta-form/target/classes"/>
     </wb-module>

@@ -170,7 +170,7 @@ public class MetaTableController extends BaseController{
     public void getMdTableDraft(@PathVariable Long tableId, HttpServletResponse response) {
     	
     	PendingMetaTable mdTable =     			
-    			mdTableMag.getPendingMdTable(tableId);
+    			mdTableMag.getPendingMetaTable(tableId);
         JsonResultUtils.writeSingleDataJson(mdTable, response);
     }
     
@@ -184,7 +184,7 @@ public class MetaTableController extends BaseController{
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
     	PendingMetaTable table=new PendingMetaTable();
     	table.copyNotNullProperty(mdTable);
-    	Serializable pk = mdTableMag.saveNewPendingMdTable(table);
+    	Serializable pk = mdTableMag.saveNewPendingMetaTable(table);
         JsonResultUtils.writeSingleDataJson(pk,response);
     }
     
@@ -197,7 +197,7 @@ public class MetaTableController extends BaseController{
      */
     @RequestMapping(value="/publish/{ptableId}",method = {RequestMethod.POST})
     public void publishMdTable(@PathVariable Long ptableId, HttpServletResponse response) {
-    	String msg=mdTableMag.publishMdTable(ptableId);
+    	String msg=mdTableMag.publishMetaTable(ptableId);
         JsonResultUtils.writeSingleDataJson(msg,response);
     }
     
@@ -209,7 +209,7 @@ public class MetaTableController extends BaseController{
     @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.DELETE})
     public void deleteMdTable(@PathVariable Long tableId, HttpServletResponse response) {
     	
-    	mdTableMag.deletePendingMdTable(tableId);
+    	mdTableMag.deletePendingMetaTable(tableId);
         
         JsonResultUtils.writeBlankJson(response);
     } 
@@ -227,11 +227,11 @@ public class MetaTableController extends BaseController{
     	
     	
     	PendingMetaTable dbMdTable  =     			
-    			mdTableMag.getPendingMdTable(tableId);
+    			mdTableMag.getPendingMetaTable(tableId);
         
         if (null != mdTable) {
         	dbMdTable .copyNotNullProperty(mdTable);
-        	mdTableMag.savePendingMdTable(dbMdTable);
+        	mdTableMag.savePendingMetaTable(dbMdTable);
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);
             return;
