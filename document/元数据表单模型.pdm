@@ -3181,8 +3181,8 @@ CARD 0 Arial Unicode MS,8,N</a:FontList>
 <o:ReferenceSymbol Id="o55">
 <a:CreationDate>1465726079</a:CreationDate>
 <a:ModificationDate>1465869203</a:ModificationDate>
-<a:Rect>((9100,23325), (26701,33196))</a:Rect>
-<a:ListOfPoints>((26701,23325),(9100,33196))</a:ListOfPoints>
+<a:Rect>((9100,23325), (27060,33196))</a:Rect>
+<a:ListOfPoints>((27060,23325),(9100,33196))</a:ListOfPoints>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>16711680</a:LineColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -3468,8 +3468,8 @@ TableComment 0 新宋体,8,N</a:FontList>
 </o:TableSymbol>
 <o:TableSymbol Id="o56">
 <a:CreationDate>1465726026</a:CreationDate>
-<a:ModificationDate>1465869203</a:ModificationDate>
-<a:Rect>((21733,16200), (36751,30750))</a:Rect>
+<a:ModificationDate>1466998142</a:ModificationDate>
+<a:Rect>((21733,16200), (37837,30750))</a:Rect>
 <a:AutoAdjustToText>0</a:AutoAdjustToText>
 <a:LineColor>16711680</a:LineColor>
 <a:FillColor>16769022</a:FillColor>
@@ -5030,9 +5030,10 @@ Name	Code	Comment	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
 <a:Code>Access_Type</a:Code>
 <a:CreationDate>1464084043</a:CreationDate>
 <a:Creator>codefan</a:Creator>
-<a:ModificationDate>1465869455</a:ModificationDate>
+<a:ModificationDate>1466665954</a:ModificationDate>
 <a:Modifier>codefan</a:Modifier>
-<a:Comment>只读/更改/隐藏 </a:Comment>
+<a:Comment>R 只读/  W 更改/ H 隐藏 </a:Comment>
+<a:DefaultValue>W</a:DefaultValue>
 <a:DataType>CHAR</a:DataType>
 </o:Column>
 <o:Column Id="o188">
