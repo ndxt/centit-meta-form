@@ -164,6 +164,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 		for(String pkCol:rc.getTableInfo().getPkColumns()){
 			MetaColumn field = rc.getTableInfo().findFieldByColumn(pkCol);
 			String autoCreateRule = field.getAutoCreateRule();
+			if (null == autoCreateRule) continue;
+			
 			switch(autoCreateRule){
 			case "C":
 				pk.put(field.getPropertyName(), field.getAutoCreateParam());
@@ -191,6 +193,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 		JSONObject object = new JSONObject();
 		for(MetaColumn field :rc.getTableInfo().getMdColumns()){			
 			String autoCreateRule = field.getAutoCreateRule();
+			if (null == autoCreateRule) continue;
+			
 			switch(autoCreateRule){
 			case "C":
 				object.put(field.getPropertyName(), field.getAutoCreateParam());
@@ -406,6 +410,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		
 		lv.addOperation(new ModelOperation(rc.getModelCode(),"view","get","查看"));
 		lv.addOperation(new ModelOperation(rc.getModelCode(),"edit","get","编辑"));
+		lv.addOperation(new ModelOperation(rc.getModelCode(),"delete","get","删除"));
 		return lv;
 	}
 	
