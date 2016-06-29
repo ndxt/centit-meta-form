@@ -3,8 +3,10 @@ package com.centit.metaform.service.impl;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -24,11 +26,13 @@ import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaTableDao;
+import com.centit.metaform.dao.PendingMetaRelationDao;
 import com.centit.metaform.dao.PendingMetaTableDao;
 import com.centit.metaform.po.MetaChangLog;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaColumn;
+import com.centit.metaform.po.PendingMetaRelation;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.metaform.service.MetaTableManager;
 import com.centit.support.database.DataSourceDescription;
@@ -81,6 +85,10 @@ public class MetaTableManagerImpl
 	
 	@Resource
     private DatabaseInfoDao databaseInfoDao;
+	
+	
+	@Resource
+    private PendingMetaRelationDao pendignRelationDao;
 /*
  	@PostConstruct
     public void init() {
@@ -119,6 +127,17 @@ public class MetaTableManagerImpl
 	@Override
 	@Transactional
 	public void savePendingMetaTable(PendingMetaTable pmt) {
+		Set<PendingMetaRelation> relations =pmt.getMdRelations();
+		Iterator<PendingMetaRelation> itr=relations.iterator();
+		while(itr.hasNext()){
+			PendingMetaRelation relation =itr.next();
+			relation.setParentTable(pmt);
+			if(relation.getRelationId()==null)
+				pendignRelationDao.saveNewObject(relation);
+			else{
+				pendignRelationDao.mergeObject(relation);
+			}
+		}
 		pendingMdTableDao.mergeObject(pmt);
 	}
 
@@ -227,6 +246,8 @@ public class MetaTableManagerImpl
 			PageDesc pageDesc) {
 		return pendingMdTableDao.listObjects(searchColumn, pageDesc);
 	}
+
+	
 	
 }
 
