@@ -75,6 +75,16 @@
 		       		<th data-options="field:'accessType',editor:{type:'textbox',options:{required: true}}">字段类别</th>
 		       		<th data-options="field:'mandatory',
 						formatter:function(value, rowData, rowIndex){
+							if(false==value)
+							{
+							rowData.mandatory='F';
+							return '否';
+							}
+							if(true==value)
+							{
+							rowData.mandatory='T';
+							return '是';
+							}
 							if(null==value)
 								return '否';
 						  	if(value=='')return '否';else
@@ -89,6 +99,9 @@
 							}}">是否必填</th>
 		       		<th data-options="field:'primarykey',
 						formatter:function(value, rowData, rowIndex){
+							if(null==value){
+								rowData.primarykey='F';
+								return '否';}
 						  	if(value=='')return '否';else
 						  	if(value=='T')return '是';else
 						  	if(value=='F')return '否';
