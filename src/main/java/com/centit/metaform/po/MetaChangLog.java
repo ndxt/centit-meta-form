@@ -12,6 +12,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.centit.support.algorithm.DatetimeOpt;
+
 
 /**
  * create by scaffold 2016-06-01 
@@ -67,12 +69,12 @@ public class MetaChangLog implements java.io.Serializable {
 	// Constructors
 	/** default constructor */
 	public MetaChangLog() {
+		this.changeDate= DatetimeOpt.currentUtilDate(); 
 	}
 	/** minimal constructor */
 	public MetaChangLog(
 		Long tableID		
-		,Date  changeDate,String  changer) {
-	
+		,Date  changeDate,String  changer) {	
 	
 		this.tableID = tableID;		
 	

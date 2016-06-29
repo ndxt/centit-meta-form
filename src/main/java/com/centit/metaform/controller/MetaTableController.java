@@ -196,8 +196,9 @@ public class MetaTableController extends BaseController{
      * @return
      */
     @RequestMapping(value="/publish/{ptableId}",method = {RequestMethod.POST})
-    public void publishMdTable(@PathVariable Long ptableId, HttpServletResponse response) {
-    	String msg=mdTableMag.publishMetaTable(ptableId);
+    public void publishMdTable(@PathVariable Long ptableId,
+    		HttpServletRequest request,HttpServletResponse response) {
+    	String msg=mdTableMag.publishMetaTable(ptableId, super.getLoginUserCode(request));
         JsonResultUtils.writeSingleDataJson(msg,response);
     }
     

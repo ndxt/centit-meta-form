@@ -1,6 +1,7 @@
 package com.centit.metaform.service.impl;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.centit.dde.dao.DatabaseInfoDao;
 import com.centit.dde.po.DatabaseInfo;
@@ -23,6 +25,7 @@ import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.PendingMetaTableDao;
+import com.centit.metaform.po.MetaChangLog;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaColumn;
@@ -125,64 +128,93 @@ public class MetaTableManagerImpl
 	 */
 	@Override
 	@Transactional
-	public String publishMetaTable(Long tableId) {
+	public String publishMetaTable(Long tableId,String currentUser) {
 		try{
-		PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
-		MetaTable stable = metaTableDao.getObjectById(tableId);
-		DatabaseInfo mdb = databaseInfoDao.getObjectById(ptable.getDatabaseCode());		
-		DataSourceDescription dbc = new DataSourceDescription();
-		dbc.setDatabaseCode(mdb.getDatabaseCode());
-		dbc.setConnUrl(mdb.getDatabaseUrl());
-		dbc.setUsername(mdb.getUsername());
-		dbc.setPassword(mdb.getPassword());		
-		DbcpConnect conn = DbcpConnectPools.getDbcpConnect(dbc);
-		JsonObjectDao jsonDao=null;
-		DDLOperations ddlOpt = null;
-		switch(conn.getDatabaseType()){
-		case Oracle:
-			jsonDao = new OracleJsonObjectDao(conn);
-			ddlOpt = new OracleDDLOperations();
-			break;
-	  	case DB2:
-	  		jsonDao = new DB2JsonObjectDao(conn);
-	  		ddlOpt = new DB2DDLOperations();
-	  		break;
-	  	case SqlServer:
-	  		jsonDao = new SqlSvrJsonObjectDao(conn);
-	  		ddlOpt = new SqlSvrDDLOperations();
-	  		break;
-	  	case MySql:
-	  		jsonDao = new MySqlJsonObjectDao(conn);
-	  		ddlOpt = new MySqlDDLOperations();
-	  		break;
-	  	default:
-	  		jsonDao = new OracleJsonObjectDao(conn);
-	  		ddlOpt = new OracleDDLOperations();
-	  		break;
-		}
-		
-		List<String> sqls = new ArrayList<>();
-		if(stable==null){
-			sqls.add(ddlOpt.createTable(ptable));
-		}else{
-			for(PendingMetaColumn pcol : ptable.getMdColumns()){
-				MetaColumn ocol = stable.findFieldByColumn(pcol.getColumnName());
-				if(ocol==null){
-					sqls.add(ddlOpt.addColumn(
-							ptable.getTableName(), pcol) );
+			PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
+			MetaTable stable = metaTableDao.getObjectById(tableId);
+			DatabaseInfo mdb = databaseInfoDao.getObjectById(ptable.getDatabaseCode());		
+			DataSourceDescription dbc = new DataSourceDescription();
+			dbc.setDatabaseCode(mdb.getDatabaseCode());
+			dbc.setConnUrl(mdb.getDatabaseUrl());
+			dbc.setUsername(mdb.getUsername());
+			dbc.setPassword(mdb.getPassword());		
+			DbcpConnect conn = DbcpConnectPools.getDbcpConnect(dbc);
+			JsonObjectDao jsonDao=null;
+			DDLOperations ddlOpt = null;
+			switch(conn.getDatabaseType()){
+			case Oracle:
+				jsonDao = new OracleJsonObjectDao(conn);
+				ddlOpt = new OracleDDLOperations();
+				break;
+		  	case DB2:
+		  		jsonDao = new DB2JsonObjectDao(conn);
+		  		ddlOpt = new DB2DDLOperations();
+		  		break;
+		  	case SqlServer:
+		  		jsonDao = new SqlSvrJsonObjectDao(conn);
+		  		ddlOpt = new SqlSvrDDLOperations();
+		  		break;
+		  	case MySql:
+		  		jsonDao = new MySqlJsonObjectDao(conn);
+		  		ddlOpt = new MySqlDDLOperations();
+		  		break;
+		  	default:
+		  		jsonDao = new OracleJsonObjectDao(conn);
+		  		ddlOpt = new OracleDDLOperations();
+		  		break;
+			}
+			
+			List<String> sqls = new ArrayList<>();
+			if(stable==null){
+				sqls.add(ddlOpt.createTable(ptable));
+			}else{
+				for(PendingMetaColumn pcol : ptable.getMdColumns()){
+					MetaColumn ocol = stable.findFieldByColumn(pcol.getColumnName());
+					if(ocol==null){
+						sqls.add(ddlOpt.addColumn(
+								ptable.getTableName(), pcol) );
+					}else{
+						if(pcol.getColumnType().equals(ocol.getColumnType())){
+							if( pcol.getMaxLength() != ocol.getMaxLength() ||
+									pcol.getScale() != ocol.getScale()){
+								sqls.add(ddlOpt.modifyColumn(
+										ptable.getTableName(), pcol) );
+							}
+						}else{
+							sqls.addAll(ddlOpt.reconfigurationColumn(
+									ptable.getTableName(),ocol.getColumnName(), pcol));
+						}
+					}
+				}
+					
+				for(MetaColumn ocol : stable.getMdColumns()){
+					PendingMetaColumn pcol = ptable.findFieldByColumn(ocol.getColumnName());
+					if(pcol==null){
+						sqls.add(ddlOpt.dropColumn(stable.getTableName(),ocol.getColumnName()));
+					}
 				}
 			}
-				
-			for(MetaColumn pcol : stable.getMdColumns()){
-				
+			List<String> errors = new ArrayList<>();
+			for(String sql:sqls){
+				try{
+					jsonDao.doExecuteSql(sql);
+				}catch(SQLException se){
+					errors.add(se.getMessage());
+				}
 			}
-		}
-		
-		
-		MetaTable table= new MetaTable(ptable);
-		metaTableDao.mergeObject(table);
-		//MetaChangLog chgLog = new MetaChangLog();		
-		//metaChangLogDao.saveNewObject(chgLog);
+			if(errors.size()==0)
+				errors.add("表结构变更成功！");
+			
+			MetaChangLog chgLog = new MetaChangLog();
+			chgLog.setChangeId(metaChangLogDao.getNextKey());
+			chgLog.setTableID(ptable.getTableId());
+			chgLog.setChangeScript(JSON.toJSONString(sqls));
+			chgLog.setChangeComment(JSON.toJSONString(errors));
+			chgLog.setChanger(currentUser);
+			metaChangLogDao.saveNewObject(chgLog);
+			MetaTable table= new MetaTable(ptable);
+			metaTableDao.mergeObject(table);
+			
 		}catch(Exception e){
 			return "failed to publish!";
 		}
