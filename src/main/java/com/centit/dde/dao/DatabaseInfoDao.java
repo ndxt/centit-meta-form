@@ -11,6 +11,7 @@ import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.support.database.DataSourceDescription;
+import com.centit.support.security.DESSecurityUtils;
 @Repository
 public class DatabaseInfoDao extends BaseDaoImpl<DatabaseInfo,String> {
 
@@ -54,4 +55,10 @@ public class DatabaseInfoDao extends BaseDaoImpl<DatabaseInfo,String> {
 	public List<Object> listDatabase() {
         return (List<Object>) DatabaseOptUtils.findObjectsByHql(this,"select t.databaseName from DatabaseInfo t");
     }
+
+	public DatabaseInfo getDatabaseInfoById(String databaseCode) {
+		DatabaseInfo dbi=this.getObjectById(databaseCode);
+		dbi.setPassword(DESSecurityUtils.decryptBase64String(dbi.getPassword(),DatabaseInfo.DESKEY));
+		return dbi;
+	}
 }

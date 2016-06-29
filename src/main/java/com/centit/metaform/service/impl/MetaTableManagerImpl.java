@@ -151,7 +151,7 @@ public class MetaTableManagerImpl
 		try{
 			PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
 			MetaTable stable = metaTableDao.getObjectById(tableId);
-			DatabaseInfo mdb = databaseInfoDao.getObjectById(ptable.getDatabaseCode());		
+			DatabaseInfo mdb = databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());		
 			DataSourceDescription dbc = new DataSourceDescription();
 			dbc.setDatabaseCode(mdb.getDatabaseCode());
 			dbc.setConnUrl(mdb.getDatabaseUrl());
