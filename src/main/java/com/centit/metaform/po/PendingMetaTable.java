@@ -126,22 +126,11 @@ public class PendingMetaTable implements
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 
-	
 	@OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	//@JoinColumn(name="TABLE_ID")
-	/*@JoinColumns({
-	       @JoinColumn(name="wfcode", referencedColumnName="wfcode"),
-	       @JoinColumn(name="version", referencedColumnName="version")
-	    })*/
 	private Set<PendingMetaColumn> mdColumns;
 	
-	
-	
-	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<PendingMetaRelation> mdRelations;
-	
-	
-	
 	
 	// Constructors
 	/** default constructor */
@@ -195,12 +184,17 @@ public class PendingMetaTable implements
 		return mdColumns;
 	}
 	public void setMdColumns(Set<PendingMetaColumn> mdColumns1) {
-		this.getMdColumns().clear();
-		Iterator<PendingMetaColumn> itr=mdColumns1.iterator();
-		while(itr.hasNext()){
-			itr.next().getCid().setMdTable(this);
+		if(mdColumns1==null)
+		{
+			this.mdColumns=null;
+		}else{
+			this.getMdColumns().clear();
+			Iterator<PendingMetaColumn> itr=mdColumns1.iterator();
+			while(itr.hasNext()){
+				itr.next().getCid().setMdTable(this);
+			}
+			this.getMdColumns().addAll(mdColumns1);
 		}
-		this.getMdColumns().addAll(mdColumns1);
 	}
 	
 	public Set<PendingMetaRelation> getMdRelations() {

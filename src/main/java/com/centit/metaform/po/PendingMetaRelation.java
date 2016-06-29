@@ -94,7 +94,7 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	
 	
 	
-	@OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<PendingMetaRelDetail> relationDetails;
 
 	// Constructors
@@ -102,21 +102,14 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	public PendingMetaRelation() {
 	}
 	/** minimal constructor */
-	public PendingMetaRelation(
-		Long relationId		
-		,String  relationName,String  relationState) {
-	
-	
+	public PendingMetaRelation(Long relationId,String  relationName,String  relationState) {
 		this.relationId = relationId;		
-	
 		this.relationName= relationName; 
 		this.relationState= relationState; 		
 	}
 
 	/** full constructor */
-	public PendingMetaRelation(
-	 Long relationId		
-	,PendingMetaTable  parentTable,PendingMetaTable  childTable,String  relationName,String  relationState,String  relationComment,Date  lastModifyDate,String  recorder) {
+	public PendingMetaRelation(Long relationId,PendingMetaTable  parentTable,PendingMetaTable  childTable,String  relationName,String  relationState,String  relationComment,Date  lastModifyDate,String  recorder) {
 		this.parentTable=parentTable;
 		this.childTable=childTable;
 		this.relationId = relationId;		
@@ -132,42 +125,51 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
     		return this.getChildTable().getTableId();
     	return null;
     }
+	
     public String getChildTableName(){
     	if(null!=this.getChildTable())
     		return this.getChildTable().getTableLabelName();
     	return null;
     }
     
-    
-    
 	public Set<PendingMetaRelDetail> getRelationDetails() {
 		if(null==this.relationDetails)
 			this.relationDetails=new HashSet<PendingMetaRelDetail>();
 		return relationDetails;
 	}
+	
 	public void setRelationDetails(Set<PendingMetaRelDetail> relationDetails) {
-		this.getRelationDetails().clear();
-		Iterator<PendingMetaRelDetail> itr=relationDetails.iterator();
-		while(itr.hasNext()){
-			itr.next().getCid().setRelation(this);
+		if(null==relationDetails){
+			this.relationDetails=null;
+		}else{
+			this.getRelationDetails().clear();
+			Iterator<PendingMetaRelDetail> itr=relationDetails.iterator();
+			while(itr.hasNext()){
+				itr.next().getCid().setRelation(this);
+			}
+			this.getRelationDetails().addAll(relationDetails);
 		}
-		this.getRelationDetails().addAll(relationDetails);
 	}
+	
 	public PendingMetaTable getParentTable() {
 		return parentTable;
 	}
+	
 	public void setParentTable(PendingMetaTable parentTable) {
 		
 		this.parentTable = parentTable;
 	}
+	
 	public PendingMetaTable getChildTable() {
 		return childTable;
 	}
+	
 	public void setChildTable(PendingMetaTable childTable) {
 		if(null==this.childTable)
 			this.childTable=new PendingMetaTable();
 		this.childTable = childTable;
 	}
+	
 	public Long getRelationId() {
 		return this.relationId;
 	}
@@ -266,7 +268,6 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 			this.lastModifyDate= other.getLastModifyDate();  
 		if( other.getRecorder() != null)
 			this.recorder= other.getRecorder();		
-
 		return this;
 	}
 
