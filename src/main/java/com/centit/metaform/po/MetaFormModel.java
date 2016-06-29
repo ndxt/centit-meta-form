@@ -19,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -96,6 +98,7 @@ public class MetaFormModel implements java.io.Serializable {
 	@JoinColumn(name = "PARENT_MODEL_CODE")
 	@ManyToOne
 	@JSONField(serialize=false)
+	@NotFound(action=NotFoundAction.IGNORE)
 	private MetaFormModel  parentModel;
 	/**
 	 * 显示顺序 null 
