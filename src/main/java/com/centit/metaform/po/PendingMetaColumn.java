@@ -11,6 +11,8 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.centit.framework.core.po.EntityWithTimestamp;
+import com.centit.support.database.metadata.SimpleTableField;
+import com.centit.support.database.metadata.TableField;
 
 
 /**
@@ -21,11 +23,11 @@ import com.centit.framework.core.po.EntityWithTimestamp;
 */
 @Entity
 @Table(name = "F_PENDING_META_COLUMN")
-public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializable {
+public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 	@EmbeddedId
-	private com.centit.metaform.po.PendingMetaColumnId cid;
+	private PendingMetaColumnId cid;
 
 	/**
 	 * 字段名称 null 
@@ -56,12 +58,12 @@ public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializa
 	 * 字段长度 precision 
 	 */
 	@Column(name = "MAX_LENGTH")
-	private Long  maxLength;
+	private Integer  maxLength;
 	/**
 	 * 字段精度 null 
 	 */
 	@Column(name = "SCALE")
-	private Long  scale;
+	private Integer  scale;
 	/**
 	 * 字段类别 null 
 	 */
@@ -114,6 +116,20 @@ public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializa
 	private String  validateInfo;
 	
 	/**
+	 * 自动生成规则   C 常量  U uuid S sequence
+	 */
+	@Column(name = "AUTO_CREATE_RULE")
+	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
+	private String  autoCreateRule;
+	
+	/**
+	 * 自动生成参数
+	 */
+	@Column(name = "AUTO_CREATE_PARAM")
+	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
+	private String  autoCreateParam;
+	
+	/**
 	 * 更改时间 null 
 	 */
 	@Column(name = "LAST_MODIFY_DATE")
@@ -142,9 +158,9 @@ public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializa
 
 /** full constructor */
 	public PendingMetaColumn(
-			PendingMetaColumnId cid,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,Long  maxLength,Long  scale,String  accessType,String  mandatory,String  primarykey,String  columnState,String  referenceType,String  referenceData,String  validateRegex,String  validateInfo,String  defaultValue,Date  lastModifyDate,String  recorder) {
-	
-	
+			PendingMetaColumnId cid,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,
+			Integer  maxLength,Integer  scale,String  accessType,String  mandatory,String  primarykey,String  columnState,String  referenceType,String  referenceData,String  validateRegex,String  validateInfo,String  defaultValue,Date  lastModifyDate,String  recorder) {
+
 		this.cid=cid;
 		this.fieldLabelName= fieldLabelName;
 		this.columnComment= columnComment;
@@ -219,19 +235,12 @@ public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializa
 		this.columnType = columnType;
 	}
   
-	public Long getMaxLength() {
-		return this.maxLength;
-	}
-	
-	public void setMaxLength(Long maxLength) {
+	public void setMaxLength(Integer maxLength) {
 		this.maxLength = maxLength;
 	}
   
-	public Long getScale() {
-		return this.scale;
-	}
 	
-	public void setScale(Long scale) {
+	public void setScale(Integer scale) {
 		this.scale = scale;
 	}
   
@@ -316,14 +325,28 @@ public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializa
 		this.recorder = recorder;
 	}
 
-
-
-	public com.centit.metaform.po.PendingMetaColumnId getCid() {
+	public String getAutoCreateRule() {
+		return autoCreateRule;
+	}
+	
+	public void setAutoCreateRule(String autoCreateRule) {
+		this.autoCreateRule = autoCreateRule;
+	}
+	
+	public String getAutoCreateParam() {
+		return autoCreateParam;
+	}
+	
+	public void setAutoCreateParam(String autoCreateParam) {
+		this.autoCreateParam = autoCreateParam;
+	}
+	
+	public PendingMetaColumnId getCid() {
 		if(null==this.cid)
 			this.cid=new PendingMetaColumnId();
 		return cid;
 	}
-	public void setCid(com.centit.metaform.po.PendingMetaColumnId cid1) {
+	public void setCid(PendingMetaColumnId cid1) {
 		if(null==cid1.getTableId())
 			this.cid=null;
 		else
@@ -364,11 +387,9 @@ public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializa
 		if( other.getColumnOrder() != null)
 			this.columnOrder= other.getColumnOrder();  
 		if( other.getColumnType() != null)
-			this.columnType= other.getColumnType();  
-		if( other.getMaxLength() != null)
-			this.maxLength= other.getMaxLength();  
-		if( other.getScale() != null)
-			this.scale= other.getScale();  
+			this.columnType= other.getColumnType();		
+		this.maxLength= other.getMaxLength();  
+		this.scale= other.getScale();  
 		if( other.getAccessType() != null)
 			this.accessType= other.getAccessType();  
 		if( other.getMandatory() != null)
@@ -413,5 +434,39 @@ public class PendingMetaColumn implements EntityWithTimestamp, java.io.Serializa
 		this.recorder= null;
 
 		return this;
+	}
+	@Override
+	public String getPropertyName() {
+		return SimpleTableField.mapPropName(getColumnName());
+	}
+	@Override
+	public String getJavaType() {
+		return SimpleTableField.mapToJavaType(columnType,scale==null?0:scale.intValue());
+	}
+	@Override
+	public boolean isMandatory() {
+		return "T".equals(mandatory) ||  "Y".equals(mandatory) || "1".equals(mandatory);
+	}
+
+	public boolean isPrimaryKey() {
+		return "T".equals(primarykey) ||  "Y".equals(primarykey) || "1".equals(primarykey);
+	}
+	
+	@Override
+	public int getMaxLength() {
+		return maxLength==null?0:maxLength.intValue();
+	}
+	
+	@Override
+	public int getPrecision() {
+		return maxLength==null?0:maxLength.intValue();
+	}
+	@Override
+	public int getScale() {
+		return scale==null?0:scale.intValue();
+	}
+	@Override
+	public String getDefaultValue() {
+		return "C".equals(autoCreateRule)?autoCreateParam:null;
 	}
 }

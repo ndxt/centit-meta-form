@@ -1,8 +1,10 @@
 package com.centit.metaform.po;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -25,6 +27,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.core.po.EntityWithTimestamp;
+import com.centit.support.database.metadata.TableInfo;
+import com.centit.support.database.metadata.TableReference;
 
 
 /**
@@ -35,7 +39,8 @@ import com.centit.framework.core.po.EntityWithTimestamp;
 */
 @Entity
 @Table(name = "F_PENDING_META_TABLE")
-public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializable {
+public class PendingMetaTable implements 
+	TableInfo, EntityWithTimestamp,java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 
 
@@ -380,5 +385,67 @@ public class PendingMetaTable implements EntityWithTimestamp,java.io.Serializabl
 		this.recorder= null;
 
 		return this;
+	}
+	
+	@Override
+	public String getPkName() {
+		return "PK_"+ this.tableName;
+	}
+	@Override
+	public String getSchema() {
+		return null;
+	}
+	@Override
+	public PendingMetaColumn findFieldByName(String name) {
+		if(mdColumns==null)
+			return null;
+		for(PendingMetaColumn c: mdColumns){
+			if(c.getPropertyName().equals(name))
+				return c;
+		}
+		return null;
+	}
+	@Override
+	public PendingMetaColumn findFieldByColumn(String name) {
+		if(mdColumns==null)
+			return null;
+		for(PendingMetaColumn c: mdColumns){
+			if(c.getColumnName().equals(name))
+				return c;
+		}
+		return null;
+	}
+	@Override
+	public boolean isParmaryKey(String colname) {
+		if(mdColumns==null)
+			return false;
+		for(PendingMetaColumn c: mdColumns){
+			if(c.getColumnName().equals(colname)){
+				return c.isPrimaryKey();
+			}
+		}
+		return false;
+	}
+	@Override
+	public List<PendingMetaColumn> getColumns() {
+		return new ArrayList<PendingMetaColumn>(mdColumns);
+	}
+	@Override
+	public List<String> getPkColumns() {
+		if(mdColumns==null)
+			return null;
+		
+		List<String> pks =  new ArrayList<>();
+		for(PendingMetaColumn c: mdColumns){
+			if(c.isPrimaryKey()){
+				pks.add(c.getColumnName());
+			}
+		}
+		return pks;
+	}
+	@Override
+	public List<? extends TableReference> getReferences() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

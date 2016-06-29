@@ -23,7 +23,6 @@ import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.PendingMetaTableDao;
-import com.centit.metaform.po.MetaChangLog;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaColumn;
@@ -130,7 +129,7 @@ public class MetaTableManagerImpl
 		try{
 		PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
 		MetaTable stable = metaTableDao.getObjectById(tableId);
-		DatabaseInfo mdb = databaseInfoDao.getObjectById(stable.getDatabaseCode());		
+		DatabaseInfo mdb = databaseInfoDao.getObjectById(ptable.getDatabaseCode());		
 		DataSourceDescription dbc = new DataSourceDescription();
 		dbc.setDatabaseCode(mdb.getDatabaseCode());
 		dbc.setConnUrl(mdb.getDatabaseUrl());
@@ -141,36 +140,43 @@ public class MetaTableManagerImpl
 		DDLOperations ddlOpt = null;
 		switch(conn.getDatabaseType()){
 		case Oracle:
-			jsonDao = new OracleJsonObjectDao(conn,stable);
+			jsonDao = new OracleJsonObjectDao(conn);
 			ddlOpt = new OracleDDLOperations();
 			break;
 	  	case DB2:
-	  		jsonDao = new DB2JsonObjectDao(conn,stable);
+	  		jsonDao = new DB2JsonObjectDao(conn);
 	  		ddlOpt = new DB2DDLOperations();
 	  		break;
 	  	case SqlServer:
-	  		jsonDao = new SqlSvrJsonObjectDao(conn,stable);
+	  		jsonDao = new SqlSvrJsonObjectDao(conn);
 	  		ddlOpt = new SqlSvrDDLOperations();
 	  		break;
 	  	case MySql:
-	  		jsonDao = new MySqlJsonObjectDao(conn,stable);
+	  		jsonDao = new MySqlJsonObjectDao(conn);
 	  		ddlOpt = new MySqlDDLOperations();
 	  		break;
 	  	default:
-	  		jsonDao = new OracleJsonObjectDao(conn,stable);
+	  		jsonDao = new OracleJsonObjectDao(conn);
 	  		ddlOpt = new OracleDDLOperations();
 	  		break;
 		}
 		
 		List<String> sqls = new ArrayList<>();
-		for(PendingMetaColumn pcol : ptable.getMdColumns()){
-			
+		if(stable==null){
+			sqls.add(ddlOpt.createTable(ptable));
+		}else{
+			for(PendingMetaColumn pcol : ptable.getMdColumns()){
+				MetaColumn ocol = stable.findFieldByColumn(pcol.getColumnName());
+				if(ocol==null){
+					sqls.add(ddlOpt.addColumn(
+							ptable.getTableName(), pcol) );
+				}
+			}
+				
+			for(MetaColumn pcol : stable.getMdColumns()){
+				
+			}
 		}
-			
-		for(MetaColumn pcol : stable.getMdColumns()){
-			
-		}
-		
 		
 		
 		MetaTable table= new MetaTable(ptable);
