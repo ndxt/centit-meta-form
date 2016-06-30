@@ -30,6 +30,7 @@ public interface MetaTableManager extends BaseEntityManager<MetaTable,java.lang.
 	public void deletePendingMetaTable(long tableId);
 	public PendingMetaTable getPendingMetaTable(long tableId);
 	public void savePendingMetaTable(PendingMetaTable pmt);
+	public List<String> makeAlterTableSqls(Long tableId);
 	public String publishMetaTable(Long tableId,String currentUser);
 	public List<PendingMetaTable> listDrafts(Map<String, Object> searchColumn,
 			PageDesc pageDesc);

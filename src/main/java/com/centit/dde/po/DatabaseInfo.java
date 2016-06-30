@@ -39,19 +39,19 @@ public class DatabaseInfo implements Serializable {
     @NotBlank(message = "字段不能为空")
     private String databaseType;
     @Column(name = "HOSTPORT")
-    @Length(min=1,max = 100, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 100, message = "字段长度不能大于{max}")
     private String hostPort;
     @Column(name = "DATABASE_URL")
-    @Length(min=1,max = 1000, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 1000, message = "字段长度不能大于{max}")
     private String databaseUrl;
     @Column(name = "USERNAME")
-    @Length(min=1,max = 100, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 100, message = "字段长度不能大于{max}")
     private String username;
     @Column(name = "PASSWORD")
-    @Length(min=1,max = 100, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 100, message = "字段长度不能大于{max}")
     private String password;
     @Column(name = "DATA_DESC")
-    @Length(min=1,max = 100, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 100, message = "字段长度不能大于{max}")
     private String dataDesc;
     @Column(name = "CREATED")    
     private String created;

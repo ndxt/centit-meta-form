@@ -37,8 +37,8 @@ import com.centit.metaform.formaccess.ListViewDefine;
 import com.centit.metaform.formaccess.MateFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
-import com.centit.metaform.formaccess.OptionItem;
 import com.centit.metaform.formaccess.OperationEvent;
+import com.centit.metaform.formaccess.OptionItem;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
@@ -136,7 +136,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		dbc.setDatabaseCode(mdb.getDatabaseCode());
 		dbc.setConnUrl(mdb.getDatabaseUrl());
 		dbc.setUsername(mdb.getUsername());
-		dbc.setPassword(mdb.getPassword());		
+		dbc.setPassword(mdb.getClearPassword());		
 		rc.setDataSource(dbc);
 
 		return rc;

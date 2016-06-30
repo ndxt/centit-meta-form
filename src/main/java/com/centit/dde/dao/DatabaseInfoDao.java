@@ -11,7 +11,6 @@ import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.hibernate.dao.BaseDaoImpl;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.support.database.DataSourceDescription;
-import com.centit.support.security.DESSecurityUtils;
 @Repository
 public class DatabaseInfoDao extends BaseDaoImpl<DatabaseInfo,String> {
 

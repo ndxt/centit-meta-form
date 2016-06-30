@@ -35,6 +35,7 @@ import com.centit.metaform.po.PendingMetaColumn;
 import com.centit.metaform.po.PendingMetaRelation;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.metaform.service.MetaTableManager;
+import com.centit.support.database.DBType;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.DbcpConnect;
 import com.centit.support.database.DbcpConnectPools;
@@ -141,6 +142,71 @@ public class MetaTableManagerImpl
 		pendingMdTableDao.mergeObject(pmt);
 	}
 
+	
+	/**
+	 * 对比pendingMetaTable和MetaTable中的字段信息，
+	 * 获取表结构差异对应的Sql语句
+	 */
+	@Override
+	@Transactional
+	public List<String> makeAlterTableSqls(Long tableId) {
+		PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
+		MetaTable stable = metaTableDao.getObjectById(tableId);
+		DatabaseInfo mdb = databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());		
+	
+		DDLOperations ddlOpt = null;
+		switch(DBType.mapDBType(mdb.getDatabaseUrl())){
+		case Oracle:
+			ddlOpt = new OracleDDLOperations();
+			break;
+	  	case DB2:
+	  		ddlOpt = new DB2DDLOperations();
+	  		break;
+	  	case SqlServer:
+	  		ddlOpt = new SqlSvrDDLOperations();
+	  		break;
+	  	case MySql:
+	  		ddlOpt = new MySqlDDLOperations();
+	  		break;
+	  	default:
+	  		ddlOpt = new OracleDDLOperations();
+	  		break;
+		}
+		
+		List<String> sqls = new ArrayList<>();
+		if(stable==null){
+			sqls.add(ddlOpt.makeCreateTableSql(ptable));
+		}else{
+			for(PendingMetaColumn pcol : ptable.getMdColumns()){
+				MetaColumn ocol = stable.findFieldByColumn(pcol.getColumnName());
+				if(ocol==null){
+					sqls.add(ddlOpt.makeAddColumnSql(
+							ptable.getTableName(), pcol) );
+				}else{
+					if(pcol.getColumnType().equals(ocol.getColumnType())){
+						if( pcol.getMaxLength() != ocol.getMaxLength() ||
+								pcol.getScale() != ocol.getScale()){
+							sqls.add(ddlOpt.makeModifyColumnSql(
+									ptable.getTableName(), pcol) );
+						}
+					}else{
+						sqls.addAll(ddlOpt.makeReconfigurationColumnSqls(
+								ptable.getTableName(),ocol.getColumnName(), pcol));
+					}
+				}
+			}
+				
+			for(MetaColumn ocol : stable.getMdColumns()){
+				PendingMetaColumn pcol = ptable.findFieldByColumn(ocol.getColumnName());
+				if(pcol==null){
+					sqls.add(ddlOpt.makeDropColumnSql(stable.getTableName(),ocol.getColumnName()));
+				}
+			}
+		}
+		
+		return sqls;
+	}
+	
 	/**
 	 * 对比pendingMetaTable和MetaTable中的字段信息，并对数据库中的表进行重构，
 	 * 重构成功后将对应的表结构信息同步到 MetaTable中，并在MetaChangeLog中记录信息
@@ -150,7 +216,6 @@ public class MetaTableManagerImpl
 	public String publishMetaTable(Long tableId,String currentUser) {
 		try{
 			PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
-			MetaTable stable = metaTableDao.getObjectById(tableId);
 			DatabaseInfo mdb = databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());		
 			DataSourceDescription dbc = new DataSourceDescription();
 			dbc.setDatabaseCode(mdb.getDatabaseCode());
@@ -159,60 +224,26 @@ public class MetaTableManagerImpl
 			dbc.setPassword(mdb.getClearPassword());		
 			DbcpConnect conn = DbcpConnectPools.getDbcpConnect(dbc);
 			JsonObjectDao jsonDao=null;
-			DDLOperations ddlOpt = null;
 			switch(conn.getDatabaseType()){
 			case Oracle:
 				jsonDao = new OracleJsonObjectDao(conn);
-				ddlOpt = new OracleDDLOperations();
 				break;
 		  	case DB2:
 		  		jsonDao = new DB2JsonObjectDao(conn);
-		  		ddlOpt = new DB2DDLOperations();
 		  		break;
 		  	case SqlServer:
 		  		jsonDao = new SqlSvrJsonObjectDao(conn);
-		  		ddlOpt = new SqlSvrDDLOperations();
 		  		break;
 		  	case MySql:
 		  		jsonDao = new MySqlJsonObjectDao(conn);
-		  		ddlOpt = new MySqlDDLOperations();
 		  		break;
 		  	default:
 		  		jsonDao = new OracleJsonObjectDao(conn);
-		  		ddlOpt = new OracleDDLOperations();
 		  		break;
 			}
 			
-			List<String> sqls = new ArrayList<>();
-			if(stable==null){
-				sqls.add(ddlOpt.makeCreateTableSql(ptable));
-			}else{
-				for(PendingMetaColumn pcol : ptable.getMdColumns()){
-					MetaColumn ocol = stable.findFieldByColumn(pcol.getColumnName());
-					if(ocol==null){
-						sqls.add(ddlOpt.makeAddColumnSql(
-								ptable.getTableName(), pcol) );
-					}else{
-						if(pcol.getColumnType().equals(ocol.getColumnType())){
-							if( pcol.getMaxLength() != ocol.getMaxLength() ||
-									pcol.getScale() != ocol.getScale()){
-								sqls.add(ddlOpt.makeModifyColumnSql(
-										ptable.getTableName(), pcol) );
-							}
-						}else{
-							sqls.addAll(ddlOpt.makeReconfigurationColumnSqls(
-									ptable.getTableName(),ocol.getColumnName(), pcol));
-						}
-					}
-				}
-					
-				for(MetaColumn ocol : stable.getMdColumns()){
-					PendingMetaColumn pcol = ptable.findFieldByColumn(ocol.getColumnName());
-					if(pcol==null){
-						sqls.add(ddlOpt.makeDropColumnSql(stable.getTableName(),ocol.getColumnName()));
-					}
-				}
-			}
+			List<String> sqls =  makeAlterTableSqls(tableId);
+			
 			List<String> errors = new ArrayList<>();
 			for(String sql:sqls){
 				try{
@@ -247,7 +278,5 @@ public class MetaTableManagerImpl
 		return pendingMdTableDao.listObjects(searchColumn, pageDesc);
 	}
 
-	
-	
 }
 
