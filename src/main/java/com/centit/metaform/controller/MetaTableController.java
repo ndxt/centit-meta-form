@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -198,7 +199,12 @@ public class MetaTableController extends BaseController{
     @RequestMapping(value="/publish/{ptableId}",method = {RequestMethod.POST})
     public void publishMdTable(@PathVariable Long ptableId,
     		HttpServletRequest request,HttpServletResponse response) {
-    	String msg=mdTableMag.publishMetaTable(ptableId, super.getLoginUserCode(request));
+    	String userCode = super.getLoginUserCode(request);
+    	if(StringUtils.isBlank(userCode)){
+    		JsonResultUtils.writeErrorMessageJson("当前用户没有登录，请先登录。", response);
+    		return;
+    	}
+    	String msg=mdTableMag.publishMetaTable(ptableId, userCode);
         JsonResultUtils.writeSingleDataJson(msg,response);
     }
     
