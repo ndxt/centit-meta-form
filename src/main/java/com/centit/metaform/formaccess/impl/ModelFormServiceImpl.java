@@ -50,6 +50,7 @@ import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.UuidOpt;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.DatabaseAccess;
+import com.centit.support.database.QueryAndNamedParams;
 import com.centit.support.database.QueryUtils;
 import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
@@ -653,7 +654,17 @@ public class ModelFormServiceImpl implements ModelFormService {
 		try {			
 			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSql(rc.getTableInfo(),null);
 			String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
+
+			QueryAndNamedParams qap = rc.getMetaFormFilter();
 			String filter = buildFilterSql(rc,null,filters);
+			if(qap!=null){
+				sql = sql + " where (" + qap.getQuery()+")";
+				if(StringUtils.isNotBlank(filter))
+					sql = sql + " and " + filter;
+				filters.putAll(qap.getParams());
+			}else if(StringUtils.isNotBlank(filter))
+				sql = sql + " where " + filter;
+			
 			if(StringUtils.isNotBlank(filter))
 				sql = sql + " where " + filter;	
 			return dao.findObjectsByNamedSqlAsJSON(
@@ -672,8 +683,14 @@ public class ModelFormServiceImpl implements ModelFormService {
 		try {
 			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSql(rc.getTableInfo(),null);
 			String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
+			QueryAndNamedParams qap = rc.getMetaFormFilter();
 			String filter = buildFilterSql(rc,null,filters);
-			if(StringUtils.isNotBlank(filter))
+			if(qap!=null){
+				sql = sql + " where (" + qap.getQuery()+")";
+				if(StringUtils.isNotBlank(filter))
+					sql = sql + " and " + filter;
+				filters.putAll(qap.getParams());
+			}else if(StringUtils.isNotBlank(filter))
 				sql = sql + " where " + filter;
 
 			JSONArray ja = dao.findObjectsByNamedSqlAsJSON(sql,filters,q.getRight(),
