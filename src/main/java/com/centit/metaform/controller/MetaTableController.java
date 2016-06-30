@@ -201,7 +201,7 @@ public class MetaTableController extends BaseController{
     		HttpServletRequest request,HttpServletResponse response) {
     	String userCode = super.getLoginUserCode(request);
     	if(StringUtils.isBlank(userCode)){
-    		JsonResultUtils.writeErrorMessageJson("当前用户没有登录，请先登录。", response);
+    		JsonResultUtils.writeErrorMessageJson(401,"当前用户没有登录，请先登录。", response);
     		return;
     	}
     	String msg=mdTableMag.publishMetaTable(ptableId, userCode);
