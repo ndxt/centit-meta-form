@@ -1,14 +1,20 @@
 package com.centit.metaform.po;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -71,8 +77,6 @@ public class MetaRelation implements TableReference, java.io.Serializable {
 	 * 状态 null 
 	 */
 	@Column(name = "RELATION_STATE")
-	@NotBlank(message = "字段不能为空")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
 	private String  relationState;
 	/**
 	 * 关联说明 null 
@@ -92,6 +96,11 @@ public class MetaRelation implements TableReference, java.io.Serializable {
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 
+	
+	@OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<MetaRelDetail> relationDetails;
+	
+	
 	// Constructors
 	/** default constructor */
 	public MetaRelation() {
@@ -128,14 +137,32 @@ public class MetaRelation implements TableReference, java.io.Serializable {
   
 	public MetaRelation(PendingMetaRelation next) {
 		this.setRelationId(next.getRelationId());
-		//this.parentTable= new MetaTable(next.getParentTable());  
-		//this.childTable= new MetaTable(next.getChildTable());  
 		this.relationName= next.getRelationName();  
 		this.relationState= next.getRelationState();  
 		this.relationComment= next.getRelationComment();  
 		this.lastModifyDate= next.getLastModifyDate();  
 		this.recorder= next.getRecorder();
+		
+		Set<PendingMetaRelDetail> pRelationDetails=next.getRelationDetails();
+		this.relationDetails=new HashSet<MetaRelDetail>();
+		Iterator<PendingMetaRelDetail> itr=pRelationDetails.iterator();
+		while(itr.hasNext()){
+			PendingMetaRelDetail pdetail=itr.next();
+			MetaRelDetail  detail=new MetaRelDetail(new MetaRelDetailId(this,pdetail.getParentColumnName()),pdetail.getChildColumnName());
+			this.relationDetails.add(detail);
+		}
 	}
+	
+	
+	
+	public Set<MetaRelDetail> getRelationDetails() {
+		return relationDetails;
+	}
+	
+	public void setRelationDetails(Set<MetaRelDetail> relationDetails) {
+		this.relationDetails = relationDetails;
+	}
+	
 	public Long getRelationId() {
 		return this.relationId;
 	}

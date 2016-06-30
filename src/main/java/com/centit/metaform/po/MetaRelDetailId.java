@@ -2,8 +2,13 @@ package com.centit.metaform.po;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * MdRelDetialId  entity.
@@ -19,9 +24,10 @@ public class MetaRelDetailId implements java.io.Serializable {
 	/**
 	 * 关联代码 null 
 	 */
-	@Column(name = "RELATION_ID")
-	@NotBlank(message = "字段不能为空")
-	private String relationId;
+	@JoinColumn(name = "RELATION_ID",nullable=false)
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JSONField(serialize=false)
+	private MetaRelation relation;
 
 	/**
 	 * p字段代码 null 
@@ -35,19 +41,28 @@ public class MetaRelDetailId implements java.io.Serializable {
 	public MetaRelDetailId() {
 	}
 	/** full constructor */
-	public MetaRelDetailId(String relationId, String parentColumnName) {
+	public MetaRelDetailId(MetaRelation relation, String parentColumnName) {
 
-		this.relationId = relationId;
+		this.relation = relation;
 		this.parentColumnName = parentColumnName;	
 	}
 
   
-	public String getRelationId() {
-		return this.relationId;
+	public MetaRelation getRelation() {
+		return relation;
+	}
+	public void setRelation(MetaRelation relation) {
+		this.relation = relation;
+	}
+	public Long getRelationId() {
+		if(null==this.relation)
+			return null;
+		return this.relation.getRelationId();
 	}
 
-	public void setRelationId(String relationId) {
-		this.relationId = relationId;
+	public void setRelationId(Long relationId) {
+			this.relation=new MetaRelation();
+			this.relation.setRelationId(relationId);
 	}
   
 	public String getParentColumnName() {

@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -53,6 +55,7 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	@JoinColumn(name = "PARENT_TABLE_ID")
 	@ManyToOne
 	@JSONField(serialize=false)
+	@NotFound(action=NotFoundAction.IGNORE)
 	private PendingMetaTable  parentTable;
 	/**
 	 * 从表表ID 表单主键 
@@ -60,6 +63,7 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 	@JoinColumn(name = "CHILD_TABLE_ID")
 	@ManyToOne
 	@JSONField(serialize=false)
+	@NotFound(action=NotFoundAction.IGNORE)
 	private PendingMetaTable  childTable;
 	/**
 	 * 关联名称 null 

@@ -180,11 +180,11 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		
 	}
 	
-	
 	public void setColumnsFromPending(Set<PendingMetaColumn> pcolumns){
 		Iterator<PendingMetaColumn> itr= pcolumns.iterator();
 		while(itr.hasNext()){
 			MetaColumn column=new MetaColumn(itr.next());
+			column.getCid().setMdTable(this);
 			this.mdColumns.add(column);
 		}
 	}
@@ -192,10 +192,10 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		Iterator<PendingMetaRelation> itr= prelations.iterator();
 		while(itr.hasNext()){
 			MetaRelation relation=new MetaRelation(itr.next());
+			relation.setParentTable(this);
 			this.mdRelations.add(relation);
 		}
 	}
-	
 	
 	
 	/** minimal constructor */

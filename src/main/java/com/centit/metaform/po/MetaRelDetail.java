@@ -47,7 +47,6 @@ public class MetaRelDetail implements java.io.Serializable {
 	}
 
 
-
 	public com.centit.metaform.po.MetaRelDetailId getCid() {
 		return this.cid;
 	}
@@ -56,17 +55,6 @@ public class MetaRelDetail implements java.io.Serializable {
 		this.cid = id;
 	}
   
-	public String getRelationId() {
-		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.MetaRelDetailId();
-		return this.cid.getRelationId();
-	}
-	
-	public void setRelationId(String relationId) {
-		if(this.cid==null)
-			this.cid = new com.centit.metaform.po.MetaRelDetailId();
-		this.cid.setRelationId(relationId);
-	}
   
 	public String getParentColumnName() {
 		if(this.cid==null)
@@ -96,7 +84,7 @@ public class MetaRelDetail implements java.io.Serializable {
 
 	public MetaRelDetail copy(MetaRelDetail other){
   
-		this.setRelationId(other.getRelationId());  
+		this.setCid(other.getCid());
 		this.setParentColumnName(other.getParentColumnName());
   
 		this.childColumnName= other.getChildColumnName();
@@ -106,8 +94,8 @@ public class MetaRelDetail implements java.io.Serializable {
 	
 	public MetaRelDetail copyNotNullProperty(MetaRelDetail other){
   
-	if( other.getRelationId() != null)
-		this.setRelationId(other.getRelationId());  
+	if( other.getCid() != null)
+		this.setCid(other.getCid());
 	if( other.getParentColumnName() != null)
 		this.setParentColumnName(other.getParentColumnName());
   
