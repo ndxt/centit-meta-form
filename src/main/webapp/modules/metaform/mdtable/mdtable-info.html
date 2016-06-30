@@ -131,18 +131,16 @@
 		       		<th data-options="field:'columnState'">状态</th>
 		       		<th data-options="field:'referenceType',
 					formatter:function(value, rowData, rowIndex){
-					  	if(value==undefined)return '无';else
-					  	if(value=='0')return '无';else
-					  	if(value=='1')return '数据字典';else
+					    if(value=='1')return '数据字典';else
 					  	if(value=='2')return 'JSON表达式';else
 					  	if(value=='3')return 'sql语句';else
 					  	if(value=='Y')return '年份';else
-					  	if(value=='M')return '月份';
+					  	if(value=='M')return '月份';else
+					  	return '';
 					  }
 					,editor:{ type:'combobox',
 					  options:{valueField:'value',textField:'label',
 						data:[
-						{value:'0',label:'无'},
 						{value:'1',label:'数据字典 '},
 						{value:'2',label:'JSON表达式 '},
 						{value:'3',label:'sql语句'},
