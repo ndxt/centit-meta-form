@@ -522,15 +522,24 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	
 	@Override
 	public int getMaxLength() {
-		return maxLength==null?0:maxLength.intValue();
+		if("string".equalsIgnoreCase(this.columnFieldType) ||
+				"integer".equalsIgnoreCase(this.columnFieldType)||
+				"float".equalsIgnoreCase(this.columnFieldType) ||
+				"varchar".equalsIgnoreCase(this.columnFieldType)||
+				"number".equalsIgnoreCase(this.columnFieldType))
+			return maxLength==null?0:maxLength.intValue();
+		return 0;
 	}
 	@Override
 	public int getPrecision() {
-		return maxLength==null?0:maxLength.intValue();
+		return getMaxLength();
 	}
 	@Override
 	public int getScale() {
-		return scale==null?0:scale.intValue();
+		if("float".equalsIgnoreCase(this.columnFieldType) ||
+				"number".equalsIgnoreCase(this.columnFieldType))
+			return scale==null?0:scale.intValue();
+		return 0;
 	}
 	
 	@Override
