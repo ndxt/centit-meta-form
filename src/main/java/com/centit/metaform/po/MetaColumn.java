@@ -190,6 +190,28 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.recorder= recorder;		
 	}
 
+	public MetaColumn(PendingMetaColumn next) {
+		this.setTableId(next.getTableId());  
+		this.setColumnName(next.getColumnName());
+		this.fieldLabelName= next.getFieldLabelName();  
+		this.columnComment= next.getColumnComment();  
+		this.columnOrder= next.getColumnOrder();  
+		this.columnType= next.getColumnType();  
+		this.maxLength= next.getMaxLength();  
+		this.scale= next.getScale();  
+		this.accessType= next.getAccessType();  
+		this.mandatory= next.getMandatory();  
+		this.primarykey= next.getPrimarykey();  
+		this.columnState= next.getColumnState();  
+		this.referenceType= next.getReferenceType();  
+		this.referenceData= next.getReferenceData();  
+		this.validateRegex= next.getValidateRegex();  
+		this.validateInfo= next.getValidateInfo();  
+		this.autoCreateRule= next.getAutoCreateRule();  
+		this.autoCreateParam= next.getAutoCreateParam();  
+		this.lastModifyDate= next.getLastModifyDate();  
+		this.recorder= next.getRecorder();
+	}
 	public com.centit.metaform.po.MetaColumnId getCid() {
 		return this.cid;
 	}

@@ -158,8 +158,32 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.tableState= ptable.getTableState();
 		this.tableComment= ptable.getTableComment();
 		this.lastModifyDate= ptable.getLastModifyDate();
-		this.recorder= ptable.getRecorder();
+		this.workFlowOptType=ptable.getWorkFlowOptType();
+		this.recorder=ptable.getRecorder();
+		this.updateCheckTimeStamp=ptable.getUpdateCheckTimeStamp();
+		this.mdColumns=new HashSet<MetaColumn>();
+		this.mdRelations=new HashSet<MetaRelation>();
+		this.setColumnsFromPending(ptable.getMdColumns());
+		this.setRelationsFromPending(ptable.getMdRelations());
+		
 	}
+	
+	
+	public void setColumnsFromPending(Set<PendingMetaColumn> pcolumns){
+		Iterator<PendingMetaColumn> itr= pcolumns.iterator();
+		while(itr.hasNext()){
+			MetaColumn column=new MetaColumn(itr.next());
+			this.mdColumns.add(column);
+		}
+	}
+	public void setRelationsFromPending(Set<PendingMetaRelation> prelations){
+		Iterator<PendingMetaRelation> itr= prelations.iterator();
+		while(itr.hasNext()){
+			MetaRelation relation=new MetaRelation(itr.next());
+			this.mdRelations.add(relation);
+		}
+	}
+	
 	
 	
 	/** minimal constructor */
