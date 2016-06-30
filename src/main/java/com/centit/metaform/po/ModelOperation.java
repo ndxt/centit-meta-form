@@ -26,54 +26,54 @@ public class ModelOperation implements java.io.Serializable {
 	/**
 	 * 操作模块代码 一个模块中的操作可能是针对其他模块的 
 	 */
-	@Column(name = "OPT_Model_Code")
+	@Column(name = "OPT_MODEL_CODE")
 	@Length(min = 0, max = 16, message = "字段长度不能小于{min}大于{max}")
 	private String  optModelCode;
 	/**
 	 * 操作方法 null 
 	 */
-	@Column(name = "method")
+	@Column(name = "METHOD")
 	@Length(min = 0, max = 16, message = "字段长度不能小于{min}大于{max}")
 	private String  method;
 	/**
 	 * 操作名称 null 
 	 */
-	@Column(name = "label")
+	@Column(name = "LABEL")
 	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
 	private String  label;
 	/**
 	 * 显示顺序 null 
 	 */
-	@Column(name = "Display_Order")
+	@Column(name = "DISPLAY_ORDER")
 	private Long  displayOrder;
 	/**
 	 * 打开方式 0：没有：1： 提示信息  2：只读表单  3：读写表单   
 	 */
-	@Column(name = "open_type")
+	@Column(name = "OPEN_TYPE")
 	@Length(min = 0, max = 1, message = "字段长度不能小于{min}大于{max}")
 	private String  openType;
 	/**
 	 * 返回后操作 0：不操作 1： 刷新页面  2：删除当前行 3：更新当前行 
 	 */
-	@Column(name = "return_operation")
+	@Column(name = "RETURN_OPERATION")
 	@Length(min = 0, max = 1, message = "字段长度不能小于{min}大于{max}")
 	private String  returnOperation;
 	/**
 	 * 操作前提示类别 0： 没有  1 yes or no 2 cancel ok 3 cancel retry ok 
 	 */
-	@Column(name = "opt_hint_type")
+	@Column(name = "OPT_HINT_TYPE")
 	@Length(min = 0, max = 1, message = "字段长度不能小于{min}大于{max}")
 	private String  optHintType;
 	/**
 	 * 操作提示信息 操作前提示信息 
 	 */
-	@Column(name = "opt_hint_info")
+	@Column(name = "OPT_HINT_INFO")
 	@Length(min = 0, max = 500, message = "字段长度不能小于{min}大于{max}")
 	private String  optHintInfo;
 	/**
 	 * 其他扩展属性 null 
 	 */
-	@Column(name = "extend_Options")
+	@Column(name = "EXTEND_OPTIONS")
 	@Length(min = 0, max = 1000, message = "字段长度不能小于{min}大于{max}")
 	private String  extendOptions;
 

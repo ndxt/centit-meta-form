@@ -72,71 +72,71 @@ public class ModelDataField implements java.io.Serializable {
 	/**
 	 * 输入约束描述
 	 */
-	@Column(name = "Validate_hint")
+	@Column(name = "VALIDATE_HINT")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  validateHint;
 	
 	/**
 	 * 约束提示
 	 */
-	@Column(name = "Validate_Info")
+	@Column(name = "VALIDATE_INFO")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  validateInfo;
 	
 	/**
 	 * 约束表达式
 	 */
-	@Column(name = "Validate_Regex")
+	@Column(name = "VALIDATE_REGEX")
 	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  validateRegex;
 	
 	/**
 	 * 默认值
 	 */
-	@Column(name = "default_Value")
+	@Column(name = "DEFAULT_VALUE")
 	private String defaultValue;
 	
 	
 	/**
 	 * 过滤类别
 	 */
-	@Column(name = "filter_type")
+	@Column(name = "FILTER_TYPE")
 	private String filterType;
 	
 	/**
 	 * 过滤类别
 	 */
-	@Column(name = "mandatory")
+	@Column(name = "MANDATORY")
 	private String mandatory;
 	
 	/**
 	 * 是否是焦点
 	 */
-	@Column(name = "focus")
+	@Column(name = "FOCUS")
 	private String focus;
 	
 	/**
 	 * 连接url
 	 */
-	@Column(name = "url")
+	@Column(name = "URL")
 	private String url;
 	
 	/**
 	 * 其他扩展属性
 	 */
-	@Column(name = "extend_Options")
+	@Column(name = "EXTEND_OPTIONS")
 	private String extendOptions;
 	
 	/**
 	 * 字段高度 null 
 	 */
-	@Column(name = "Field_Height")
+	@Column(name = "FIELD_HEIGHT")
 	private Long  fieldHeight;
 	
 	/**
 	 * 字段长度 null 
 	 */
-	@Column(name = "field_width")
+	@Column(name = "FIELD_WIDTH")
 	private Long  fieldWidth;
 
 	// Constructors

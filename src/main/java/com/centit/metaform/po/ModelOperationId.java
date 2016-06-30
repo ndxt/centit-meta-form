@@ -23,7 +23,7 @@ public class ModelOperationId implements java.io.Serializable {
 	/**
 	 * 模块代码 所属（关联） 
 	 */
-	@JoinColumn(name = "Model_Code")
+	@JoinColumn(name = "MODEL_CODE")
 	@ManyToOne
 	@JSONField(serialize=false)
 	private MetaFormModel metaFormModel;
