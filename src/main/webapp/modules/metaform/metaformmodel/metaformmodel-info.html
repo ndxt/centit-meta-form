@@ -70,6 +70,54 @@
 			       		<th data-options="field:'columnName',editor:{type:'textbox',options:{required:true}}">字段代码</th>
 			       		<th data-options="field:'columnType',editor:{type:'textbox',options:{required:true}}">字段类别</th>
 			       		<th data-options="field:'accessType',editor:{type:'textbox',options:{}}">更改类别</th>
+			       		<th data-options="field:'focus',
+						formatter:function(value, rowData, rowIndex){
+							if(false==value)
+							{
+							rowData.focus='F';
+							return '否';
+							}
+							if(true==value)
+							{
+							rowData.focus='T';
+							return '是';
+							}
+							if(null==value)
+								return '否';
+						  	if(value=='')return '否';else
+						  	if(value=='T')return '是';else
+						  	if(value=='F')return '否';
+						  },
+						  editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',
+							data:[
+							{value:'T',label:'是'},
+							{value:'F',label:'否'}],
+							}}">是否是焦点</th>
+							<th data-options="field:'mandatory',
+						formatter:function(value, rowData, rowIndex){
+							if(false==value)
+							{
+							rowData.mandatory='F';
+							return '否';
+							}
+							if(true==value)
+							{
+							rowData.mandatory='T';
+							return '是';
+							}
+							if(null==value)
+								return '否';
+						  	if(value=='')return '否';else
+						  	if(value=='T')return '是';else
+						  	if(value=='F')return '否';
+						  },
+						  editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',
+							data:[
+							{value:'T',label:'是'},
+							{value:'F',label:'否'}],
+							}}">是否必填</th>
 			       		<th data-options="field:'displayOrder',editor:{type:'numberbox',options:{}}">显示顺序</th>
 			       		<th data-options="field:'inputHint',editor:{type:'textbox',options:{}}">输入说明</th>
 			       		<th data-options="field:'referenceType',
