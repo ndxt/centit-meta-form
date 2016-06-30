@@ -185,22 +185,22 @@ public class MetaTableManagerImpl
 			
 			List<String> sqls = new ArrayList<>();
 			if(stable==null){
-				sqls.add(ddlOpt.createTable(ptable));
+				sqls.add(ddlOpt.makeCreateTableSql(ptable));
 			}else{
 				for(PendingMetaColumn pcol : ptable.getMdColumns()){
 					MetaColumn ocol = stable.findFieldByColumn(pcol.getColumnName());
 					if(ocol==null){
-						sqls.add(ddlOpt.addColumn(
+						sqls.add(ddlOpt.makeAddColumnSql(
 								ptable.getTableName(), pcol) );
 					}else{
 						if(pcol.getColumnType().equals(ocol.getColumnType())){
 							if( pcol.getMaxLength() != ocol.getMaxLength() ||
 									pcol.getScale() != ocol.getScale()){
-								sqls.add(ddlOpt.modifyColumn(
+								sqls.add(ddlOpt.makeModifyColumnSql(
 										ptable.getTableName(), pcol) );
 							}
 						}else{
-							sqls.addAll(ddlOpt.reconfigurationColumn(
+							sqls.addAll(ddlOpt.makeReconfigurationColumnSqls(
 									ptable.getTableName(),ocol.getColumnName(), pcol));
 						}
 					}
@@ -209,7 +209,7 @@ public class MetaTableManagerImpl
 				for(MetaColumn ocol : stable.getMdColumns()){
 					PendingMetaColumn pcol = ptable.findFieldByColumn(ocol.getColumnName());
 					if(pcol==null){
-						sqls.add(ddlOpt.dropColumn(stable.getTableName(),ocol.getColumnName()));
+						sqls.add(ddlOpt.makeDropColumnSql(stable.getTableName(),ocol.getColumnName()));
 					}
 				}
 			}

@@ -25,6 +25,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.centit.framework.core.po.EntityWithTimestamp;
 
 /**
  * create by scaffold 2016-06-02 
@@ -34,7 +35,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 */
 @Entity
 @Table(name = "M_META_FORM_MODEL")
-public class MetaFormModel implements java.io.Serializable {
+public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 	private static final long serialVersionUID =  1L;
 	/**
 	 * 模块代码 null 
@@ -56,41 +57,41 @@ public class MetaFormModel implements java.io.Serializable {
 	 * 模快描述 null 
 	 */
 	@Column(name = "MODEL_COMMENT")
-	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 256, message = "字段长度不能大于{max}")
 	private String  modelComment;
 	/**
 	 * 模块名称 null 
 	 */
 	@Column(name = "MODEL_NAME")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 64, message = "字段长度不能大于{max}")
 	private String  modelName;
 	/**
 	 * 存储类别 只读（视图、查询），新增（只能新增一条），修改，编辑列表（增删改） 
 	 */
 	@Column(name = "ACCESS_TYPE")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 1, message = "字段长度不能大于{max}")
 	private String  accessType;
 	
 	/**
 	 * 表单模板
 	 */
-	@Column(name = "form_template")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Column(name = "FORM_TEMPLATE")
+	@Length(max = 1, message = "字段长度不能大于{max}")
 	private String  formTemplate;
 	
 	/**
 	 * 是否是树形结构
 	 */
-	@Column(name = "list_as_tree")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Column(name = "LIST_AS_TREE")
+	@Length(max = 1, message = "字段长度不能大于{max}")
 	private String  listAsTree;
 	
 	/**
 	 * 与父模块关系 O 没有父模块  1  一对一，2 多对一 
 	 */
 	@Column(name = "RELATION_TYPE")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 1, message = "字段长度不能大于{max}")
 	private String  relationType;
 	/**
 	 * 父模块代码 子模块必需对应父模块对应的子表 
@@ -129,16 +130,15 @@ public class MetaFormModel implements java.io.Serializable {
 	@Length(max = 800, message = "字段长度不能大于{max}")
 	private String  extendOptBeanParam;
 
-	
-	
+	@Column(name = "DATA_FILTER_SQL")
+	@Length(max = 800, message = "字段长度不能大于{max}")
+	private String  dataFilterSql;
+
 	@OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<ModelDataField> modelDataFields;
-	
-	
+		
 	@OneToMany(mappedBy="parentModel",fetch = FetchType.LAZY)
-	private Set<MetaFormModel> childFormModels;
-
-	
+	private Set<MetaFormModel> childFormModels;	
 	
 	@OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<ModelOperation> modelOperations;
@@ -186,7 +186,6 @@ public class MetaFormModel implements java.io.Serializable {
 	}
 	
 
-	
 	public String getTableLabelName(){
 			if(null==this.mdTable)
 				return null;
@@ -313,6 +312,13 @@ public class MetaFormModel implements java.io.Serializable {
 		this.recorder = recorder;
 	}
 
+	public String getDataFilterSql() {
+		return dataFilterSql;
+	}
+	
+	public void setDataFilterSql(String dataFilterSql) {
+		this.dataFilterSql = dataFilterSql;
+	}
 
 	public Set<ModelDataField> getModelDataFields(){
 		if(this.modelDataFields==null)
@@ -598,6 +604,7 @@ public class MetaFormModel implements java.io.Serializable {
 		this.childFormModels = other.getMetaFormModels();		
 		this.extendOptBean = other.getExtendOptBean();
 		this.extendOptBeanParam = other.getExtendOptBeanParam();
+		this.dataFilterSql = other.getDataFilterSql();
 		
 		this.setModelOperations(other.getModelOperations());
 		this.setModelDataFields(other.getModelDataFields());
@@ -643,6 +650,9 @@ public class MetaFormModel implements java.io.Serializable {
 			this.setModelDataFields(other.getModelDataFields());
 		if(null!=other.getModelOperations())
 			this.setModelOperations(other.getModelOperations());
+		
+		if(null!=other.getDataFilterSql())
+			this.dataFilterSql = other.getDataFilterSql();
 		return this;
 	}
 
