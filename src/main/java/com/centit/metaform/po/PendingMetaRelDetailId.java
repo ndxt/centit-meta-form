@@ -2,6 +2,7 @@ package com.centit.metaform.po;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -24,7 +25,7 @@ public class PendingMetaRelDetailId implements java.io.Serializable {
 	 * 关联代码 null 
 	 */
 	@JoinColumn(name = "RELATION_ID",nullable=false)
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JSONField(serialize=false)
 	private PendingMetaRelation relation;
 
