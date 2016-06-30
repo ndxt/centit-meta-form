@@ -261,14 +261,16 @@ public class MetaTableManagerImpl
 			chgLog.setChangeScript(JSON.toJSONString(sqls));
 			chgLog.setChangeComment(JSON.toJSONString(errors));
 			chgLog.setChanger(currentUser);
-			metaChangLogDao.saveNewObject(chgLog);
-			MetaTable table= new MetaTable(ptable);
-			metaTableDao.mergeObject(table);
-			
+			if(errors.size()==0){
+				metaChangLogDao.saveNewObject(chgLog);
+				MetaTable table= new MetaTable(ptable);
+				metaTableDao.mergeObject(table);
+				return "发布成功!";
+			}else
+				return JSON.toJSONString(errors);
 		}catch(Exception e){
-			return "failed to publish!";
+			return "发布失败!" +  e.getMessage();
 		}
-		return "finished!";
 	}
 
 	@Override
