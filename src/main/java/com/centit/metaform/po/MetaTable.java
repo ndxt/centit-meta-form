@@ -136,7 +136,6 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	@OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<MetaColumn> mdColumns;
 	
-	@Transient
 	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<MetaRelation> mdRelations;
 	
