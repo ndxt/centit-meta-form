@@ -133,11 +133,11 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	private String  recorder;
 	
 	
-	@OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<MetaColumn> mdColumns;
 	
 	@Transient
-	@OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<MetaRelation> mdRelations;
 	
 	

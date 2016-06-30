@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.metaform.formaccess.FieldType;
 import com.centit.support.database.DBType;
 import com.centit.support.database.metadata.SimpleTableField;
@@ -543,6 +544,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	}
 	
 	@Override
+	@JSONField(serialize=false)
 	public String getColumnType() {		
 		return FieldType.mapToDBColumnType(this.databaseType, this.columnFieldType);
 	}

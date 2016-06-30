@@ -152,10 +152,11 @@ public class MetaTableManagerImpl
 	public List<String> makeAlterTableSqls(Long tableId) {
 		PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
 		MetaTable stable = metaTableDao.getObjectById(tableId);
-		DatabaseInfo mdb = databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());		
-	
+		DatabaseInfo mdb = databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
+		DBType dbType = DBType.mapDBType(mdb.getDatabaseUrl());
+		ptable.setDatabaseType(dbType);
 		DDLOperations ddlOpt = null;
-		switch(DBType.mapDBType(mdb.getDatabaseUrl())){
+		switch(dbType){
 		case Oracle:
 			ddlOpt = new OracleDDLOperations();
 			break;
@@ -177,6 +178,7 @@ public class MetaTableManagerImpl
 		if(stable==null){
 			sqls.add(ddlOpt.makeCreateTableSql(ptable));
 		}else{
+			stable.setDatabaseType(dbType);
 			for(PendingMetaColumn pcol : ptable.getMdColumns()){
 				MetaColumn ocol = stable.findFieldByColumn(pcol.getColumnName());
 				if(ocol==null){
@@ -224,6 +226,7 @@ public class MetaTableManagerImpl
 			dbc.setPassword(mdb.getClearPassword());		
 			DbcpConnect conn = DbcpConnectPools.getDbcpConnect(dbc);
 			JsonObjectDao jsonDao=null;
+			ptable.setDatabaseType(conn.getDatabaseType());
 			switch(conn.getDatabaseType()){
 			case Oracle:
 				jsonDao = new OracleJsonObjectDao(conn);
@@ -252,8 +255,6 @@ public class MetaTableManagerImpl
 					errors.add(se.getMessage());
 				}
 			}
-			if(errors.size()==0)
-				errors.add("表结构变更成功！");
 			
 			MetaChangLog chgLog = new MetaChangLog();
 			chgLog.setChangeId(metaChangLogDao.getNextKey());

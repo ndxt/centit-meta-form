@@ -139,6 +139,8 @@ public abstract class FieldType {
 	 * @return
 	 */
 	public static String mapToDBColumnType(DBType dt,String ft){
+		if(dt==null)
+			return ft;
 		switch(dt){
 		case SqlServer:
 			return mapToSqlServerColumnType(ft);

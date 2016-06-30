@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.core.po.EntityWithTimestamp;
 import com.centit.metaform.formaccess.FieldType;
 import com.centit.support.database.DBType;
@@ -488,6 +489,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 		return "C".equals(autoCreateRule)?autoCreateParam:null;
 	}
 	@Override
+	@JSONField(serialize=false)
 	public String getColumnType() {
 		return FieldType.mapToDBColumnType(this.databaseType, this.columnFieldType);
 	}
