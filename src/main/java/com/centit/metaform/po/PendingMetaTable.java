@@ -104,13 +104,13 @@ public class PendingMetaTable implements
 	 * 与流程中业务关联关系
 	 * 0: 不关联工作流 1：和流程业务关联 2： 和流程过程关联
 	 */
-	@Column(name = "Workflow_OPT_TYPE")
+	@Column(name = "WORKFLOW_OPT_TYPE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max=1, message = "字段长度不能小于{min}大于{max}")
 	private String  workFlowOptType;
 	
 	//Y/N 更新时是否校验时间戳 添加 Last_modify_time datetime
-	@Column(name = "update_check_timestamp")
+	@Column(name = "UPDATE_CHECK_TIMESTAMP")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max=1, message = "字段长度不能小于{min}大于{max}")
 	private String  updateCheckTimeStamp;

@@ -48,7 +48,6 @@ public class DatabaseInfoDao extends BaseDaoImpl<DatabaseInfo,String> {
                 databaseInfo.getUsername(),
                 databaseInfo.getPassword()));
     }
-
     
 	@SuppressWarnings("unchecked")
 	public List<Object> listDatabase() {
