@@ -685,21 +685,22 @@ public class ModelFormServiceImpl implements ModelFormService {
 			String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
 			QueryAndNamedParams qap = rc.getMetaFormFilter();
 			String filter = buildFilterSql(rc,null,filters);
+			String whereSql="";
 			if(qap!=null){
-				sql = sql + " where (" + qap.getQuery()+")";
+				whereSql = " where (" + qap.getQuery()+")";
 				if(StringUtils.isNotBlank(filter))
-					sql = sql + " and " + filter;
+					whereSql = whereSql + " and " + filter;
 				filters.putAll(qap.getParams());
 			}else if(StringUtils.isNotBlank(filter))
-				sql = sql + " where " + filter;
+				whereSql = " where " + filter;
 
-			JSONArray ja = dao.findObjectsByNamedSqlAsJSON(sql,filters,q.getRight(),
+			JSONArray ja = dao.findObjectsByNamedSqlAsJSON(sql + whereSql,filters,q.getRight(),
 						(pageDesc.getPageNo()-1)>0? (pageDesc.getPageNo()-1)*pageDesc.getPageSize():0,
 						pageDesc.getPageSize());
 			
-			sql = "select count(1) as rs from " +rc.getTableInfo().getTableName();
-			if(StringUtils.isNotBlank(filter))
-				sql = sql + " where " + filter;	
+			sql = "select count(1) as rs from " +
+					rc.getTableInfo().getTableName() + whereSql;
+			
 			List<Object[]> objList = dao.findObjectsByNamedSql(sql,filters);
 			Long ts = NumberBaseOpt.castObjectToLong(
 					DatabaseAccess.fetchScalarObject(objList));			
