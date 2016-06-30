@@ -110,19 +110,19 @@ public class ModelDataField implements java.io.Serializable {
 	private String mandatory;
 	
 	/**
-	 * 过滤类别
+	 * 是否是焦点
 	 */
 	@Column(name = "focus")
 	private String focus;
 	
 	/**
-	 * 过滤类别
+	 * 连接url
 	 */
 	@Column(name = "url")
 	private String url;
 	
 	/**
-	 * 过滤类别
+	 * 其他扩展属性
 	 */
 	@Column(name = "extend_Options")
 	private String extendOptions;
