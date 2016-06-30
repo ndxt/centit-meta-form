@@ -156,7 +156,7 @@ public class MetaTableManagerImpl
 			dbc.setDatabaseCode(mdb.getDatabaseCode());
 			dbc.setConnUrl(mdb.getDatabaseUrl());
 			dbc.setUsername(mdb.getUsername());
-			dbc.setPassword(mdb.getPassword());		
+			dbc.setPassword(mdb.getClearPassword());		
 			DbcpConnect conn = DbcpConnectPools.getDbcpConnect(dbc);
 			JsonObjectDao jsonDao=null;
 			DDLOperations ddlOpt = null;

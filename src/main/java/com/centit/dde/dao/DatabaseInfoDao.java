@@ -58,7 +58,6 @@ public class DatabaseInfoDao extends BaseDaoImpl<DatabaseInfo,String> {
 
 	public DatabaseInfo getDatabaseInfoById(String databaseCode) {
 		DatabaseInfo dbi=this.getObjectById(databaseCode);
-		dbi.setPassword(DESSecurityUtils.decryptBase64String(dbi.getPassword(),DatabaseInfo.DESKEY));
 		return dbi;
 	}
 }

@@ -52,6 +52,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 	@JoinColumn(name="TABLE_ID")
 	@ManyToOne
 	@JSONField(serialize=false)
+	@NotFound(action=NotFoundAction.IGNORE)
 	private MetaTable mdTable;
 	/**
 	 * 模快描述 null 
