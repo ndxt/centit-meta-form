@@ -6,10 +6,13 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.centit.metaform.formaccess.FieldType;
+import com.centit.support.database.DBType;
 import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.TableField;
 
@@ -55,7 +58,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	@Column(name = "COLUMN_TYPE")
 	@NotBlank(message = "字段不能为空")
 	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
-	private String  columnType;
+	private String  columnFieldType;
 	/**
 	 * 字段长度 precision 
 	 */
@@ -142,6 +145,13 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
 	private String  recorder;
 
+	@Transient
+	private DBType databaseType;
+	
+	public void setDatabaseType(DBType databaseType) {
+		this.databaseType = databaseType;
+	}
+	
 	// Constructors
 	/** default constructor */
 	public MetaColumn() {
@@ -155,7 +165,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 			
 	
 		this.fieldLabelName= fieldLabelName; 
-		this.columnType= columnType; 
+		this.columnFieldType= columnType; 
 		this.accessType= accessType; 
 		this.columnState= columnState; 		
 	}
@@ -173,7 +183,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.fieldLabelName= fieldLabelName;
 		this.columnComment= columnComment;
 		this.columnOrder= columnOrder;
-		this.columnType= columnType;
+		this.columnFieldType= columnType;
 		this.maxLength= maxLength;
 		this.scale= scale;
 		this.accessType= accessType;
@@ -196,7 +206,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.fieldLabelName= next.getFieldLabelName();  
 		this.columnComment= next.getColumnComment();  
 		this.columnOrder= next.getColumnOrder();  
-		this.columnType= next.getColumnType();  
+		this.columnFieldType= next.getColumnFieldType();  
 		this.maxLength= next.getMaxLength();  
 		this.scale= next.getScale();  
 		this.accessType= next.getAccessType();  
@@ -272,12 +282,12 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.columnOrder = columnOrder;
 	}
   
-	public String getColumnType() {
-		return this.columnType;
+	public String getColumnFieldType() {
+		return this.columnFieldType;		
 	}
 	
-	public void setColumnType(String columnType) {
-		this.columnType = columnType;
+	public void setColumnFieldType(String columnType) {
+		this.columnFieldType = columnType;
 	}
 
 	public String getAccessType() {
@@ -406,7 +416,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.fieldLabelName= other.getFieldLabelName();  
 		this.columnComment= other.getColumnComment();  
 		this.columnOrder= other.getColumnOrder();  
-		this.columnType= other.getColumnType();  
+		this.columnFieldType= other.getColumnFieldType();  
 		this.maxLength= other.getMaxLength();  
 		this.scale= other.getScale();  
 		this.accessType= other.getAccessType();  
@@ -438,8 +448,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
 			this.columnComment= other.getColumnComment();  
 		if( other.getColumnOrder() != null)
 			this.columnOrder= other.getColumnOrder();  
-		if( other.getColumnType() != null)
-			this.columnType= other.getColumnType();  
+		if( other.getColumnFieldType() != null)
+			this.columnFieldType= other.getColumnFieldType();  
 		//if( other.getMaxLength() != null)
 		this.maxLength= other.getMaxLength();  
 		this.scale= other.getScale();  
@@ -476,7 +486,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.fieldLabelName= null;  
 		this.columnComment= null;  
 		this.columnOrder= null;  
-		this.columnType= null;  
+		this.columnFieldType= null;  
 		this.maxLength= null;  
 		this.scale= null;  
 		this.accessType= null;  
@@ -499,7 +509,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	}
 	@Override
 	public String getJavaType() {
-		return SimpleTableField.mapToJavaType(columnType,scale==null?0:scale.intValue());
+		return SimpleTableField.mapToJavaType(columnFieldType,scale==null?0:scale.intValue());
 	}
 	@Override
 	public boolean isMandatory() {
@@ -521,5 +531,10 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	@Override
 	public int getScale() {
 		return scale==null?0:scale.intValue();
+	}
+	
+	@Override
+	public String getColumnType() {		
+		return FieldType.mapToDBColumnType(this.databaseType, this.columnFieldType);
 	}
 }

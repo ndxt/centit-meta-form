@@ -26,6 +26,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.centit.dde.po.DatabaseInfo;
+import com.centit.support.database.DBType;
 import com.centit.support.database.metadata.TableInfo;
 import com.centit.support.database.metadata.TableReference;
 
@@ -143,6 +144,17 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	@Transient
 	private Set<MetaFormModel> metaFormModels;
 
+	@Transient
+	private DBType databaseType;
+	
+	public void setDatabaseType(DBType databaseType) {		
+		this.databaseType = databaseType;
+		if( this.mdColumns!=null){
+			for(MetaColumn col: this.mdColumns){
+				col.setDatabaseType(databaseType);
+			}
+		}
+	}
 	// Constructors
 	/** default constructor */
 	public MetaTable() {

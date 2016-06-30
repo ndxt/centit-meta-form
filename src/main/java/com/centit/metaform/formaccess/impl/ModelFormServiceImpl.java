@@ -90,7 +90,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		tableInfo.setTableLabelName("通讯录");
 		MetaColumn field = new MetaColumn();
 		field.setColumnName("ID");
-		field.setColumnType("Number(10)");
+		field.setColumnFieldType("Number(10)");
 		field.setMaxLength(10);
 		field.setScale(0);
 		field.setMandatory("T");
@@ -99,13 +99,13 @@ public class ModelFormServiceImpl implements ModelFormService {
 		
 		field = new MetaColumn();
 		field.setColumnName("USER_NAME");
-		field.setColumnType("varchar2");
+		field.setColumnFieldType("varchar2");
 		field.setMaxLength(50);
 		cols.add(field);
 		
 		field = new MetaColumn();
 		field.setColumnName("USER_PHONE");
-		field.setColumnType("varchar2");
+		field.setColumnFieldType("varchar2");
 		field.setMaxLength(20);
 		field.setAutoCreateRule("C");
 		field.setAutoCreateParam("'110'");

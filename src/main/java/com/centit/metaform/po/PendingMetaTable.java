@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -27,6 +28,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.core.po.EntityWithTimestamp;
+import com.centit.support.database.DBType;
 import com.centit.support.database.metadata.TableInfo;
 import com.centit.support.database.metadata.TableReference;
 
@@ -42,9 +44,6 @@ import com.centit.support.database.metadata.TableReference;
 public class PendingMetaTable implements 
 	TableInfo, EntityWithTimestamp,java.io.Serializable {
 	private static final long serialVersionUID =  1L;
-
-
-
 	/**
 	 * 表ID 表单主键 
 	 */
@@ -132,6 +131,18 @@ public class PendingMetaTable implements
 	@OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<PendingMetaRelation> mdRelations;
 	
+	
+	@Transient
+	private DBType databaseType;
+	
+	public void setDatabaseType(DBType databaseType) {		
+		this.databaseType = databaseType;
+		if( this.mdColumns!=null){
+			for(PendingMetaColumn col: this.mdColumns){
+				col.setDatabaseType(databaseType);
+			}
+		}
+	}
 	// Constructors
 	/** default constructor */
 	public PendingMetaTable() {
