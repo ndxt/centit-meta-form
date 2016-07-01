@@ -2796,12 +2796,12 @@ CARD 0 宋体,8,N</a:FontList>
 </o:ReferenceSymbol>
 <o:ReferenceSymbol Id="o9">
 <a:CreationDate>1464084043</a:CreationDate>
-<a:ModificationDate>1465871842</a:ModificationDate>
+<a:ModificationDate>1467337404</a:ModificationDate>
 <a:CenterTextOffset>(6, 0)</a:CenterTextOffset>
 <a:SourceTextOffset>(-705, 259)</a:SourceTextOffset>
 <a:DestinationTextOffset>(705, -259)</a:DestinationTextOffset>
-<a:Rect>((-40620,5636), (-22509,27177))</a:Rect>
-<a:ListOfPoints>((-40620,5636),(-22509,27177))</a:ListOfPoints>
+<a:Rect>((-40620,5636), (-28659,29127))</a:Rect>
+<a:ListOfPoints>((-40620,5636),(-28659,29127))</a:ListOfPoints>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>16711680</a:LineColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -2819,11 +2819,11 @@ CARD 0 宋体,8,N</a:FontList>
 </o:ReferenceSymbol>
 <o:ReferenceSymbol Id="o12">
 <a:CreationDate>1464084043</a:CreationDate>
-<a:ModificationDate>1465871842</a:ModificationDate>
+<a:ModificationDate>1467337404</a:ModificationDate>
 <a:SourceTextOffset>(-755, 240)</a:SourceTextOffset>
 <a:DestinationTextOffset>(755, -240)</a:DestinationTextOffset>
-<a:Rect>((-43578,5437), (-26092,27177))</a:Rect>
-<a:ListOfPoints>((-43578,5437),(-26092,27177))</a:ListOfPoints>
+<a:Rect>((-43578,5437), (-32242,29127))</a:Rect>
+<a:ListOfPoints>((-43578,5437),(-32242,29127))</a:ListOfPoints>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>16711680</a:LineColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -3040,9 +3040,9 @@ CARD 0 Arial Unicode MS,8,N</a:FontList>
 </o:ReferenceSymbol>
 <o:ReferenceSymbol Id="o39">
 <a:CreationDate>1464244646</a:CreationDate>
-<a:ModificationDate>1465871842</a:ModificationDate>
-<a:Rect>((-20911,5981), (-4371,30907))</a:Rect>
-<a:ListOfPoints>((-20911,30907),(-6596,5981))</a:ListOfPoints>
+<a:ModificationDate>1467337404</a:ModificationDate>
+<a:Rect>((-27061,5981), (-6596,32857))</a:Rect>
+<a:ListOfPoints>((-27061,32857),(-6596,5981))</a:ListOfPoints>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>16711680</a:LineColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -3240,8 +3240,8 @@ TableComment 0 新宋体,8,N</a:FontList>
 </o:TableSymbol>
 <o:TableSymbol Id="o10">
 <a:CreationDate>1464084043</a:CreationDate>
-<a:ModificationDate>1465871842</a:ModificationDate>
-<a:Rect>((-33355,13216), (-14327,39112))</a:Rect>
+<a:ModificationDate>1467337404</a:ModificationDate>
+<a:Rect>((-39505,15166), (-20477,41062))</a:Rect>
 <a:AutoAdjustToText>0</a:AutoAdjustToText>
 <a:LineColor>16711680</a:LineColor>
 <a:FillColor>8454143</a:FillColor>
@@ -4860,9 +4860,9 @@ Name	Code	Comment	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
 <a:Code>Access_Type</a:Code>
 <a:CreationDate>1464084043</a:CreationDate>
 <a:Creator>codefan</a:Creator>
-<a:ModificationDate>1464746147</a:ModificationDate>
+<a:ModificationDate>1467337361</a:ModificationDate>
 <a:Modifier>codefan</a:Modifier>
-<a:Comment>只读（视图、查询），新增（只能新增一条），修改，编辑列表（增删改）</a:Comment>
+<a:Comment>R 只读（视图、查询），A  新增（只能新增一条），W 修改 ，L 编辑列表（增删改）</a:Comment>
 <a:DataType>CHAR</a:DataType>
 </o:Column>
 <o:Column Id="o175">
@@ -4892,9 +4892,9 @@ Name	Code	Comment	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
 <a:Code>Relation_type</a:Code>
 <a:CreationDate>1464084043</a:CreationDate>
 <a:Creator>codefan</a:Creator>
-<a:ModificationDate>1464746147</a:ModificationDate>
+<a:ModificationDate>1467337361</a:ModificationDate>
 <a:Modifier>codefan</a:Modifier>
-<a:Comment>O 没有父模块  1  一对一，2 多对一</a:Comment>
+<a:Comment>0 没有父模块  1  一对一，2 多对一</a:Comment>
 <a:DataType>CHAR</a:DataType>
 </o:Column>
 <o:Column Id="o178">
