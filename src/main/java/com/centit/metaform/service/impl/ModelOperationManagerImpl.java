@@ -42,12 +42,10 @@ public class ModelOperationManagerImpl
 		setBaseDao(this.modelOperationDao);
 	}
 	
-/*
- 	@PostConstruct
+/* 	@PostConstruct
     public void init() {
         
     }
- 	
  */
 	@Transactional(propagation=Propagation.REQUIRED) 
 	public JSONArray listModelOperationsAsJson(
