@@ -149,6 +149,36 @@ public class ModelFormServiceImpl implements ModelFormService {
 		}
 		return pk;
 	}
+	
+	@Override
+	@Transactional
+	public Map<String,Object> getModelReferenceFields(ModelRuntimeContext rc, JSONObject object) throws SQLException{
+		JSONObject refData = new JSONObject();
+		for(ModelDataField field :rc.getMetaFormModel().getModelDataFields()){
+			if("R".equals(field.getColumnType())){
+				if("3".equals(field.getReferenceType())){
+					refData.put( SimpleTableField.mapPropName(field.getColumnName()),
+							field.getReferenceData());
+				}else{
+					String sql = field.getReferenceData();
+					QueryAndNamedParams qap = rc.translateSQL(sql, object);
+					Object value=null;
+					try {
+						value = DatabaseAccess.fetchScalarObject(
+								rc.getJsonObjectDao().findObjectsByNamedSql(
+										qap.getQuery(),
+										qap.getParams()));
+					} catch (SQLException | IOException e) {
+						e.printStackTrace();
+					}
+				
+				refData.put( SimpleTableField.mapPropName(field.getColumnName()),
+						value);
+				}
+			}
+		}
+		return refData;
+	}
 
 	@Override
 	@Transactional
@@ -577,6 +607,12 @@ public class ModelFormServiceImpl implements ModelFormService {
 		case "afterUpdate":
 			return optEvent.afterUpdate(rc, jo, 
 					rc.getMetaFormModel().getExtendOptBeanParam(), response);
+		case "beforeMerge":
+			return optEvent.beforeMerge(rc, jo, 
+					rc.getMetaFormModel().getExtendOptBeanParam(), response);
+		case "afterMerge":
+			return optEvent.afterMerge(rc, jo, 
+					rc.getMetaFormModel().getExtendOptBeanParam(), response);
 		case "beforeDelete":
 			return optEvent.beforeDelete(rc, jo, 
 					rc.getMetaFormModel().getExtendOptBeanParam(), response);
@@ -610,6 +646,20 @@ public class ModelFormServiceImpl implements ModelFormService {
 
 	@Override
 	@Transactional
+	public int mergeObject(ModelRuntimeContext rc, 
+			Map<String, Object> object, HttpServletResponse response) throws Exception {
+		int n = runOperationEvent(rc, object, "beforeMerge", response);
+		if( n<=0 ){
+			JsonObjectDao dao = rc.getJsonObjectDao();		
+			dao.mergeObject(object);
+			n = runOperationEvent(rc, object, "afterMerge", response);
+		}
+		//rc.commitAndClose();
+		return n;
+	}
+
+	@Override
+	@Transactional
 	public int updateObject(ModelRuntimeContext rc, 
 			Map<String, Object> object, HttpServletResponse response) throws Exception {
 		int n = runOperationEvent(rc, object, "beforeUpdate", response);
@@ -621,7 +671,6 @@ public class ModelFormServiceImpl implements ModelFormService {
 		//rc.commitAndClose();
 		return n;
 	}
-
 	@Override
 	@Transactional
 	public int deleteObjectById(ModelRuntimeContext rc, 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
@@ -52,8 +53,15 @@ public class MetaFormController  extends BaseController{
     	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	Map<String,Object> jo = rc.fetchPkFromRequest(request);    	
 		ResponseData resData = new ResponseData();
-		resData.addResponseData("obj", formService.getObjectByProperties(rc, jo));
 		
+		JSONObject obj = formService.getObjectByProperties(rc, jo);
+		try {
+			Map<String, Object> refField = formService.getModelReferenceFields(rc,obj);
+			obj.putAll(refField);
+		} catch (SQLException e) {
+		}
+		
+		resData.addResponseData("obj", obj);
 		rc.close();		
 		if(addMeta){
         	resData.addResponseData("formModel", formService.getFormDefine(rc,"view")); 
@@ -76,7 +84,10 @@ public class MetaFormController  extends BaseController{
     	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	try {
     		ResponseData resData = new ResponseData();
-    		resData.addResponseData("obj", formService.createInitialObject(rc));    		
+    		JSONObject obj = formService.createInitialObject(rc);
+    		Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
+    		obj.putAll(refField);
+    		resData.addResponseData("obj", obj); 
     		rc.close();
 			if(addMeta){
 	        	resData.addResponseData("formModel", formService.getFormDefine(rc,"create")); 
@@ -108,13 +119,32 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/{modelCode}/save",method = RequestMethod.POST)
 	public void saveNew(@PathVariable String modelCode, @RequestBody String jsonStr, 
 			HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jo = JSON.parseObject(jsonStr);
+		
+		if(jsonStr==null || jsonStr.length()<2){
+        	JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
+        	return;
+        }
+        if('['!=jsonStr.charAt(0) && '{'!=jsonStr.charAt(0)){
+        	JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
+        	return;
+        }
+        
     	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	try {
-    		int n = formService.saveNewObject(rc, jo,response);
-    		rc.commitAndClose();
-      		if(n<=1)
+    		if('['==jsonStr.charAt(0)){
+	    		JSONArray jo = JSON.parseArray(jsonStr);
+	    		for(Object ja:jo)
+	    			formService.mergeObject(rc, (JSONObject)ja,response);
+	     		rc.commitAndClose();
 				JsonResultUtils.writeSuccessJson(response);
+    		}else{
+	    		JSONObject jo = JSON.parseObject(jsonStr);
+				int n = formService.saveNewObject(rc, jo,response);
+	     		rc.commitAndClose();
+				if(n<=1)
+					JsonResultUtils.writeSuccessJson(response);
+    		}   		
+    		
 		} catch (Exception e) {
 			JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
 			rc.rollbackAndClose();
@@ -129,7 +159,13 @@ public class MetaFormController  extends BaseController{
 		JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	Map<String,Object> jo = rc.fetchPkFromRequest(request);    	
 		ResponseData resData = new ResponseData();
-		resData.addResponseData("obj", formService.getObjectByProperties(rc, jo));		
+		JSONObject obj = formService.getObjectByProperties(rc, jo);
+		try {
+			Map<String, Object> refField = formService.getModelReferenceFields(rc,obj);
+			obj.putAll(refField);
+		} catch (SQLException e) {
+		}
+		resData.addResponseData("obj", obj);
 		rc.close();		
 		if(addMeta){
         	resData.addResponseData("formModel", formService.getFormDefine(rc,"edit")); 
@@ -141,14 +177,30 @@ public class MetaFormController  extends BaseController{
 	
 	@RequestMapping(value = "/{modelCode}/update",method = RequestMethod.PUT)
 	public void update(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
-        
-		JSONObject jo = JSON.parseObject(jsonStr);
+        if(jsonStr==null || jsonStr.length()<2){
+        	JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
+        	return;
+        }
+        if('['!=jsonStr.charAt(0) && '{'!=jsonStr.charAt(0)){
+        	JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
+        	return;
+        }
+		
     	JdbcModelRuntimeContext rc = (JdbcModelRuntimeContext)formService.createRuntimeContext(modelCode);
     	try {
-			int n = formService.updateObject(rc, jo,response);
-     		rc.commitAndClose();
-			if(n<=1)
+    		if('['==jsonStr.charAt(0)){
+	    		JSONArray jo = JSON.parseArray(jsonStr);
+	    		for(Object ja:jo)
+	    			formService.mergeObject(rc, (JSONObject)ja,response);
+	     		rc.commitAndClose();
 				JsonResultUtils.writeSuccessJson(response);
+    		}else{
+	    		JSONObject jo = JSON.parseObject(jsonStr);
+				int n = formService.updateObject(rc, jo,response);
+	     		rc.commitAndClose();
+				if(n<=1)
+					JsonResultUtils.writeSuccessJson(response);
+    		}
 		} catch (Exception e) {
 			JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
 			rc.rollbackAndClose();
@@ -175,8 +227,7 @@ public class MetaFormController  extends BaseController{
 	
 	@RequestMapping(value = "/{modelCode}/submit",method = RequestMethod.POST)
 	public void submit(@PathVariable String modelCode,  @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
-       
-		
+		update(modelCode, jsonStr, request, response);
 	}
 	
 	

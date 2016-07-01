@@ -58,6 +58,31 @@ public interface OperationEvent {
 	 */
 	public int afterUpdate(ModelRuntimeContext mrc, Map<String,Object> params,
 			String optJsonStrParam, HttpServletResponse response) throws Exception;
+	
+	/*** 
+	 * @param mrc
+	 * @param params
+	 * @param optJsonStrParam
+	 * @param response
+	 * @return  0: 表示仅仅作为事件，不需要特别处理， 
+	 * 			1： 表示替代操作无需后续处理 ，
+	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
+	 * @throws Exception
+	 */
+	public int beforeMerge(ModelRuntimeContext mrc, Map<String,Object> params
+			, String optJsonStrParam, HttpServletResponse response) throws Exception;
+	/*** 
+	 * @param mrc
+	 * @param params
+	 * @param optJsonStrParam
+	 * @param response
+	 * @return  0: 表示仅仅作为事件，不需要特别处理， 
+	 * 			1： 表示替代操作无需后续处理 ，
+	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
+	 * @throws Exception
+	 */
+	public int afterMerge(ModelRuntimeContext mrc, Map<String,Object> params,
+			String optJsonStrParam, HttpServletResponse response) throws Exception;
 	/*** 
 	 * @param mrc
 	 * @param params

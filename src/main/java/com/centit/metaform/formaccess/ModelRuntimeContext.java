@@ -36,4 +36,6 @@ public interface ModelRuntimeContext {
 			CentitUserDetails userDetails);
 	
 	public QueryAndNamedParams getMetaFormFilter();
+	
+	public QueryAndNamedParams translateSQL(String sql,Object obj);
 }

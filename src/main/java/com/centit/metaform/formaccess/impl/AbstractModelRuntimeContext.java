@@ -146,4 +146,12 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 				metaFormModel.getDataFilterSql(), 
 				new SimpleFilterTranslater(userEvniData));
 	}
+	
+	@Override
+	public QueryAndNamedParams translateSQL(String sql,Object obj){
+		setUserEvniData("obj",obj);
+		return QueryUtils.translateQueryFilter(
+				sql, 
+				new SimpleFilterTranslater(userEvniData));
+	}
 }

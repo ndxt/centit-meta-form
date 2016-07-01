@@ -21,6 +21,8 @@ public interface ModelFormService {
 	
 	public Map<String,Object> createNewPk(ModelRuntimeContext rc ) throws SQLException;
 	
+	public Map<String,Object> getModelReferenceFields(ModelRuntimeContext rc, JSONObject object) throws SQLException;
+	
 	public JSONObject createInitialObject(ModelRuntimeContext rc ) throws SQLException;
 	
 	public MateFormDefine getFormDefine(ModelRuntimeContext rc,String operation);
@@ -30,6 +32,9 @@ public interface ModelFormService {
 	public int saveNewObject(ModelRuntimeContext rc, 
 			Map<String, Object> object, HttpServletResponse response) throws Exception;
 	
+	public int mergeObject(ModelRuntimeContext rc, 
+			Map<String, Object> object, HttpServletResponse response) throws Exception;
+		
 	public int updateObject(ModelRuntimeContext rc,
 			Map<String, Object> object, HttpServletResponse response) throws Exception;
 	

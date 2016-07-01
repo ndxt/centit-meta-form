@@ -21,15 +21,31 @@ public abstract class AbstractOperationEvent implements OperationEvent {
 	@Override
 	public int beforeUpdate(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
 			HttpServletResponse response) throws Exception {
-		return 0;
+		return beforeSave(mrc, params,  optJsonStrParam,
+				 response);
 	}
 
 	@Override
 	public int afterUpdate(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
 			HttpServletResponse response) throws Exception {
-		return 0;
+		return afterSave(mrc, params,  optJsonStrParam,
+				 response);
 	}
 
+	@Override
+	public int beforeMerge(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return beforeSave(mrc, params,  optJsonStrParam,
+				 response);
+	}
+
+	@Override
+	public int afterMerge(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
+			HttpServletResponse response) throws Exception {
+		return afterSave(mrc, params,  optJsonStrParam,
+				 response);
+	}
+	
 	@Override
 	public int beforeDelete(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
 			HttpServletResponse response) throws Exception {
@@ -45,13 +61,15 @@ public abstract class AbstractOperationEvent implements OperationEvent {
 	@Override
 	public int beforeSubmit(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
 			HttpServletResponse response) throws Exception {
-		return 0;
+		return beforeSave(mrc, params,  optJsonStrParam,
+				 response);
 	}
 
 	@Override
 	public int afterSubmit(ModelRuntimeContext mrc, Map<String, Object> params, String optJsonStrParam,
 			HttpServletResponse response) throws Exception {
-		return 0;
+		return afterSave(mrc, params,  optJsonStrParam,
+				 response);
 	}
 
 }
