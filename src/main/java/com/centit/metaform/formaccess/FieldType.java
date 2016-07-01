@@ -56,16 +56,16 @@ public abstract class FieldType {
 		case STRING:
 			return "varchar";
 	  	case INTEGER:
-	  		return "number";
+	  		return "decimal";
 	  	case FLOAT:
-	  		return "number";
+	  		return "decimal";
 	  	case BOOLEAN:
 	  		return "varchar(1)";
 	  	case DATE:
 	  	case DATETIME:
-	  		return "Date";
+	  		return "datetime";
 	  	case TEXT:
-	  		return "clob";//长文本
+	  		return "text";//长文本
 	  	case FILE:
 	  		return "varchar(64)";//默认记录文件的ID号
 	  	default:
@@ -85,16 +85,16 @@ public abstract class FieldType {
 		case STRING:
 			return "varchar";
 	  	case INTEGER:
-	  		return "number";
+	  		return "INTEGER";
 	  	case FLOAT:
-	  		return "number";
+	  		return "DECIMAL";
 	  	case BOOLEAN:
 	  		return "varchar(1)";
 	  	case DATE:
 	  	case DATETIME:
 	  		return "Date";
 	  	case TEXT:
-	  		return "clob";//长文本
+	  		return "clob(52428800)";//长文本
 	  	case FILE:
 	  		return "varchar(64)";//默认记录文件的ID号
 	  	default:
@@ -114,14 +114,15 @@ public abstract class FieldType {
 		case STRING:
 			return "varchar";
 	  	case INTEGER:
-	  		return "number";
+	  		return "INT";
 	  	case FLOAT:
-	  		return "number";
+	  		return "DECIMAL";
 	  	case BOOLEAN:
 	  		return "varchar(1)";
 	  	case DATE:
-	  	case DATETIME:
 	  		return "Date";
+	  	case DATETIME:
+	  		return "DATETIME";
 	  	case TEXT:
 	  		return "clob";//长文本
 	  	case FILE:
