@@ -10,7 +10,7 @@ public abstract class FieldType {
 	public static final String INTEGER= "integer";
 	public static final String FLOAT= "float";
 	public static final String BOOLEAN= "boolean";
-	public static final String DATE= "data";
+	public static final String DATE= "date";
 	public static final String DATETIME= "datetime";
 	public static final String TEXT= "text";
 	public static final String FILE = "file";
