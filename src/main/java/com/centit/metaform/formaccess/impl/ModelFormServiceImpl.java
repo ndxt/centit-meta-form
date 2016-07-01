@@ -646,7 +646,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeSave", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();
-			dao.saveNewObject(rc.caseObjectFieldType(object));
+			dao.saveNewObject(rc.caseObjectTableObject(object));
  			n = runOperationEvent(rc, object, "afterSave", response);
 		}
 		//rc.commitAndClose();
@@ -660,7 +660,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeMerge", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.mergeObject(rc.caseObjectFieldType(object));
+			dao.mergeObject(rc.caseObjectTableObject(object));
 			n = runOperationEvent(rc, object, "afterMerge", response);
 		}
 		//rc.commitAndClose();
@@ -674,7 +674,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeUpdate", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.updateObject(rc.caseObjectFieldType(object));
+			dao.updateObject(rc.caseObjectTableObject(object));
 			n = runOperationEvent(rc, object, "afterUpdate", response);
 		}
 		//rc.commitAndClose();
@@ -687,7 +687,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, keyValue, "beforeDelete", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();
-			dao.deleteObjectById(rc.caseObjectFieldType(keyValue));
+			dao.deleteObjectById(rc.caseObjectTableObject(keyValue));
 			n = runOperationEvent(rc, keyValue, "afterDelete", response);
 		}
 		//rc.commitAndClose();

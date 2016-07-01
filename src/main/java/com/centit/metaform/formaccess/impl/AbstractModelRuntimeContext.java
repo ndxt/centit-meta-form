@@ -104,12 +104,12 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 			return null;
 		TableField field = getTableInfo().findFieldByName(fieldName);
 		if(field==null)
-			return null;
+			return fieldValue;
 		return castValueToFieldType(field,fieldValue);
 	}
 	
 	@Override
-	public Map<String,Object> caseObjectFieldType(Map<String,Object> object){
+	public Map<String,Object> caseObjectTableObject(Map<String,Object> object){
 		Map<String,Object> jo = new HashMap<>();
 		for(TableField field: getTableInfo().getColumns()){
     		Object pv = object.get(field.getPropertyName());

@@ -25,7 +25,7 @@ public interface ModelRuntimeContext {
 	
 	public  Object castValueToFieldType(TableField field,Object fieldValue);
 	
-	public Map<String,Object> caseObjectFieldType(Map<String,Object> object);
+	public Map<String,Object> caseObjectTableObject(Map<String,Object> object);
 	
 	public Map<String,Object> fetchPkFromRequest( HttpServletRequest request);
 	
