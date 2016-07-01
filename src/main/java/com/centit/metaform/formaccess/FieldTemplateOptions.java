@@ -109,5 +109,13 @@ public class FieldTemplateOptions {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
 	}	
 }

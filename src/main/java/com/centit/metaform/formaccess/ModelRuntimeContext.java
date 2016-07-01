@@ -9,6 +9,7 @@ import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
 import com.centit.support.database.QueryAndNamedParams;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
+import com.centit.support.database.metadata.TableField;
 
 public interface ModelRuntimeContext {
 	
@@ -19,6 +20,12 @@ public interface ModelRuntimeContext {
 	public MetaFormModel getMetaFormModel();
 	
 	public MetaTable getTableInfo();
+	
+	public Object castValueToFieldType(String fieldName,Object fieldValue);
+	
+	public  Object castValueToFieldType(TableField field,Object fieldValue);
+	
+	public Map<String,Object> caseObjectFieldType(Map<String,Object> object);
 	
 	public Map<String,Object> fetchPkFromRequest( HttpServletRequest request);
 	

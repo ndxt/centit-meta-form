@@ -421,7 +421,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 		
 		for(ModelDataField field:mfm.getModelDataFields()){
 			MetaColumn col = ti.findFieldByColumn(field.getColumnName());
-			if(filters.get( col.getPropertyName()) !=null){
+			Object paramValue = filters.get( col.getPropertyName());
+			if(paramValue !=null){
 				if(i>0)
 					sBuilder.append(" and ");
 	
@@ -431,17 +432,22 @@ public class ModelFormServiceImpl implements ModelFormService {
 						sBuilder.append(alias).append('.');
 					sBuilder.append(col.getColumnName()).append(" like :").append(col.getPropertyName());
 					filters.put(col.getPropertyName(), QueryUtils.getMatchString(
-							StringBaseOpt.objectToString(filters.get( col.getPropertyName()))));
+							StringBaseOpt.objectToString(paramValue)));
 					break;
 				case "LT":
 					if(StringUtils.isNotBlank(alias))
 						sBuilder.append(alias).append('.');
 					sBuilder.append(col.getColumnName()).append(" < :").append(col.getPropertyName());
+					
+					filters.put(col.getPropertyName(), rc.castValueToFieldType(col,
+							paramValue));					 
 					break;
 				case "GT":
 					if(StringUtils.isNotBlank(alias))
 						sBuilder.append(alias).append('.');
 					sBuilder.append(col.getColumnName()).append(" > :").append(col.getPropertyName());
+					filters.put(col.getPropertyName(), rc.castValueToFieldType(col,
+							paramValue));
 					break;
 				/*case "BT":
 					break;*/
@@ -449,16 +455,22 @@ public class ModelFormServiceImpl implements ModelFormService {
 					if(StringUtils.isNotBlank(alias))
 						sBuilder.append(alias).append('.');
 					sBuilder.append(col.getColumnName()).append(" <= :").append(col.getPropertyName());
+					filters.put(col.getPropertyName(), rc.castValueToFieldType(col,
+							paramValue));
 					break;
 				case "GE":
 					if(StringUtils.isNotBlank(alias))
 						sBuilder.append(alias).append('.');
 					sBuilder.append(col.getColumnName()).append(" >= :").append(col.getPropertyName());
+					filters.put(col.getPropertyName(), rc.castValueToFieldType(col,
+							paramValue));
 					break;
 				default:
 					if(StringUtils.isNotBlank(alias))
 						sBuilder.append(alias).append('.');
 					sBuilder.append(col.getColumnName()).append(" = :").append(col.getPropertyName());
+					filters.put(col.getPropertyName(), rc.castValueToFieldType(col,
+							paramValue));
 					break;
 				}
 				i++;
@@ -471,6 +483,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 					if(StringUtils.isNotBlank(alias))
 						sBuilder.append(alias).append('.');
 					sBuilder.append(col.getColumnName()).append(" >= :").append(skey);
+					filters.put(skey, rc.castValueToFieldType(col,
+							paramValue));
 					i++;
 				}
 				skey = SimpleTableField.mapPropName("t_"+field.getColumnName());				
@@ -480,6 +494,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 					if(StringUtils.isNotBlank(alias))
 						sBuilder.append(alias).append('.');
 					sBuilder.append(col.getColumnName()).append(" < :").append(skey);
+					filters.put(skey, rc.castValueToFieldType(col,
+							paramValue));
 					i++;
 				}
 			}
@@ -495,7 +511,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		try {			
 			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSql(rc.getTableInfo(),null);
 			String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
-
+		
 			QueryAndNamedParams qap = rc.getMetaFormFilter();
 			String filter = buildFilterSql(rc,null,filters);
 			if(qap!=null){
@@ -630,7 +646,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeSave", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();
-			dao.saveNewObject(object);
+			dao.saveNewObject(rc.caseObjectFieldType(object));
  			n = runOperationEvent(rc, object, "afterSave", response);
 		}
 		//rc.commitAndClose();
@@ -644,7 +660,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeMerge", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.mergeObject(object);
+			dao.mergeObject(rc.caseObjectFieldType(object));
 			n = runOperationEvent(rc, object, "afterMerge", response);
 		}
 		//rc.commitAndClose();
@@ -658,7 +674,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeUpdate", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.updateObject(object);
+			dao.updateObject(rc.caseObjectFieldType(object));
 			n = runOperationEvent(rc, object, "afterUpdate", response);
 		}
 		//rc.commitAndClose();
@@ -671,7 +687,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, keyValue, "beforeDelete", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();
-			dao.deleteObjectById(keyValue);
+			dao.deleteObjectById(rc.caseObjectFieldType(keyValue));
 			n = runOperationEvent(rc, keyValue, "afterDelete", response);
 		}
 		//rc.commitAndClose();
