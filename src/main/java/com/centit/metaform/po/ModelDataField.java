@@ -48,9 +48,12 @@ public class ModelDataField implements java.io.Serializable {
 	 * 输入说明 与系统关联，比如自动与登录用户代码关联，选择系统用户，选择系统机构，等等 
 	 */
 	@Column(name = "INPUT_HINT")
-	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
+	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
 	private String  inputHint;
 	
+	@Column(name = "INPUT_TYPE")
+	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
+	private String  inputType;
 	
 	
 	/**
@@ -215,6 +218,12 @@ public class ModelDataField implements java.io.Serializable {
 
 	// Property accessors
   
+	public String getInputType() {
+		return inputType;
+	}
+	public void setInputType(String inputType) {
+		this.inputType = inputType;
+	}
 	public String getAccessType() {
 		return this.accessType;
 	}
