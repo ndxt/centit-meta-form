@@ -34,7 +34,7 @@ public class ModelDataField implements java.io.Serializable {
 	
 	
 	/**
-	 * 更改类别 只读/更改/隐藏 
+	 * H 隐藏 R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑
 	 */
     @Column(name = "ACCESS_TYPE")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
@@ -364,6 +364,7 @@ public class ModelDataField implements java.io.Serializable {
 		this.fieldWidth=other.getFieldWidth();
 		this.filterType=other.getFilterType();
 		this.inputHint=other.getInputHint();
+		this.inputType=other.getInputType();
 		this.mandatory=other.getMandatory();
 		this.referenceData=other.getReferenceData();
 		this.referenceType=other.getReferenceType();
@@ -380,37 +381,39 @@ public class ModelDataField implements java.io.Serializable {
 		if( other.getColumnName() != null)
 			this.setColumnName(other.getColumnName());
 		if(other.getAccessType()!= null)
-		this.accessType= other.getAccessType();  
+			this.accessType= other.getAccessType();  
 		if(other.getColumnType()!= null)
-		this.columnType=other.getColumnType();
+			this.columnType=other.getColumnType();
 		if(other.getDefaultValue()!= null)
-		this.defaultValue=other.getDefaultValue();
+			this.defaultValue=other.getDefaultValue();
 		if(other.getDisplayOrder()!= null)
-		this.displayOrder=other.getDisplayOrder();
+			this.displayOrder=other.getDisplayOrder();
 		if(other.getExtendOptions()!= null)
-		this.extendOptions=other.getExtendOptions();
+			this.extendOptions=other.getExtendOptions();
 		if(other.getFieldHeight()!= null)
-		this.fieldHeight=other.getFieldHeight();
+			this.fieldHeight=other.getFieldHeight();
 		if(other.getFieldWidth()!= null)
-		this.fieldWidth=other.getFieldWidth();
+			this.fieldWidth=other.getFieldWidth();
 		if(other.getFilterType()!= null)
-		this.filterType=other.getFilterType();
+			this.filterType=other.getFilterType();
 		if(other.getInputHint()!= null)
-		this.inputHint=other.getInputHint();
+			this.inputHint=other.getInputHint();
 		if(other.getMandatory()!= null)
-		this.mandatory=other.getMandatory();
+			this.mandatory=other.getMandatory();
 		if(other.getReferenceData()!= null)
-		this.referenceData=other.getReferenceData();
+			this.referenceData=other.getReferenceData();
 		if(other.getReferenceType()!= null)
-		this.referenceType=other.getReferenceType();
+			this.referenceType=other.getReferenceType();
 		if(other.getUrl()!= null)
-		this.url=other.getUrl();
+			this.url=other.getUrl();
 		if(other.getValidateHint()!= null)
-		this.validateHint=other.getValidateHint();
+			this.validateHint=other.getValidateHint();
+		if(other.getInputType()!= null)
+			this.inputType=other.getInputType();
 		if(other.getValidateInfo()!= null)
-		this.validateInfo=other.getValidateInfo();
+			this.validateInfo=other.getValidateInfo();
 		if(other.getValidateRegex()!= null)
-		this.validateRegex=other.getValidateRegex();
+			this.validateRegex=other.getValidateRegex();
 		return this;
 	}
 
