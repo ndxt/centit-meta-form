@@ -11,6 +11,8 @@ public class FieldTemplateOptions {
 	private String placeholder;
 	private String description;
 	private Boolean focus;
+	private Boolean readonly;
+	private Boolean disabled;
 	/**
 	 * 正则表达式
 	 */	
@@ -53,6 +55,22 @@ public class FieldTemplateOptions {
 		this.options.add(option);
 	}
 	
+	public Boolean getRequired() {
+		return required;
+	}
+
+	public void setRequired(Boolean required) {
+		this.required = required;
+	}
+
+	public Boolean getReadonly() {
+		return readonly;
+	}
+
+	public void setReadonly(Boolean readonly) {
+		this.readonly = readonly;
+	}
+
 	public String getPlaceholder() {
 		return placeholder;
 	}

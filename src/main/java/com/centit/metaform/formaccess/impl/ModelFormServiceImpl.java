@@ -23,10 +23,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.dde.dao.DatabaseInfoDao;
 import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.metaform.dao.MetaColumnDao;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.MetaTableDao;
-import com.centit.metaform.dao.ModelDataFieldDao;
 import com.centit.metaform.formaccess.FieldTemplateOptions;
 import com.centit.metaform.formaccess.FormField;
 import com.centit.metaform.formaccess.ListColumn;
@@ -63,18 +61,11 @@ public class ModelFormServiceImpl implements ModelFormService {
     private MetaTableDao tableDao;
 
     @Resource
-    private MetaColumnDao columnDao;
-    
-    @Resource
     private MetaFormModelDao formModelDao;
-    
-    @Resource
-    private ModelDataFieldDao formFieldDao;
-    
+     
     @Value("${metaform.dataaccess.embedded}")
     private boolean useLocalDatabase;
-
-    
+   
 	@Override
 	public ModelRuntimeContext createRuntimeContext(String modelCode) {
 		if(useLocalDatabase)
@@ -327,6 +318,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 		mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
 		
 		for(ModelDataField field:mfm.getModelDataFields()){
+			if("H".equals(field.getAccessType()))
+				continue;
 			FormField ff = new FormField();
 			MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
 			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
@@ -342,14 +335,14 @@ public class ModelFormServiceImpl implements ModelFormService {
 				templateOptions.setFocus(true);
 			if(field.isMandatory())
 				templateOptions.setRequired(true);
-			if("view".equals(operation) || "R".equals(field.getColumnType()) ||
-					"R".equals(field.getAccessType())||
-					("C".equals(field.getAccessType()) && !"create".equals(operation) )  ){
-				//READONLY
-			}
 			
-			if("H".equals(field.getAccessType())){
-				//hide
+			
+			if(!"view".equals(operation) &&
+					("R".equals(field.getColumnType()) ||
+					"R".equals(field.getAccessType())||
+					("C".equals(field.getAccessType()) && !"create".equals(operation) ) ) ){
+				//READONLY
+				templateOptions.setReadonly(true);
 			}
 			
 			referenceDataToOption( rc,
