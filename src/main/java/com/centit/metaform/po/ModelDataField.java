@@ -34,7 +34,7 @@ public class ModelDataField implements java.io.Serializable {
 	
 	
 	/**
-	 * H 隐藏 R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑
+	 * H 隐藏  R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑
 	 */
     @Column(name = "ACCESS_TYPE")
 	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
@@ -264,8 +264,10 @@ public class ModelDataField implements java.io.Serializable {
 		this.fieldHeight = fieldHeight;
 	}
   
-	
-  
+	/**
+	 * R 为引用 T 为表字段
+	 * @return
+	 */	
 	public String getColumnType() {
 		return columnType;
 	}

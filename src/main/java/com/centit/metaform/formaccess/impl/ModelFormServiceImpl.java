@@ -312,6 +312,16 @@ public class ModelFormServiceImpl implements ModelFormService {
 				templateOptions.setFocus(true);
 			if(field.isMandatory())
 				templateOptions.setRequired(true);
+			if("view".equals(operation) || "R".equals(field.getColumnType()) ||
+					"R".equals(field.getAccessType())||
+					("C".equals(field.getAccessType()) && !"create".equals(operation) )  ){
+				//READONLY
+			}
+			
+			if("H".equals(field.getAccessType())){
+				//hide
+			}
+			
 			referenceDataToOption( rc,
 					 field, templateOptions);
 			ff.setTemplateOptions(templateOptions);
@@ -321,8 +331,6 @@ public class ModelFormServiceImpl implements ModelFormService {
 			mff.addOperation(mo);
 		return mff;
 	}
-
-
 
 	@Override
 	@Transactional(readOnly=true)
@@ -351,14 +359,10 @@ public class ModelFormServiceImpl implements ModelFormService {
 			FormField ff = new FormField();			
 			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
 			ff.setType(StringUtils.isBlank(field.getInputType())?"input":field.getInputType());
+			
 			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
 			templateOptions.setLabel(mc.getFieldLabelName());
 			templateOptions.setPlaceholder(field.getInputHint());
-		
-			if(field.isFocus())
-				templateOptions.setFocus(true);
-			if(field.isMandatory())
-				templateOptions.setRequired(true);
 			
 			referenceDataToOption( rc,
 					 field, templateOptions);
