@@ -343,6 +343,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 					("C".equals(field.getAccessType()) && !"create".equals(operation) ) ) ){
 				//READONLY
 				templateOptions.setReadonly(true);
+				//ff.setNoFormControl(true);
+				//ff.setTemplate("<p>Some text here</p>");
 			}
 			
 			referenceDataToOption( rc,

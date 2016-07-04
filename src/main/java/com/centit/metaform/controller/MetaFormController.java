@@ -75,7 +75,7 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/{modelCode}/meta/{metaType}",method = RequestMethod.GET)
 	public void meta(@PathVariable String modelCode,  @PathVariable String metaType, 
 			HttpServletRequest request, HttpServletResponse response) {
-		 ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
 		JsonResultUtils.writeSingleDataJson(formService.getFormDefine(rc,metaType), response);
 	    rc.close();
 	}
@@ -83,7 +83,7 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/{modelCode}/create",method = RequestMethod.GET)
 	public void create(@PathVariable String modelCode,
 			boolean addMeta, HttpServletRequest request, HttpServletResponse response) {
-    	 ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	try {
     		ResponseData resData = new ResponseData();
     		JSONObject obj = formService.createInitialObject(rc);
@@ -107,7 +107,7 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/{modelCode}/createpk",method = RequestMethod.GET)
 	public void createPk(@PathVariable String modelCode,
 			HttpServletRequest request, HttpServletResponse response) {
-    	 ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	try {
     		ResponseData resData = new ResponseData();
     		resData.addResponseData("pk", formService.createNewPk(rc));    	
@@ -133,7 +133,7 @@ public class MetaFormController  extends BaseController{
         	return;
         }
         
-    	 ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	try {
     		if('['==jsonStr.charAt(0)){
 	    		JSONArray jo = JSON.parseArray(jsonStr);
@@ -160,7 +160,7 @@ public class MetaFormController  extends BaseController{
 	public void edit(@PathVariable String modelCode,boolean addMeta,
 			HttpServletRequest request, HttpServletResponse response) {
         
-		 ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	Map<String,Object> jo = rc.fetchPkFromRequest(request);    	
 		ResponseData resData = new ResponseData();
 		JSONObject obj = formService.getObjectByProperties(rc, jo);
@@ -192,7 +192,7 @@ public class MetaFormController  extends BaseController{
         	return;
         }
 		
-    	 ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	try {
     		if('['==jsonStr.charAt(0)){
 	    		JSONArray jo = JSON.parseArray(jsonStr);
@@ -218,7 +218,7 @@ public class MetaFormController  extends BaseController{
 	public void delete(@PathVariable String modelCode,  @RequestBody String jsonStr,  
 			HttpServletRequest request, HttpServletResponse response) {
 		JSONObject jo = JSON.parseObject(jsonStr);
-    	 ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	try {
 			int n = formService.deleteObjectById(rc, jo,response);
 			rc.commitAndClose();

@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -204,8 +205,8 @@ public class MetaTableController extends BaseController{
     		JsonResultUtils.writeErrorMessageJson(401,"当前用户没有登录，请先登录。", response);
     		return;
     	}
-    	String msg=mdTableMag.publishMetaTable(ptableId, userCode);
-        JsonResultUtils.writeSingleDataJson(msg,response);
+    	Pair<Integer, String> ret = mdTableMag.publishMetaTable(ptableId, userCode);
+        JsonResultUtils.writeErrorMessageJson(ret.getLeft(),ret.getRight(),response);
     }
     
     /**

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.core.service.BaseEntityManager;
@@ -31,7 +33,7 @@ public interface MetaTableManager extends BaseEntityManager<MetaTable,java.lang.
 	public PendingMetaTable getPendingMetaTable(long tableId);
 	public void savePendingMetaTable(PendingMetaTable pmt);
 	public List<String> makeAlterTableSqls(Long tableId);
-	public String publishMetaTable(Long tableId,String currentUser);
+	public Pair<Integer, String> publishMetaTable(Long tableId,String currentUser);
 	public List<PendingMetaTable> listDrafts(Map<String, Object> searchColumn,
 			PageDesc pageDesc);
 }

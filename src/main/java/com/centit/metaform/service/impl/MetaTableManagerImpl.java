@@ -11,6 +11,8 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,7 @@ import com.centit.support.database.DbcpConnect;
 import com.centit.support.database.DbcpConnectPools;
 import com.centit.support.database.ddl.DB2DDLOperations;
 import com.centit.support.database.ddl.DDLOperations;
+import com.centit.support.database.ddl.GeneralDDLOperations;
 import com.centit.support.database.ddl.MySqlDDLOperations;
 import com.centit.support.database.ddl.OracleDDLOperations;
 import com.centit.support.database.ddl.SqlSvrDDLOperations;
@@ -212,12 +215,17 @@ public class MetaTableManagerImpl
 	/**
 	 * 对比pendingMetaTable和MetaTable中的字段信息，并对数据库中的表进行重构，
 	 * 重构成功后将对应的表结构信息同步到 MetaTable中，并在MetaChangeLog中记录信息
+	 * @return 返回错误编号 和 错误说明， 编号为0表示成功
 	 */
 	@Override
 	@Transactional
-	public String publishMetaTable(Long tableId,String currentUser) {
+	public Pair<Integer, String> publishMetaTable(Long tableId,String currentUser) {
 		try{
 			PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
+			Pair<Integer, String> ret = GeneralDDLOperations.checkTableWellDefined(ptable);
+			if(ret.getLeft().intValue() != 0)
+				return ret;
+			
 			DatabaseInfo mdb = databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());		
 			DataSourceDescription dbc = new DataSourceDescription();
 			dbc.setDatabaseCode(mdb.getDatabaseCode());
@@ -266,11 +274,11 @@ public class MetaTableManagerImpl
 				metaChangLogDao.saveNewObject(chgLog);
 				MetaTable table= new MetaTable(ptable);
 				metaTableDao.mergeObject(table);
-				return "发布成功!";
+				return new ImmutablePair<Integer, String>(0,"发布成功！");
 			}else
-				return JSON.toJSONString(errors);
+				return new ImmutablePair<Integer, String>(-10,JSON.toJSONString(errors));
 		}catch(Exception e){
-			return "发布失败!" +  e.getMessage();
+			return new ImmutablePair<Integer, String>(0,"发布失败!" +  e.getMessage());
 		}
 	}
 
