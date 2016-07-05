@@ -71,7 +71,7 @@ public class MetaRelation implements TableReference, java.io.Serializable {
 	 */
 	@Column(name = "RELATION_NAME")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 64, message = "字段长度不能大于{max}")
 	private String  relationName;
 	/**
 	 * 状态 null 
@@ -82,7 +82,7 @@ public class MetaRelation implements TableReference, java.io.Serializable {
 	 * 关联说明 null 
 	 */
 	@Column(name = "RELATION_COMMENT")
-	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 256, message = "字段长度不能大于{max}")
 	private String  relationComment;
 	/**
 	 * 更改时间 null 
@@ -93,7 +93,7 @@ public class MetaRelation implements TableReference, java.io.Serializable {
 	 * 更改人员 null 
 	 */
 	@Column(name = "RECORDER")
-	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 8, message = "字段长度不能大于{max}")
 	private String  recorder;
 
 	

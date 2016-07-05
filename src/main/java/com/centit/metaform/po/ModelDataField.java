@@ -29,7 +29,7 @@ public class ModelDataField implements java.io.Serializable {
 	 * 字段类别 ，关联只读字段（reference_Data 中为关联SQL语句）
 	 */
     @Column(name = "COLUMN_TYPE")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Length(  message = "字段长度不能大于{max}")
 	private String  columnType;
 	
 	
@@ -37,7 +37,7 @@ public class ModelDataField implements java.io.Serializable {
 	 * H 隐藏  R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑
 	 */
     @Column(name = "ACCESS_TYPE")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Length(  message = "字段长度不能大于{max}")
 	private String  accessType;
 	/**
 	 * 显示顺序 null 
@@ -48,11 +48,11 @@ public class ModelDataField implements java.io.Serializable {
 	 * 输入说明 与系统关联，比如自动与登录用户代码关联，选择系统用户，选择系统机构，等等 
 	 */
 	@Column(name = "INPUT_HINT")
-	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 256, message = "字段长度不能大于{max}")
 	private String  inputHint;
 	
 	@Column(name = "INPUT_TYPE")
-	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 32, message = "字段长度不能大于{max}")
 	private String  inputType;
 	
 	
@@ -66,14 +66,14 @@ public class ModelDataField implements java.io.Serializable {
 	 * 5：SQL（树）
 	 */
 	@Column(name = "REFERENCE_TYPE")
-	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
+	@Length(message = "字段长度不能大于{max}")
 	private String  referenceType;
 	
 	/**
 	 * 引用数据 根据paramReferenceType类型（1,2,3）填写对应值 
 	 */
 	@Column(name = "REFERENCE_DATA")
-	@Length(min = 0, max = 1000, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 1000, message = "字段长度不能大于{max}")
 	private String  referenceData;
 	
 	
@@ -82,21 +82,21 @@ public class ModelDataField implements java.io.Serializable {
 	 * 输入约束描述
 	 */
 	@Column(name = "VALIDATE_HINT")
-	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 256, message = "字段长度不能大于{max}")
 	private String  validateHint;
 	
 	/**
 	 * 约束提示
 	 */
 	@Column(name = "VALIDATE_INFO")
-	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 256, message = "字段长度不能大于{max}")
 	private String  validateInfo;
 	
 	/**
 	 * 约束表达式
 	 */
 	@Column(name = "VALIDATE_REGEX")
-	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 256, message = "字段长度不能大于{max}")
 	private String  validateRegex;
 	
 	/**

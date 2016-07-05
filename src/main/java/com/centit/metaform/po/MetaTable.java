@@ -76,34 +76,34 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	 */
 	@Column(name = "TABLE_NAME")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 32, message = "字段长度不能大于{max}")
 	private String  tableName;
 	/**
 	 * 表名称 null 
 	 */
 	@Column(name = "TABLE_LABEL_NAME")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 64, message = "字段长度不能大于{max}")
 	private String  tableLabelName;
 	/**
 	 * 类别 表/视图 目前只能是表 
 	 */
 	@Column(name = "TABLE_TYPE")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Length(  message = "字段长度不能大于{max}")
 	private String  tableType;
 	/**
 	 * 状态 系统 S / R 查询(只读)/ N 新建(读写) 
 	 */
 	@Column(name = "TABLE_STATE")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Length(  message = "字段长度不能大于{max}")
 	private String  tableState;
 	/**
 	 * 描述 null 
 	 */
 	@Column(name = "TABLE_COMMENT")
-	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 256, message = "字段长度不能大于{max}")
 	private String  tableComment;
 	/**
 	 * 与流程中业务关联关系
@@ -111,13 +111,13 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	 */
 	@Column(name = "WORKFLOW_OPT_TYPE")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max=1, message = "字段长度不能小于{min}大于{max}")
+	@Length( max=1, message = "字段长度不能大于{max}")
 	private String  workFlowOptType;
 	
 	//Y/N 更新时是否校验时间戳 添加 Last_modify_time datetime
 	@Column(name = "UPDATE_CHECK_TIMESTAMP")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max=1, message = "字段长度不能小于{min}大于{max}")
+	@Length( max=1, message = "字段长度不能大于{max}")
 	private String  updateCheckTimeStamp;
 	
 	/**
@@ -129,7 +129,7 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	 * 更改人员 null 
 	 */
 	@Column(name = "RECORDER")
-	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 8, message = "字段长度不能大于{max}")
 	private String  recorder;
 	
 	

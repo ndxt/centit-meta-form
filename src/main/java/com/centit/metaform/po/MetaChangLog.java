@@ -49,20 +49,19 @@ public class MetaChangLog implements java.io.Serializable {
 	 */
 	@Column(name = "CHANGER")
 	@NotBlank(message = "字段不能为空")
-	//@Length(min = 0, max = 6, message = "字段长度不能小于{min}大于{max}")
+	//@Length(max = 6, message = "字段长度不能大于{max}")
 	private String  changer;
 
 	/**
 	 * 更改脚本 null 
 	 */
 	@Column(name = "CHANGE_SCRIPT")
-	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
 	private String  changeScript;
 	/**
 	 * 更改说明 null 
 	 */
 	@Column(name = "CHANGE_COMMENT")
-	@Length(min = 0, max = 2048, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 2048, message = "字段长度不能大于{max}")
 	private String  changeComment;
 	
 

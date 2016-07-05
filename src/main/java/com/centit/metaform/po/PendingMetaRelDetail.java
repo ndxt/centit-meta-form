@@ -29,7 +29,7 @@ public class PendingMetaRelDetail implements java.io.Serializable {
 	 */
 	@Column(name = "CHILD_COLUMN_NAME")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 32, message = "字段长度不能大于{max}")
 	private String  childColumnName;
 
 	// Constructors

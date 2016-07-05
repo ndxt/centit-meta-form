@@ -24,22 +24,22 @@ public class OsInfo implements java.io.Serializable {
     @GenericGenerator(name = "assignedGenerator", strategy = "assigned")
     private String osId;
     @Column(name = "OS_NAME")
-    @Length(min = 1, max = 200, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 200, message = "字段长度不能大于{max}")
     private String osName;
     @Column(name = "HAS_INTERFACE")
     @NotBlank(message = "字段不能为空")
     private String hasInterface;
     @Column(name = "INTERFACE_URL")
-    @Length(min = 1, max = 200, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 200, message = "字段长度不能大于{max}")
     private String interfaceUrl;
     @Column(name = "CREATED")
-    @Length(min = 1, max = 8, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 8, message = "字段长度不能大于{max}")
     private String created;
     @Column(name = "OS_USER")
-    @Length(min = 1, max = 20, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 20, message = "字段长度不能大于{max}")
     private String osUser;
     @Column(name = "OS_PASSWORD")
-    @Length(min = 1, max = 100, message = "字段长度不能小于{min}大于{max}")
+    @Length(max = 100, message = "字段长度不能大于{max}")
     private String osPassword;
     @Column(name = "LAST_UPDATE_TIME")
     private Date lastUpdateTime;

@@ -38,13 +38,13 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 	 */
 	@Column(name = "FIELD_LABEL_NAME")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 64, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 64, message = "字段长度不能大于{max}")
 	private String  fieldLabelName;
 	/**
 	 * 字段描述 null 
 	 */
 	@Column(name = "COLUMN_COMMENT")
-	@Length(min = 0, max = 256, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 256, message = "字段长度不能大于{max}")
 	private String  columnComment;
 	/**
 	 * 显示次序 null 
@@ -56,7 +56,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 	 */
 	@Column(name = "COLUMN_TYPE")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0, max = 32, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 32, message = "字段长度不能大于{max}")
 	private String  columnFieldType;
 	/**
 	 * 字段长度 precision 
@@ -73,64 +73,64 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 	 */
 	@Column(name = "ACCESS_TYPE")
 	@NotBlank(message = "字段不能为空")
-	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
+	@Length(message = "字段长度不能大于{max}")
 	private String  accessType;
 	/**
 	 * 是否必填 null 
 	 */
 	@Column(name = "MANDATORY")
-	@Length(min = 0,  message = "字段长度不能小于{min}大于{max}")
+	@Length(  message = "字段长度不能大于{max}")
 	private String  mandatory;
 	/**
 	 * 是否为主键 null 
 	 */
 	@Column(name = "PRIMARYKEY")
-	@Length(min = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length( message = "字段长度不能大于{max}")
 	private String  primarykey;
 	/**
 	 * 状态 null 
 	 */
 	@Column(name = "COLUMN_STATE")
 	//@NotBlank(message = "字段不能为空")
-	@Length(min = 0, message = "字段长度不能小于{min}大于{max}")
+	@Length( message = "字段长度不能大于{max}")
 	private String  columnState;
 	/**
 	 * 引用类型 0：没有：1： 数据字典 2：JSON表达式 3：sql语句  Y：年份 M：月份 
 	 */
 	@Column(name = "REFERENCE_TYPE")
-	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
+	@Length(message = "字段长度不能大于{max}")
 	private String  referenceType;
 	/**
 	 * 引用数据 根据paramReferenceType类型（1,2,3）填写对应值 
 	 */
 	@Column(name = "REFERENCE_DATA")
-	@Length(min = 0, max = 1000, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 1000, message = "字段长度不能大于{max}")
 	private String  referenceData;
 	/**
 	 * 约束表达式 regex表达式 
 	 */
 	@Column(name = "VALIDATE_REGEX")
-	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 200, message = "字段长度不能大于{max}")
 	private String  validateRegex;
 	/**
 	 * 约束提示 约束不通过提示信息 
 	 */
 	@Column(name = "VALIDATE_INFO")
-	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 200, message = "字段长度不能大于{max}")
 	private String  validateInfo;
 	
 	/**
 	 * 自动生成规则   C 常量  U uuid S sequence
 	 */
 	@Column(name = "AUTO_CREATE_RULE")
-	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 200, message = "字段长度不能大于{max}")
 	private String  autoCreateRule;
 	
 	/**
 	 * 自动生成参数
 	 */
 	@Column(name = "AUTO_CREATE_PARAM")
-	@Length(min = 0, max = 200, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 200, message = "字段长度不能大于{max}")
 	private String  autoCreateParam;
 	
 	/**
@@ -142,7 +142,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 	 * 更改人员 null 
 	 */
 	@Column(name = "RECORDER")
-	@Length(min = 0, max = 8, message = "字段长度不能小于{min}大于{max}")
+	@Length(max = 8, message = "字段长度不能大于{max}")
 	private String  recorder;
 
 	@Transient
