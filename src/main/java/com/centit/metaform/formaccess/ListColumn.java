@@ -4,24 +4,16 @@ public class ListColumn {
 	private String name;
 	private String label;
 	private String url;
-	private Boolean show;
 	private Boolean primaryKey;
 	
 	public ListColumn(){
-		show = true;
+		
 	}
 	public ListColumn(String name,String label){
 		this.name = name;
 		this.label = label;
 	}
 	
-	public Boolean isShow() {
-		return show;
-	}
-	
-	public void setShow(Boolean show) {
-		this.show = show;
-	}
 	public ListColumn(String name,String label,String url){
 		this.name = name;
 		this.label = label;
