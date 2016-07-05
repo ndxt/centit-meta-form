@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -136,12 +137,15 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 	private String  dataFilterSql;
 
 	@OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OrderBy(value="displayOrder asc")
 	private Set<ModelDataField> modelDataFields;
 		
 	@OneToMany(mappedBy="parentModel",fetch = FetchType.LAZY)
+	@OrderBy(value="displayOrder asc")
 	private Set<MetaFormModel> childFormModels;	
 	
 	@OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OrderBy(value="displayOrder asc")
 	private Set<ModelOperation> modelOperations;
 	
 	// Constructors
