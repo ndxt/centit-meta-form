@@ -156,6 +156,12 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 	public PendingMetaColumn() {
 		this.columnState="0";
 	}
+	
+	public PendingMetaColumn(PendingMetaTable mdTable, String columnName) {
+		this.cid= new PendingMetaColumnId(mdTable,columnName);
+		this.columnState="0";
+	}
+	
 	/** minimal constructor */
 	public PendingMetaColumn(
 		PendingMetaColumnId cid,String  fieldLabelName,String  columnType,String  accessType,String  columnState) {

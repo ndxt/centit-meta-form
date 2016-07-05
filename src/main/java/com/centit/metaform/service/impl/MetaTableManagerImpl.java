@@ -30,6 +30,7 @@ import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.PendingMetaRelationDao;
 import com.centit.metaform.dao.PendingMetaTableDao;
+import com.centit.metaform.formaccess.FieldType;
 import com.centit.metaform.po.MetaChangLog;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
@@ -37,6 +38,7 @@ import com.centit.metaform.po.PendingMetaColumn;
 import com.centit.metaform.po.PendingMetaRelation;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.metaform.service.MetaTableManager;
+import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.database.DBType;
 import com.centit.support.database.DataSourceDescription;
 import com.centit.support.database.DbcpConnect;
@@ -154,7 +156,12 @@ public class MetaTableManagerImpl
 	@Transactional
 	public List<String> makeAlterTableSqls(Long tableId) {
 		PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
-		MetaTable stable = metaTableDao.getObjectById(tableId);
+		return  makeAlterTableSqls(ptable);
+	}
+
+	@Transactional
+	public List<String> makeAlterTableSqls(PendingMetaTable ptable) {		
+		MetaTable stable = metaTableDao.getObjectById(ptable.getTableId());
 		DatabaseInfo mdb = databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
 		DBType dbType = DBType.mapDBType(mdb.getDatabaseUrl());
 		ptable.setDatabaseType(dbType);
@@ -176,7 +183,7 @@ public class MetaTableManagerImpl
 	  		ddlOpt = new OracleDDLOperations();
 	  		break;
 		}
-		
+				
 		List<String> sqls = new ArrayList<>();
 		if(stable==null){
 			sqls.add(ddlOpt.makeCreateTableSql(ptable));
@@ -212,6 +219,46 @@ public class MetaTableManagerImpl
 		return sqls;
 	}
 	
+	public void checkPendingMetaTable(PendingMetaTable ptable,String currentUser){
+		if("Y".equals(ptable.getUpdateCheckTimeStamp())){
+			PendingMetaColumn col = ptable.findFieldByName("lastModifyDate");
+			if(col==null){
+				col = new PendingMetaColumn(ptable, "LAST_MODIFY_DATE");
+				col.setFieldLabelName("最新更新时间");
+				col.setColumnComment("最新更新时间");
+				col.setColumnFieldType(FieldType.DATETIME);
+				col.setLastModifyDate(DatetimeOpt.currentUtilDate());
+				col.setRecorder(currentUser);
+				ptable.getColumns().add(col);
+			};
+		}
+		
+		if("1".equals(ptable.getWorkFlowOptType())){
+			PendingMetaColumn col = ptable.findFieldByName("wfInstId");
+			if(col==null){
+				col = new PendingMetaColumn(ptable, "WF_INST_ID");
+				col.setFieldLabelName("流程实例ID");
+				col.setColumnComment("业务对应的工作流程实例ID");
+				col.setColumnFieldType(FieldType.INTEGER);
+				col.setMaxLength(12);
+				col.setLastModifyDate(DatetimeOpt.currentUtilDate());
+				col.setRecorder(currentUser);
+				ptable.getColumns().add(col);
+			};
+		}else if("2".equals(ptable.getWorkFlowOptType())){
+			PendingMetaColumn col = ptable.findFieldByName("nodeInstId");
+			if(col==null){
+				col = new PendingMetaColumn(ptable, "NODE_INST_ID");
+				col.setFieldLabelName("流程实例ID");
+				col.setColumnComment("业务对应的工作流程实例ID");
+				col.setColumnFieldType(FieldType.INTEGER);
+				col.setMaxLength(12);
+				col.setLastModifyDate(DatetimeOpt.currentUtilDate());
+				col.setRecorder(currentUser);
+				ptable.getColumns().add(col);
+			};
+		}		
+	}
 	/**
 	 * 对比pendingMetaTable和MetaTable中的字段信息，并对数据库中的表进行重构，
 	 * 重构成功后将对应的表结构信息同步到 MetaTable中，并在MetaChangeLog中记录信息
@@ -221,7 +268,8 @@ public class MetaTableManagerImpl
 	@Transactional
 	public Pair<Integer, String> publishMetaTable(Long tableId,String currentUser) {
 		try{
-			PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
+			PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);		
+			
 			Pair<Integer, String> ret = GeneralDDLOperations.checkTableWellDefined(ptable);
 			if(ret.getLeft().intValue() != 0)
 				return ret;
@@ -253,7 +301,8 @@ public class MetaTableManagerImpl
 		  		break;
 			}
 			
-			List<String> sqls =  makeAlterTableSqls(tableId);
+			checkPendingMetaTable(ptable,currentUser);
+			List<String> sqls =  makeAlterTableSqls(ptable);
 			
 			List<String> errors = new ArrayList<>();
 			for(String sql:sqls){
@@ -272,6 +321,8 @@ public class MetaTableManagerImpl
 			chgLog.setChanger(currentUser);
 			if(errors.size()==0){
 				metaChangLogDao.saveNewObject(chgLog);
+				ptable.setRecorder(currentUser);
+				pendingMdTableDao.mergeObject(ptable);
 				MetaTable table= new MetaTable(ptable);
 				metaTableDao.mergeObject(table);
 				return new ImmutablePair<Integer, String>(0,"发布成功！");
