@@ -57,7 +57,13 @@ public class ModelDataField implements java.io.Serializable {
 	
 	
 	/**
-	 * 引用类型 0：没有：1： 数据字典 2：JSON表达式 3：sql语句  Y：年份 M：月份 
+	 * 引用类型 
+	 * 0：没有
+	 * 1： 数据字典（列表） 
+	 * 2：数据字典（树）
+	 * 3：JSON
+	 * 4：SQL（列表）
+	 * 5：SQL（树）
 	 */
 	@Column(name = "REFERENCE_TYPE")
 	@Length(min = 0,message = "字段长度不能小于{min}大于{max}")
