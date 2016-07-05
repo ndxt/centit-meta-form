@@ -16,6 +16,7 @@ import com.centit.metaform.po.MetaTable;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.database.QueryAndNamedParams;
 import com.centit.support.database.QueryUtils;
 import com.centit.support.database.QueryUtils.SimpleFilterTranslater;
@@ -91,8 +92,8 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 		case FieldType.FLOAT:
 			return NumberBaseOpt.castObjectToDouble(fieldValue);
 		case FieldType.BOOLEAN:
-			return StringUtils.substring( 
-							StringBaseOpt.objectToString(fieldValue),0, 1);
+			return StringRegularOpt.isTrue( 
+							StringBaseOpt.objectToString(fieldValue))?"T":"F";
 		default:
 			return StringBaseOpt.objectToString(fieldValue);
 		}
