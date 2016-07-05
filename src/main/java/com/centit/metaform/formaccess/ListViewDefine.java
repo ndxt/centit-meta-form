@@ -29,7 +29,7 @@ public class ListViewDefine extends  MateFormDefine{
 		this.columns = columns;
 	}
 	
-
+	private List<String> primaryKey;	
 	private List<ListColumn> columns;	
 	
 	public List<ListColumn> getColumns() {
@@ -46,5 +46,18 @@ public class ListViewDefine extends  MateFormDefine{
 			this.columns = new ArrayList<>();
 		this.columns.add(column);
 	}
+
+	public List<String> getPrimaryKey() {
+		return primaryKey;
+	}
+
+	public void setPrimaryKey(List<String> primaryKey) {
+		this.primaryKey = primaryKey;
+	}
 	
+	public void addPrimaryKey(String pk) {
+		if(this.primaryKey==null)
+			this.primaryKey = new ArrayList<>();
+		this.primaryKey.add(pk);
+	}
 }
