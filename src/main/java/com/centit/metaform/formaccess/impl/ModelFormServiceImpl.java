@@ -370,14 +370,16 @@ public class ModelFormServiceImpl implements ModelFormService {
 		
 		for(ModelDataField field:mfm.getModelDataFields()){
 			MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
-			if(!"H".equals(field.getAccessType())){
-				ListColumn col = new ListColumn(
-						SimpleTableField.mapPropName(field.getColumnName()),
-						mc.getFieldLabelName());
-				if(mc.isPrimaryKey())
-					col.setPrimaryKey(true);
-				mff.addColumn(col);
-			}
+			//if(!"H".equals(field.getAccessType())){
+			ListColumn col = new ListColumn(
+					SimpleTableField.mapPropName(field.getColumnName()),
+					mc.getFieldLabelName());
+			if(mc.isPrimaryKey())
+				col.setPrimaryKey(true);
+			if("H".equals(field.getAccessType()))
+				col.setShow(false);
+			mff.addColumn(col);
+			//}
 			
 			if("NO".equals(field.getFilterType()))
 				continue;
