@@ -46,8 +46,13 @@ public class MetaFormDefine {
 			if(ff.getTemplateOptions()!=null &&
 					(ff.getTemplateOptions().isDisabled() 
 							|| "view".equals(formType))){
-				ff.setKey(ff.getKey()+"Value");
+				List<OptionItem> ops = ff.getTemplateOptions().getOptions();
+				//ff.getTemplateOptions().setDisabled(true);
 				ff.setType("text");
+				if(ops!=null){
+					ff.setKey(ff.getKey()+"Value");
+					//ff.setType("input");
+				}
 			}
 		}
 	}	
@@ -82,24 +87,20 @@ public class MetaFormDefine {
 							for(int i=0;i<n;i++){
 								int p = ops.indexOf(new OptionItem(sa[i]));
 								if(p>=0)
-									sv[i] = ops.get(p).getValue();
+									sv[i] = ops.get(p).getName();
 								else
 									sv[i] = sa[i];
 							}
-							obj.put(readonlyKey,sv);
+							obj.put(readonlyKey,StringBaseOpt.objectToString(sv));
 						}
 					}else{
 						int p = ops.indexOf(new OptionItem(StringBaseOpt.objectToString(v)));
 						if(p>=0)
-							obj.put(readonlyKey,ops.get(p).getValue());
+							obj.put(readonlyKey,ops.get(p).getName());
 						else
 							obj.put(readonlyKey,v);
 					}
-				}
-				// 文本等没有options的情况
-				else {
-					obj.put(readonlyKey, StringBaseOpt.objectToString(v));
-				}
+				}				
 			}
 		}
 		return obj;

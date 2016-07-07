@@ -64,12 +64,12 @@ public class OptionItem implements Serializable {
     @Override  
     public boolean equals(Object obj) {
     	if(obj instanceof String){
-    		return StringUtils.equals(name, 
+    		return StringUtils.equals(value, 
     				(String)obj);
     	}
     	if(obj instanceof OptionItem){
-    		return StringUtils.equals(name, 
-    				((OptionItem)obj).getName());
+    		return StringUtils.equals(value, 
+    				((OptionItem)obj).getValue());
     	}
     	return false;
     }
