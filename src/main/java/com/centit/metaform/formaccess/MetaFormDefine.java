@@ -58,6 +58,7 @@ public class MetaFormDefine {
 		for(FormField ff:filters){
 			
 			Object v = obj.get(ff.getKey());
+			String readonlyKey = ff.getKey()+"Value";
 			
 			if("multiCheckbox".equals(ff.getType())){//inputType
 				String[] sa = StringUtils.split(
@@ -85,15 +86,19 @@ public class MetaFormDefine {
 								else
 									sv[i] = sa[i];
 							}
-							obj.put(ff.getKey()+"Value",sv);
+							obj.put(readonlyKey,sv);
 						}
 					}else{
 						int p = ops.indexOf(new OptionItem(StringBaseOpt.objectToString(v)));
 						if(p>=0)
-							obj.put(ff.getKey()+"Value",ops.get(p).getValue());
+							obj.put(readonlyKey,ops.get(p).getValue());
 						else
-							obj.put(ff.getKey()+"Value",v);
+							obj.put(readonlyKey,v);
 					}
+				}
+				// 文本等没有options的情况
+				else {
+					obj.put(readonlyKey, StringBaseOpt.objectToString(v));
 				}
 			}
 		}
