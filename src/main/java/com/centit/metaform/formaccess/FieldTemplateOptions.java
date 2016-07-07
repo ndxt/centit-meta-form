@@ -12,7 +12,7 @@ public class FieldTemplateOptions {
 	private String description;
 	private Boolean focus;
 	private Boolean readonly;
-	private Boolean disabled = false;
+	private Boolean disabled;
 	/**
 	 * 正则表达式
 	 */	
@@ -23,6 +23,7 @@ public class FieldTemplateOptions {
 	private String url;
 	
 	public FieldTemplateOptions(){
+		disabled = false;
 	}
 
 	public String getLabel() {
