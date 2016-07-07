@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.centit.metaform.po.ModelOperation;
 
-public class ListViewDefine extends  MateFormDefine{
+public class ListViewDefine extends  MetaFormDefine{
 	
 	public ListViewDefine(){
 		

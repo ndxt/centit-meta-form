@@ -20,6 +20,8 @@ import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.metaform.formaccess.ListViewDefine;
+import com.centit.metaform.formaccess.MetaFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
 
@@ -32,24 +34,26 @@ public class MetaFormController  extends BaseController{
 	private ModelFormService formService;	
 	
 	@RequestMapping(value = "/{modelCode}/list",method = RequestMethod.GET)
-	public void list(@PathVariable String modelCode,boolean addMeta, PageDesc pageDesc ,HttpServletRequest request, HttpServletResponse response) {
+	public void list(@PathVariable String modelCode,boolean noMeta, PageDesc pageDesc ,HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
         
         ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
         rc.setCurrentUserDetails(this.getLoginUser(request));
         
         ResponseData resData = new ResponseData();
-        resData.addResponseData(OBJLIST, formService.listObjectsByFilter(rc, searchColumn, pageDesc));
+        ListViewDefine metaData = formService.getListViewModel(rc);        
+        JSONArray objs = formService.listObjectsByFilter(rc, searchColumn, pageDesc);		
+        resData.addResponseData(OBJLIST, metaData.transObjectsRefranceData(objs));
         resData.addResponseData(PAGE_DESC, pageDesc);
         rc.close();
-        if(addMeta){
-        	resData.addResponseData("formModel", formService.getListViewModel(rc)); 
+        if(! noMeta){
+        	resData.addResponseData("formModel", metaData); 
         }
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }	
 	
 	@RequestMapping(value = "/{modelCode}/view",method = RequestMethod.GET)
-	public void view(@PathVariable String modelCode, boolean addMeta, HttpServletRequest request, HttpServletResponse response) {
+	public void view(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
 		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	Map<String,Object> jo = rc.fetchPkFromRequest(request);    	
 		ResponseData resData = new ResponseData();
@@ -63,10 +67,11 @@ public class MetaFormController  extends BaseController{
 		} catch (SQLException e) {
 		}
 		
-		resData.addResponseData("obj", obj);
+		MetaFormDefine metaData = formService.getFormDefine(rc,"view");
+		resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
 		rc.close();		
-		if(addMeta){
-        	resData.addResponseData("formModel", formService.getFormDefine(rc,"view")); 
+		if(!noMeta){
+        	resData.addResponseData("formModel", metaData); 
         }
 		
 		JsonResultUtils.writeResponseDataAsJson(resData, response);
@@ -82,7 +87,7 @@ public class MetaFormController  extends BaseController{
 	
 	@RequestMapping(value = "/{modelCode}/create",method = RequestMethod.GET)
 	public void create(@PathVariable String modelCode,
-			boolean addMeta, HttpServletRequest request, HttpServletResponse response) {
+			boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
     	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	try {
     		ResponseData resData = new ResponseData();
@@ -91,10 +96,13 @@ public class MetaFormController  extends BaseController{
 	    		Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
 	    		obj.putAll(refField);
     		}
-    		resData.addResponseData("obj", obj); 
+    		
+    		MetaFormDefine metaData = formService.getFormDefine(rc,"create");
+    		resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
+    		
     		rc.close();
-			if(addMeta){
-	        	resData.addResponseData("formModel", formService.getFormDefine(rc,"create")); 
+			if(! noMeta){
+	        	resData.addResponseData("formModel",metaData); 
 	        }			
 			JsonResultUtils.writeResponseDataAsJson(resData, response);
 		} catch (SQLException e) {
@@ -157,7 +165,7 @@ public class MetaFormController  extends BaseController{
 	}
 	
 	@RequestMapping(value = "/{modelCode}/edit",method = RequestMethod.GET)
-	public void edit(@PathVariable String modelCode,boolean addMeta,
+	public void edit(@PathVariable String modelCode,boolean noMeta,
 			HttpServletRequest request, HttpServletResponse response) {
         
 		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
@@ -171,10 +179,13 @@ public class MetaFormController  extends BaseController{
 			} catch (SQLException e) {
 			}
 		}
-		resData.addResponseData("obj", obj);
+		
+		MetaFormDefine metaData = formService.getFormDefine(rc,"edit");
+		resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
+		
 		rc.close();		
-		if(addMeta){
-        	resData.addResponseData("formModel", formService.getFormDefine(rc,"edit")); 
+		if(!noMeta){
+        	resData.addResponseData("formModel", metaData); 
         }
 		
 		JsonResultUtils.writeResponseDataAsJson(resData, response);

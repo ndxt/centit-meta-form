@@ -1,12 +1,22 @@
 package com.centit.metaform.formaccess;
 
-public class OptionItem {
+import java.io.Serializable;
+
+import org.apache.commons.lang3.StringUtils;
+
+public class OptionItem implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private String name;
 	private String value;
 	private String group;
 	
 	public OptionItem(){
 		
+	}
+	public OptionItem(String name){
+		this.name = name;
+		this.value = name;
 	}
 	
 	public OptionItem(String name,String value){
@@ -44,4 +54,23 @@ public class OptionItem {
 		this.group = group;
 	}
 
+	@Override  
+    public int hashCode() {
+		if(name==null)
+			return 0;
+        return name.hashCode();  
+    }  
+      
+    @Override  
+    public boolean equals(Object obj) {
+    	if(obj instanceof String){
+    		return StringUtils.equals(name, 
+    				(String)obj);
+    	}
+    	if(obj instanceof OptionItem){
+    		return StringUtils.equals(name, 
+    				((OptionItem)obj).getName());
+    	}
+    	return false;
+    }
 }

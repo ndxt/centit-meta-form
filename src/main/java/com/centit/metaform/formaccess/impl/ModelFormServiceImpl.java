@@ -2,7 +2,9 @@ package com.centit.metaform.formaccess.impl;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +31,7 @@ import com.centit.metaform.formaccess.FieldTemplateOptions;
 import com.centit.metaform.formaccess.FormField;
 import com.centit.metaform.formaccess.ListColumn;
 import com.centit.metaform.formaccess.ListViewDefine;
-import com.centit.metaform.formaccess.MateFormDefine;
+import com.centit.metaform.formaccess.MetaFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
 import com.centit.metaform.formaccess.OperationEvent;
@@ -66,6 +68,8 @@ public class ModelFormServiceImpl implements ModelFormService {
     @Value("${metaform.dataaccess.embedded}")
     private boolean useLocalDatabase;
    
+    private Map<String,List<OptionItem>> propertyOptionCache;
+    
 	@Override
 	public ModelRuntimeContext createRuntimeContext(String modelCode) {
 		if(useLocalDatabase)
@@ -200,108 +204,136 @@ public class ModelFormServiceImpl implements ModelFormService {
 		return object;
 	}
 	
-	protected void referenceDataToOption(ModelRuntimeContext rc,
-			ModelDataField field,FieldTemplateOptions templateOptions){
-		if(field.getReferenceType()==null)
-			return;
+	protected List<OptionItem> getReferenceDataToOption(ModelRuntimeContext rc,
+			ModelDataField field,String propertyName){
+		if(field.getReferenceType()==null || "0".equals(field.getReferenceType()))
+			return null;
 		
-		switch(field.getReferenceType()){
-			case "1":{//数据字典（列表）
-				String sql = "select datacode,datavalue from f_datadictionary where catalogcode=?";
-				List<Object[]> datas;
-				try {
-					datas = rc.getJsonObjectDao().findObjectsBySql(
-							sql,
-							new Object[]{field.getReferenceData()});
-				
-					for (Object[] data : datas) {
-						templateOptions.addOption(new OptionItem(
-								StringBaseOpt.objectToString(data[1]),
-								StringBaseOpt.objectToString(data[0])));
-					}
-				} catch (SQLException | IOException e) {
-					e.printStackTrace();
-				}
-				break;
+		if(propertyOptionCache==null){
+			propertyOptionCache = new HashMap<>();
+		}else{
+			List<OptionItem> options = propertyOptionCache.get(propertyName);
+			if(options!=null){				
+				return options;
 			}
-			case "2":{//数据字典（树）
-				String sql = "select datacode,datavalue,extracode from f_datadictionary where catalogcode=?";
-				List<Object[]> datas;
-				try {
-					datas = rc.getJsonObjectDao().findObjectsBySql(
-							sql,
-							new Object[]{field.getReferenceData()});
-				
-					for (Object[] data : datas) {
-						templateOptions.addOption(new OptionItem(
-								StringBaseOpt.objectToString(data[1]),
-								StringBaseOpt.objectToString(data[0]),
-								StringBaseOpt.objectToString(data[2])));
-					}
-				} catch (SQLException | IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			}
-			case "3"://JSON
-				templateOptions.setOptions(
-						JSON.parseArray(field.getReferenceData(),OptionItem.class));
-				break;
-			case "4":{//SQL语句（列表）
-				String sql = field.getReferenceData();
-				List<Object[]> datas;
-				try {
-					datas = rc.getJsonObjectDao().findObjectsBySql(
-							sql,null);				
-					for (Object[] data : datas) {
-						templateOptions.addOption(new OptionItem(
-								StringBaseOpt.objectToString(data[1]),
-								StringBaseOpt.objectToString(data[0])));
-					}
-				} catch (SQLException | IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			}
-			case "5":{//SQL语句（树）
-				String sql = field.getReferenceData();
-				List<Object[]> datas;
-				try {
-					datas = rc.getJsonObjectDao().findObjectsBySql(
-							sql,null);				
-					for (Object[] data : datas) {
-						templateOptions.addOption(new OptionItem(
-								StringBaseOpt.objectToString(data[1]),
-								StringBaseOpt.objectToString(data[0]),
-								StringBaseOpt.objectToString(data[2])));
-					}
-				} catch (SQLException | IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			}
-			case "Y":{//年
-				int currYear = DatetimeOpt.getYear(new Date());
-				for (int i = 5; i > -45; i--) {
-					templateOptions.addOption(new OptionItem(
-							String.valueOf(currYear + i) + "年",
-							String.valueOf(currYear + i)));
-				}			
-				break;
-			}
-			case "M"://月
-				for (int i = 1; i < 13; i++) {
-					templateOptions.addOption(new OptionItem(
-							String.valueOf(i) + "月",
-							String.valueOf(i)));
-				}
-				break;
-			case "F"://文件
-				//文件类型特殊属相
-				break;
-			default:
-				break;
 		}
+		
+		List<OptionItem> options = null;
+				
+		switch(field.getReferenceType()){
+		case "1":{//数据字典（列表）
+			String sql = "select datacode,datavalue from f_datadictionary where catalogcode=?";
+			List<Object[]> datas;
+			
+			try {
+				datas = rc.getJsonObjectDao().findObjectsBySql(
+						sql,
+						new Object[]{field.getReferenceData()});
+				options = new ArrayList<>();
+				for (Object[] data : datas) {
+					options.add(new OptionItem(
+							StringBaseOpt.objectToString(data[1]),
+							StringBaseOpt.objectToString(data[0])));
+				}
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
+		case "2":{//数据字典（树）
+			String sql = "select datacode,datavalue,extracode from f_datadictionary where catalogcode=?";
+			List<Object[]> datas;
+			try {
+				datas = rc.getJsonObjectDao().findObjectsBySql(
+						sql,
+						new Object[]{field.getReferenceData()});
+				options = new ArrayList<>();
+				for (Object[] data : datas) {
+					options.add(new OptionItem(
+							StringBaseOpt.objectToString(data[1]),
+							StringBaseOpt.objectToString(data[0]),
+							StringBaseOpt.objectToString(data[2])));
+				}
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
+		case "3"://JSON
+			options = 
+					JSON.parseArray(field.getReferenceData(),OptionItem.class);
+			break;
+		case "4":{//SQL语句（列表）
+			String sql = field.getReferenceData();
+			List<Object[]> datas;
+			try {
+				datas = rc.getJsonObjectDao().findObjectsBySql(
+						sql,null);
+				options = new ArrayList<>();
+				for (Object[] data : datas) {
+					options.add(new OptionItem(
+							StringBaseOpt.objectToString(data[1]),
+							StringBaseOpt.objectToString(data[0])));
+				}
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
+		case "5":{//SQL语句（树）
+			String sql = field.getReferenceData();
+			List<Object[]> datas;
+			try {
+				datas = rc.getJsonObjectDao().findObjectsBySql(
+						sql,null);
+				options = new ArrayList<>();
+				for (Object[] data : datas) {
+					options.add(new OptionItem(
+							StringBaseOpt.objectToString(data[1]),
+							StringBaseOpt.objectToString(data[0]),
+							StringBaseOpt.objectToString(data[2])));
+				}
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
+		case "Y":{//年
+			int currYear = DatetimeOpt.getYear(new Date());
+			options = new ArrayList<>();
+			for (int i = 5; i > -45; i--) {
+				options.add(new OptionItem(
+						String.valueOf(currYear + i) + "年",
+						String.valueOf(currYear + i)));
+			}			
+			break;
+		}
+		case "M"://月
+			options = new ArrayList<>();
+			for (int i = 1; i < 13; i++) {
+				options.add(new OptionItem(
+						String.valueOf(i) + "月",
+						String.valueOf(i)));
+			}
+			break;
+		//case "F"://文件
+			//文件类型特殊属相
+			//break;
+		//default:
+			//break;
+		}
+		if(options!=null)
+			propertyOptionCache.put(propertyName,options);
+		return options;
+	}
+	
+	protected void referenceDataToOption(ModelRuntimeContext rc,
+			ModelDataField field,String propertyName,FieldTemplateOptions templateOptions){
+		if(field.getReferenceType()==null)
+			return;		
+		List<OptionItem> options = getReferenceDataToOption( rc, field, propertyName);
+		if(options!=null)
+			templateOptions.setOptions(options);
 	}
 
 	/**
@@ -309,10 +341,10 @@ public class ModelFormServiceImpl implements ModelFormService {
 	 */
 	@Override
 	@Transactional(readOnly=true)
-	public MateFormDefine getFormDefine(ModelRuntimeContext rc,String operation) {
+	public MetaFormDefine getFormDefine(ModelRuntimeContext rc,String operation) {
 		MetaFormModel mfm = rc.getMetaFormModel();
 		MetaTable tableInfo = rc.getTableInfo();
-		MateFormDefine mff = new MateFormDefine(mfm.getModelName());
+		MetaFormDefine mff = new MetaFormDefine(mfm.getModelName());
 		mff.setAccessType(mfm.getAccessType()); 
 		mff.setExtendOptBean(mfm.getExtendOptBean());
 		mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
@@ -325,6 +357,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
 			
 			ff.setType(StringUtils.isBlank(field.getInputType())?"input":field.getInputType());
+			ff.setColumnType(mc.getColumnFieldType());
 			
 			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
 			templateOptions.setLabel(mc.getFieldLabelName());
@@ -348,7 +381,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			}
 			
 			referenceDataToOption( rc,
-					 field, templateOptions);
+					 field, mc.getPropertyName(),templateOptions);
 			ff.setTemplateOptions(templateOptions);
 			mff.addFilter(ff);
 		}
@@ -376,8 +409,18 @@ public class ModelFormServiceImpl implements ModelFormService {
 		for(ModelDataField field:mfm.getModelDataFields()){
 			MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
 			if(!"H".equals(field.getAccessType())){
+				
+				char rt =StringUtils.isNotBlank(mc.getReferenceType())?
+						mc.getReferenceType().charAt(0):'0';
+				String fieldName;
+				if(rt>'0' && rt<'9'){
+					fieldName = SimpleTableField.mapPropName(field.getColumnName())+"Value";
+				}else{			
+					fieldName = SimpleTableField.mapPropName(field.getColumnName());
+				}
+				
 				ListColumn col = new ListColumn(
-						SimpleTableField.mapPropName(field.getColumnName()),
+						fieldName,
 						mc.getFieldLabelName());
 				if(mc.isPrimaryKey())
 					col.setPrimaryKey(true);
@@ -388,16 +431,18 @@ public class ModelFormServiceImpl implements ModelFormService {
 			
 			if("NO".equals(field.getFilterType()))
 				continue;
-			FormField ff = new FormField();			
+			FormField ff = new FormField();
+						
 			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
 			ff.setType(StringUtils.isBlank(field.getInputType())?"input":field.getInputType());
+			ff.setColumnType(mc.getColumnFieldType());
 			
 			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
 			templateOptions.setLabel(mc.getFieldLabelName());
 			templateOptions.setPlaceholder(field.getInputHint());
 			
 			referenceDataToOption( rc,
-					 field, templateOptions);
+					 field, mc.getPropertyName(),templateOptions);
 			ff.setTemplateOptions(templateOptions);
 			
 			if("BT".equals(field.getFilterType())){
