@@ -47,6 +47,7 @@ public class MetaFormDefine {
 					(ff.getTemplateOptions().isDisabled() 
 							|| "view".equals(formType))){
 				ff.setKey(ff.getKey()+"Value");
+				ff.setType("text");
 			}
 		}
 	}	
@@ -90,6 +91,8 @@ public class MetaFormDefine {
 						int p = ops.indexOf(new OptionItem(StringBaseOpt.objectToString(v)));
 						if(p>=0)
 							obj.put(ff.getKey()+"Value",ops.get(p).getValue());
+						else
+							obj.put(ff.getKey()+"Value",v);
 					}
 				}
 			}
