@@ -41,7 +41,7 @@ public class MetaFormController  extends BaseController{
         rc.setCurrentUserDetails(this.getLoginUser(request));
         
         ResponseData resData = new ResponseData();
-        ListViewDefine metaData = formService.getListViewModel(rc);        
+        ListViewDefine metaData = formService.createListViewModel(rc);        
         JSONArray objs = formService.listObjectsByFilter(rc, searchColumn, pageDesc);		
         resData.addResponseData(OBJLIST, metaData.transObjectsRefranceData(objs));
         resData.addResponseData(PAGE_DESC, pageDesc);
@@ -67,10 +67,11 @@ public class MetaFormController  extends BaseController{
 		} catch (SQLException e) {
 		}
 		
-		MetaFormDefine metaData = formService.getFormDefine(rc,"view");
+		MetaFormDefine metaData = formService.createFormDefine(rc,"view");
 		resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
 		rc.close();		
 		if(!noMeta){
+			metaData.updateReadOnlyRefrenceField();
         	resData.addResponseData("formModel", metaData); 
         }
 		
@@ -81,7 +82,13 @@ public class MetaFormController  extends BaseController{
 	public void meta(@PathVariable String modelCode,  @PathVariable String metaType, 
 			HttpServletRequest request, HttpServletResponse response) {
 		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-		JsonResultUtils.writeSingleDataJson(formService.getFormDefine(rc,metaType), response);
+		if("list".equals(metaType)){
+			JsonResultUtils.writeSingleDataJson(formService.createListViewModel(rc), response);
+		}else{
+			MetaFormDefine metaData = formService.createFormDefine(rc,metaType);
+			metaData.updateReadOnlyRefrenceField();
+			JsonResultUtils.writeSingleDataJson(metaData, response);
+		}
 	    rc.close();
 	}
 	
@@ -97,11 +104,12 @@ public class MetaFormController  extends BaseController{
 	    		obj.putAll(refField);
     		}
     		
-    		MetaFormDefine metaData = formService.getFormDefine(rc,"create");
+    		MetaFormDefine metaData = formService.createFormDefine(rc,"create");
     		resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
     		
     		rc.close();
 			if(! noMeta){
+				metaData.updateReadOnlyRefrenceField();
 	        	resData.addResponseData("formModel",metaData); 
 	        }			
 			JsonResultUtils.writeResponseDataAsJson(resData, response);
@@ -180,11 +188,12 @@ public class MetaFormController  extends BaseController{
 			}
 		}
 		
-		MetaFormDefine metaData = formService.getFormDefine(rc,"edit");
+		MetaFormDefine metaData = formService.createFormDefine(rc,"edit");
 		resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
 		
 		rc.close();		
 		if(!noMeta){
+			metaData.updateReadOnlyRefrenceField();
         	resData.addResponseData("formModel", metaData); 
         }
 		

@@ -25,9 +25,9 @@ public interface ModelFormService {
 	
 	public JSONObject createInitialObject(ModelRuntimeContext rc ) throws SQLException;
 	
-	public MetaFormDefine getFormDefine(ModelRuntimeContext rc,String operation);
+	public MetaFormDefine createFormDefine(ModelRuntimeContext rc,String operation);
 	
-	public ListViewDefine getListViewModel(ModelRuntimeContext rc);
+	public ListViewDefine createListViewModel(ModelRuntimeContext rc);
 	
 	public int saveNewObject(ModelRuntimeContext rc, 
 			Map<String, Object> object, HttpServletResponse response) throws Exception;

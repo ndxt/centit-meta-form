@@ -12,7 +12,7 @@ public class ListViewDefine extends  MetaFormDefine{
 	}
 	
 	public ListViewDefine(String modelName){
-		super(modelName);
+		super(modelName,"list");
 	}
 
 	public ListViewDefine(List<FormField> filters){

@@ -341,10 +341,10 @@ public class ModelFormServiceImpl implements ModelFormService {
 	 */
 	@Override
 	@Transactional(readOnly=true)
-	public MetaFormDefine getFormDefine(ModelRuntimeContext rc,String operation) {
+	public MetaFormDefine createFormDefine(ModelRuntimeContext rc,String operation) {
 		MetaFormModel mfm = rc.getMetaFormModel();
 		MetaTable tableInfo = rc.getTableInfo();
-		MetaFormDefine mff = new MetaFormDefine(mfm.getModelName());
+		MetaFormDefine mff = new MetaFormDefine(mfm.getModelName(),operation);
 		mff.setAccessType(mfm.getAccessType()); 
 		mff.setExtendOptBean(mfm.getExtendOptBean());
 		mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
@@ -380,6 +380,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			
 			referenceDataToOption( rc,
 					 field, mc.getPropertyName(),templateOptions);
+			
 			ff.setTemplateOptions(templateOptions);
 			mff.addFilter(ff);
 		}
@@ -390,7 +391,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 
 	@Override
 	@Transactional(readOnly=true)
-	public ListViewDefine getListViewModel(ModelRuntimeContext rc){
+	public ListViewDefine createListViewModel(ModelRuntimeContext rc){
 		
 		MetaFormModel mfm = rc.getMetaFormModel();
 		MetaTable tableInfo = rc.getTableInfo();

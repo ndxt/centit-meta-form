@@ -230,10 +230,16 @@ public class ModelDataField implements java.io.Serializable {
 	public void setInputType(String inputType) {
 		this.inputType = inputType;
 	}
+	/**
+	 * H 隐藏  R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑
+	 */
 	public String getAccessType() {
 		return this.accessType;
 	}
 	
+	/**
+	 * H 隐藏  R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑
+	 */
 	public void setAccessType(String accessType) {
 		this.accessType = accessType;
 	}

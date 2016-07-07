@@ -15,6 +15,7 @@ public class MetaFormDefine {
 	private String extendOptBean;
 	private String extendOptBeanParam;
 	private String accessType;
+	private String formType;
 	
 	private List<FormField> filters;
 	private List<ModelOperation> operations;
@@ -24,8 +25,9 @@ public class MetaFormDefine {
 		
 	}
 		
-	public MetaFormDefine(String modelName){
+	public MetaFormDefine(String modelName,String formType){
 		this.modelName = modelName;
+		this.formType = formType;
 	}
 
 	public MetaFormDefine(List<FormField> filters){
@@ -37,10 +39,23 @@ public class MetaFormDefine {
 		this.operations = operations;
 	}
 	
+	public void updateReadOnlyRefrenceField(){
+		if("list".equals(formType))
+			return;
+		for(FormField ff:filters){
+			if(ff.getTemplateOptions()!=null &&
+					(ff.getTemplateOptions().isDisabled() 
+							|| "view".equals(formType))){
+				ff.setKey(ff.getKey()+"Value");
+			}
+		}
+	}	
+	
 	public JSONObject transObjectRefranceData(JSONObject obj){
 		if(filters==null)
 			return obj;
 		for(FormField ff:filters){
+			
 			Object v = obj.get(ff.getKey());
 			
 			if("multiCheckbox".equals(ff.getType())){//inputType
@@ -50,7 +65,11 @@ public class MetaFormDefine {
 				v = sa;
 			}
 			
-			if(ff.getTemplateOptions()!=null){
+			if(ff.getTemplateOptions()!=null &&
+					(ff.getTemplateOptions().isDisabled() 
+							|| "view".equals(formType)
+							|| "list".equals(formType))){
+				
 				List<OptionItem> ops = ff.getTemplateOptions().getOptions();
 				if(ops!=null){
 					if(v instanceof String[] ){
@@ -145,6 +164,14 @@ public class MetaFormDefine {
 		if(this.filters == null)
 			this.filters = new ArrayList<>();
 		this.filters.add(filter);
+	}
+
+	public String getFormType() {
+		return formType;
+	}
+
+	public void setFormType(String formType) {
+		this.formType = formType;
 	}
 	
 }
