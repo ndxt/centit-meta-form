@@ -12,7 +12,7 @@ public class FieldTemplateOptions {
 	private String description;
 	private Boolean focus;
 	private Boolean readonly;
-	private Boolean disabled;
+	private Boolean disabled = false;
 	/**
 	 * 正则表达式
 	 */	
