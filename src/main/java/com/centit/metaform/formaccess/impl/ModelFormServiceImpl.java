@@ -357,8 +357,6 @@ public class ModelFormServiceImpl implements ModelFormService {
 			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
 			
 			ff.setType(StringUtils.isBlank(field.getInputType())?"input":field.getInputType());
-			ff.setColumnType(mc.getColumnFieldType());
-			
 			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
 			templateOptions.setLabel(mc.getFieldLabelName());
 			templateOptions.setPlaceholder(field.getInputHint());
@@ -435,8 +433,6 @@ public class ModelFormServiceImpl implements ModelFormService {
 						
 			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
 			ff.setType(StringUtils.isBlank(field.getInputType())?"input":field.getInputType());
-			ff.setColumnType(mc.getColumnFieldType());
-			
 			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
 			templateOptions.setLabel(mc.getFieldLabelName());
 			templateOptions.setPlaceholder(field.getInputHint());

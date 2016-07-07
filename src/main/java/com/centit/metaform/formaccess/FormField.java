@@ -15,7 +15,6 @@ public class FormField {
 	private Boolean noFormControl;
 	private String template;
 	private String templateUrl;
-	private String columnType;
 	private Long rows;
 	
 	private Map<String,FieldValidator> validators;
@@ -131,13 +130,4 @@ public class FormField {
 	public void setRows(Long rows) {
 		this.rows = rows;
 	}
-
-	public String getColumnType() {
-		return columnType;
-	}
-
-	public void setColumnType(String columnType) {
-		this.columnType = columnType;
-	}
-	
 }

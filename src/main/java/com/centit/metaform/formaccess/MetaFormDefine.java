@@ -42,11 +42,8 @@ public class MetaFormDefine {
 			return obj;
 		for(FormField ff:filters){
 			Object v = obj.get(ff.getKey());
-			if(FieldType.BOOLEAN.equals(ff.getColumnType())){				
-				if(v!=null){
-					obj.put(ff.getKey(),"T".equals(v));
-				}
-			}else if("multiSelect".equals(ff.getType())){//inputType
+			
+			if("multiCheckbox".equals(ff.getType())){//inputType
 				String[] sa = StringUtils.split(
 						StringBaseOpt.objectToString(v),',');
 				obj.put(ff.getKey(),sa);
