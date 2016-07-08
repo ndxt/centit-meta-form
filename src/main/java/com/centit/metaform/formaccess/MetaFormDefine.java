@@ -17,7 +17,7 @@ public class MetaFormDefine {
 	private String accessType;
 	private String formType;
 	
-	private List<FormField> filters;
+	private List<FormField> fields;
 	private List<ModelOperation> operations;
 	
 	
@@ -31,18 +31,18 @@ public class MetaFormDefine {
 	}
 
 	public MetaFormDefine(List<FormField> filters){
-		this.filters = filters;
+		this.fields = filters;
 	}
 	
 	public MetaFormDefine(List<FormField> filters,List<ModelOperation> operations){
-		this.filters = filters;
+		this.fields = filters;
 		this.operations = operations;
 	}
 	
 	public void updateReadOnlyRefrenceField(){
 		if("list".equals(formType))
 			return;
-		for(FormField ff:filters){
+		for(FormField ff:fields){
 			if(ff.getTemplateOptions()!=null &&
 					(ff.getTemplateOptions().isDisabled() 
 							|| "view".equals(formType))){
@@ -58,9 +58,9 @@ public class MetaFormDefine {
 	}	
 	
 	public JSONObject transObjectRefranceData(JSONObject obj){
-		if(filters==null)
+		if(fields==null)
 			return obj;
-		for(FormField ff:filters){
+		for(FormField ff:fields){
 			
 			Object v = obj.get(ff.getKey());
 			String readonlyKey = ff.getKey()+"Value";
@@ -161,18 +161,18 @@ public class MetaFormDefine {
 		this.operations.add(operation);
 	}
 	
-	public List<FormField> getFilters() {
-		return filters;
+	public List<FormField> getFields() {
+		return fields;
 	}
 
-	public void setFilters(List<FormField> filters) {
-		this.filters = filters;
+	public void setFields(List<FormField> fields) {
+		this.fields = fields;
 	}
 	
-	public void addFilter(FormField filter) {
-		if(this.filters == null)
-			this.filters = new ArrayList<>();
-		this.filters.add(filter);
+	public void addField(FormField field) {
+		if(this.fields == null)
+			this.fields = new ArrayList<>();
+		this.fields.add(field);
 	}
 
 	public String getFormType() {

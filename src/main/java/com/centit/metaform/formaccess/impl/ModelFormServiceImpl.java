@@ -382,7 +382,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 					 field, mc.getPropertyName(),templateOptions);
 			
 			ff.setTemplateOptions(templateOptions);
-			mff.addFilter(ff);
+			mff.addField(ff);
 		}
 		for(ModelOperation mo :mfm.getModelOperations())	
 			mff.addOperation(mo);
@@ -407,7 +407,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 	
 		for(ModelDataField field:mfm.getModelDataFields()){
 			MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
-			if(!"H".equals(field.getAccessType())){
+			if(!"H".equals(field.getAccessType()) && !"HI".equals(field.getFilterType())){
 				
 				char rt =StringUtils.isNotBlank(mc.getReferenceType())?
 						mc.getReferenceType().charAt(0):'0';
@@ -425,36 +425,35 @@ public class ModelFormServiceImpl implements ModelFormService {
 					col.setPrimaryKey(true);
 				//if("H".equals(field.getAccessType()))
 					//col.setShow(false);
-				mff.addColumn(col);
+				mff.addColumn(col);			
+			
+				if("NO".equals(field.getFilterType()))
+					continue;
+				FormField ff = new FormField();
+							
+				ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
+				ff.setType(StringUtils.isBlank(field.getInputType())?"input":field.getInputType());
+				FieldTemplateOptions templateOptions = new FieldTemplateOptions();
+				templateOptions.setLabel(mc.getFieldLabelName());
+				templateOptions.setPlaceholder(field.getInputHint());
+				
+				referenceDataToOption( rc,
+						 field, mc.getPropertyName(),templateOptions);
+				ff.setTemplateOptions(templateOptions);
+				
+				if("BT".equals(field.getFilterType())){
+					ff.setKey(SimpleTableField.mapPropName("l_"+field.getColumnName()));			
+					ff.getTemplateOptions().setLabel(templateOptions.getLabel()+" 从" );				
+					mff.addField(ff);
+					FormField ffu = new FormField();
+					BeanUtils.copyProperties(ff, ffu);
+					ffu.getTemplateOptions().setLabel("到" );
+					ffu.setKey(SimpleTableField.mapPropName("t_"+field.getColumnName()));
+					mff.addField(ffu);
+				}else	
+					mff.addField(ff);
 			}
-			
-			if("NO".equals(field.getFilterType()))
-				continue;
-			FormField ff = new FormField();
-						
-			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
-			ff.setType(StringUtils.isBlank(field.getInputType())?"input":field.getInputType());
-			FieldTemplateOptions templateOptions = new FieldTemplateOptions();
-			templateOptions.setLabel(mc.getFieldLabelName());
-			templateOptions.setPlaceholder(field.getInputHint());
-			
-			referenceDataToOption( rc,
-					 field, mc.getPropertyName(),templateOptions);
-			ff.setTemplateOptions(templateOptions);
-			
-			if("BT".equals(field.getFilterType())){
-				ff.setKey(SimpleTableField.mapPropName("l_"+field.getColumnName()));			
-				ff.getTemplateOptions().setLabel(templateOptions.getLabel()+" 从" );				
-				mff.addFilter(ff);
-				FormField ffu = new FormField();
-				BeanUtils.copyProperties(ff, ffu);
-				ffu.getTemplateOptions().setLabel("到" );
-				ffu.setKey(SimpleTableField.mapPropName("t_"+field.getColumnName()));
-				mff.addFilter(ffu);
-			}else	
-				mff.addFilter(ff);
 		}
-		
 		for(ModelOperation mo :mfm.getModelOperations())	
 			mff.addOperation(mo);
 
