@@ -7,6 +7,8 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.centit.support.database.metadata.SimpleTableField;
+
 
 /**
  * create by scaffold 2016-06-02 
@@ -211,8 +213,16 @@ public class ModelDataField implements java.io.Serializable {
   
 	public String getColumnName() {
 		if(this.cid==null)
-			this.cid = new ModelDataFieldId();
+			return null;//this.cid = new ModelDataFieldId();
 		return this.cid.getColumnName();
+	}
+	
+	
+	public String getPropertyName(){
+		if(this.cid==null)
+			return null;
+		return SimpleTableField.mapPropName(
+				 this.cid.getColumnName());
 	}
 	
 	public void setColumnName(String columnName) {

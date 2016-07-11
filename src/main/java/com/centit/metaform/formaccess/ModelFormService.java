@@ -1,6 +1,7 @@
 package com.centit.metaform.formaccess;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -40,5 +41,7 @@ public interface ModelFormService {
 	
 	public int deleteObjectById(ModelRuntimeContext rc,
 			Map<String,Object> keyValue, HttpServletResponse response) throws Exception;
-
+	
+	public List<OptionItem> getAsyncReferenceData(ModelRuntimeContext rc,
+			String propertyName,String startGroup);
 }

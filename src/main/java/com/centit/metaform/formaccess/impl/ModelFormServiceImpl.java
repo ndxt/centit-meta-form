@@ -390,6 +390,35 @@ public class ModelFormServiceImpl implements ModelFormService {
 		return mff;
 	}
 
+	
+	@Override
+	@Transactional(readOnly=true)
+	public List<OptionItem> getAsyncReferenceData(ModelRuntimeContext rc,
+			String propertyName,String startGroup){
+		
+		ModelDataField mdf = rc.getMetaFormModel().findFieldByName(propertyName);
+		if(mdf==null || !"A".equals(mdf.getReferenceType()))
+			return null;
+		JsonObjectDao dao = rc.getJsonObjectDao();
+		
+		QueryAndNamedParams qap = QueryUtils.translateQuery(mdf.getReferenceData(),
+				QueryUtils.createSqlParamsMap("sg",startGroup));
+		List<OptionItem> options = new ArrayList<OptionItem>();
+		try {
+			List<Object[]> objss = dao.findObjectsByNamedSql(qap.getQuery(), qap.getParams());
+			for(Object[] objs:objss){
+				options.add(new OptionItem(
+						StringBaseOpt.objectToString(objs[1]),
+						StringBaseOpt.objectToString(objs[0]),
+						StringBaseOpt.objectToString(objs[2])));
+			}
+		} catch (Exception e) {			
+			e.printStackTrace();
+		} finally{
+			rc.close();
+		}		
+		return options;
+	}	
 	@Override
 	@Transactional(readOnly=true)
 	public ListViewDefine createListViewModel(ModelRuntimeContext rc){

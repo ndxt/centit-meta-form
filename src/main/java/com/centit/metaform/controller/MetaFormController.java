@@ -1,6 +1,7 @@
 package com.centit.metaform.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -24,6 +25,7 @@ import com.centit.metaform.formaccess.ListViewDefine;
 import com.centit.metaform.formaccess.MetaFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
+import com.centit.metaform.formaccess.OptionItem;
 
 @Controller
 @RequestMapping("/metaform/formaccess")
@@ -261,6 +263,16 @@ public class MetaFormController  extends BaseController{
 	public void multiModelOpt(@PathVariable String modelCode,  @RequestBody String jsonStr, 
 			HttpServletRequest request, HttpServletResponse response) {
 		
-	}
+	}	
 	
+	@RequestMapping(value = "/{modelCode}/{propertyName}",method = RequestMethod.GET)
+	public void asyncReferenceData(@PathVariable String modelCode,
+			@PathVariable String propertyName,String startGroup,
+			HttpServletRequest request, HttpServletResponse response) {
+        
+		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	List<OptionItem> options = formService.getAsyncReferenceData(
+    			rc, propertyName, startGroup);		
+		JsonResultUtils.writeSingleDataJson(options, response);
+	}
 }

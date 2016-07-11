@@ -353,6 +353,26 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 		this.modelDataFields.remove(modelDataField);
 	}
 	
+
+	public ModelDataField findFieldByName(String name) {
+		if(modelDataFields==null)
+			return null;
+		for(ModelDataField c: modelDataFields){
+			if(c.getPropertyName().equals(name))
+				return c;
+		}
+		return null;
+	}
+
+	public ModelDataField findFieldByColumn(String name) {
+		if(modelDataFields==null)
+			return null;
+		for(ModelDataField c: modelDataFields){
+			if(c.getColumnName().equals(name))
+				return c;
+		}
+		return null;
+	}
 	
 	
 	public ModelDataField newModelDataField(){
