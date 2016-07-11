@@ -21,9 +21,6 @@ public class ModelDataField implements java.io.Serializable {
 
 	@EmbeddedId
 	private com.centit.metaform.po.ModelDataFieldId cid;
-
-
-	
 	
 	/**
 	 * 字段类别 ，关联只读字段（reference_Data 中为关联SQL语句）
@@ -74,9 +71,7 @@ public class ModelDataField implements java.io.Serializable {
 	 */
 	@Column(name = "REFERENCE_DATA")
 	@Length(max = 1000, message = "字段长度不能大于{max}")
-	private String  referenceData;
-	
-	
+	private String  referenceData;	
 	
 	/**
 	 * 输入约束描述
@@ -136,6 +131,12 @@ public class ModelDataField implements java.io.Serializable {
 	@Column(name = "EXTEND_OPTIONS")
 	private String extendOptions;
 	
+	
+	@Column(name = "VIEW_FORMAT")
+	@Length(max = 50, message = "字段长度不能大于{max}")
+	private String viewFormat;
+	
+
 	/**
 	 * 字段高度 null 
 	 */
@@ -363,7 +364,13 @@ public class ModelDataField implements java.io.Serializable {
 	}
 	
 
-
+	
+	public String getViewFormat() {
+		return viewFormat;
+	}
+	public void setViewFormat(String viewFormat) {
+		this.viewFormat = viewFormat;
+	}
 
 	public ModelDataField copy(ModelDataField other){
   
@@ -386,6 +393,7 @@ public class ModelDataField implements java.io.Serializable {
 		this.validateHint=other.getValidateHint();
 		this.validateInfo=other.getValidateInfo();
 		this.validateRegex=other.getValidateRegex();
+		this.viewFormat=other.getViewFormat();
 		return this;
 	}
 	
@@ -428,6 +436,8 @@ public class ModelDataField implements java.io.Serializable {
 			this.validateInfo=other.getValidateInfo();
 		if(other.getValidateRegex()!= null)
 			this.validateRegex=other.getValidateRegex();
+		if(other.getViewFormat()!= null)
+			this.viewFormat=other.getViewFormat();
 		return this;
 	}
 
@@ -448,6 +458,7 @@ public class ModelDataField implements java.io.Serializable {
 		this.url=null; 
 		this.validateHint=null; 
 		this.validateInfo=null; 
+		this.viewFormat=null;
 		this.validateRegex=null; 
 		return this;
 	}

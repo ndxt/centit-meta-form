@@ -366,7 +366,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 				templateOptions.setFocus(true);
 			if(field.isMandatory())
 				templateOptions.setRequired(true);
-			
+			if(StringUtils.isNotBlank(field.getViewFormat()))
+				templateOptions.setFormat(field.getViewFormat());					
 			
 			if(!"view".equals(operation) &&
 					("R".equals(field.getColumnType()) ||
@@ -437,18 +438,21 @@ public class ModelFormServiceImpl implements ModelFormService {
 				templateOptions.setLabel(mc.getFieldLabelName());
 				templateOptions.setPlaceholder(field.getInputHint());
 				
+				if(StringUtils.isNotBlank(field.getViewFormat()))
+					templateOptions.setFormat(field.getViewFormat());	
+				
 				referenceDataToOption( rc,
 						 field, mc.getPropertyName(),templateOptions);
 				ff.setTemplateOptions(templateOptions);
 				
 				if("BT".equals(field.getFilterType())){
-					ff.setKey(SimpleTableField.mapPropName("l_"+field.getColumnName()));			
+					//ff.setKey(SimpleTableField.mapPropName("l_"+field.getColumnName()));			
 					ff.getTemplateOptions().setLabel(templateOptions.getLabel()+" 从" );				
 					mff.addField(ff);
 					FormField ffu = new FormField();
 					BeanUtils.copyProperties(ff, ffu);
 					ffu.getTemplateOptions().setLabel("到" );
-					ffu.setKey(SimpleTableField.mapPropName("t_"+field.getColumnName()));
+					ffu.setKey(SimpleTableField.mapPropName("top_"+field.getColumnName()));
 					mff.addField(ffu);
 				}else	
 					mff.addField(ff);
@@ -509,12 +513,14 @@ public class ModelFormServiceImpl implements ModelFormService {
 							paramValue));
 					break;
 				case "GE":
+				case "BT":
 					if(StringUtils.isNotBlank(alias))
 						sBuilder.append(alias).append('.');
 					sBuilder.append(col.getColumnName()).append(" >= :").append(col.getPropertyName());
 					filters.put(col.getPropertyName(), rc.castValueToFieldType(col,
 							paramValue));
 					break;
+				
 				default:
 					if(StringUtils.isNotBlank(alias))
 						sBuilder.append(alias).append('.');
@@ -526,18 +532,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 				i++;
 			}
 			if("BT".equals(field.getFilterType())){
-				String skey = SimpleTableField.mapPropName("l_"+field.getColumnName());	
-				if(filters.get(skey) !=null){
-					if(i>0)
-						sBuilder.append(" and ");
-					if(StringUtils.isNotBlank(alias))
-						sBuilder.append(alias).append('.');
-					sBuilder.append(col.getColumnName()).append(" >= :").append(skey);
-					filters.put(skey, rc.castValueToFieldType(col,
-							paramValue));
-					i++;
-				}
-				skey = SimpleTableField.mapPropName("t_"+field.getColumnName());				
+				String skey = SimpleTableField.mapPropName("top_"+field.getColumnName());				
 				if(filters.get(skey) !=null){
 					if(i>0)
 						sBuilder.append(" and ");

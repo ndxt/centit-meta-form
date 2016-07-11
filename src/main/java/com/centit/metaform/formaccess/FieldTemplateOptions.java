@@ -13,6 +13,7 @@ public class FieldTemplateOptions {
 	private Boolean focus;
 	private Boolean readonly;
 	private Boolean disabled;
+	private String format;
 	/**
 	 * 正则表达式
 	 */	
@@ -118,5 +119,13 @@ public class FieldTemplateOptions {
 
 	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
 	}	
 }

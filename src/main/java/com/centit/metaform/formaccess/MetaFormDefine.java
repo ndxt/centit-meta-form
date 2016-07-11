@@ -1,6 +1,7 @@
 package com.centit.metaform.formaccess;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.metaform.po.ModelOperation;
+import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 
 public class MetaFormDefine {
@@ -60,9 +62,10 @@ public class MetaFormDefine {
 	public JSONObject transObjectRefranceData(JSONObject obj){
 		if(fields==null)
 			return obj;
-		for(FormField ff:fields){
-			
+		for(FormField ff:fields){			
 			Object v = obj.get(ff.getKey());
+			if(v==null)
+				continue;
 			String readonlyKey = ff.getKey()+"Value";
 			
 			if("multiCheckbox".equals(ff.getType())){//inputType
@@ -71,6 +74,14 @@ public class MetaFormDefine {
 				obj.put(ff.getKey(),sa);
 				v = sa;
 			}
+			
+			if(StringUtils.isNotBlank(ff.getTemplateOptions().getFormat()) 
+					&& ("view".equals(formType) || "text".equals(ff.getType()))){
+				if(v instanceof Date){
+					obj.put(ff.getKey(),DatetimeOpt.convertDateToString(
+							(Date) v, ff.getTemplateOptions().getFormat()));
+				}
+			}			
 			
 			if(ff.getTemplateOptions()!=null &&
 					(ff.getTemplateOptions().isDisabled() 
