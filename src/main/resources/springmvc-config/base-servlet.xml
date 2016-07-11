@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" 
-	   xmlns:mvc="http://www.springframework.org/schema/mvc" 
+<beans xmlns="http://www.springframework.org/schema/beans" 	   
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/aop 
@@ -8,19 +7,7 @@
 				http://www.springframework.org/schema/beans
 			    http://www.springframework.org/schema/beans/spring-beans.xsd
 			    http://www.springframework.org/schema/context
-			    http://www.springframework.org/schema/context/spring-context.xsd
-			    http://www.springframework.org/schema/mvc
-			    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-    
-	<mvc:annotation-driven >
-		<mvc:message-converters register-defaults="true">
-			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
-				<property name="supportedMediaTypes" value="application/json"/>
-			</bean>
-		</mvc:message-converters>  
-    </mvc:annotation-driven>
-
-    <aop:aspectj-autoproxy />
+			    http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- 资源文件绑定器 -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
