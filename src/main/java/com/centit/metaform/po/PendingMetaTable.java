@@ -194,6 +194,7 @@ public class PendingMetaTable implements
 			this.mdColumns=new HashSet<PendingMetaColumn>();
 		return mdColumns;
 	}
+	
 	public void setMdColumns(Set<PendingMetaColumn> mdColumns1) {
 		if(mdColumns1==null)
 		{
@@ -206,6 +207,13 @@ public class PendingMetaTable implements
 			}
 			this.getMdColumns().addAll(mdColumns1);
 		}
+	}
+	
+	public void addMdColumn(PendingMetaColumn mdColumn) {
+		if(mdColumn==null)
+			return;
+		mdColumn.getCid().setMdTable(this);
+		this.getMdColumns().add(mdColumn);
 	}
 	
 	public Set<PendingMetaRelation> getMdRelations() {

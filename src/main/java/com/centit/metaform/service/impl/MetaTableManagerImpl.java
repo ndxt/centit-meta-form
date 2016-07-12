@@ -31,6 +31,7 @@ import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.PendingMetaRelationDao;
 import com.centit.metaform.dao.PendingMetaTableDao;
 import com.centit.metaform.formaccess.FieldType;
+import com.centit.metaform.formaccess.PdmTableInfo;
 import com.centit.metaform.po.MetaChangLog;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
@@ -338,6 +339,21 @@ public class MetaTableManagerImpl
 	public List<PendingMetaTable> listDrafts(Map<String, Object> searchColumn,
 			PageDesc pageDesc) {
 		return pendingMdTableDao.listObjects(searchColumn, pageDesc);
+	}
+
+	@Override
+	public List<Pair<String, String>> listTablesInPdm(String pdmFilePath) {
+		return PdmTableInfo.listTablesInPdm(pdmFilePath);
+	}
+
+	@Override
+	@Transactional
+	public boolean importTableFromPdm(String pdmFilePath, String tableCode, String databaseCode) {
+		PendingMetaTable metaTable = PdmTableInfo.importTableFromPdm(pdmFilePath, tableCode, databaseCode);
+		if(metaTable==null)
+			return false;
+		pendingMdTableDao.saveNewObject(metaTable);
+		return true;
 	}
 
 }
