@@ -49,6 +49,7 @@ public class PdmTableInfo{
 			mdColumn.setAccessType("N");
 			mdColumn.setMandatory(field.isMandatory()?"T":"F");
 			mdColumn.setPrimarykey("F");
+			mdColumn.setColumnState("N");
 			
 			metaTable.addMdColumn(mdColumn);
 		}
