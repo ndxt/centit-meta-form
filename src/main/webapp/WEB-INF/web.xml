@@ -125,7 +125,7 @@
 	<!-- CORS跨域 -->
 	<filter>
          <filter-name>corsFilter</filter-name>
-         <filter-class>com.centit.core.filter.ResponseCorsFilter</filter-class>
+         <filter-class>com.centit.framework.filter.ResponseCorsFilter</filter-class>
     </filter>
     <filter-mapping>
          <filter-name>corsFilter</filter-name>
