@@ -153,7 +153,7 @@
     </filter-mapping>
     <!-- Spring Open Session In View Pattern filter 
            这个过滤器可以将访问数据库退出到Jsp中对属性的调用，主要起的作用是 按需访问数据库-->
-    <!--     
+     
     <filter>
         <filter-name>OpenSessionInViewFilter</filter-name>
         <filter-class>
@@ -179,7 +179,7 @@
         <filter-name>OpenSessionInViewFilter</filter-name>
         <url-pattern>/service/*</url-pattern>
     </filter-mapping>
-     -->
+
     <!-- org.springframework.web.context.ContextLoaderListener -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
