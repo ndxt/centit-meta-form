@@ -1,4 +1,4 @@
-package com.centit.metaform.fromaccess;
+package com.centit.metaform.formaccess;
 
 import java.util.List;
 
