@@ -37,14 +37,14 @@ public class ImportTableInfo2Database {
 				PendingMetaTable metaTable = PdmTableInfo.importTableFromPdm(pdmFilePath, t.getLeft(), "1");
 				DatabaseAccess.doExecuteSql(conn, "insert into F_PENDING_META_TABLE"
 						+ "(Table_ID,Database_Code,Table_Name,Table_Label_Name,table_type,table_state,table_Comment) "
-						+ "values(?,'1',?,?,'T','N',?')",
+						+ "values(?,'1',?,?,'T','N',?)",
 					new Object[]{tableId,metaTable.getTableName(),metaTable.getTableLabelName(),metaTable.getTableComment()});
 				for(PendingMetaColumn col: metaTable.getColumns()){
 					DatabaseAccess.doExecuteSql(conn, "insert into F_PENDING_META_COLUMN"
 							+ "(Table_ID,column_Name,field_Label_Name,column_Type,access_type,"
 							+ "max_Length,scale,column_state,column_Comment,auto_create_Rule,"
 							+ "auto_create_Param,primarykey) "
-							+ "values(?,?,?,?,'N', ?,?,'N',?,?,?)",
+							+ "values(?,?,?,?,'N', ?,?,'N',?,?,?,?)",
 						new Object[]{tableId,col.getColumnName(),col.getFieldLabelName(),col.getColumnFieldType(),
 								col.getMaxLength(),col.getScale(),col.getColumnComment(),col.getAutoCreateRule(),
 								col.getAutoCreateParam(),col.getPrimarykey()});
