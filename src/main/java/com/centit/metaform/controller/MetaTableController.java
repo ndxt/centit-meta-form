@@ -178,6 +178,7 @@ public class MetaTableController extends BaseController{
     
     /**
      * 新增 表元数据表 草稿
+     * 
      *
      * @param mdTable  {@link MetaTable}
      * @return
@@ -191,6 +192,20 @@ public class MetaTableController extends BaseController{
     }
     
     
+    /**
+     * 发布 表元数据表
+     *
+     * @param mdTable  {@link MetaTable}
+     * @return
+     */
+    @RequestMapping(value="/beforePublish/{ptableId}",method = {RequestMethod.POST})
+    public void alertSqlBeforePublish(@PathVariable Long ptableId,
+    		HttpServletRequest request,HttpServletResponse response) {
+    	List<String> sqls = mdTableMag.makeAlterTableSqls(ptableId);
+    	ResponseData resData = new ResponseData();
+        resData.addResponseData(OBJLIST, sqls);
+        JsonResultUtils.writeResponseDataAsJson(resData, response);
+    }
     /**
      * 发布 表元数据表
      *
