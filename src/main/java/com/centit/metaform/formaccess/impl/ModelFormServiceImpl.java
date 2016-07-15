@@ -457,7 +457,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 					//col.setShow(false);
 				mff.addColumn(col);			
 			
-				if("NO".equals(field.getFilterType()))
+				if(StringUtils.isBlank(field.getFilterType()) || "NO".equals(field.getFilterType()))
 					continue;
 				FormField ff = new FormField();
 							
