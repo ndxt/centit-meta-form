@@ -510,7 +510,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	}
 	@Override
 	public String getJavaType() {
-		return this.columnFieldType;
+		return SimpleTableField.mapToJavaType(this.columnFieldType,this.scale);
 	}
 	@Override
 	public boolean isMandatory() {
