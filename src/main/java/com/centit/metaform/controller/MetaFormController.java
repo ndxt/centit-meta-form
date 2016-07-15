@@ -37,7 +37,7 @@ public class MetaFormController  extends BaseController{
 	
 	@RequestMapping(value = "/{modelCode}/list",method = RequestMethod.GET)
 	public void list(@PathVariable String modelCode,boolean noMeta, PageDesc pageDesc ,HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> searchColumn = convertSearchColumn(request);
+        Map<String, Object> searchColumn = collectRequestParameters(request);//convertSearchColumn(request);
         
         ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
         rc.setCurrentUserDetails(this.getLoginUser(request));
