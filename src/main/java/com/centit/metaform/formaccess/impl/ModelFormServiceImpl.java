@@ -319,6 +319,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			break;
 		case "C"://C :框架内置字典（用户、机构、角色等等）
 			options = CodeRepositoryUtil.getOptionForSelect(field.getReferenceData());
+			break;
 		//case "F"://文件
 			//文件类型特殊属相
 			//break;
