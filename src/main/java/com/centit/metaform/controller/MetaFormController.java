@@ -22,7 +22,6 @@ import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.metaform.formaccess.ListViewDefine;
 import com.centit.metaform.formaccess.MetaFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
@@ -43,13 +42,14 @@ public class MetaFormController  extends BaseController{
         rc.setCurrentUserDetails(this.getLoginUser(request));
         
         ResponseData resData = new ResponseData();
-        ListViewDefine metaData = formService.createListViewModel(rc);        
+        //ListViewDefine metaData = formService.createListViewModel(rc);
+        MetaFormDefine metaData = formService.createFormDefine(rc,"view");
         JSONArray objs = formService.listObjectsByFilter(rc, searchColumn, pageDesc);		
         resData.addResponseData(OBJLIST, metaData.transObjectsRefranceData(objs));
         resData.addResponseData(PAGE_DESC, pageDesc);
         rc.close();
         if(! noMeta){
-        	resData.addResponseData("formModel", metaData); 
+        	resData.addResponseData("formModel", formService.createListViewModel(rc)); 
         }
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }	

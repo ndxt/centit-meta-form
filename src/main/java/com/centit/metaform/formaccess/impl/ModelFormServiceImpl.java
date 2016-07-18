@@ -375,7 +375,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			if(StringUtils.isNotBlank(field.getViewFormat()))
 				templateOptions.setFormat(field.getViewFormat());					
 			
-			if(!"view".equals(operation) &&
+			if("view".equals(operation) ||
 					("R".equals(field.getColumnType()) ||
 					"R".equals(field.getAccessType())||
 					("C".equals(field.getAccessType()) && !"create".equals(operation) ) ) ){

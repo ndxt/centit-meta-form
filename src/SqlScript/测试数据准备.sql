@@ -44,3 +44,40 @@ set input_TYPE='select',
 	reference_Data='unitCode'
 where model_code= 'NEW_OPPORTUNITIE' and column_name='L_OWNER_DEP_ID'
 /
+
+update F_META_COLUMN
+set reference_Type='9',
+	reference_Data='unitCode'
+where table_id= 105 and column_Name='L_OWNER_DEP_ID'
+/
+
+update F_META_COLUMN
+set reference_Type='3',
+	reference_Data='[{value:1,name:"行业固定前期事务",group:""},{value:2,name:"一般前期事务",group:""}]'
+where table_id= 105 and column_Name='L_OPP_TYPE'
+/
+
+update F_META_COLUMN
+set reference_Type='3',
+	reference_Data='[{value:1,name:"进行中事务",group:""},{value:2,name:"关闭的事务",group:""}]'
+where table_id= 105 and  column_name='L_OPP_STATE'
+/
+
+
+update F_PENDING_META_COLUMN
+set reference_Type='9',
+	reference_Data='unitCode'
+where table_id= 105 and column_Name='L_OWNER_DEP_ID'
+/
+
+update F_PENDING_META_COLUMN
+set reference_Type='3',
+	reference_Data='[{value:1,name:"行业固定前期事务",group:""},{value:2,name:"一般前期事务",group:""}]'
+where table_id= 105 and column_Name='L_OPP_TYPE'
+/
+
+update F_PENDING_META_COLUMN
+set reference_Type='3',
+	reference_Data='[{value:1,name:"进行中事务",group:""},{value:2,name:"关闭的事务",group:""}]'
+where table_id= 105 and  column_name='L_OPP_STATE'
+/
