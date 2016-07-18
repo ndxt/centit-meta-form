@@ -299,6 +299,10 @@ public class ModelFormServiceImpl implements ModelFormService {
 			}
 			break;
 		}
+		case "9"://C :框架内置字典（用户、机构、角色等等）
+			options = CodeRepositoryUtil.getOptionForSelect(field.getReferenceData());
+			break;
+			
 		case "Y":{//年
 			int currYear = DatetimeOpt.getYear(new Date());
 			options = new ArrayList<>();
@@ -317,9 +321,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 						String.valueOf(i)));
 			}
 			break;
-		case "C"://C :框架内置字典（用户、机构、角色等等）
-			options = CodeRepositoryUtil.getOptionForSelect(field.getReferenceData());
-			break;
+		
 		//case "F"://文件
 			//文件类型特殊属相
 			//break;
@@ -446,7 +448,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 				char rt =StringUtils.isNotBlank(mc.getReferenceType())?
 						mc.getReferenceType().charAt(0):'0';
 				String fieldName;
-				if(rt>'0' && rt<'9'){
+				if(rt>'0' && rt<='9'){
 					fieldName = SimpleTableField.mapPropName(field.getColumnName())+"Value";
 				}else{			
 					fieldName = SimpleTableField.mapPropName(field.getColumnName());

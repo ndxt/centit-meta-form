@@ -97,7 +97,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	@Length(  message = "字段长度不能大于{max}")
 	private String  columnState;
 	/**
-	 * 引用类型 0：没有：1： 数据字典 2：JSON表达式 3：sql语句  Y：年份 M：月份 
+	 *  0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
+	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））
 	 */
 	@Column(name = "REFERENCE_TYPE")
 	@Length(  message = "字段长度不能大于{max}")
@@ -322,11 +323,19 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	public void setColumnState(String columnState) {
 		this.columnState = columnState;
 	}
-  
+	/**
+	 *  0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
+	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））
+	 * @return
+	 */
 	public String getReferenceType() {
 		return this.referenceType;
 	}
-	
+	/**
+	 *  0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
+	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））
+	 * @param referenceType
+	 */
 	public void setReferenceType(String referenceType) {
 		this.referenceType = referenceType;
 	}

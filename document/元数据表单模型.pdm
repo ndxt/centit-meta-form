@@ -3961,11 +3961,10 @@ Name	Code	Comment	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
 <a:Code>reference_Type</a:Code>
 <a:CreationDate>1464744540</a:CreationDate>
 <a:Creator>codefan</a:Creator>
-<a:ModificationDate>1468823060</a:ModificationDate>
+<a:ModificationDate>1468833011</a:ModificationDate>
 <a:Modifier>codefan</a:Modifier>
-<a:Comment>0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句  
-C :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））
-</a:Comment>
+<a:Comment> 0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
+	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））</a:Comment>
 <a:DataType>CHAR</a:DataType>
 </o:Column>
 <o:Column Id="o100">
@@ -4561,9 +4560,10 @@ C :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份
 <a:Code>reference_Type</a:Code>
 <a:CreationDate>1464745774</a:CreationDate>
 <a:Creator>codefan</a:Creator>
-<a:ModificationDate>1465885330</a:ModificationDate>
+<a:ModificationDate>1468833023</a:ModificationDate>
 <a:Modifier>codefan</a:Modifier>
-<a:Comment>0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句  Y：年份 M：月份</a:Comment>
+<a:Comment> 0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
+	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））</a:Comment>
 <a:DataType>CHAR</a:DataType>
 </o:Column>
 <o:Column Id="o146">
@@ -5156,15 +5156,10 @@ C :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份
 <a:Code>reference_Type</a:Code>
 <a:CreationDate>1464854364</a:CreationDate>
 <a:Creator>codefan</a:Creator>
-<a:ModificationDate>1467685764</a:ModificationDate>
-<a:Modifier>zk</a:Modifier>
-<a:Comment>	 * 0：没有
-	 * 1： 数据字典（列表） 
-	 * 2：数据字典（树）
-	 * 3：JSON
-	 * 4：SQL（列表）
-	 * 5：SQL（树）
-</a:Comment>
+<a:ModificationDate>1468833003</a:ModificationDate>
+<a:Modifier>codefan</a:Modifier>
+<a:Comment> 0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
+	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））</a:Comment>
 <a:DataType>CHAR</a:DataType>
 </o:Column>
 <o:Column Id="o192">
@@ -8752,13 +8747,13 @@ start with 1</a:PhysicalOptions>
 <c:TargetModels>
 <o:TargetModel Id="o445">
 <a:ObjectID>19ED6618-CBB0-4F5B-B8D7-FB1FEF0034DE</a:ObjectID>
-<a:Name>数据统计模型</a:Name>
-<a:Code>数据统计模型</a:Code>
+<a:Name>BS框架系统表结构 3</a:Name>
+<a:Code>BS框架系统表结构 3</a:Code>
 <a:CreationDate>1335499478</a:CreationDate>
 <a:Creator>codefan</a:Creator>
-<a:ModificationDate>1464244856</a:ModificationDate>
+<a:ModificationDate>1468831687</a:ModificationDate>
 <a:Modifier>codefan</a:Modifier>
-<a:TargetModelURL>file:///D|/Projects/framework2.1/product-stat/src/document/数据统计模型.pdm</a:TargetModelURL>
+<a:TargetModelURL>file:///D|/Projects/framework3/framework-system/Document/BS框架系统表结构3.pdm</a:TargetModelURL>
 <a:TargetModelID>B58DAB19-9C22-4ED1-A1D6-8EBB5F8B55C8</a:TargetModelID>
 <a:TargetModelClassID>CDE44E21-9669-11D1-9914-006097355D9B</a:TargetModelClassID>
 <c:SessionShortcuts>
