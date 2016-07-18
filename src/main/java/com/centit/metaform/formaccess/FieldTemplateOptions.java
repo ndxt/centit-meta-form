@@ -3,6 +3,8 @@ package com.centit.metaform.formaccess;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.centit.framework.common.OptionItem;
+
 public class FieldTemplateOptions {
 	
 	private String label;

@@ -24,6 +24,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.dde.dao.DatabaseInfoDao;
 import com.centit.dde.po.DatabaseInfo;
+import com.centit.framework.common.OptionItem;
+import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.MetaTableDao;
@@ -35,7 +37,6 @@ import com.centit.metaform.formaccess.MetaFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
 import com.centit.metaform.formaccess.OperationEvent;
-import com.centit.metaform.formaccess.OptionItem;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
@@ -316,6 +317,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 						String.valueOf(i)));
 			}
 			break;
+		case "C"://C :框架内置字典（用户、机构、角色等等）
+			options = CodeRepositoryUtil.getOptionForSelect(field.getReferenceData());
 		//case "F"://文件
 			//文件类型特殊属相
 			//break;

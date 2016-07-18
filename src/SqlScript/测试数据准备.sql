@@ -6,3 +6,30 @@ Reference_Type,Reference_Data,column_comment
 from F_META_COLUMN where table_id='105';
 
 select * from F_META_TABLE;
+
+update M_Model_Data_Field
+set input_TYPE='select',
+	reference_Type='3',
+	reference_Data='[{value:"1",name:"行业固定前期事务",group:""},{value:"2",name:"一般前期事务",group:""}]'
+where model_code= 'NEW_OPPORTUNITIE' and column_name='L_OPP_TYPE'
+/
+
+update M_Model_Data_Field
+set input_TYPE='select',
+	reference_Type='3',
+	reference_Data='[{value:"1",name:"进行中事务",group:""},{value:"2",name:"关闭的事务",group:""}]'
+where model_code= 'NEW_OPPORTUNITIE' and column_name='L_OPP_STATE'
+/
+
+update M_Model_Data_Field
+set Access_Type='R'
+where model_code= 'NEW_OPPORTUNITIE' and column_name='L_OPP_ID'
+/
+
+
+--create sequence fedmo2.seq_OPPORT_ID start with 100;
+update F_META_COLUMN
+set auto_create_rule='S' , auto_create_param = 'SEQ_OPPORT_ID'
+where table_id= 105 and column_Name='L_OPP_ID'
+/
+
