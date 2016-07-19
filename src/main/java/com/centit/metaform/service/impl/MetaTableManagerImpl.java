@@ -3,6 +3,7 @@ package com.centit.metaform.service.impl;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.centit.dde.dao.DatabaseInfoDao;
 import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaChangLogDao;
+import com.centit.metaform.dao.MetaColumnDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.dao.PendingMetaRelationDao;
 import com.centit.metaform.dao.PendingMetaTableDao;
@@ -85,7 +88,7 @@ public class MetaTableManagerImpl
 	}
 	
 	@Resource
-	private PendingMetaTableDao pendingMdTableDao;
+	private MetaColumnDao metaColumnDao;
 	
 	@Resource
 	private MetaChangLogDao metaChangLogDao;
@@ -93,6 +96,9 @@ public class MetaTableManagerImpl
 	@Resource
     private DatabaseInfoDao databaseInfoDao;
 	
+	
+	@Resource
+	private PendingMetaTableDao pendingMdTableDao;
 	
 	@Resource
     private PendingMetaRelationDao pendignRelationDao;
@@ -354,6 +360,25 @@ public class MetaTableManagerImpl
 			return false;
 		pendingMdTableDao.saveNewObject(metaTable);
 		return true;
+	}
+
+	@Override
+	@Transactional
+	public List<MetaColumn> getNotInFormFields(Long tableId) {
+		String sql = "select * from F_META_COLUMN  t where t.table_id=? " +
+				"and t.column_name not in " +
+				"(select f.column_name from m_model_data_field f join m_meta_form_model m" +
+				" on f.model_code=m.model_code and m.table_id=? )";
+		return
+				(List<MetaColumn>) DatabaseOptUtils.findObjectsBySql(metaColumnDao, sql, new Object[]{tableId,tableId},MetaColumn.class);
+	}
+
+	@Override
+	public List<MetaColumn> listFields(Long tableId) {
+		Map<String,Object> filterMap = new HashMap<String,Object>();
+       	filterMap.put("tableId", tableId);
+       	
+		return metaColumnDao.listObjects(filterMap);
 	}
 
 }

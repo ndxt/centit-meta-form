@@ -1,9 +1,9 @@
 
-<div class="easyui-tabs" style="width:100%;">
+<div class="easyui-tabs" style="width:100%;" layoutH="0">
 	<div title="1.表元详细信息">
 	     <form class="centit form" novalidate="true" style="width:98%;">
 
-		      <div class="fields three"> 	
+		      <div class="fields "> 	
 		   		<div class="field required">
 		       		<label>表代码</label>
 		       		<input type="text" class="easyui-textbox" 
@@ -15,23 +15,9 @@
 		       		<input type="text" class="easyui-textbox" 
 		       		name="tableLabelName" required/>
 				</div>
-				<div class="field required">
-		       		<label>类别</label>
-		       		<input type="text" class="easyui-combobox" 
-		       		data-options="valueField:'value',textField:'text',data:[{value:'0',text:'类别0'},{value:'1',text:'类别1'},{value:'2',text:'类别2'}]"
-		       		name="tableType" required/>
-				</div>
-		    </div>
-		    <div class="fields three">	
-		    	
-		   		<div class="field required">
-		       		<label>状态</label>
-		       		<input type="text" class="easyui-textbox" 
-		       		name="tableState" required/>
-				</div>
 				<div class="field ">
 		       		<label>所属数据库ID</label>
-		       		<input class="easyui-combobox" name="databaseCode" required
+		       		<input class="easyui-combobox" name="databaseCode" required panelHeight="auto"
 						url="service/sys/databaseinfo?pageNo=1&pageSize=100" method="get"
 						data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
 				</div>
@@ -39,29 +25,27 @@
 		       		<label>与流程中业务关联关系</label>
 		       		<input type="text" class="easyui-combobox" 
 		       		data-options="valueField:'value',textField:'text',data:[{value:'0',text:'不关联工作流'},{value:'1',text:'和流程业务关联'},{value:'2',text:'和流程过程关联'}]"
-		       		name="workFlowOptType" required/>
+		       		name="workFlowOptType" required panelHeight="auto" />
 				</div>
-				
-		    </div>	
-		    <div class="fields three">
-		   		<div class="field required">
+				<div class="field required">
 		       		<label>更新时是否校验时间戳</label>
 		       		<input type="text" class="easyui-combobox" 
 		       		data-options="valueField:'value',textField:'text',data:[{value:'Y',text:'是'},{value:'N',text:'否'}]"
-		       		name="updateCheckTimeStamp" required/>
+		       		name="updateCheckTimeStamp" required panelHeight="auto"/>
 				</div>
-		    	<div class="field ">
-		       		<label>描述</label>
-		       		<input type="text" class="easyui-textbox" 
-		       		name="tableComment" />
-			</div>
 		    </div>	
+		    <div class="field ">
+	       		<label>描述</label>
+	       		<input type="text" class="easyui-textbox" multiline="true" style="height: 50px;"
+	       		name="tableComment" />
+			</div>
 		    
 		</form>
 
-		<table title="表字段" idField="tableId" id="mdtable_columns" style="height:300px;width:98%;"
+		<table title="表字段" idField="tableId" id="mdtable_columns" style="width:98%;"layoutH="240px"
 			editable="true"
-			pagination="false"
+			pagination="false" 
+			sortName="columnOrder"
 			toolbar=".temp-toolbar_mdtable_columns">
 		    <thead data-options="frozen:true">
 		        <tr>
@@ -167,7 +151,7 @@
 		
 	</div>
 	<div  title="2.子表">
-			<table title="子表" idField="tableId" id="mdtable_subtables" style="height:300px;width:98%;"
+			<table title="子表" idField="tableId" id="mdtable_subtables" style="width:98%;" layoutH="80px"
 				editable="true"
 				pagination="false"
 				toolbar=".temp-toolbar_mdtable_subtables">

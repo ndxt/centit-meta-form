@@ -1,0 +1,28 @@
+<div>
+
+<table idField="columnName" id="mdtable_columns_view" style="height:527px;"
+			pagination="false" 
+			singleSelect="false"
+			checkOnSelect="true"
+			selectOnCheck="true">
+		    <thead data-options="frozen:true">
+		        <tr>
+		        	<th data-options="field:'tableId'" hidden="true">表ID</th>
+					<th data-options="field:'ck'" checkbox='true' ></th>
+					<th data-options="field:'columnName'">字段代码</th> 
+		       		<th data-options="field:'fieldLabelName'">字段名称</th>
+		       		<th data-options="field:'columnFieldType'">字段类型</th>
+		       		<th data-options="field:'mandatory',
+						formatter:function(value, rowData, rowIndex){
+							if(null==value)
+								return '否';
+						  	if(value=='')return '否';else
+						  	if(value=='T')return '是';else
+						  	if(value=='F')return '否';
+						  }">是否必填</th>
+		       		<th data-options="field:'columnComment'">字段描述</th> 
+		       		
+		        </tr>
+		    </thead>
+		</table>
+</div>

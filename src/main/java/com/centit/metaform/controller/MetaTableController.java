@@ -26,6 +26,7 @@ import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.metaform.service.MetaChangLogManager;
@@ -187,6 +188,8 @@ public class MetaTableController extends BaseController{
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
     	PendingMetaTable table=new PendingMetaTable();
     	table.copyNotNullProperty(mdTable);
+    	mdTable.setTableType("T");// T 是数据表，后期会添加 V（视图）的选择
+    	mdTable.setTableState("N");
     	Serializable pk = mdTableMag.saveNewPendingMetaTable(table);
         JsonResultUtils.writeSingleDataJson(pk,response);
     }
@@ -261,5 +264,23 @@ public class MetaTableController extends BaseController{
         }
 
         JsonResultUtils.writeBlankJson(response);
+    }
+    
+    /**
+     * 列出未加入表单的field
+     * @param tableId
+     * @param response
+     * @param pageDesc 
+     */
+    @RequestMapping(value="/{tableId}/getField",method = RequestMethod.GET)
+    public void listfield(@PathVariable Long tableId, HttpServletResponse response, PageDesc pageDesc) {
+       	
+    	List<MetaColumn> meTadColumns =     			
+    			mdTableMag.listFields(tableId);
+    	ResponseData resData = new ResponseData();
+        resData.addResponseData(OBJLIST, meTadColumns);
+        resData.addResponseData(PAGE_DESC, pageDesc);
+        JsonResultUtils.writeSingleDataJson(meTadColumns, response);
+        
     }
 }

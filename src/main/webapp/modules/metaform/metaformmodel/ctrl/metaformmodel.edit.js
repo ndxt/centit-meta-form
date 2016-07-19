@@ -33,18 +33,22 @@ define(function(require) {
 				operationTable.datagrid('loadData',data.modelOperations);
 			});
 			
-			
+			//保存
 			panel.find('#metaform_sub').click(function(){
 				var form = panel.find('form');
 				// 开启校验
 				form.form('enableValidation');
 				var isValid = form.form('validate');
+				
+				var metaformmodel=form.form('value');
+				
 				var dataFieldTable=panel.find("#formmodel_dataField");
 				var dataFieldTableRows=dataFieldTable.datagrid('getRows');
-				var metaformmodel=form.form('value');
+				
 				var operationTable=panel.find("#formmodel_operation");
 				var operationTableRows=operationTable.datagrid('getRows');
-				$.extend(metaformmodel,{modelDataFields:dataFieldTableRows,modelOperations:operationTableRows})
+				
+				$.extend(metaformmodel,{modelDataFields:dataFieldTableRows,modelOperations:operationTableRows});
 				if (isValid && dataFieldTable.cdatagrid('endEdit') && operationTable.cdatagrid('endEdit')) {
 					$.ajax({
 						type: 'PUT',

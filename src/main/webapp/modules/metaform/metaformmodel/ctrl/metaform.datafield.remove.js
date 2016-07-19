@@ -1,7 +1,7 @@
 define(function(require) {
 	var Page = require('core/page');
 	
-	// 新增角色信息
+	// 删除一条字段信息
 	var DatafieldRemove = Page.extend(function() {
 		
 		// @override
