@@ -373,7 +373,9 @@ public class ModelFormServiceImpl implements ModelFormService {
 			if(field.isMandatory())
 				templateOptions.setRequired(true);
 			if(StringUtils.isNotBlank(field.getViewFormat()))
-				templateOptions.setFormat(field.getViewFormat());					
+				templateOptions.setFormat(field.getViewFormat());
+			if(field.getFieldWidth()!=null)
+				ff.setFieldWidth(field.getFieldWidth().intValue());
 			
 			if("view".equals(operation) ||
 					("R".equals(field.getColumnType()) ||
@@ -479,6 +481,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 				referenceDataToOption( rc,
 						 field, mc.getPropertyName(),templateOptions);
 				ff.setTemplateOptions(templateOptions);
+				if(field.getFieldWidth()!=null)
+					ff.setFieldWidth(field.getFieldWidth().intValue());
 				
 				if("BT".equals(field.getFilterType())){
 					//ff.setKey(SimpleTableField.mapPropName("l_"+field.getColumnName()));			

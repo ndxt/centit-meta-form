@@ -6,6 +6,7 @@ import java.util.Map;
 public class FormField {
 
 	private String key;
+	private String className;// 'col-xs-12',
 	private String type;
 	private String defaultValue;
 	private FieldTemplateOptions templateOptions;
@@ -129,5 +130,19 @@ public class FormField {
 
 	public void setRows(Long rows) {
 		this.rows = rows;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+	/**
+	 * private String className;// 'col-xs-12',
+	 */
+	public void setFieldWidth(int width) {
+		this.className = "col-xs-"+width;
 	}
 }
