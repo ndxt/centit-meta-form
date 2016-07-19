@@ -476,7 +476,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 				templateOptions.setPlaceholder(field.getInputHint());
 				
 				if(StringUtils.isNotBlank(field.getViewFormat()))
-					templateOptions.setFormat(field.getViewFormat());	
+					templateOptions.setFormat(field.getViewFormat());
 				
 				referenceDataToOption( rc,
 						 field, mc.getPropertyName(),templateOptions);
