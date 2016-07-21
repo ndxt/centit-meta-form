@@ -131,6 +131,18 @@
          <filter-name>corsFilter</filter-name>
          <url-pattern>/service/*</url-pattern>
     </filter-mapping>
+	<filter-mapping>
+         <filter-name>corsFilter</filter-name>
+         <url-pattern>/system/*</url-pattern>
+    </filter-mapping>
+	<filter-mapping>
+         <filter-name>corsFilter</filter-name>
+         <url-pattern>/login</url-pattern>
+    </filter-mapping>
+	<filter-mapping>
+         <filter-name>corsFilter</filter-name>
+         <url-pattern>/logout</url-pattern>
+    </filter-mapping>
  	
     <!-- spring Security 认证与权限管理-->
     <filter>
@@ -264,10 +276,6 @@
         <exception-type>java.lang.Throwable</exception-type>
         <location>/system/exception/error/500</location>
     </error-page>-->
-    <error-page>
-    	<error-code>404</error-code>
-    	<location>/system/exception/error/404</location>
-    </error-page>
     <error-page>
         <error-code>400</error-code>
         <location>/system/exception/error/400</location>
