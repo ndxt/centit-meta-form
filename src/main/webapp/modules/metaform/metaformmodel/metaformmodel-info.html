@@ -68,8 +68,10 @@
 			        <tr>
 			       		<th data-options="field:'modelCode'" hidden=true>模块代码</th>
 			       		<th data-options="field:'columnName',editor:{type:'textbox',options:{required:true}}">字段代码</th>
+			       		<th data-options="field:'fieldLableName',editor:{type:'textbox',options:{}}">字段名称</th>
 			       		<th data-options="field:'columnType',editor:{type:'textbox',options:{required:true}}">字段类别</th>
-			       		<th data-options="field:'accessType',editor:{type:'textbox',options:{}}">更改类别</th>
+			       		<th data-options="field:'columnState',editor:{type:'textbox',options:{}}">字段状态</th>
+			       		<th data-options="field:'accessType',editor:{type:'textbox',options:{required:true}}">更改类别</th>
 			       		<th data-options="field:'focus',
 						formatter:function(value, rowData, rowIndex){
 							if(false==value)
