@@ -517,10 +517,44 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	public String getPropertyName() {
 		return SimpleTableField.mapPropName(getColumnName());
 	}
+	
+	public static String mapToFieldType(String columnType,int scale)
+	{
+		if("NUMBER".equalsIgnoreCase(columnType) ||
+		   "INTEGER".equalsIgnoreCase(columnType)||
+		   "DECIMAL".equalsIgnoreCase(columnType) ){
+			if( scale > 0 )
+				return FieldType.FLOAT;
+			else
+				return FieldType.INTEGER;
+		}else if("FLOAT".equalsIgnoreCase(columnType)){
+			return FieldType.FLOAT;
+		}else if("CHAR".equalsIgnoreCase(columnType) ||
+			   "VARCHAR".equalsIgnoreCase(columnType)||
+			   "VARCHAR2".equalsIgnoreCase(columnType)||
+			   "STRING".equalsIgnoreCase(columnType) ){
+			return FieldType.STRING;
+		}else if("DATE".equalsIgnoreCase(columnType) ||
+				   "TIME".equalsIgnoreCase(columnType)||
+				   "DATETIME".equalsIgnoreCase(columnType) ){
+			return FieldType.DATE;
+		}else if("TIMESTAMP".equalsIgnoreCase(columnType) ){
+			return FieldType.DATETIME;
+		}else if("CLOB".equalsIgnoreCase(columnType) /*||
+				   "LOB".equalsIgnoreCase(sDBType)||
+				   "BLOB".equalsIgnoreCase(sDBType)*/ ){
+			return FieldType.TEXT;
+		}else if("BOOLEAN".equalsIgnoreCase(columnType) ){
+			return FieldType.BOOLEAN;
+		}else
+			return columnType;
+	}
+	
 	@Override
 	public String getJavaType() {
-		return SimpleTableField.mapToJavaType(this.columnFieldType,this.scale);
+		return MetaColumn.mapToFieldType(this.columnFieldType,this.scale==null?0:this.scale);
 	}
+	
 	@Override
 	public boolean isMandatory() {
 		return "T".equals(mandatory) ||  "Y".equals(mandatory) || "1".equals(mandatory);
