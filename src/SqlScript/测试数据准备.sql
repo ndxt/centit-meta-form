@@ -115,13 +115,20 @@ set auto_create_rule='S' , auto_create_param = 'SEQ_OPPORT_ID'
 where table_id= 69 and column_Name='L_EXPENSE_ID'
 /
 
+select * from F_PENDING_META_RELATION;
+
+select * from F_PENDING_META_REL_DETIAL;
 
 insert into F_PENDING_META_RELATION
  (RELATION_ID,PARENT_TABLE_ID,CHILD_TABLE_ID,RELATION_NAME,RELATION_STATE,LAST_MODIFY_DATE)
 values( seq_pendingrelationid.nextval, 105,62,'前期事务合同信息','T',sysdate);
 
+insert into F_PENDING_META_REL_DETIAL(RELATION_ID,PARENT_COLUMN_NAME,CHILD_COLUMN_NAME )
+ values(seq_pendingrelationid.currval,'L_OPP_ID','L_RELATION_OPPORTUNITY')
 
 insert into F_PENDING_META_RELATION
  (RELATION_ID,PARENT_TABLE_ID,CHILD_TABLE_ID,RELATION_NAME,RELATION_STATE,LAST_MODIFY_DATE)
 values( seq_pendingrelationid.nextval, 105,69,'前期事务费用信息','T',sysdate);
 
+insert into F_PENDING_META_REL_DETIAL(RELATION_ID,PARENT_COLUMN_NAME,CHILD_COLUMN_NAME )
+ values(seq_pendingrelationid.currval,'L_OPP_ID','L_OPPORTUNITY_ID');
