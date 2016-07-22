@@ -97,4 +97,31 @@ set reference_Type='3',
 where table_id= 105 and  column_name='L_OPP_STATE'
 /
 
+update M_Model_Data_Field
+set input_TYPE='select',
+  reference_Type='4',
+  reference_Data='select L_OPP_ID,VC_OPP_NAME from P_OPPORTUNITIES'
+where model_code= 'OPPORT_CONTRACTS' and column_name='L_RELATION_OPPORTUNITY'
+/
+
+update F_META_COLUMN
+set auto_create_rule='S' , auto_create_param = 'SEQ_OPPORT_ID'
+where table_id= 62 and column_Name='L_CONTRACT_ID'
+/
+
+
+update F_META_COLUMN
+set auto_create_rule='S' , auto_create_param = 'SEQ_OPPORT_ID'
+where table_id= 69 and column_Name='L_EXPENSE_ID'
+/
+
+
+insert into F_PENDING_META_RELATION
+ (RELATION_ID,PARENT_TABLE_ID,CHILD_TABLE_ID,RELATION_NAME,RELATION_STATE,LAST_MODIFY_DATE)
+values( seq_pendingrelationid.nextval, 105,62,'前期事务合同信息','T',sysdate);
+
+
+insert into F_PENDING_META_RELATION
+ (RELATION_ID,PARENT_TABLE_ID,CHILD_TABLE_ID,RELATION_NAME,RELATION_STATE,LAST_MODIFY_DATE)
+values( seq_pendingrelationid.nextval, 105,69,'前期事务费用信息','T',sysdate);
 
