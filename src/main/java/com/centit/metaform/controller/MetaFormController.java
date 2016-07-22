@@ -80,6 +80,32 @@ public class MetaFormController  extends BaseController{
 		JsonResultUtils.writeResponseDataAsJson(resData, response);
 	}
 	
+	@RequestMapping(value = "/{modelCode}/viewlist",method = RequestMethod.GET)
+	public void viewList(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
+		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	Map<String,Object> jo = rc.fetchPkFromRequest(request);    	
+		ResponseData resData = new ResponseData();
+		
+		JSONObject obj = formService.getObjectByProperties(rc, jo);
+		try {
+			if(obj!=null){
+	    		Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
+	    		obj.putAll(refField);
+    		}
+		} catch (SQLException e) {
+		}
+		
+		MetaFormDefine metaData = formService.createFormDefine(rc,"viewlist");
+		resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
+		rc.close();		
+		if(!noMeta){
+			metaData.updateReadOnlyRefrenceField();
+        	resData.addResponseData("formModel", metaData); 
+        }
+		
+		JsonResultUtils.writeResponseDataAsJson(resData, response);
+	}
+	
 	@RequestMapping(value = "/{modelCode}/meta/{metaType}",method = RequestMethod.GET)
 	public void meta(@PathVariable String modelCode,  @PathVariable String metaType, 
 			HttpServletRequest request, HttpServletResponse response) {

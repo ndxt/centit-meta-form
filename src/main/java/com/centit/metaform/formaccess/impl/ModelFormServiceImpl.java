@@ -358,6 +358,8 @@ public class ModelFormServiceImpl implements ModelFormService {
 		for(ModelDataField field:mfm.getModelDataFields()){
 			if("H".equals(field.getAccessType()))
 				continue;
+			if("viewlist".equals(operation) && "HI".equals(field.getFilterType()) )
+				continue;
 			FormField ff = new FormField();
 			MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
 			ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
@@ -377,7 +379,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 			if(field.getFieldWidth()!=null)
 				ff.setFieldWidth(field.getFieldWidth().intValue());
 			
-			if("view".equals(operation) ||
+			if("view".equals(operation) || "viewlist".equals(operation) ||
 					("R".equals(field.getColumnType()) ||
 					"R".equals(field.getAccessType())||
 					("C".equals(field.getAccessType()) && !"create".equals(operation) ) ) ){
