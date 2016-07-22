@@ -623,7 +623,7 @@ public class ModelFormServiceImpl implements ModelFormService {
 	
 	@Transactional
 	private Map<String, Object> makeTabulationFilter(ModelRuntimeContext rc, Map<String, Object> filters){
-		if("0".equals(rc.getMetaFormModel().getRelationType()))
+		if(StringUtils.isBlank(rc.getMetaFormModel().getRelationType()) || "0".equals(rc.getMetaFormModel().getRelationType()))
 				return filters;
 		List<Pair<String,String>> pMap = formModelDao.getSubModelPropertiesMap(rc.getMetaFormModel().getParentModel().getTableId(),
 				rc.getMetaFormModel().getTableId());
