@@ -35,6 +35,8 @@ define(function(require) {
 			var parentTable = this.parent.panel.find("#formmodel_dataField");
 			var tableId = this.parent.data.tableId;
 			items.forEach(function(d){
+				d.columnType='T';
+				d.displayOrder=d.columnOrder;
 				parentTable.datagrid('appendRow', $.extend({tableId:tableId}, d));
 			});
 		};
