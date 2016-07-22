@@ -41,6 +41,8 @@ define(function(require) {
 				form.form('enableValidation');
 				var isValid = form.form('validate');
 				var mdtable=form.form('value');
+				mdtable.tableType="T";
+				mdtable.tableState='N';
 				var mdtable_columns=panel.find("#mdtable_columns");
 				var mdtablecolumns=mdtable_columns.datagrid('getRows');
 				var mdtable_subtables=panel.find("#mdtable_subtables");
