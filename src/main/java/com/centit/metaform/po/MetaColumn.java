@@ -535,10 +535,10 @@ public class MetaColumn implements TableField,java.io.Serializable {
 			   "STRING".equalsIgnoreCase(columnType) ){
 			return FieldType.STRING;
 		}else if("DATE".equalsIgnoreCase(columnType) ||
-				   "TIME".equalsIgnoreCase(columnType)||
-				   "DATETIME".equalsIgnoreCase(columnType) ){
+				   "TIME".equalsIgnoreCase(columnType) ){
 			return FieldType.DATE;
-		}else if("TIMESTAMP".equalsIgnoreCase(columnType) ){
+		}else if("TIMESTAMP".equalsIgnoreCase(columnType)||
+				   "DATETIME".equalsIgnoreCase(columnType) ){
 			return FieldType.DATETIME;
 		}else if("CLOB".equalsIgnoreCase(columnType) /*||
 				   "LOB".equalsIgnoreCase(sDBType)||
