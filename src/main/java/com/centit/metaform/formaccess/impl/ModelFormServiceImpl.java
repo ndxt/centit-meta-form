@@ -592,7 +592,9 @@ public class ModelFormServiceImpl implements ModelFormService {
 	
 	@Override
 	@Transactional
-	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters) {
+	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters) {
+		Map<String, Object> filters = makeTabulationFilter(rc, requestFilters);
+		
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {			
 			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSql(rc.getTableInfo(),null);
@@ -619,9 +621,29 @@ public class ModelFormServiceImpl implements ModelFormService {
 		}
 	}
 	
+	@Transactional
+	private Map<String, Object> makeTabulationFilter(ModelRuntimeContext rc, Map<String, Object> filters){
+		if("0".equals(rc.getMetaFormModel().getRelationType()))
+				return filters;
+		List<Pair<String,String>> pMap = formModelDao.getSubModelPropertiesMap(rc.getMetaFormModel().getParentModel().getTableId(),
+				rc.getMetaFormModel().getTableId());
+		if(pMap==null)
+			return filters;
+		Map<String, Object> newFilters = new HashMap<>(filters);
+		for(Pair<String,String> p : pMap){
+			Object v = filters.get(p.getLeft());
+			if(v !=null)
+				newFilters.put(p.getRight(), v);
+		}
+		return newFilters;
+	}
+	
 	@Override
 	@Transactional
-	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> filters, PageDesc pageDesc) {
+	public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters, PageDesc pageDesc) {
+		
+		Map<String, Object> filters = makeTabulationFilter(rc, requestFilters);
+		
 		JsonObjectDao dao = rc.getJsonObjectDao();
 		try {
 			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSql(rc.getTableInfo(),null);
