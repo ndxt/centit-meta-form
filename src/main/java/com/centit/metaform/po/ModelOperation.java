@@ -77,7 +77,7 @@ public class ModelOperation implements java.io.Serializable {
 	 * 操作提示信息 操作前提示信息 
 	 */
 	@Column(name = "OPT_HINT_TITLE")
-	@Length(max = 500, message = "字段长度不能大于{max}")
+	@Length(max = 100, message = "字段长度不能大于{max}")
 	private String  optHintTitle;
 	
 	/**
