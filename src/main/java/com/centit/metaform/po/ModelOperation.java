@@ -74,7 +74,7 @@ public class ModelOperation implements java.io.Serializable {
 	@Length(max = 500, message = "字段长度不能大于{max}")
 	private String  optMessage;
 	/**
-	 * 操作提示信息 操作前提示信息 
+	 * 操作提示信息 操作前提示信息 标题
 	 */
 	@Column(name = "OPT_HINT_TITLE")
 	@Length(max = 100, message = "字段长度不能大于{max}")
