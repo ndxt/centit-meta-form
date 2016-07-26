@@ -50,10 +50,10 @@ public class ModelOperation implements java.io.Serializable {
 	private String  label;
 	
 	/**
-	 * 显示顺序 null 
+	 * L: list 列表   N ：不关联数据   S：单选择  M多选
 	 */
-	@Column(name = "DISPLAY_POSTION")
-	private String  displayPostion;
+	@Column(name = "DATA_RELATION_TYPE")
+	private String  dataRelationType;
 	/**
 	 * 显示顺序 null 
 	 */
@@ -68,7 +68,7 @@ public class ModelOperation implements java.io.Serializable {
 
 
 	/**
-	 * 操作前提示类别 0： 没有  1 yes or no 2 cancel ok 3 cancel retry ok 
+	 * 操作后提示信息
 	 */
 	@Column(name = "OPT_MESSAGE")
 	@Length(max = 500, message = "字段长度不能大于{max}")
@@ -76,9 +76,17 @@ public class ModelOperation implements java.io.Serializable {
 	/**
 	 * 操作提示信息 操作前提示信息 
 	 */
+	@Column(name = "OPT_HINT_TITLE")
+	@Length(max = 500, message = "字段长度不能大于{max}")
+	private String  optHintTitle;
+	
+	/**
+	 * 操作提示信息 操作前提示信息 
+	 */
 	@Column(name = "OPT_HINT_INFO")
 	@Length(max = 500, message = "字段长度不能大于{max}")
 	private String  optHintInfo;
+	
 	/**
 	 * 其他扩展属性 null 
 	 */
@@ -106,7 +114,7 @@ public class ModelOperation implements java.io.Serializable {
 	
 /** full constructor */
 	public ModelOperation(com.centit.metaform.po.ModelOperationId id
-		,String  optModelCode,String  method,String  label,String  displayPostion,
+		,String  optModelCode,String  method,String  label,String  dataRelationType,
 		Long  displayOrder,String  openType,String  returnOperation,String  optMessage,String  optHintInfo,String  extendOptions) {
 		this.cid = id; 
 		this.optModelCode= optModelCode;
@@ -114,7 +122,7 @@ public class ModelOperation implements java.io.Serializable {
 		this.label= label;
 		this.displayOrder= displayOrder;
 		this.openType= openType;
-		this.displayPostion= displayPostion;
+		this.dataRelationType= dataRelationType;
 		this.optMessage= optMessage;
 		this.optHintInfo= optHintInfo;
 		this.extendOptions= extendOptions;		
@@ -196,12 +204,12 @@ public class ModelOperation implements java.io.Serializable {
 		this.openType = openType;
 	}
   
-	public String getDisplayPostion() {
-		return this.displayPostion;
+	public String getDataRelationType() {
+		return this.dataRelationType;
 	}
 	
-	public void setDisplayPostion(String displayPostion) {
-		this.displayPostion = displayPostion;
+	public void setDataRelationType(String dataRelationType) {
+		this.dataRelationType = dataRelationType;
 	}
   
 	public String getOptHintInfo() {
@@ -234,6 +242,12 @@ public class ModelOperation implements java.io.Serializable {
 	public void setOptMessage(String optMessage) {
 		this.optMessage = optMessage;
 	}
+	public String getOptHintTitle() {
+		return optHintTitle;
+	}
+	public void setOptHintTitle(String optHintTitle) {
+		this.optHintTitle = optHintTitle;
+	}
 	
 	public ModelOperation copy(ModelOperation other){
   
@@ -244,12 +258,12 @@ public class ModelOperation implements java.io.Serializable {
 		this.label= other.getLabel();  
 		this.displayOrder= other.getDisplayOrder();  
 		this.openType= other.getOpenType();  
-		this.displayOrder= other.getDisplayOrder();  
+		this.dataRelationType= other.getDataRelationType();  
 		this.optModelType= other.getOptModelType();  
 		this.optMessage = other.getOptMessage();
 		this.optHintInfo= other.getOptHintInfo();  
 		this.extendOptions= other.getExtendOptions();
-
+		this.optHintTitle = other.getOptHintTitle();
 		return this;
 	}
 	
@@ -272,17 +286,19 @@ public class ModelOperation implements java.io.Serializable {
 			this.openType= other.getOpenType();
 		if( other.getOptMessage() != null)
 			this.optMessage = other.getOptMessage();		
-		if( other.getDisplayOrder() != null)
-			this.displayOrder= other.getDisplayOrder();  
+		if( other.getDataRelationType() != null)
+			this.dataRelationType= other.getDataRelationType();  
 		if( other.getOptModelType() != null)
 			this.optModelType= other.getOptModelType();  
 		if( other.getOptHintInfo() != null)
 			this.optHintInfo= other.getOptHintInfo();  
 		if( other.getExtendOptions() != null)
 			this.extendOptions= other.getExtendOptions();		
-
+		if( other.getOptHintTitle() != null)
+			this.optHintTitle = other.getOptHintTitle();
 		return this;
 	}
+
 
 	public ModelOperation clearProperties(){
   
@@ -291,11 +307,12 @@ public class ModelOperation implements java.io.Serializable {
 		this.label= null;  
 		this.displayOrder= null;  
 		this.openType= null;  
-		this.displayOrder= null;  
+		this.dataRelationType = null;  
 		this.optModelType= null;  
 		this.optMessage = null;  
 		this.optHintInfo= null;  
 		this.extendOptions= null;
+		this.optHintTitle = null;
 		return this;
 	}
 }
