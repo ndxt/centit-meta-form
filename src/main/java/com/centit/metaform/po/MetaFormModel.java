@@ -95,6 +95,21 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 	@Column(name = "RELATION_TYPE")
 	@Length(max = 1, message = "字段长度不能大于{max}")
 	private String  relationType;
+	
+	/**
+	 * 关联的流程代码
+	 */
+	@Column(name = "REL_WFCODE")
+	@Length(max = 1, message = "字段长度不能大于{max}")
+	private String  relFlowCode;
+
+	public String getRelFlowCode() {
+		return relFlowCode;
+	}
+	public void setRelFlowCode(String relWfCode) {
+		this.relFlowCode = relWfCode;
+	}
+
 	/**
 	 * 父模块代码 子模块必需对应父模块对应的子表 
 	 */
@@ -630,7 +645,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 		this.extendOptBean = other.getExtendOptBean();
 		this.extendOptBeanParam = other.getExtendOptBeanParam();
 		this.dataFilterSql = other.getDataFilterSql();
-		
+		this.relFlowCode = other.getRelFlowCode();
 		this.setModelOperations(other.getModelOperations());
 		this.setModelDataFields(other.getModelDataFields());
 		return this;
@@ -670,7 +685,8 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 			this.extendOptBean = other.getExtendOptBean();
 		if( other.getExtendOptBeanParam() != null)
 			this.extendOptBeanParam = other.getExtendOptBeanParam();
-		
+		if( other.getRelFlowCode() != null)
+			this.relFlowCode = other.getRelFlowCode();
 		if(null!=other.getModelDataFields())
 			this.setModelDataFields(other.getModelDataFields());
 		if(null!=other.getModelOperations())
@@ -692,6 +708,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 		this.displayOrder= null;  
 		this.lastModifyDate= null;  
 		this.recorder= null;
+		this.relFlowCode = null;
 	
 		this.modelDataFields = new HashSet<ModelDataField>();	
 		this.childFormModels = new HashSet<MetaFormModel>();
