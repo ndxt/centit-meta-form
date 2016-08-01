@@ -8,6 +8,11 @@
 	    http://www.springframework.org/schema/security/spring-security.xsd"
 	default-lazy-init="true">
 
+	<bean id="userDetailsService"
+		 class="com.centit.framework.staticsystem.service.impl.UserDetailsServiceImpl" scope="singleton">
+		 <property name="platformEnvironment" ref="platformEnvironment" />
+	</bean>
+	
 	<security:http security="none" pattern="/system/login"/>
 	<security:http security="none" pattern="/service/exception/**"/>	
 	<security:http security="none" pattern="/system/login/**"/>
