@@ -18,7 +18,7 @@
 				<div class="field ">
 		       		<label>所属数据库ID</label>
 		       		<input class="easyui-combobox" name="databaseCode" required panelHeight="auto"
-						url="service/sys/databaseinfo?pageNo=1&pageSize=100" method="get"
+						url="system/environment/databaseinfos" method="get"
 						data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
 				</div>
 				<div class="field required">

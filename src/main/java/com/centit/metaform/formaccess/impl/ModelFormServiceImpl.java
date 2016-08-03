@@ -22,11 +22,11 @@ import org.springframework.web.context.ContextLoaderListener;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.dde.dao.DatabaseInfoDao;
-import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.staticsystem.po.DatabaseInfo;
+import com.centit.framework.staticsystem.service.StaticEnvironmentManager;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.formaccess.FieldTemplateOptions;
@@ -57,8 +57,6 @@ import com.centit.support.database.metadata.SimpleTableField;
 @Service(value="modelFormService")
 public class ModelFormServiceImpl implements ModelFormService {
 
-    @Resource
-    private DatabaseInfoDao databaseInfoDao;
 
     @Resource
     private MetaTableDao tableDao;
@@ -66,6 +64,9 @@ public class ModelFormServiceImpl implements ModelFormService {
     @Resource
     private MetaFormModelDao formModelDao;
      
+    @Resource
+    protected StaticEnvironmentManager platformEnvironment;
+    
     @Value("${metaform.dataaccess.embedded}")
     private boolean useLocalDatabase;
    
@@ -90,7 +91,9 @@ public class ModelFormServiceImpl implements ModelFormService {
 		rc.setTableInfo(mtab);
 		rc.setMetaFormModel(mfm);
 		
-		DatabaseInfo mdb = databaseInfoDao.getObjectById( mtab.getDatabaseCode());		
+		DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(mtab.getDatabaseCode());
+				//databaseInfoDao.getObjectById( mtab.getDatabaseCode());
+
 		DataSourceDescription dbc = new DataSourceDescription();
 		dbc.setDatabaseCode(mdb.getDatabaseCode());
 		dbc.setConnUrl(mdb.getDatabaseUrl());

@@ -13,19 +13,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.centit.dde.po.DatabaseInfo;
 import com.centit.support.database.DBType;
 import com.centit.support.database.metadata.TableInfo;
 import com.centit.support.database.metadata.TableReference;
@@ -56,21 +51,9 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	/**
 	 * 所属数据库ID null 
 	 */
-	@JoinColumn(name="DATABASE_CODE", nullable = true)  
-	@ManyToOne
-	@NotFound(action=NotFoundAction.IGNORE)
-	private DatabaseInfo  databaseInfo;
-	
-	
-	
-	public DatabaseInfo getDatabaseInfo() {
-		if(null==this.databaseInfo)
-			this.databaseInfo=new DatabaseInfo();
-		return databaseInfo;
-	}
-	public void setDatabaseInfo(DatabaseInfo databaseInfo) {
-		this.databaseInfo = databaseInfo;
-	}
+	@Column(name = "DATABASE_CODE")  
+	private String  databaseCode;
+
 	/**
 	 * 表代码 null 
 	 */
@@ -162,7 +145,7 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	
 	public MetaTable(PendingMetaTable ptable) {
 		this.tableId = ptable.getTableId();		
-		this.databaseInfo=ptable.getDatabaseInfo();
+		this.databaseCode=ptable.getDatabaseCode();
 		this.tableName= ptable.getTableName();
 		this.tableLabelName= ptable.getTableLabelName();
 		this.tableType=ptable.getTableType();
@@ -247,12 +230,11 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	// Property accessors
   
 	public String getDatabaseCode() {
-		return this.getDatabaseInfo().getDatabaseCode();
+		return this.databaseCode;
 	}
 	
 	public void setDatabaseCode(String databaseCode) {
-		this.databaseInfo=new DatabaseInfo();
-		this.setDatabaseCode(databaseCode);
+		this.databaseCode = databaseCode;
 	}
   
 	public String getTableName() {

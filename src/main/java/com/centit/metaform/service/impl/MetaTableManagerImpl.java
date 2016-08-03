@@ -22,12 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.centit.dde.dao.DatabaseInfoDao;
-import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
+import com.centit.framework.staticsystem.po.DatabaseInfo;
+import com.centit.framework.staticsystem.service.StaticEnvironmentManager;
 import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaColumnDao;
 import com.centit.metaform.dao.MetaTableDao;
@@ -93,15 +93,15 @@ public class MetaTableManagerImpl
 	@Resource
 	private MetaChangLogDao metaChangLogDao;
 	
-	@Resource
-    private DatabaseInfoDao databaseInfoDao;
-	
-	
+		
 	@Resource
 	private PendingMetaTableDao pendingMdTableDao;
 	
 	@Resource
     private PendingMetaRelationDao pendignRelationDao;
+	
+	@Resource
+    protected StaticEnvironmentManager platformEnvironment;
 /*
  	@PostConstruct
     public void init() {
@@ -169,7 +169,10 @@ public class MetaTableManagerImpl
 	@Transactional
 	public List<String> makeAlterTableSqls(PendingMetaTable ptable) {		
 		MetaTable stable = metaTableDao.getObjectById(ptable.getTableId());
-		DatabaseInfo mdb = databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
+		
+		DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
+				//databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
+		
 		DBType dbType = DBType.mapDBType(mdb.getDatabaseUrl());
 		ptable.setDatabaseType(dbType);
 		DDLOperations ddlOpt = null;
@@ -281,7 +284,9 @@ public class MetaTableManagerImpl
 			if(ret.getLeft().intValue() != 0)
 				return ret;
 			
-			DatabaseInfo mdb = databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());		
+			DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
+					//databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
+	
 			DataSourceDescription dbc = new DataSourceDescription();
 			dbc.setDatabaseCode(mdb.getDatabaseCode());
 			dbc.setConnUrl(mdb.getDatabaseUrl());
@@ -362,6 +367,7 @@ public class MetaTableManagerImpl
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	public List<MetaColumn> getNotInFormFields(Long tableId) {

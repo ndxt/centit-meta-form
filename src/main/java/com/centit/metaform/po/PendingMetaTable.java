@@ -14,19 +14,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.centit.dde.po.DatabaseInfo;
 import com.centit.framework.core.po.EntityWithTimestamp;
 import com.centit.support.database.DBType;
 import com.centit.support.database.metadata.TableInfo;
@@ -61,10 +56,8 @@ public class PendingMetaTable implements
 	/**
 	 * 所属数据库ID null 
 	 */
-	@JoinColumn(name="DATABASE_CODE", nullable = true)  
-	@ManyToOne()
-	@NotFound(action=NotFoundAction.IGNORE)
-	private DatabaseInfo  databaseInfo;
+	@Column(name = "DATABASE_CODE")  
+	private String  databaseCode;
 	/**
 	 * 表代码 null 
 	 */
@@ -236,16 +229,6 @@ public class PendingMetaTable implements
 	}
 	
 	
-	
-	public DatabaseInfo getDatabaseInfo(){
-		if(null==this.databaseInfo)
-			this.databaseInfo=new DatabaseInfo();
-		return this.databaseInfo;
-	}
-  
-	public void setDatabaseInfo(DatabaseInfo dbInfo){
-		this.databaseInfo=dbInfo;
-	}
 	public Long getTableId() {
 		return this.tableId;
 	}
@@ -256,12 +239,11 @@ public class PendingMetaTable implements
 	// Property accessors
   
 	public String getDatabaseCode() {
-		return this.getDatabaseInfo().getDatabaseCode();
+		return this.databaseCode;
 	}
 	
 	public void setDatabaseCode(String databaseCode) {
-		this.databaseInfo=new DatabaseInfo();
-		this.databaseInfo.setDatabaseCode(databaseCode);
+		this.databaseCode = databaseCode;
 	}
   
 	public String getTableName() {
@@ -334,16 +316,12 @@ public class PendingMetaTable implements
 		this.recorder = recorder;
 	}
 
-	public String getDatabaseName(){
-		return getDatabaseInfo().getDatabaseName();
-	}
-
 
 	public PendingMetaTable copy(PendingMetaTable other){
 		this.setMdColumns(other.getMdColumns());
 		this.setMdRelations(other.getMdRelations());
 		this.setTableId(other.getTableId());
-		this.setDatabaseInfo(other.getDatabaseInfo());
+		this.setDatabaseCode(other.getDatabaseCode());
 		this.tableName= other.getTableName();  
 		this.tableLabelName= other.getTableLabelName();  
 		this.tableType= other.getTableType();  
@@ -365,7 +343,7 @@ public class PendingMetaTable implements
 		if(other.getMdColumns()!=null)
 			this.setMdColumns(other.getMdColumns());
 		if( other.getDatabaseCode() != null)
-			this.databaseInfo=other.getDatabaseInfo(); 
+			this.databaseCode=other.getDatabaseCode(); 
 		if( other.getTableName() != null)
 			this.tableName= other.getTableName();  
 		if( other.getTableLabelName() != null)
@@ -390,7 +368,7 @@ public class PendingMetaTable implements
 	public PendingMetaTable clearProperties(){
 		this.mdColumns=null;
 		this.mdRelations=null;
-		this.databaseInfo=null;
+		this.databaseCode=null;
 		this.tableName= null;  
 		this.tableLabelName= null;  
 		this.tableType= null;  

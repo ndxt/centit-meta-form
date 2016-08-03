@@ -12,8 +12,6 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,7 +46,7 @@ import com.centit.metaform.service.MetaTableManager;
 @Controller
 @RequestMapping("/metaform/mdtable")
 public class MetaTableController extends BaseController{
-	private static final Log log = LogFactory.getLog(MetaTableController.class);
+	//private static final Log log = LogFactory.getLog(MetaTableController.class);
 	
 	@Resource
 	private MetaTableManager mdTableMag;	
