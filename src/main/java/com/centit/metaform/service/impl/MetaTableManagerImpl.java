@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
@@ -92,8 +93,7 @@ public class MetaTableManagerImpl
 	
 	@Resource
 	private MetaChangLogDao metaChangLogDao;
-	
-		
+			
 	@Resource
 	private PendingMetaTableDao pendingMdTableDao;
 	
@@ -347,9 +347,25 @@ public class MetaTableManagerImpl
 
 	@Override
 	@Transactional(readOnly=true)
-	public List<PendingMetaTable> listDrafts(Map<String, Object> searchColumn,
+	public JSONArray listDrafts(String[] fields, Map<String, Object> searchColumn,
 			PageDesc pageDesc) {
-		return pendingMdTableDao.listObjects(searchColumn, pageDesc);
+		JSONArray listTables = SysDaoOptUtils.listObjectsAsJson( baseDao ,
+	            fields,PendingMetaTable.class, 
+	            searchColumn,  pageDesc);
+		List<DatabaseInfo> databases = platformEnvironment.listDatabaseInfo();
+		for(Object obj:listTables){
+			JSONObject table = (JSONObject)obj;
+			String databaseCode = table.getString("databaseCode");
+			if(databaseCode!=null){
+				for(DatabaseInfo di:databases){
+					if(databaseCode.equals(di.getDatabaseCode())){
+						table.put("databaseName", di.getDatabaseName());
+						break;
+					}
+				}
+			}
+		}
+		return listTables;
 	}
 
 	@Override

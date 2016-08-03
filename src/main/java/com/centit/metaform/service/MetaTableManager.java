@@ -35,7 +35,7 @@ public interface MetaTableManager extends BaseEntityManager<MetaTable,java.lang.
 	public void savePendingMetaTable(PendingMetaTable pmt);
 	public List<String> makeAlterTableSqls(Long tableId);
 	public Pair<Integer, String> publishMetaTable(Long tableId,String currentUser);
-	public List<PendingMetaTable> listDrafts(Map<String, Object> searchColumn,
+	public JSONArray listDrafts(String[] fields, Map<String, Object> searchColumn,
 			PageDesc pageDesc);
 	
 	public List<Pair<String, String>> listTablesInPdm(String pdmFilePath);

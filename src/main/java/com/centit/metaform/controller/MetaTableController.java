@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.centit.framework.core.common.JsonResultUtils;
 import com.centit.framework.core.common.ResponseData;
 import com.centit.framework.core.controller.BaseController;
@@ -120,10 +119,7 @@ public class MetaTableController extends BaseController{
     @RequestMapping(value="/draft",method = RequestMethod.GET)
     public void listdraft(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);        
-        List<PendingMetaTable> listObjects = mdTableMag.listDrafts(searchColumn, pageDesc);
-        SimplePropertyPreFilter simplePropertyPreFilter = null;
-        
-        
+        JSONArray listObjects = mdTableMag.listDrafts(field,searchColumn, pageDesc);        
         if (null == pageDesc) {
             JsonResultUtils.writeSingleDataJson(listObjects, response);
             return;
@@ -132,13 +128,10 @@ public class MetaTableController extends BaseController{
         resData.addResponseData(OBJLIST, listObjects);
         resData.addResponseData(PAGE_DESC, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
-            simplePropertyPreFilter = new SimplePropertyPreFilter(PendingMetaTable.class, field);
-            JsonResultUtils.writeResponseDataAsJson(resData, response,simplePropertyPreFilter);
-        }
-        else{
+            JsonResultUtils.writeResponseDataAsJson(resData, response);
+        }else{
         	JsonResultUtils.writeResponseDataAsJson(resData, response);
-        }
-        
+        }        
     }
     
     /**
