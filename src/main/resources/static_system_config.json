@@ -50,26 +50,6 @@
       "pageType": "D"
     },
     {
-      "optId": "DatabaseInfo",
-      "optName": "数据库定义",
-      "preOptId": "MDFORMMGR",
-      "optRoute": "modules/sys/databaseinfo/databaseinfo.html",
-      "optUrl": "service/sys/databaseinfo",
-      "optType": "O",
-      "isInToolbar": "Y",
-      "pageType": "D"
-    },
-    {
-      "optId": "OsInfo",
-      "optName": "系统业务管理",
-      "preOptId": "MDFORMMGR",
-      "optRoute": "modules/sys/osinfo/osinfo.html",
-      "optUrl": "service/sys/osinfo",
-      "optType": "O",
-      "isInToolbar": "Y",
-      "pageType": "D"
-    },
-    {
       "optId": "MDTABLE",
       "optName": "表元数据",
       "preOptId": "MDFORMMGR",
@@ -115,22 +95,6 @@
       "optName": "业务首页",
       "optUrl": "/firstpage",
       "optMethod": "firstpage",
-      "optReq": "R"
-    },
-    {
-      "optCode": "1000077",
-      "optId": "DatabaseInfo",
-      "optName": "数据库定义",
-      "optUrl": "/",
-      "optMethod": "view",
-      "optReq": "R"
-    },
-    {
-      "optCode": "1000081",
-      "optId": "OsInfo",
-      "optName": "系统业务管理",
-      "optUrl": "/",
-      "optMethod": "view",
       "optReq": "R"
     },
     {
@@ -185,17 +149,7 @@
     },
     {
       "roleCode": "G-SYSADMIN",
-      "optCode": "1000077",
-      "optScopeCodes": ""
-    },
-    {
-      "roleCode": "G-SYSADMIN",
       "optCode": "1000076",
-      "optScopeCodes": ""
-    },
-    {
-      "roleCode": "G-SYSADMIN",
-      "optCode": "1000081",
       "optScopeCodes": ""
     },
     {
