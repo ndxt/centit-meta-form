@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
-         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-    <display-name>基于元数据的自定义表单工具</display-name>
+	<display-name>基于元数据的自定义表单工具</display-name>
 
     <!-- param -->
     <context-param>
@@ -28,7 +27,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
         	classpath:spring-config.xml,
-            classpath:spring-security-dao.xml
+            classpath:spring-security-cas.xml
         </param-value>
     </context-param>
 
@@ -59,15 +58,11 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>/system/*</url-pattern>
+        <url-pattern>/service/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
-        <url-pattern>/service/*</url-pattern>
-    </filter-mapping>
-	<filter-mapping>
-        <filter-name>encodingFilter</filter-name>
-        <url-pattern>/login</url-pattern>
+        <url-pattern>/system/*</url-pattern>
     </filter-mapping>
     
 	<!-- _method=PUT 这个过滤器让put也可以想post一样接收form表单中的数据，可以去掉-->
@@ -77,12 +72,9 @@
 	</filter>  
 	<filter-mapping>  
 	    <filter-name>httpPutFormContentFilter</filter-name>  
-	    <url-pattern>/system/*</url-pattern>  
+	    <url-pattern>/service/*</url-pattern>  
 	</filter-mapping> 
-    <filter-mapping>
-        <filter-name>httpPutFormContentFilter</filter-name>
-        <url-pattern>/service/*</url-pattern>
-    </filter-mapping>	
+	
 	<!-- 过滤请求方式 -->
     <filter>
         <filter-name>HiddenHttpMethodFilter</filter-name>
@@ -108,20 +100,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- CAS统一登出过滤器 -->
-	 
-    <!-- <filter>
-        <filter-name>CASSingleSignOutFilter</filter-name>
-        <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
-        <async-supported>true</async-supported>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>CASSingleSignOutFilter</filter-name>
-        <url-pattern>/system/*</url-pattern>
-    </filter-mapping>
-    -->
- 	
     <!-- spring Security 认证与权限管理-->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
@@ -131,29 +109,20 @@
 
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/login</url-pattern>
-        <dispatcher>REQUEST</dispatcher>  
-      	<dispatcher>FORWARD</dispatcher>  
+        <url-pattern>/service/*</url-pattern>
     </filter-mapping>
-    
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/logout</url-pattern>
-        <dispatcher>REQUEST</dispatcher>  
-      	<dispatcher>FORWARD</dispatcher>  
-    </filter-mapping>
-
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/system/*</url-pattern>
     </filter-mapping>
-   	<filter-mapping>
+	<filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/service/*</url-pattern>
+        <url-pattern>/login/cas</url-pattern>
     </filter-mapping>
+
     <!-- Spring Open Session In View Pattern filter 
            这个过滤器可以将访问数据库退出到Jsp中对属性的调用，主要起的作用是 按需访问数据库-->
-     
+        
     <filter>
         <filter-name>OpenSessionInViewFilter</filter-name>
         <filter-class>
@@ -179,6 +148,54 @@
         <filter-name>OpenSessionInViewFilter</filter-name>
         <url-pattern>/service/*</url-pattern>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>OpenSessionInViewFilter</filter-name>
+        <url-pattern>/system/*</url-pattern>
+    </filter-mapping>
+
+
+    <!--传输文件压缩过滤器  -->
+    <!--<filter>-->
+    <!--<filter-name>compressionFilter</filter-name>-->
+    <!--<filter-class>-->
+    <!--com.centit.core.web.filter.GZIPFilter-->
+    <!--</filter-class>-->
+    <!--</filter>-->
+
+    <!--<filter-mapping>-->
+    <!--<filter-name>compressionFilter</filter-name>-->
+    <!--<url-pattern>*.css</url-pattern>-->
+    <!--</filter-mapping>-->
+    <!--<filter-mapping>-->
+    <!--<filter-name>compressionFilter</filter-name>-->
+    <!--<url-pattern>*.jsp</url-pattern>-->
+    <!--</filter-mapping>-->
+    <!--<filter-mapping>-->
+    <!--<filter-name>compressionFilter</filter-name>-->
+    <!--<url-pattern>*.js</url-pattern>-->
+    <!--</filter-mapping>-->
+
+
+    <!--  缓存过滤器 好像有点问题，不能打开-->
+    <!--
+         <filter>
+         <filter-name>cacheFilter</filter-name>
+         <filter-class>com.centit.core.web.filter.CacheFilter</filter-class>
+         </filter>
+
+         <filter-mapping>
+         <filter-name>cacheFilter</filter-name>
+         <url-pattern>*.css</url-pattern>
+         </filter-mapping>
+         <filter-mapping>
+         <filter-name>cacheFilter</filter-name>
+         <url-pattern>*.gif</url-pattern>
+         </filter-mapping>
+         <filter-mapping>
+         <filter-name>cacheFilter</filter-name>
+         <url-pattern>*.js</url-pattern>
+         </filter-mapping>
+     -->
 
     <!-- org.springframework.web.context.ContextLoaderListener -->
     <listener>
@@ -199,9 +216,9 @@
     </listener>
     
     <!-- 通过 socket io 实现消息推送，如果不使用 这个消息推送服务 可以不需要 -->    
-    <listener>
+    <!-- <listener>
         <listener-class>com.centit.framework.listener.MessageComponentListener</listener-class>
-    </listener>
+    </listener> -->
 
     <!--  This listener is deployed in conjunction with the Spring plugin to enable the spring object
                 factory and the autowiring interceptors.  This only necessary starting with the Chapter Nine
@@ -213,7 +230,7 @@
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:springmvc-config/normal-servlet.xml</param-value>
-        </init-param>        
+        </init-param>
         <load-on-startup>1</load-on-startup>
         <async-supported>true</async-supported>
     </servlet>
@@ -236,13 +253,25 @@
         <servlet-name>system</servlet-name>
         <url-pattern>/system/*</url-pattern>
     </servlet-mapping>
-   
+    
+    <!--<servlet>
+    	<description>
+    	</description>
+    	<display-name>OfficeServer</display-name>
+    	<servlet-name>OfficeServer</servlet-name>
+    	<servlet-class>com.goldgrid.weboffice.OfficeServer</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>OfficeServer</servlet-name>
+    	<url-pattern>/OfficeServer</url-pattern>
+    </servlet-mapping>-->
+    
     <!-- CAS统一登出监听器 -->
-<!-- 
+ 
     <listener>
         <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
     </listener>
- -->
+ 
     <jsp-config>
         <taglib>
             <taglib-uri>http://www.centit.com/el/coderepo</taglib-uri>
@@ -252,19 +281,23 @@
 
     <!--<error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/system/exception/error/500</location>
+        <location>/service/exception/error/500</location>
     </error-page>-->
     <error-page>
+    	<error-code>404</error-code>
+    	<location>/service/exception/error/404</location>
+    </error-page>
+    <error-page>
         <error-code>400</error-code>
-        <location>/system/exception/error/400</location>
+        <location>/service/exception/error/400</location>
     </error-page>
     <error-page>
         <error-code>401</error-code>
-        <location>/system/exception/error/401</location>
+        <location>/service/exception/error/401</location>
     </error-page>
     <error-page>
         <error-code>403</error-code>
-        <location>/system/exception/error/403</location>
+        <location>/service/exception/error/403</location>
     </error-page>
 
     <!-- other -->
