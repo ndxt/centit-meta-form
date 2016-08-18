@@ -39,9 +39,11 @@
 
 	<bean id="ajaxFailureHandler" class="com.centit.framework.security.AjaxAuthenticationFailureHandler">
 		<property name="defaultFailureUrl" value="/service/sys/login/error"></property>
+		<property name="writeLog" value="true"></property>
     </bean>
      
     <bean id="ajaxSuccessHandler" class="com.centit.framework.security.AjaxAuthenticationSuccessHandler">
+    	<property name="writeLog" value="true"></property>
     </bean>
     
 	<bean id="casFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">
