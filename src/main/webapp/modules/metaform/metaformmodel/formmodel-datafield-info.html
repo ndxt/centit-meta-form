@@ -1,0 +1,84 @@
+<form class="centit form info" novalidate="true">
+	<div class="fields two"> 
+		<div class="field required ">
+			<label>模块代码</label> <input type="text" class="easyui-textbox"
+				name="modelCode" required />
+		</div>
+		<div class="field required">
+			<label>字段代码</label> <input type="text" class="easyui-textbox"
+				name="columnName" required />
+		</div>
+		<div class="field ">
+			<label>字段名称</label> <input type="text" class="easyui-textbox"
+				name="fieldLableName" />
+		</div>
+		<div class="field ">
+			<label>字段类别</label> <input type="text" class="easyui-textbox"
+				name="columnType" required />
+		</div>
+		<div class="field ">
+			<label>字段状态</label> <input type="text" class="easyui-textbox"
+				name="columnState" />
+		</div>
+		<div class="field ">
+			<label>更改类别</label> <input type="text" class="easyui-textbox"
+				name="accessType" required/>
+		</div>
+		<div class="field ">
+			<label>是否是焦点</label> <input type="text" class="easyui-combobox" panelHeight="auto"
+				name="focus" data-options="valueField:'value',textField:'label',data:[{value:'T',label:'是'},{value:'F',label:'否'}]"/>
+		</div>
+		<div class="field ">
+			<label>是否必填</label> <input type="text" class="easyui-combobox" panelHeight="auto"
+				name="mandatory" data-options="valueField:'value',textField:'label',data:[{value:'T',label:'是'},{value:'F',label:'否'}]"/>
+		</div>
+		<div class="field ">
+			<label>显示顺序</label> <input type="text" class="easyui-textbox"
+				name="displayOrder" />
+		</div>
+		<div class="field ">
+			<label>引用类型</label> <input type="text" class="easyui-combobox" panelHeight="auto"
+				name="referenceType" data-options="valueField:'value',textField:'label',
+								data:[
+								{value:'1',label:'数据字典 '},
+								{value:'2',label:'JSON表达式 '},
+								{value:'3',label:'sql语句'},
+								{value:'Y',label:'年份'},
+								{value:'M',label:'月份'}]"/>
+		</div>
+		
+		<div class="field ">
+			<label>约束表达式</label> <input type="text" class="easyui-textbox"
+				name="validateRegex" />
+		</div>
+		<div class="field ">
+			<label>约束提示</label> <input type="text" class="easyui-textbox"
+				name="validateInfo" />
+		</div>
+		<div class="field ">
+			<label>默认值</label> <input type="text" class="easyui-textbox"
+				name="defaultValue" />
+		</div>
+		<div class="field ">
+			<label>自动创建规则</label> <input type="text" class="easyui-textbox"
+				name="autoCreateRule" />
+		</div>
+		<div class="field ">
+			<label>数据库类别</label> <input type="text" class="easyui-textbox"
+				name="databaseType" />
+		</div>
+		
+	</div>
+	<div class="field required">
+			<label>引用数据</label> <input type="text" class="easyui-textbox"
+				name="referenceData"  multiline="true" style="height: 50px;"/>
+		</div>
+	<div class="field ">
+			<label>输入约束描述</label> <input type="text" class="easyui-textbox"
+				name="validateHint" multiline="true" style="height: 50px;"/>
+		</div>
+	<div class="field ">
+			<label>输入说明</label> <input type="text" class="easyui-textbox"
+				name="inputHint" multiline="true" style="height: 50px;"/>
+	</div>
+</form>
