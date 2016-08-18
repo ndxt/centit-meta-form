@@ -2,6 +2,7 @@ define(function(require) {
 	var Config = require('config');
 	var Page = require('core/page');
 	var DatafieldAdd=require("./metaform.datafield.add");
+	var DatafieldEdit=require("./metaform.datafield.eidt");
 	var DatafieldRemove=require("./metaform.datafield.remove");
 	var OperationAdd=require("./metaform.operation.add");
 	var OperationRemove=require("./metaform.operation.remove");
@@ -10,6 +11,7 @@ define(function(require) {
 		
 		this.injecte([
 		              new DatafieldAdd('formmodel_datafield_add'),
+		              new DatafieldEdit('formmodel_datafield_edit'),
 		              new DatafieldRemove('formmodel_datafield_remove'),
 		              new OperationAdd('formmodel_operation_add'),
 		              new OperationRemove('formmodel_operation_remove')
