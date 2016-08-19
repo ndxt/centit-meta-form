@@ -179,8 +179,8 @@ public class MetaTableController extends BaseController{
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
     	PendingMetaTable table=new PendingMetaTable();
     	table.copyNotNullProperty(mdTable);
-    	mdTable.setTableType("T");// T 是数据表，后期会添加 V（视图）的选择
-    	mdTable.setTableState("N");
+//    	mdTable.setTableType("T");// T 是数据表，后期会添加 V（视图）的选择
+//    	mdTable.setTableState("N");
     	Serializable pk = mdTableMag.saveNewPendingMetaTable(table);
         JsonResultUtils.writeSingleDataJson(pk,response);
     }

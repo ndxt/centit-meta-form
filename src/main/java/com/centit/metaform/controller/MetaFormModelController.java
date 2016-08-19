@@ -1,6 +1,7 @@
 package com.centit.metaform.controller;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -100,9 +101,13 @@ public class MetaFormModelController extends BaseController{
      * @return
      */
     @RequestMapping(method = {RequestMethod.POST})
-    public void createMetaFormModel(@RequestBody @Valid MetaFormModel metaFormModel, HttpServletResponse response) {
+    public void createMetaFormModel(@RequestBody @Valid MetaFormModel metaFormModel,
+    		 HttpServletRequest request, HttpServletResponse response) {
     	MetaFormModel model=new MetaFormModel();
+    	String usercode = getLoginUserCode(request);
     	model.copyNotNullProperty(metaFormModel);
+    	model.setRecorder(usercode);
+    	model.setLastModifyDate(new Date());
     	Serializable pk = metaFormModelMag.saveNewObject(model);
         JsonResultUtils.writeSingleDataJson(pk,response);
     }
@@ -128,17 +133,12 @@ public class MetaFormModelController extends BaseController{
      * @param response    {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.PUT})
-    public void updateMetaFormModel(@PathVariable String modelCode, 
+    public void updateMetaFormModel(@PathVariable String modelCode,
     		@RequestBody @Valid MetaFormModel metaFormModel, HttpServletResponse response) {
-    	
-    	
-    	MetaFormModel dbMetaFormModel  =     			
-    			metaFormModelMag.getObjectById( modelCode);
-        
-        
-
+    	MetaFormModel dbMetaFormModel = metaFormModelMag.getObjectById( modelCode);
         if (null != metaFormModel) {
-        	dbMetaFormModel .copyNotNullProperty(metaFormModel);
+        	dbMetaFormModel.copyNotNullProperty(metaFormModel);
+        	dbMetaFormModel.setLastModifyDate(new Date());
         	metaFormModelMag.mergeObject(dbMetaFormModel);
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);
