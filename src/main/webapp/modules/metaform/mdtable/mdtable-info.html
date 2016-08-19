@@ -130,10 +130,12 @@
 						{value:'3',label:'sql语句'},
 						{value:'Y',label:'年份'},
 						{value:'M',label:'月份'}]}}">引用类型</th>
-		       		<th data-options="field:'referenceData',editor:{type:'textbox',options:{}}">引用数据</th>
 		       		<th data-options="field:'validateRegex',editor:{type:'textbox',options:{}}">约束表达式</th>
 		       		<th data-options="field:'validateInfo',editor:{type:'textbox',options:{}}">约束提示</th>
 		       		<th data-options="field:'defaultValue',editor:{type:'textbox',options:{}}">默认值</th>
+		       		<th data-options="field:'autoCreateRule',editor:{type:'textbox',options:{}}">自动创建规则</th>
+		       		<th data-options="field:'autoCreateParam',editor:{type:'textbox',options:{}}">自动创建参数</th>
+		       		<th data-options="field:'referenceData',editor:{type:'textbox',options:{}}">引用数据</th>
 		       		<th data-options="field:'columnComment',editor:{type:'textbox',options:{}}">字段描述</th>
 		       		
 		        </tr>
@@ -141,10 +143,11 @@
 		</table>
 		
 		<div class="temp-toolbar_mdtable_columns">
-			<a iconCls="icon-add" trigger="none"
-				target="custom" rel="mdtable_column_add" >新增</a>
+			<a iconCls="icon-add" trigger="none" target="custom" rel="mdtable_column_add" >新增</a>
 			<hr>
-		
+			<a iconCls="icon-edit" trigger="single" href="/modules/metaform/mdtable/mdtable-column-edit.html"
+					target="dialog" rel="mdtable_column_edit" height="600px" width="700px" title="表字段" >编辑</a>
+			<hr>
 			<a iconCls="icon-base icon-base-ban" trigger="single"
 				target="confirm" rel="mdtable_column_remove" title="确定删除吗？">删除</a>
 		</div>

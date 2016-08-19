@@ -2,6 +2,7 @@ define(function(require) {
 	var Config = require('config');
 	var Page = require('core/page');
 	var MdtableColumnAdd=require("./mdtable.column.add");
+	var MdtableColumnEdit=require("./mdtable.column.eidt");
 	var MdtableColumnRemove=require("./mdtable.column.remove");
 	var MdtableSubtableAdd=require("./mdtable.subtable.add");
 	var MdtableSubtableRemove=require("./mdtable.subtable.remove");
@@ -14,6 +15,7 @@ define(function(require) {
 		// @override
 		this.injecte([
 		              new MdtableColumnAdd('mdtable_column_add'),
+		              new MdtableColumnEdit('mdtable_column_edit'),
 		              new MdtableColumnRemove('mdtable_column_remove'),
 		              new MdtableSubtableAdd('mdtable_subtable_add'),
 		              new MdtableSubtableRemove('mdtable_subtable_remove'),
