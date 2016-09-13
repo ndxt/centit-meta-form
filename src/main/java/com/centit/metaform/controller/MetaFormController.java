@@ -163,7 +163,14 @@ public class MetaFormController  extends BaseController{
 			e.printStackTrace();
 		}		
 	}	
-	
+	/**
+	 * 如果表结构和工作流关联，这里应该会新建工作流相关的信息，
+	 * 	和工作流相关的信息 需要在事件bean中实现，所有和工作流相关的工程需要有一个事件bean的实现
+	 * @param modelCode
+	 * @param jsonStr
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = "/{modelCode}/save",method = RequestMethod.POST)
 	public void saveNew(@PathVariable String modelCode, @RequestBody String jsonStr, 
 			HttpServletRequest request, HttpServletResponse response) {
@@ -188,8 +195,7 @@ public class MetaFormController  extends BaseController{
     		}else{
 	    		JSONObject jo = JSON.parseObject(jsonStr);
 				int n = formService.saveNewObject(rc, jo,response);
-
-				if(n<=1)
+				if(n<=1)//>1 说明在 service 方法中已经在response中写入了返回信息
 					JsonResultUtils.writeSuccessJson(response);
     		}   		
      		rc.commitAndClose();
@@ -251,7 +257,7 @@ public class MetaFormController  extends BaseController{
     		}else{
 	    		JSONObject jo = JSON.parseObject(jsonStr);
 				int n = formService.updateObject(rc, jo,response);
-				if(n<=1)
+				if(n<=1)//>1 说明在 service 方法中已经在response中写入了返回信息
 					JsonResultUtils.writeSuccessJson(response);
     		}
     		rc.commitAndClose();
@@ -270,7 +276,7 @@ public class MetaFormController  extends BaseController{
     	try {
 			int n = formService.deleteObjectById(rc, jo,response);
 			rc.commitAndClose();
-			if(n<=1)
+			if(n<=1)//>1 说明在 service 方法中已经在response中写入了返回信息
 				JsonResultUtils.writeSuccessJson(response);
 		} catch (Exception e) {
 			JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
@@ -279,12 +285,42 @@ public class MetaFormController  extends BaseController{
 		}		
 	}
 	
+	/**
+	 * 判断模块是否和工作流程关联，返回失败
+	 * 		如果有关联，先调用update
+	 * @param modelCode
+	 * @param jsonStr
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = "/{modelCode}/submit",method = RequestMethod.POST)
 	public void submit(@PathVariable String modelCode,  @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
-		update(modelCode, jsonStr, request, response);
+		if(jsonStr==null || jsonStr.length()<2){
+        	JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
+        	return;
+        }       
+		
+    	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+    	try {	    		
+    		JSONObject jo = JSON.parseObject(jsonStr);
+			int n = formService.submitObject(rc, jo,response);
+			if(n<=1)//>1 说明在 service 方法中已经在response中写入了返回信息
+				JsonResultUtils.writeSuccessJson(response);	    	
+    		rc.commitAndClose();
+		} catch (Exception e) {
+			JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
+			rc.rollbackAndClose();
+			e.printStackTrace();
+		}
 	}
 	
-	
+	/**
+	 * 一个页面上多个表单同时提交，并且在一个事务中完成，这个暂未实现
+	 * @param modelCode
+	 * @param jsonStr
+	 * @param request
+	 * @param response
+	 */
 	@RequestMapping(value = "/multimodelopt",method = RequestMethod.POST)
 	public void multiModelOpt(@PathVariable String modelCode,  @RequestBody String jsonStr, 
 			HttpServletRequest request, HttpServletResponse response) {

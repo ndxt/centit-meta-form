@@ -40,9 +40,20 @@ public interface ModelFormService {
 	public int updateObject(ModelRuntimeContext rc,
 			Map<String, Object> object, HttpServletResponse response) throws Exception;
 	
+	public int submitObject(ModelRuntimeContext rc,
+			Map<String, Object> object, HttpServletResponse response) throws Exception;
+	
 	public int deleteObjectById(ModelRuntimeContext rc,
 			Map<String,Object> keyValue, HttpServletResponse response) throws Exception;
 	
+	
+	/**
+	 * 获取级联查询的数据选项
+	 * @param rc
+	 * @param propertyName
+	 * @param startGroup
+	 * @return
+	 */
 	public List<OptionItem> getAsyncReferenceData(ModelRuntimeContext rc,
 			String propertyName,String startGroup);
 }

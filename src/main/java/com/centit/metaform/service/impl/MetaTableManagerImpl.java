@@ -312,7 +312,7 @@ public class MetaTableManagerImpl
 		  		jsonDao = new OracleJsonObjectDao(conn);
 		  		break;
 			}
-			
+			//检查字段定义一致性，包括：检查是否有时间戳、是否和工作流关联
 			checkPendingMetaTable(ptable,currentUser);
 			List<String> sqls =  makeAlterTableSqls(ptable);
 			

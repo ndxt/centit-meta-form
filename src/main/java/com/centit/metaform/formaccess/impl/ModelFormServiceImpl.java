@@ -709,9 +709,12 @@ public class ModelFormServiceImpl implements ModelFormService {
 	 */
 	private int runOperationEvent(ModelRuntimeContext rc, Map<String, Object> jo, 
 			String eventType , HttpServletResponse response ) throws Exception{
+		
 		String eventBeanName = rc.getMetaFormModel().getExtendOptBean();
+		//没有设置时间bean直接返回
 		if(StringUtils.isBlank(eventBeanName))
-				return 0;		
+				return 0;
+		//获取时间bean
 		OperationEvent optEvent = 
 	                ContextLoaderListener.getCurrentWebApplicationContext().
 	                getBean(eventBeanName,  OperationEvent.class);
@@ -794,6 +797,21 @@ public class ModelFormServiceImpl implements ModelFormService {
 		//rc.commitAndClose();
 		return n;
 	}
+	
+	@Override
+	@Transactional
+	public int submitObject(ModelRuntimeContext rc,
+			Map<String, Object> object, HttpServletResponse response) throws Exception{
+		int n = runOperationEvent(rc, object, "beforeSubmit", response);
+		if( n<=0 ){
+			JsonObjectDao dao = rc.getJsonObjectDao();		
+			dao.updateObject(rc.caseObjectTableObject(object));
+			n = runOperationEvent(rc, object, "afterSubmit", response);
+		}
+		//rc.commitAndClose();
+		return n;
+	}
+	
 	@Override
 	@Transactional
 	public int deleteObjectById(ModelRuntimeContext rc, 
