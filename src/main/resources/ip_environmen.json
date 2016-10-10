@@ -20,5 +20,13 @@
       "databaseDesc": "公司经营数据管理数据库",
       "created": "u0000000"
     }
+  ],
+  "userAccessTokens": [
+    {
+      "tokenId": "LTAI9QEcfHf7VrSE",
+      "userCode": "u0000000",
+      "secretAccessKey": "fYHyfoehaUS48tv53XEh3tihHx4hsN",
+      "isValid": "T"
+    }
   ]
 }
