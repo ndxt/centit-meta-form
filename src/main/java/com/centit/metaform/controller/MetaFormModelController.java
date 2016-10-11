@@ -122,7 +122,8 @@ public class MetaFormModelController extends BaseController{
     	
     	//metaFormModelMag.deleteObjectById( modelCode);
         
-        JsonResultUtils.writeAjaxErrorMessage(501, "系统已经禁用删除模块功能！", response);
+        JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_METHOD_DISABLED,
+        		"系统已经禁用删除模块功能！", response);
     } 
     
     /**
