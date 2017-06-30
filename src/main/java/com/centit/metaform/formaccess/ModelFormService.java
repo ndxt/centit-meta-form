@@ -13,37 +13,37 @@ import com.centit.framework.core.dao.PageDesc;
 
 public interface ModelFormService {
 	
-	public ModelRuntimeContext createRuntimeContext(String modelCode);
+	ModelRuntimeContext createRuntimeContext(String modelCode);
 	
-	public JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters);
+	JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters) throws SQLException;
 	
-	public JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters, PageDesc pageDesc );	
+	JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters, PageDesc pageDesc );	
 	
-	public JSONObject getObjectByProperties(ModelRuntimeContext rc,Map<String, Object> properties);
+	JSONObject getObjectByProperties(ModelRuntimeContext rc,Map<String, Object> properties);
 	
-	public Map<String,Object> createNewPk(ModelRuntimeContext rc ) throws SQLException;
+	Map<String,Object> createNewPk(ModelRuntimeContext rc ) throws SQLException;
 	
-	public Map<String,Object> getModelReferenceFields(ModelRuntimeContext rc, JSONObject object) throws SQLException;
+	Map<String,Object> getModelReferenceFields(ModelRuntimeContext rc, JSONObject object) throws SQLException;
 	
-	public JSONObject createInitialObject(ModelRuntimeContext rc ) throws SQLException;
+	JSONObject createInitialObject(ModelRuntimeContext rc ) throws SQLException;
 	
-	public MetaFormDefine createFormDefine(ModelRuntimeContext rc,String operation);
+	MetaFormDefine createFormDefine(ModelRuntimeContext rc,String operation);
 	
-	public ListViewDefine createListViewModel(ModelRuntimeContext rc);
+	ListViewDefine createListViewModel(ModelRuntimeContext rc);
 	
-	public int saveNewObject(ModelRuntimeContext rc, 
+	int saveNewObject(ModelRuntimeContext rc, 
 			Map<String, Object> object, HttpServletResponse response) throws Exception;
 	
-	public int mergeObject(ModelRuntimeContext rc, 
+	int mergeObject(ModelRuntimeContext rc, 
 			Map<String, Object> object, HttpServletResponse response) throws Exception;
 		
-	public int updateObject(ModelRuntimeContext rc,
+	int updateObject(ModelRuntimeContext rc,
 			Map<String, Object> object, HttpServletResponse response) throws Exception;
 	
-	public int submitObject(ModelRuntimeContext rc,
+	int submitObject(ModelRuntimeContext rc,
 			Map<String, Object> object, HttpServletResponse response) throws Exception;
 	
-	public int deleteObjectById(ModelRuntimeContext rc,
+	int deleteObjectById(ModelRuntimeContext rc,
 			Map<String,Object> keyValue, HttpServletResponse response) throws Exception;
 	
 	
@@ -54,6 +54,6 @@ public interface ModelFormService {
 	 * @param startGroup
 	 * @return
 	 */
-	public List<OptionItem> getAsyncReferenceData(ModelRuntimeContext rc,
+	List<OptionItem> getAsyncReferenceData(ModelRuntimeContext rc,
 			String propertyName,String startGroup);
 }

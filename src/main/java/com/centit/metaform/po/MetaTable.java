@@ -59,14 +59,14 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	 */
 	@Column(name = "TABLE_NAME")
 	@NotBlank(message = "字段不能为空")
-	@Length(max = 32, message = "字段长度不能大于{max}")
+	@Length(max = 64, message = "字段长度不能大于{max}")
 	private String  tableName;
 	/**
 	 * 表名称 null 
 	 */
 	@Column(name = "TABLE_LABEL_NAME")
 	@NotBlank(message = "字段不能为空")
-	@Length(max = 64, message = "字段长度不能大于{max}")
+	@Length(max = 100, message = "字段长度不能大于{max}")
 	private String  tableLabelName;
 	/**
 	 * 类别 表/视图 目前只能是表 

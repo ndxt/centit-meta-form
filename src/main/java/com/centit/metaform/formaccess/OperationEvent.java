@@ -19,7 +19,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int beforeSave(ModelRuntimeContext mrc, Map<String,Object> params,
+	int beforeSave(ModelRuntimeContext mrc, Map<String,Object> params,
 			String optJsonStrParam, HttpServletResponse response) throws Exception;
 	
 	/*** 
@@ -32,7 +32,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int afterSave(ModelRuntimeContext mrc, Map<String,Object> params,
+	int afterSave(ModelRuntimeContext mrc, Map<String,Object> params,
 			String optJsonStrParam, HttpServletResponse response) throws Exception;
 	/*** 
 	 * @param mrc
@@ -44,7 +44,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int beforeUpdate(ModelRuntimeContext mrc, Map<String,Object> params
+	int beforeUpdate(ModelRuntimeContext mrc, Map<String,Object> params
 			, String optJsonStrParam, HttpServletResponse response) throws Exception;
 	/*** 
 	 * @param mrc
@@ -56,7 +56,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int afterUpdate(ModelRuntimeContext mrc, Map<String,Object> params,
+	int afterUpdate(ModelRuntimeContext mrc, Map<String,Object> params,
 			String optJsonStrParam, HttpServletResponse response) throws Exception;
 	
 	/*** 
@@ -69,7 +69,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int beforeMerge(ModelRuntimeContext mrc, Map<String,Object> params
+	int beforeMerge(ModelRuntimeContext mrc, Map<String,Object> params
 			, String optJsonStrParam, HttpServletResponse response) throws Exception;
 	/*** 
 	 * @param mrc
@@ -81,7 +81,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int afterMerge(ModelRuntimeContext mrc, Map<String,Object> params,
+	int afterMerge(ModelRuntimeContext mrc, Map<String,Object> params,
 			String optJsonStrParam, HttpServletResponse response) throws Exception;
 	/*** 
 	 * @param mrc
@@ -93,7 +93,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int beforeDelete(ModelRuntimeContext mrc, Map<String,Object> params,
+	int beforeDelete(ModelRuntimeContext mrc, Map<String,Object> params,
 			String optJsonStrParam, HttpServletResponse response) throws Exception;
 	/*** 
 	 * @param mrc
@@ -105,7 +105,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int afterDelete(ModelRuntimeContext mrc, Map<String,Object> params,
+	int afterDelete(ModelRuntimeContext mrc, Map<String,Object> params,
 			String optJsonStrParam, HttpServletResponse response) throws Exception;
 	/*** 
 	 * @param mrc
@@ -117,7 +117,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int beforeSubmit(ModelRuntimeContext mrc, Map<String,Object> params,
+	int beforeSubmit(ModelRuntimeContext mrc, Map<String,Object> params,
 			String optJsonStrParam, HttpServletResponse response) throws Exception;
 	/*** 
 	 * @param mrc
@@ -129,7 +129,7 @@ public interface OperationEvent {
 	 * 			2 ：表示已经在response写入返回信息，主函数无需在写
 	 * @throws Exception
 	 */
-	public int afterSubmit(ModelRuntimeContext mrc, Map<String,Object> params,
+	int afterSubmit(ModelRuntimeContext mrc, Map<String,Object> params,
 			String optJsonStrParam, HttpServletResponse response) throws Exception;
 
 }

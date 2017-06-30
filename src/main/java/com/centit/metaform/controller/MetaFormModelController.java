@@ -80,8 +80,6 @@ public class MetaFormModelController extends BaseController{
      * 查询单个  通用模块管理 
 	
 	 * @param modelCode  Model_Code
-     * @param catalogCode 主键
-     * 
      * @param response    {@link HttpServletResponse}
      * @return {data:{}}
      */

@@ -277,6 +277,7 @@ public class MetaTableManagerImpl
 	@Override
 	@Transactional
 	public Pair<Integer, String> publishMetaTable(Long tableId,String currentUser) {
+		//TODO 根据不同的表类别 做不同的重构
 		try{
 			PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);		
 			

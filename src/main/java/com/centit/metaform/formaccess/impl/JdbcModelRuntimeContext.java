@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import com.centit.support.database.DBConnect;
 import com.centit.support.database.DataSourceDescription;
+import com.centit.support.database.DbcpConnect;
 import com.centit.support.database.DbcpConnectPools;
 import com.centit.support.database.jsonmaptable.DB2JsonObjectDao;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
@@ -13,7 +14,7 @@ import com.centit.support.database.jsonmaptable.SqlSvrJsonObjectDao;
 
 public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
 
-	private DBConnect conn;
+	private DbcpConnect conn;
 	private DataSourceDescription dataSource;
 
 	public JdbcModelRuntimeContext(){
@@ -25,7 +26,7 @@ public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
 	}
 	
 
-	public DBConnect getConnection() {
+	public DBConnect getConnection() throws SQLException {
 		if(conn==null){
 			 conn = DbcpConnectPools.getDbcpConnect(dataSource);
 		}
@@ -40,7 +41,7 @@ public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
 	
 	private JsonObjectDao dao = null;
 	
-	public JsonObjectDao getJsonObjectDao(){
+	public JsonObjectDao getJsonObjectDao() throws SQLException {
 		if(dao==null){
 			switch(getConnection().getDatabaseType()){
 			case Oracle:

@@ -26,20 +26,20 @@ import com.centit.metaform.po.PendingMetaTable;
 
 public interface MetaTableManager extends BaseEntityManager<MetaTable,java.lang.Long> 
 {
-	public JSONArray listMdTablesAsJson(
+	JSONArray listMdTablesAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc);
-	public Serializable saveNewPendingMetaTable(PendingMetaTable pmt);
-	public void deletePendingMetaTable(long tableId);
-	public PendingMetaTable getPendingMetaTable(long tableId);
-	public void savePendingMetaTable(PendingMetaTable pmt);
-	public List<String> makeAlterTableSqls(Long tableId);
-	public Pair<Integer, String> publishMetaTable(Long tableId,String currentUser);
-	public JSONArray listDrafts(String[] fields, Map<String, Object> searchColumn,
+	Serializable saveNewPendingMetaTable(PendingMetaTable pmt);
+	void deletePendingMetaTable(long tableId);
+	PendingMetaTable getPendingMetaTable(long tableId);
+	void savePendingMetaTable(PendingMetaTable pmt);
+	List<String> makeAlterTableSqls(Long tableId);
+	Pair<Integer, String> publishMetaTable(Long tableId,String currentUser);
+	JSONArray listDrafts(String[] fields, Map<String, Object> searchColumn,
 			PageDesc pageDesc);
 	
-	public List<Pair<String, String>> listTablesInPdm(String pdmFilePath);
-	public boolean importTableFromPdm(String pdmFilePath, String tableCode, String databaseCode);
-	public List<MetaColumn> getNotInFormFields(Long tableId);
-	public List<MetaColumn> listFields(Long tableId);
+	List<Pair<String, String>> listTablesInPdm(String pdmFilePath);
+	boolean importTableFromPdm(String pdmFilePath, String tableCode, String databaseCode);
+	List<MetaColumn> getNotInFormFields(Long tableId);
+	List<MetaColumn> listFields(Long tableId);
 }

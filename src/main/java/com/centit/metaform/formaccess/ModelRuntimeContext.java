@@ -1,5 +1,6 @@
 package com.centit.metaform.formaccess;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,36 +14,36 @@ import com.centit.support.database.metadata.TableField;
 
 public interface ModelRuntimeContext {
 	
-	public JsonObjectDao getJsonObjectDao();
+	JsonObjectDao getJsonObjectDao() throws SQLException;
 	
-	public String getModelCode();
+	String getModelCode();
 	
-	public MetaFormModel getMetaFormModel();
+	MetaFormModel getMetaFormModel();
 	
-	public MetaTable getTableInfo();
+	MetaTable getTableInfo();
 	
-	public Object castValueToFieldType(String fieldName,Object fieldValue);
+	Object castValueToFieldType(String fieldName,Object fieldValue);
 	
-	public  Object castValueToFieldType(TableField field,Object fieldValue);
+	 Object castValueToFieldType(TableField field,Object fieldValue);
 	
-	public Map<String,Object> caseObjectTableObject(Map<String,Object> object);
+	Map<String,Object> caseObjectTableObject(Map<String,Object> object);
 	
-	public Map<String,Object> fetchPkFromRequest( HttpServletRequest request);
+	Map<String,Object> fetchPkFromRequest( HttpServletRequest request);
 	
-	public Map<String,Object> fetchObjectFromRequest( HttpServletRequest request);	
+	Map<String,Object> fetchObjectFromRequest( HttpServletRequest request);	
 	
-	public void close();
+	void close();
 	
-	public void commitAndClose();
+	void commitAndClose();
 	
-	public void rollbackAndClose();
+	void rollbackAndClose();
 	
-	public void setUserEvniData(String key,Object value);
+	void setUserEvniData(String key,Object value);
 	
-	public void setCurrentUserDetails(
+	void setCurrentUserDetails(
 			CentitUserDetails userDetails);
 	
-	public QueryAndNamedParams getMetaFormFilter();
+	QueryAndNamedParams getMetaFormFilter();
 	
-	public QueryAndNamedParams translateSQL(String sql,Object obj);
+	QueryAndNamedParams translateSQL(String sql,Object obj);
 }
