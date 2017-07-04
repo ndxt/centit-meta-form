@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
@@ -24,9 +26,13 @@ public interface ModelRuntimeContext {
 	
 	Object castValueToFieldType(String fieldName,Object fieldValue);
 	
-	 Object castValueToFieldType(TableField field,Object fieldValue);
+	Object castValueToFieldType(TableField field,Object fieldValue);
 	
-	Map<String,Object> caseObjectTableObject(Map<String,Object> object);
+	Map<String,Object> castObjectToTableObject(Map<String,Object> object);
+
+	JSONObject castTableObjectToObject(JSONObject object);
+
+	JSONArray castTableObjectListToObjectList(JSONArray jsonArray);
 	
 	Map<String,Object> fetchPkFromRequest( HttpServletRequest request);
 	

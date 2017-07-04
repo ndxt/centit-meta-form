@@ -617,10 +617,12 @@ public class TableModelFormServiceImpl implements ModelFormService {
 			
 			if(StringUtils.isNotBlank(filter))
 				sql = sql + " where " + filter;	
-			return dao.findObjectsByNamedSqlAsJSON(
-					 sql,
-					 filters,
-					 q.getRight());
+			return rc.castTableObjectListToObjectList(
+						dao.findObjectsByNamedSqlAsJSON(
+								 sql,
+								 filters,
+								 q.getRight())
+						);
 		} catch (SQLException | IOException e) {
 			return null;
 		}
@@ -681,7 +683,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 				pageDesc.setTotalRows(ts.intValue());
 			else
 				pageDesc.setTotalRows(ja.size());
-			return ja;
+			return rc.castTableObjectListToObjectList(ja);
 		} catch (SQLException | IOException e) {
 			return null;
 		}
@@ -693,7 +695,8 @@ public class TableModelFormServiceImpl implements ModelFormService {
 	public JSONObject getObjectByProperties(ModelRuntimeContext rc,Map<String, Object> properties){
 		try {
 			JsonObjectDao dao = rc.getJsonObjectDao();
-			return dao.getObjectByProperties(properties);
+			return rc.castTableObjectToObject(
+					dao.getObjectByProperties(properties));
 		} catch (SQLException | IOException e) {
 			return null;
 		}
@@ -765,7 +768,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeSave", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();
-			dao.saveNewObject(rc.caseObjectTableObject(object));
+			dao.saveNewObject(rc.castObjectToTableObject(object));
  			n = runOperationEvent(rc, object, "afterSave", response);
 		}
 		//rc.commitAndClose();
@@ -779,7 +782,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeMerge", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.mergeObject(rc.caseObjectTableObject(object));
+			dao.mergeObject(rc.castObjectToTableObject(object));
 			n = runOperationEvent(rc, object, "afterMerge", response);
 		}
 		//rc.commitAndClose();
@@ -793,7 +796,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeUpdate", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.updateObject(rc.caseObjectTableObject(object));
+			dao.updateObject(rc.castObjectToTableObject(object));
 			n = runOperationEvent(rc, object, "afterUpdate", response);
 		}
 		//rc.commitAndClose();
@@ -807,7 +810,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, object, "beforeSubmit", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.updateObject(rc.caseObjectTableObject(object));
+			dao.updateObject(rc.castObjectToTableObject(object));
 			n = runOperationEvent(rc, object, "afterSubmit", response);
 		}
 		//rc.commitAndClose();
@@ -821,7 +824,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		int n = runOperationEvent(rc, keyValue, "beforeDelete", response);
 		if( n<=0 ){
 			JsonObjectDao dao = rc.getJsonObjectDao();
-			dao.deleteObjectById(rc.caseObjectTableObject(keyValue));
+			dao.deleteObjectById(rc.castObjectToTableObject(keyValue));
 			n = runOperationEvent(rc, keyValue, "afterDelete", response);
 		}
 		//rc.commitAndClose();

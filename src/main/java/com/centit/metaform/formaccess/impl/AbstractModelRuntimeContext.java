@@ -1,10 +1,16 @@
 package com.centit.metaform.formaccess.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.centit.metaform.po.MetaColumn;
+import com.centit.support.database.metadata.*;
 import org.apache.commons.lang3.StringUtils;
 
 import com.centit.framework.components.CodeRepositoryUtil;
@@ -20,7 +26,6 @@ import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.database.QueryAndNamedParams;
 import com.centit.support.database.QueryUtils;
 import com.centit.support.database.QueryUtils.SimpleFilterTranslater;
-import com.centit.support.database.metadata.TableField;
 
 public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext{
 	private String  modelCode;
@@ -38,6 +43,53 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 	
 	@Override
 	public MetaTable getTableInfo() {
+		return tableInfo;
+	}
+
+
+	public TableInfo getPersistenceTableInfo() {
+		if("C".equals(tableInfo.getTableType())) {
+			SimpleTableInfo sti = new SimpleTableInfo();
+
+			sti.setSchema( tableInfo.getSchema());
+			sti.setTableName( tableInfo.getTableName());
+			sti.setTableLabelName(tableInfo.getTableLabelName());
+			sti.setTableComment(tableInfo.getTableComment());
+			sti.setPkName(tableInfo.getPkName());
+			List<SimpleTableField> columns = new ArrayList<>();
+			for(MetaColumn column : tableInfo.getColumns()){
+				if(column.isPrimaryKey()){
+					SimpleTableField pc = new SimpleTableField();
+					pc.setPropertyName( column.getPropertyName());
+					pc.setFieldLabelName(column.getFieldLabelName());
+					pc.setJavaType(column.getJavaType());
+					pc.setColumnType(column.getColumnType());
+					pc.setColumnName(column.getColumnName());
+					pc.setColumnComment(column.getColumnComment());
+					pc.setDefaultValue(column.getDefaultValue());
+					pc.setMandatory(column.isMandatory());
+					pc.setMaxLength(column.getMaxLength());
+					pc.setPrecision(column.getPrecision());
+					pc.setScale(column.getScale());
+					columns.add(pc);
+				}
+			}
+			SimpleTableField pc = new SimpleTableField();
+			pc.setPropertyName( SimpleTableField.mapPropName(
+								tableInfo.getExtColumnName()));
+			pc.setFieldLabelName("object");
+			pc.setJavaType(FieldType.TEXT);
+			pc.setColumnType("CLOB");
+			pc.setColumnName( tableInfo.getExtColumnName());
+			pc.setColumnComment("存储对象的大字段");
+
+			columns.add(pc);
+
+			sti.setColumns(columns);
+
+			sti.setPkColumns(tableInfo.getPkColumns());
+			sti.setReferences(null);
+		}
 		return tableInfo;
 	}
 
@@ -108,9 +160,14 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 			return fieldValue;
 		return castValueToFieldType(field,fieldValue);
 	}
-	
+
+	/**
+	 * 需要添加 属性到 lob字段的转换
+	 * @param object
+	 * @return
+	 */
 	@Override
-	public Map<String,Object> caseObjectTableObject(Map<String,Object> object){
+	public Map<String,Object> castObjectToTableObject(Map<String,Object> object){
 		Map<String,Object> jo = new HashMap<>();
 		for(TableField field: getTableInfo().getColumns()){
     		Object pv = object.get(field.getPropertyName());
@@ -121,7 +178,21 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
     	}
 		return jo;
 	}
-	
+
+	/**
+	 * 需要添加 lob字段 到 对象的转换
+	 * @param object
+	 * @return
+	 */
+	@Override
+	public JSONObject castTableObjectToObject(JSONObject object){
+		return object;
+	}
+
+	@Override
+	public JSONArray castTableObjectListToObjectList(JSONArray jsonArray){
+		return jsonArray;
+	}
 	@Override
 	public MetaFormModel getMetaFormModel() {
 		return metaFormModel;

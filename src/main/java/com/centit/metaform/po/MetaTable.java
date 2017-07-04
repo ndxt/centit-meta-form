@@ -267,11 +267,15 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	public void setTableLabelName(String tableLabelName) {
 		this.tableLabelName = tableLabelName;
 	}
-  
+	/**
+	 * 类别 表 T table /视图 V view /大字段 C LOB/CLOB  目前只能是表
+	 */
 	public String getTableType() {
 		return this.tableType;
 	}
-	
+	/**
+	 * 类别 表 T table /视图 V view /大字段 C LOB/CLOB  目前只能是表
+	 */
 	public void setTableType(String tableType) {
 		this.tableType = tableType;
 	}

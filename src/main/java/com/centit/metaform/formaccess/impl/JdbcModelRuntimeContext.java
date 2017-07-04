@@ -45,15 +45,15 @@ public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
 		if(dao==null){
 			switch(getConnection().getDatabaseType()){
 			case Oracle:
-		  		return new OracleJsonObjectDao(getConnection() ,getTableInfo());
+		  		return new OracleJsonObjectDao(getConnection() ,getPersistenceTableInfo());
 		  	case DB2:
-		  		return new DB2JsonObjectDao(getConnection() ,getTableInfo());
+		  		return new DB2JsonObjectDao(getConnection() ,getPersistenceTableInfo());
 		  	case SqlServer:
-		  		return new SqlSvrJsonObjectDao(getConnection() ,getTableInfo());
+		  		return new SqlSvrJsonObjectDao(getConnection() ,getPersistenceTableInfo());
 		  	case MySql:
-		  		return new MySqlJsonObjectDao(getConnection() ,getTableInfo());
+		  		return new MySqlJsonObjectDao(getConnection() ,getPersistenceTableInfo());
 		  	default:
-		  		return new OracleJsonObjectDao(getConnection() ,getTableInfo());
+		  		return new OracleJsonObjectDao(getConnection() ,getPersistenceTableInfo());
 			}
 		}
 		return dao;

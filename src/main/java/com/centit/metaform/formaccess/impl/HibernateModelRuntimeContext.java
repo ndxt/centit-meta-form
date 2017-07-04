@@ -27,7 +27,7 @@ public class HibernateModelRuntimeContext extends AbstractModelRuntimeContext {
 	
 	public JsonObjectDao getJsonObjectDao(){
 		if(dao==null){
-			dao = new JsonObjectWork(baseObjectDao,getTableInfo());
+			dao = new JsonObjectWork(baseObjectDao,getPersistenceTableInfo());
 		}
 		return dao;
 	}
