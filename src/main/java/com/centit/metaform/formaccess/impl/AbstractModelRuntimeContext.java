@@ -7,10 +7,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.metaform.formaccess.XMLObject;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.support.database.metadata.*;
+import com.centit.support.json.JSONOpt;
 import org.apache.commons.lang3.StringUtils;
 
 import com.centit.framework.components.CodeRepositoryUtil;
@@ -168,14 +171,40 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 	 */
 	@Override
 	public Map<String,Object> castObjectToTableObject(Map<String,Object> object){
-		Map<String,Object> jo = new HashMap<>();
-		for(TableField field: getTableInfo().getColumns()){
+		if(object==null)
+			return null;
+		Map<String,Object> jo = new HashMap<>(object.size()*2);
+		Map<String,Object> jpo = new HashMap<>(object.size()*2);
+
+		for(MetaColumn field: getTableInfo().getColumns()){
     		Object pv = object.get(field.getPropertyName());
     		if(pv==null)
     			continue;
     		pv = castValueToFieldType(field,pv);
-    		jo.put(field.getPropertyName(),pv);
+
+			if("C".equals(tableInfo.getTableType())
+					&& field.isPrimaryKey()) {
+				jpo.put(field.getPropertyName(), pv);
+			} else {
+				jo.put(field.getPropertyName(), pv);
+			}
+
     	}
+		if("C".equals(tableInfo.getTableType())) {
+			if("XML".equalsIgnoreCase(getTableInfo().getExtColumnFormat())){
+				jpo.put(SimpleTableField.mapPropName(
+						tableInfo.getExtColumnName()),
+						XMLObject.jsonObjectToXMLString(jo)
+				);
+			}else {
+				jpo.put(SimpleTableField.mapPropName(
+						tableInfo.getExtColumnName()),
+						JSON.toJSONString(jo)
+				);
+			}
+			return jpo;
+		}
+
 		return jo;
 	}
 
@@ -186,11 +215,35 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 	 */
 	@Override
 	public JSONObject castTableObjectToObject(JSONObject object){
+		if(object==null)
+			return object;
+		String lobFieldColumn = SimpleTableField.mapPropName(
+				tableInfo.getExtColumnName());
+		if("C".equals(tableInfo.getTableType())) {
+			String objStr = String.valueOf(object.get(lobFieldColumn));
+			object.remove(lobFieldColumn);
+			if("XML".equalsIgnoreCase(getTableInfo().getExtColumnFormat())){
+				Map<String, Object> jo = XMLObject.xmlStringToJSONObject(objStr);
+				object.putAll(jo);
+			}else {
+				JSONObject jo = JSON.parseObject(objStr);
+				object.putAll(jo);
+			}
+		}
 		return object;
 	}
 
 	@Override
 	public JSONArray castTableObjectListToObjectList(JSONArray jsonArray){
+		if(jsonArray==null)
+			return jsonArray;
+		if("C".equals(tableInfo.getTableType())) {
+			JSONArray nja = new JSONArray(jsonArray.size());
+			for( Object jo : jsonArray) {
+				nja.add( castTableObjectToObject ((JSONObject)jo));
+			}
+			return nja;
+		}
 		return jsonArray;
 	}
 	@Override

@@ -1,13 +1,14 @@
-package com.centit.metaform.po;
+package com.centit.metaform.formaccess;
 
-import com.alibaba.fastjson.JSONObject;
 import com.centit.support.algorithm.StringBaseOpt;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -76,8 +77,24 @@ public class XMLObject {
         return createXMLElement(elementName ,"String", StringBaseOpt.objectToString(object));
     }
 
-    public static Document createXMLObjectFromJSONObject(JSONObject json){
+
+    public static String jsonObjectToXMLString(Map<String, Object> json){
         Element element = createXMLElementFromJSONMap("object",json);
-        return DocumentHelper.createDocument(element);
+        return element.asXML();
+        //return DocumentHelper.createDocument(element).asXML();
+    }
+
+    public static Map<String, Object> xmlStringToJSONObject(String xmlString){
+        Map<String, Object> objectMap = new HashMap<>();
+        try {
+            Document doc = DocumentHelper.parseText(xmlString);
+            for(Element element : doc.getRootElement().elements()){
+                objectMap.put(element.getName(),
+                        element.getData());
+            }
+        } catch (DocumentException e) {
+            //e.printStackTrace();
+        }
+        return objectMap;
     }
 }

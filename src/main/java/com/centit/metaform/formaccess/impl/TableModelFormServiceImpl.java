@@ -777,20 +777,6 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
 	@Override
 	@Transactional
-	public int mergeObject(ModelRuntimeContext rc, 
-			Map<String, Object> object, HttpServletResponse response) throws Exception {
-		int n = runOperationEvent(rc, object, "beforeMerge", response);
-		if( n<=0 ){
-			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.mergeObject(rc.castObjectToTableObject(object));
-			n = runOperationEvent(rc, object, "afterMerge", response);
-		}
-		//rc.commitAndClose();
-		return n;
-	}
-
-	@Override
-	@Transactional
 	public int updateObject(ModelRuntimeContext rc, 
 			Map<String, Object> object, HttpServletResponse response) throws Exception {
 		int n = runOperationEvent(rc, object, "beforeUpdate", response);
@@ -831,4 +817,29 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		return n;
 	}
 
+	@Override
+	@Transactional
+	public JSONObject getObjectById(ModelRuntimeContext rc,Map<String, Object> keyValue){
+		try {
+			JsonObjectDao dao = rc.getJsonObjectDao();
+			return rc.castTableObjectToObject(
+					dao.getObjectById(keyValue));
+		} catch (SQLException | IOException e) {
+			return null;
+		}
+	}
+
+	@Override
+	@Transactional
+	public int mergeObject(ModelRuntimeContext rc,
+						   Map<String, Object> object, HttpServletResponse response) throws Exception {
+		int n = runOperationEvent(rc, object, "beforeMerge", response);
+		if( n<=0 ){
+			JsonObjectDao dao = rc.getJsonObjectDao();
+			dao.mergeObject(rc.castObjectToTableObject(object));
+			n = runOperationEvent(rc, object, "afterMerge", response);
+		}
+		//rc.commitAndClose();
+		return n;
+	}
 }

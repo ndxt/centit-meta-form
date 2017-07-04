@@ -30,7 +30,9 @@ public interface ModelFormService {
 	MetaFormDefine createFormDefine(ModelRuntimeContext rc,String operation);
 	
 	ListViewDefine createListViewModel(ModelRuntimeContext rc);
-	
+
+	JSONObject getObjectById(ModelRuntimeContext rc,Map<String, Object> keyValue);
+
 	int saveNewObject(ModelRuntimeContext rc, 
 			Map<String, Object> object, HttpServletResponse response) throws Exception;
 	
