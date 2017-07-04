@@ -284,65 +284,65 @@ public class MetaTableManagerImpl
 			Pair<Integer, String> ret = GeneralDDLOperations.checkTableWellDefined(ptable);
 			if(ret.getLeft().intValue() != 0)
 				return ret;
-			
-			DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
-					//databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
-	
-			DataSourceDescription dbc = new DataSourceDescription();
-			dbc.setDatabaseCode(mdb.getDatabaseCode());
-			dbc.setConnUrl(mdb.getDatabaseUrl());
-			dbc.setUsername(mdb.getUsername());
-			dbc.setPassword(mdb.getClearPassword());		
-			DbcpConnect conn = DbcpConnectPools.getDbcpConnect(dbc);
-			JsonObjectDao jsonDao=null;
-			ptable.setDatabaseType(conn.getDatabaseType());
-			switch(conn.getDatabaseType()){
-			case Oracle:
-				jsonDao = new OracleJsonObjectDao(conn);
-				break;
-		  	case DB2:
-		  		jsonDao = new DB2JsonObjectDao(conn);
-		  		break;
-		  	case SqlServer:
-		  		jsonDao = new SqlSvrJsonObjectDao(conn);
-		  		break;
-		  	case MySql:
-		  		jsonDao = new MySqlJsonObjectDao(conn);
-		  		break;
-		  	default:
-		  		jsonDao = new OracleJsonObjectDao(conn);
-		  		break;
-			}
-			//检查字段定义一致性，包括：检查是否有时间戳、是否和工作流关联
-			checkPendingMetaTable(ptable,currentUser);
-			List<String> sqls =  makeAlterTableSqls(ptable);
-			
-			List<String> errors = new ArrayList<>();
-			for(String sql:sqls){
-				try{
-					jsonDao.doExecuteSql(sql);
-				}catch(SQLException se){
-					errors.add(se.getMessage());
-				}
-			}
-			
 			MetaChangLog chgLog = new MetaChangLog();
+			List<String> errors = new ArrayList<>();
+			if("T".equals(ptable.getTableType())) {
+				DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
+				//databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
+
+				DataSourceDescription dbc = new DataSourceDescription();
+				dbc.setDatabaseCode(mdb.getDatabaseCode());
+				dbc.setConnUrl(mdb.getDatabaseUrl());
+				dbc.setUsername(mdb.getUsername());
+				dbc.setPassword(mdb.getClearPassword());
+				DbcpConnect conn = DbcpConnectPools.getDbcpConnect(dbc);
+				JsonObjectDao jsonDao = null;
+				ptable.setDatabaseType(conn.getDatabaseType());
+				switch (conn.getDatabaseType()) {
+					case Oracle:
+						jsonDao = new OracleJsonObjectDao(conn);
+						break;
+					case DB2:
+						jsonDao = new DB2JsonObjectDao(conn);
+						break;
+					case SqlServer:
+						jsonDao = new SqlSvrJsonObjectDao(conn);
+						break;
+					case MySql:
+						jsonDao = new MySqlJsonObjectDao(conn);
+						break;
+					default:
+						jsonDao = new OracleJsonObjectDao(conn);
+						break;
+				}
+				//检查字段定义一致性，包括：检查是否有时间戳、是否和工作流关联
+				checkPendingMetaTable(ptable, currentUser);
+				List<String> sqls = makeAlterTableSqls(ptable);
+
+				for (String sql : sqls) {
+					try {
+						jsonDao.doExecuteSql(sql);
+					} catch (SQLException se) {
+						errors.add(se.getMessage());
+					}
+				}
+				chgLog.setChangeScript(JSON.toJSONString(sqls));
+				chgLog.setChangeComment(JSON.toJSONString(errors));
+			}
 			chgLog.setChangeId(metaChangLogDao.getNextKey());
 			chgLog.setTableID(ptable.getTableId());
-			chgLog.setChangeScript(JSON.toJSONString(sqls));
-			chgLog.setChangeComment(JSON.toJSONString(errors));
 			chgLog.setChanger(currentUser);
+			metaChangLogDao.saveNewObject(chgLog);
 			if(errors.size()==0){
-				metaChangLogDao.saveNewObject(chgLog);
 				ptable.setRecorder(currentUser);
 				pendingMdTableDao.mergeObject(ptable);
 				MetaTable table= new MetaTable(ptable);
 				metaTableDao.mergeObject(table);
-				return new ImmutablePair<Integer, String>(0,"发布成功！");
+				return new ImmutablePair<>(0,"发布成功！");
 			}else
-				return new ImmutablePair<Integer, String>(-10,JSON.toJSONString(errors));
+				return new ImmutablePair<>(-10,JSON.toJSONString(errors));
 		}catch(Exception e){
-			return new ImmutablePair<Integer, String>(0,"发布失败!" +  e.getMessage());
+			return new ImmutablePair<>(0,"发布失败!" +  e.getMessage());
 		}
 	}
 

@@ -285,7 +285,11 @@ public class PendingMetaTable implements
 	public void setUpdateCheckTimeStamp(String updateCheckTimeStamp) {
 		this.updateCheckTimeStamp = updateCheckTimeStamp;
 	}
-	
+
+	/**
+	 * 类别 表 T table /视图 V view /大字段 C LOB/CLOB  目前只能是表
+	 * @return
+	 */
 	public String getTableType() {
 		return this.tableType;
 	}
