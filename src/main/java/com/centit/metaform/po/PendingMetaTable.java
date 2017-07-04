@@ -73,12 +73,23 @@ public class PendingMetaTable implements
 	@Length(max = 100, message = "字段长度不能大于{max}")
 	private String  tableLabelName;
 	/**
-	 * 类别 表/视图 目前只能是表 
+	 * 类别 表 T table /视图 V view /大字段 C LOB/CLOB  目前只能是表
 	 */
 	@Column(name = "TABLE_TYPE")
 	@NotBlank(message = "字段不能为空")
 	@Length(  message = "字段长度不能大于{max}")
 	private String  tableType;
+
+
+	@Column(name = "EXT_COLUMN_NAME")
+	@NotBlank(message = "字段不能为空")
+	@Length(max = 64, message = "字段长度不能大于{max}")
+	private String  extColumnName;
+
+	@Column(name = "EXT_COLUMN_FORMAT")
+	@NotBlank(message = "字段不能为空")
+	@Length(max = 10, message = "字段长度不能大于{max}")
+	private String  extColumnFormat;
 	/**
 	 * 状态 系统 S / R 查询(只读)/ N 新建(读写) 
 	 */
@@ -316,6 +327,21 @@ public class PendingMetaTable implements
 		this.recorder = recorder;
 	}
 
+	public String getExtColumnName() {
+		return extColumnName;
+	}
+
+	public void setExtColumnName(String extColumnName) {
+		this.extColumnName = extColumnName;
+	}
+
+	public String getExtColumnFormat() {
+		return extColumnFormat;
+	}
+
+	public void setExtColumnFormat(String extColumnFormat) {
+		this.extColumnFormat = extColumnFormat;
+	}
 
 	public PendingMetaTable copy(PendingMetaTable other){
 		this.setMdColumns(other.getMdColumns());
@@ -331,6 +357,8 @@ public class PendingMetaTable implements
 		this.updateCheckTimeStamp=other.getUpdateCheckTimeStamp();
 		this.lastModifyDate= other.getLastModifyDate();  
 		this.recorder= other.getRecorder();
+		this.extColumnFormat = other.getExtColumnFormat();
+		this.extColumnName = other.getExtColumnName();
 		return this;
 	}
 	
@@ -361,7 +389,13 @@ public class PendingMetaTable implements
 		if( other.getLastModifyDate() != null)
 			this.lastModifyDate= other.getLastModifyDate();  
 		if( other.getRecorder() != null)
-			this.recorder= other.getRecorder();		
+			this.recorder= other.getRecorder();
+
+		if( other.getExtColumnFormat() != null)
+			this.extColumnFormat = other.getExtColumnFormat();
+		if( other.getExtColumnName() != null)
+			this.extColumnName = other.getExtColumnName();
+
 		return this;
 	}
 
@@ -378,7 +412,8 @@ public class PendingMetaTable implements
 		this.updateCheckTimeStamp=null;
 		this.lastModifyDate= null;  
 		this.recorder= null;
-
+		this.extColumnFormat = null;
+		this.extColumnName = null;
 		return this;
 	}
 	

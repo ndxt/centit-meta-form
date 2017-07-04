@@ -55,12 +55,32 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	private String  databaseCode;
 
 	/**
+	 * 类别 表 T table /视图 V view /大字段 C LOB/CLOB  目前只能是表
+	 */
+	@Column(name = "TABLE_TYPE")
+	@NotBlank(message = "字段不能为空")
+	@Length(max = 1, message = "字段长度不能大于{max}")
+	private String  tableType;
+
+	/**
 	 * 表代码 null 
 	 */
 	@Column(name = "TABLE_NAME")
 	@NotBlank(message = "字段不能为空")
 	@Length(max = 64, message = "字段长度不能大于{max}")
 	private String  tableName;
+
+
+	@Column(name = "EXT_COLUMN_NAME")
+	@NotBlank(message = "字段不能为空")
+	@Length(max = 64, message = "字段长度不能大于{max}")
+	private String  extColumnName;
+
+	@Column(name = "EXT_COLUMN_FORMAT")
+	@NotBlank(message = "字段不能为空")
+	@Length(max = 10, message = "字段长度不能大于{max}")
+	private String  extColumnFormat;
+
 	/**
 	 * 表名称 null 
 	 */
@@ -68,19 +88,13 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	@NotBlank(message = "字段不能为空")
 	@Length(max = 100, message = "字段长度不能大于{max}")
 	private String  tableLabelName;
-	/**
-	 * 类别 表/视图 目前只能是表 
-	 */
-	@Column(name = "TABLE_TYPE")
-	@NotBlank(message = "字段不能为空")
-	@Length(  message = "字段长度不能大于{max}")
-	private String  tableType;
+
 	/**
 	 * 状态 系统 S / R 查询(只读)/ N 新建(读写) 
 	 */
 	@Column(name = "TABLE_STATE")
 	@NotBlank(message = "字段不能为空")
-	@Length(  message = "字段长度不能大于{max}")
+	@Length(max = 1,  message = "字段长度不能大于{max}")
 	private String  tableState;
 	/**
 	 * 描述 null 
@@ -155,11 +169,12 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.workFlowOptType=ptable.getWorkFlowOptType();
 		this.recorder=ptable.getRecorder();
 		this.updateCheckTimeStamp=ptable.getUpdateCheckTimeStamp();
-		this.mdColumns=new HashSet<MetaColumn>();
-		this.mdRelations=new HashSet<MetaRelation>();
+		this.mdColumns= new HashSet<MetaColumn>();
+		this.mdRelations= new HashSet<MetaRelation>();
+		this.extColumnFormat = ptable.getExtColumnFormat();
+		this.extColumnName = ptable.getExtColumnName();
 		this.setColumnsFromPending(ptable.getMdColumns());
 		this.setRelationsFromPending(ptable.getMdRelations());
-		
 	}
 	
 	public void setColumnsFromPending(Set<PendingMetaColumn> pcolumns){
@@ -546,8 +561,23 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 			if(! found)
 				addMetaFormModel(newdt);
 		} 	
-	}	
+	}
 
+	public String getExtColumnName() {
+		return extColumnName;
+	}
+
+	public void setExtColumnName(String extColumnName) {
+		this.extColumnName = extColumnName;
+	}
+
+	public String getExtColumnFormat() {
+		return extColumnFormat;
+	}
+
+	public void setExtColumnFormat(String extColumnFormat) {
+		this.extColumnFormat = extColumnFormat;
+	}
 
 	public MetaTable copy(MetaTable other){
 		this.mdColumns=other.getMdColumns();
@@ -566,6 +596,8 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.mdRelations = other.getMdRelations();	
 		this.mdRelations = other.getMdRelations();	
 		this.metaFormModels = other.getMetaFormModels();
+		this.extColumnFormat = other.getExtColumnFormat();
+		this.extColumnName = other.getExtColumnName();
 		return this;
 	}
 	
@@ -595,6 +627,10 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 			this.recorder= other.getRecorder();		
 		if(other.getUpdateCheckTimeStamp()!=null)
 			this.updateCheckTimeStamp=other.getUpdateCheckTimeStamp();
+		if( other.getExtColumnFormat() != null)
+			this.extColumnFormat = other.getExtColumnFormat();
+		if( other.getExtColumnName() != null)
+			this.extColumnName = other.getExtColumnName();
 		//this.mdColumns = other.getMdColumns();
 		//replaceMdColumns(other.getMdColumns());
 			
@@ -622,7 +658,8 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 		this.updateCheckTimeStamp=null;
 		this.lastModifyDate= null;  
 		this.recorder= null;
-	
+		this.extColumnFormat = null;
+		this.extColumnName = null;
 		this.mdColumns = new HashSet<MetaColumn>();	
 		this.mdRelations = new HashSet<MetaRelation>();	
 		this.mdRelations = new HashSet<MetaRelation>();	
