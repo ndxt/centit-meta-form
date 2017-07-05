@@ -61,7 +61,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
     private MetaFormModelDao formModelDao;
      
     @Resource
-    protected IntegrationEnvironment platformEnvironment;
+    protected IntegrationEnvironment integrationEnvironment;
     
     @Value("${metaform.dataaccess.embedded}")
     private boolean useLocalDatabase;
@@ -87,7 +87,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		rc.setTableInfo(mtab);
 		rc.setMetaFormModel(mfm);
 		
-		DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(mtab.getDatabaseCode());
+		DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(mtab.getDatabaseCode());
 				//databaseInfoDao.getObjectById( mtab.getDatabaseCode());
 
 		DataSourceDescription dbc = new DataSourceDescription();
