@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 
+import com.centit.framework.staticsystem.service.IntegrationEnvironment;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -28,7 +29,6 @@ import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.framework.staticsystem.po.DatabaseInfo;
-import com.centit.framework.staticsystem.service.StaticEnvironmentManager;
 import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaColumnDao;
 import com.centit.metaform.dao.MetaTableDao;
@@ -101,7 +101,7 @@ public class MetaTableManagerImpl
     private PendingMetaRelationDao pendignRelationDao;
 	
 	@Resource
-    protected StaticEnvironmentManager platformEnvironment;
+    protected IntegrationEnvironment platformEnvironment;
 /*
  	@PostConstruct
     public void init() {

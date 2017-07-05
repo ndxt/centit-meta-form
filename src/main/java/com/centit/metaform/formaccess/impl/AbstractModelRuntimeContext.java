@@ -1,9 +1,6 @@
 package com.centit.metaform.formaccess.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,6 +9,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.metaform.formaccess.XMLObject;
 import com.centit.metaform.po.MetaColumn;
+import com.centit.metaform.po.ModelDataField;
 import com.centit.support.database.metadata.*;
 import com.centit.support.json.JSONOpt;
 import org.apache.commons.lang3.StringUtils;
@@ -43,12 +41,32 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 	public AbstractModelRuntimeContext(String  modelCode){
 		this.modelCode = modelCode;
 	}
-	
+	@Override
+	public String getModelCode() {
+		return modelCode;
+	}
+
+	public void setModelCode(String modelCode) {
+		this.modelCode = modelCode;
+	}
+
 	@Override
 	public MetaTable getTableInfo() {
 		return tableInfo;
 	}
 
+	public void setTableInfo(MetaTable tableinfo) {
+		this.tableInfo = tableinfo;
+	}
+
+	@Override
+	public MetaFormModel getMetaFormModel() {
+		return metaFormModel;
+	}
+
+	public void setMetaFormModel(MetaFormModel metaFormModel) {
+		this.metaFormModel = metaFormModel;
+	}
 
 	public TableInfo getPersistenceTableInfo() {
 		if("C".equals(tableInfo.getTableType())) {
@@ -96,19 +114,22 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 		return tableInfo;
 	}
 
-	public void setTableInfo(MetaTable tableinfo) {
-		this.tableInfo = tableinfo;
-	}
-
 	@Override
-	public String getModelCode() {
-		return modelCode;
+	public List<String> getMetaFormField(){
+		Set<ModelDataField> fields = metaFormModel.getModelDataFields();
+
+		if(fields==null){
+			List<String>  propertyName = new ArrayList<>(fields.size()+1);
+			for(ModelDataField field : fields){
+				propertyName.add(
+						tableInfo.findFieldByColumn(
+								field.getColumnName()).getPropertyName());
+			}
+			return propertyName;
+		}
+		return null;
 	}
 
-	public void setModelCode(String modelCode) {
-		this.modelCode = modelCode;
-	}
-	
 	@Override
 	public Map<String,Object> fetchPkFromRequest(HttpServletRequest request){
 		Map<String,Object> jo = new HashMap<>();
@@ -246,15 +267,7 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 		}
 		return jsonArray;
 	}
-	@Override
-	public MetaFormModel getMetaFormModel() {
-		return metaFormModel;
-	}
 
-	public void setMetaFormModel(MetaFormModel metaFormModel) {
-		this.metaFormModel = metaFormModel;
-	}
-	
 	@Override
 	public void setCurrentUserDetails(
 			CentitUserDetails userDetails) {

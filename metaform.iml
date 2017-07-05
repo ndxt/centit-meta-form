@@ -39,7 +39,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -127,6 +127,8 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-web:2.8.2" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
     <orderEntry type="library" name="Maven: jstl:jstl:1.2" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-dbcp2:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache:2.8.3" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.7.0">
@@ -140,8 +142,6 @@
     <orderEntry type="library" name="Maven: com.centit.framework:framework-base-view-easyui:3.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.centit.framework:framework-hibernate:4.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.flywaydb:flyway-core:4.2.0" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.2.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-dbcp2:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-core:5.2.9.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.3.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final" level="project" />
