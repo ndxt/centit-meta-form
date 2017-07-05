@@ -15,6 +15,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan(basePackages = {"com.centit.metaform.controller"},
         includeFilters = {@ComponentScan.Filter(type= FilterType.ANNOTATION,value= org.springframework.stereotype.Controller.class)},
         useDefaultFilters = false)
-public class SpringMvcConfig extends WebMvcConfigurerAdapter {
+public class NormalSpringMvcConfig extends WebMvcConfigurerAdapter {
 
 }
