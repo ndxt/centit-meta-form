@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import com.centit.framework.staticsystem.service.IntegrationEnvironment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
@@ -26,7 +27,6 @@ import com.centit.framework.common.OptionItem;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.staticsystem.po.DatabaseInfo;
-import com.centit.framework.staticsystem.service.StaticEnvironmentManager;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.formaccess.FieldTemplateOptions;
@@ -65,7 +65,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
     private MetaFormModelDao formModelDao;
      
     @Resource
-    protected StaticEnvironmentManager platformEnvironment;
+	protected IntegrationEnvironment integrationEnvironment;
     
     @Value("${metaform.dataaccess.embedded}")
     private boolean useLocalDatabase;
@@ -91,7 +91,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		rc.setTableInfo(mtab);
 		rc.setMetaFormModel(mfm);
 		
-		DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(mtab.getDatabaseCode());
+		DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(mtab.getDatabaseCode());
 				//databaseInfoDao.getObjectById( mtab.getDatabaseCode());
 
 		DataSourceDescription dbc = new DataSourceDescription();

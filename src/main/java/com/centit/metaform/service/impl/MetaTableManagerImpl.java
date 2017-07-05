@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 
+import com.centit.framework.staticsystem.service.IntegrationEnvironment;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -28,7 +29,6 @@ import com.centit.framework.hibernate.dao.DatabaseOptUtils;
 import com.centit.framework.hibernate.dao.SysDaoOptUtils;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.framework.staticsystem.po.DatabaseInfo;
-import com.centit.framework.staticsystem.service.StaticEnvironmentManager;
 import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.dao.MetaColumnDao;
 import com.centit.metaform.dao.MetaTableDao;
@@ -101,7 +101,7 @@ public class MetaTableManagerImpl
     private PendingMetaRelationDao pendignRelationDao;
 	
 	@Resource
-    protected StaticEnvironmentManager platformEnvironment;
+	protected IntegrationEnvironment integrationEnvironment;
 /*
  	@PostConstruct
     public void init() {
@@ -170,7 +170,7 @@ public class MetaTableManagerImpl
 	public List<String> makeAlterTableSqls(PendingMetaTable ptable) {		
 		MetaTable stable = metaTableDao.getObjectById(ptable.getTableId());
 		
-		DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
+		DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
 				//databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
 		
 		DBType dbType = DBType.mapDBType(mdb.getDatabaseUrl());
@@ -287,7 +287,7 @@ public class MetaTableManagerImpl
 			MetaChangLog chgLog = new MetaChangLog();
 			List<String> errors = new ArrayList<>();
 			if("T".equals(ptable.getTableType())) {
-				DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
+				DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
 				//databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
 
 				DataSourceDescription dbc = new DataSourceDescription();
@@ -353,7 +353,7 @@ public class MetaTableManagerImpl
 		JSONArray listTables = SysDaoOptUtils.listObjectsAsJson( baseDao ,
 	            fields,PendingMetaTable.class, 
 	            searchColumn,  pageDesc);
-		List<DatabaseInfo> databases = platformEnvironment.listDatabaseInfo();
+		List<DatabaseInfo> databases = integrationEnvironment.listDatabaseInfo();
 		for(Object obj:listTables){
 			JSONObject table = (JSONObject)obj;
 			String databaseCode = table.getString("databaseCode");
