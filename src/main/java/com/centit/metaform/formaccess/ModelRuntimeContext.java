@@ -27,8 +27,6 @@ public interface ModelRuntimeContext {
 
 	List<String> getMetaFormField();
 	
-	Object castValueToFieldType(String fieldName,Object fieldValue);
-	
 	Object castValueToFieldType(TableField field,Object fieldValue);
 	
 	Map<String,Object> castObjectToTableObject(Map<String,Object> object);

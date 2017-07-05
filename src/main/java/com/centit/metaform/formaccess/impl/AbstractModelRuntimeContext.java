@@ -174,16 +174,6 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 			return StringBaseOpt.objectToString(fieldValue);
 		}
 	}
-	
-	@Override
-	public Object castValueToFieldType(String fieldName,Object fieldValue){
-		if(fieldValue==null)
-			return null;
-		TableField field = getTableInfo().findFieldByName(fieldName);
-		if(field==null)
-			return fieldValue;
-		return castValueToFieldType(field,fieldValue);
-	}
 
 	/**
 	 * 需要添加 属性到 lob字段的转换
