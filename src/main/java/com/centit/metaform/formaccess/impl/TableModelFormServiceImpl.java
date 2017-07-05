@@ -2,11 +2,7 @@ package com.centit.metaform.formaccess.impl;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -65,7 +61,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
     private MetaFormModelDao formModelDao;
      
     @Resource
-	protected IntegrationEnvironment integrationEnvironment;
+    protected IntegrationEnvironment platformEnvironment;
     
     @Value("${metaform.dataaccess.embedded}")
     private boolean useLocalDatabase;
@@ -91,7 +87,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		rc.setTableInfo(mtab);
 		rc.setMetaFormModel(mfm);
 		
-		DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(mtab.getDatabaseCode());
+		DatabaseInfo mdb = platformEnvironment.getDatabaseInfo(mtab.getDatabaseCode());
 				//databaseInfoDao.getObjectById( mtab.getDatabaseCode());
 
 		DataSourceDescription dbc = new DataSourceDescription();
@@ -775,28 +771,101 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		return n;
 	}
 
+	private static Map<String,Object> mergeTwoObject(
+	        Collection<String> fields,Map<String,Object> oldObject, Map<String,Object> newObject ){
+
+        if(newObject==null || fields == null)
+            return oldObject;
+
+        if(oldObject==null){
+            oldObject = new HashMap<>(fields.size());
+        }
+
+        for(String f :fields){
+            Object obj = newObject.get(f);
+            if(obj==null){
+                oldObject.remove(f);
+            }else{
+                oldObject.put(f,obj);
+            }
+        }
+        return oldObject;
+    }
+
+    private static Map<String,Object> mergeTwoObject(
+            Map<String,Object> oldObject, Map<String,Object> newObject ){
+        if(newObject==null )
+            return oldObject;
+
+        if(oldObject==null){
+            return newObject;
+        }
+        oldObject.putAll(newObject);
+        return oldObject;
+    }
+
+    private int updateModelObject(ModelRuntimeContext rc,Map<String, Object> object) throws SQLException, IOException {
+        JsonObjectDao dao = rc.getJsonObjectDao();
+        //这个地方要判断 ，数据的存储方式，如果 大字段则要自己 merge
+        List<String> fields = rc.getMetaFormField();
+        if("C".equalsIgnoreCase(rc.getTableInfo().getTableType())){
+            Map<String, Object> oldObject = dao.getObjectById(object);
+            if(fields !=null)
+                oldObject = mergeTwoObject(oldObject,object);
+            else
+                oldObject = mergeTwoObject(fields, oldObject,object);
+
+            return dao.updateObject(rc.castObjectToTableObject(oldObject));
+        }else {
+            if(fields !=null)
+                return dao.updateObject(fields, rc.castObjectToTableObject(object));
+            else
+                return dao.updateObject(rc.castObjectToTableObject(object));
+        }
+    }
+
 	@Override
 	@Transactional
 	public int updateObject(ModelRuntimeContext rc, 
 			Map<String, Object> object, HttpServletResponse response) throws Exception {
 		int n = runOperationEvent(rc, object, "beforeUpdate", response);
 		if( n<=0 ){
-			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.updateObject(rc.castObjectToTableObject(object));
+            updateModelObject(rc,object);
 			n = runOperationEvent(rc, object, "afterUpdate", response);
 		}
 		//rc.commitAndClose();
 		return n;
 	}
-	
+    private int mergeModelObject(ModelRuntimeContext rc,Map<String, Object> object) throws SQLException, IOException {
+        JsonObjectDao dao = rc.getJsonObjectDao();
+        //这个地方要判断 ，数据的存储方式，如果 大字段则要自己 merge
+        Map<String, Object> oldObject = dao.getObjectById(object);
+        if(oldObject==null)
+            return dao.saveNewObject(rc.castObjectToTableObject(object));
+
+        return updateModelObject(rc,object);
+    }
+
+    @Override
+    @Transactional
+    public int mergeObject(ModelRuntimeContext rc,
+                           Map<String, Object> object, HttpServletResponse response) throws Exception {
+        int n = runOperationEvent(rc, object, "beforeMerge", response);
+        if( n<=0 ){
+            mergeModelObject(rc,object);
+            n = runOperationEvent(rc, object, "afterMerge", response);
+        }
+        //rc.commitAndClose();
+        return n;
+    }
+
 	@Override
 	@Transactional
 	public int submitObject(ModelRuntimeContext rc,
 			Map<String, Object> object, HttpServletResponse response) throws Exception{
 		int n = runOperationEvent(rc, object, "beforeSubmit", response);
 		if( n<=0 ){
-			JsonObjectDao dao = rc.getJsonObjectDao();		
-			dao.updateObject(rc.castObjectToTableObject(object));
+            updateModelObject(rc,object);
 			n = runOperationEvent(rc, object, "afterSubmit", response);
 		}
 		//rc.commitAndClose();
@@ -827,19 +896,5 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		} catch (SQLException | IOException e) {
 			return null;
 		}
-	}
-
-	@Override
-	@Transactional
-	public int mergeObject(ModelRuntimeContext rc,
-						   Map<String, Object> object, HttpServletResponse response) throws Exception {
-		int n = runOperationEvent(rc, object, "beforeMerge", response);
-		if( n<=0 ){
-			JsonObjectDao dao = rc.getJsonObjectDao();
-			dao.mergeObject(rc.castObjectToTableObject(object));
-			n = runOperationEvent(rc, object, "afterMerge", response);
-		}
-		//rc.commitAndClose();
-		return n;
 	}
 }

@@ -316,13 +316,12 @@ public class MetaFormController  extends BaseController{
 	
 	/**
 	 * 一个页面上多个表单同时提交，并且在一个事务中完成，这个暂未实现
-	 * @param modelCode
 	 * @param jsonStr
 	 * @param request
 	 * @param response
 	 */
 	@RequestMapping(value = "/multimodelopt",method = RequestMethod.POST)
-	public void multiModelOpt(@PathVariable String modelCode,  @RequestBody String jsonStr, 
+	public void multiModelOpt(@RequestBody String jsonStr,
 			HttpServletRequest request, HttpServletResponse response) {
 		
 	}	

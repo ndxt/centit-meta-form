@@ -1,6 +1,7 @@
 package com.centit.metaform.formaccess;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +24,8 @@ public interface ModelRuntimeContext {
 	MetaFormModel getMetaFormModel();
 	
 	MetaTable getTableInfo();
-	
-	Object castValueToFieldType(String fieldName,Object fieldValue);
+
+	List<String> getMetaFormField();
 	
 	Object castValueToFieldType(TableField field,Object fieldValue);
 	
