@@ -29,7 +29,7 @@ import com.centit.support.database.metadata.SimpleTableField;
 
 @Repository
 public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String>
-	{
+{
 
 	public static final Log log = LogFactory.getLog(MetaFormModelDao.class);
 	
@@ -80,5 +80,10 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String
 		}
 		return columnList;
 	}
-	
+
+
+	/*public List<MetaFormModel> listFormByTable(String tableId) {
+		return listObjects("From MetaFormModel where mdTable.tableId = ?", tableId);
+		//return listObjects("From MetaFormModel where tableId = ?", tableId);
+	}*/
 }

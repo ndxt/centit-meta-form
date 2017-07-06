@@ -138,7 +138,7 @@ public class MetaFormModelController extends BaseController{
         if (null != metaFormModel) {
         	dbMetaFormModel.copyNotNullProperty(metaFormModel);
         	dbMetaFormModel.setLastModifyDate(new Date());
-        	metaFormModelMag.mergeObject(dbMetaFormModel);
+        	metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);
             return;

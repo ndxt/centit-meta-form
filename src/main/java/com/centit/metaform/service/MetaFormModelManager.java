@@ -17,7 +17,9 @@ import com.centit.metaform.po.MetaFormModel;
 public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel,java.lang.String> 
 {
 	
-	public JSONArray listMetaFormModelsAsJson(
+	JSONArray listMetaFormModelsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc);
+
+	void updateMetaFormModel(MetaFormModel mtaFormModel);
 }

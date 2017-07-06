@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import com.centit.framework.staticsystem.service.IntegrationEnvironment;
+import com.centit.metaform.formaccess.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
@@ -25,14 +26,6 @@ import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.staticsystem.po.DatabaseInfo;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.MetaTableDao;
-import com.centit.metaform.formaccess.FieldTemplateOptions;
-import com.centit.metaform.formaccess.FormField;
-import com.centit.metaform.formaccess.ListColumn;
-import com.centit.metaform.formaccess.ListViewDefine;
-import com.centit.metaform.formaccess.MetaFormDefine;
-import com.centit.metaform.formaccess.ModelFormService;
-import com.centit.metaform.formaccess.ModelRuntimeContext;
-import com.centit.metaform.formaccess.OperationEvent;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
@@ -69,11 +62,19 @@ public class TableModelFormServiceImpl implements ModelFormService {
     private Map<String,List<OptionItem>> propertyOptionCache;
     
 	@Override
+	@Transactional(readOnly=true)
 	public ModelRuntimeContext createRuntimeContext(String modelCode) {
+
+		ModelRuntimeContext runtimeContext =
+				ModelRuntimeContextPool.getRuntimeContextPool(modelCode);
+		if(runtimeContext!=null)
+			return runtimeContext;
 		if(useLocalDatabase)
-			return createHibernateRuntimeContext(modelCode);
-		
-		return createJdbcRuntimeContext(modelCode);
+			runtimeContext = createHibernateRuntimeContext(modelCode);
+		else
+			runtimeContext = createJdbcRuntimeContext(modelCode);
+		ModelRuntimeContextPool.registerRuntimeContextPool(runtimeContext);
+		return runtimeContext;
 	}
 	
 	@Transactional(readOnly=true)

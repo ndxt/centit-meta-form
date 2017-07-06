@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 
+import com.centit.metaform.formaccess.ModelRuntimeContextPool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,13 @@ public class MetaFormModelManagerImpl
 		return SysDaoOptUtils.listObjectsAsJson(baseDao, fields, MetaFormModel.class,
     			filterMap, pageDesc);
 	}
-	
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void updateMetaFormModel(MetaFormModel mtaFormModel) {
+		ModelRuntimeContextPool.invalidRuntimeContextPool(mtaFormModel.getModelCode());
+		metaFormModelDao.updateObject(mtaFormModel);
+	}
+
 }
 
