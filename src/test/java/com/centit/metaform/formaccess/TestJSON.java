@@ -1,25 +1,31 @@
 package com.centit.metaform.formaccess;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.centit.support.database.metadata.SimpleTableField;
+
 public class TestJSON {
 
-	public static String getAString(){
-		try{
-			int a=0;
-			int b=4/a;
-			return "333";
-		}catch(Exception e){
-			return "222";
-		}
-		finally{
-			return "111";
-		}
+	public static void getAString(){
+		SimpleTableField pc = new SimpleTableField();
+		pc.setPropertyName( SimpleTableField.mapPropName(
+				"USER_NAME"));
+		pc.setFieldLabelName("object");
+		pc.setJavaType(FieldType.TEXT);
+		pc.setColumnType("CLOB");
+		pc.setColumnName( "USER_NAME");
+		pc.setColumnComment("存储对象的大字段");
+		JSONObject obj =(JSONObject) JSON.toJSON(pc);
+		System.out.println(obj.toJSONString());
+		System.out.println(XMLObject.jsonObjectToXMLString(obj));
+
 	}
 	
 	public static void main(String[] args) {
 		//FormField ff = new FormField();
 		//ff.setKey("iPAddess");
 		//ff.setType("input");
-		System.out.println(getAString());
+		getAString();
 	}
 
 }

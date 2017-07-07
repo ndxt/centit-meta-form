@@ -1,15 +1,12 @@
 package com.centit.metaform.formaccess;
 
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
+import org.apache.commons.lang3.StringUtils;
+import org.dom4j.*;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by codefan on 17-6-30.
@@ -19,12 +16,13 @@ public class XMLObject {
     public static Element createXMLElement(String elementName , String valueType, Object value){
         Element element = DocumentHelper.createElement(elementName);
         element.addAttribute("type",valueType);
-        element.setData(value);
+        element.setText(StringBaseOpt.objectToString(value));
         return element;
     }
 
     public static Element createXMLElementFromJSONMap(String elementName , Map<String,Object> jsonMap){
         Element element = DocumentHelper.createElement(elementName);
+        element.addAttribute("type","Object");
         for(Map.Entry<String,Object> jo : jsonMap.entrySet()){
             if(jo.getValue()!=null)
                 element.add(createXMLElementFromObject(jo.getKey(), jo.getValue()));
@@ -34,6 +32,7 @@ public class XMLObject {
 
     public static Element createXMLElementFromMap(String elementName , Map<Object,Object> jsonMap){
         Element element = DocumentHelper.createElement(elementName);
+        element.addAttribute("type","Object");
         for(Map.Entry<Object,Object> jo : jsonMap.entrySet()){
             if(jo.getValue()!=null)
                 element.add(createXMLElementFromObject(
@@ -46,6 +45,14 @@ public class XMLObject {
 
         if(object instanceof String){
             return createXMLElement(elementName ,"String", object);
+        }
+
+        if(object instanceof Long){
+            return createXMLElement(elementName ,"Long", object);
+        }
+
+        if(object instanceof Integer){
+            return createXMLElement(elementName ,"Integer", object);
         }
 
         if(object instanceof Number){
@@ -61,6 +68,7 @@ public class XMLObject {
         }
         if(object instanceof Object[]){
             Element element = DocumentHelper.createElement(elementName);
+            element.addAttribute("type","Array");
             for(Object obj: (Object[]) object){
                 if(obj!=null) {
                     element.add(createXMLElementFromObject("item", obj));
@@ -68,6 +76,7 @@ public class XMLObject {
             }
         }else if(object instanceof Collection){
             Element element = DocumentHelper.createElement(elementName);
+            element.addAttribute("type","Array");
             for(Object obj: (Collection<?>) object){
                 if(obj!=null) {
                     element.add(createXMLElementFromObject("item", obj));
@@ -84,17 +93,70 @@ public class XMLObject {
         //return DocumentHelper.createDocument(element).asXML();
     }
 
+    public static Object elementToObject(Element element ){
+        //Map<String, Object> objectMap = new HashMap<>();
+        Attribute attr = element.attribute("type");
+        String stype = attr==null?null:element.attribute("type").getValue();
+        if(StringUtils.equals("Date", stype)){
+            return DatetimeOpt.smartPraseDate(element.getTextTrim());
+        }else if(StringUtils.equals("Long", stype)){
+            return NumberBaseOpt.castObjectToLong(element.getTextTrim());
+        }else if(StringUtils.equals("Integer", stype)){
+            return NumberBaseOpt.castObjectToInteger(element.getTextTrim());
+        }else if(StringUtils.equals("Number", stype)){
+            return NumberBaseOpt.castObjectToDouble(element.getTextTrim());
+        }else if(StringUtils.equals("Array", stype)){
+            List<Element> subElements = element.elements();
+            if(subElements==null)
+                return null;
+            List<Object> objs = new ArrayList<>(subElements.size());
+            for(Element subE : subElements ){
+                if(StringUtils.equals("item",element.getName())) {
+                    objs.add(
+                            elementToObject(subE));
+                }
+            }
+            return objs;
+        }else if(StringUtils.equals("Object", stype)){
+            Map<String, Object> objectMap = new HashMap<>();
+            List<Element> subElements = element.elements();
+            if(subElements==null)
+                return null;
+            for(Element subE : subElements ){
+                objectMap.put(element.getName(),
+                        elementToObject( subE ));
+            }
+            return objectMap;
+        }else {
+            return element.getTextTrim();
+        }
+    }
+
+
+    public static Map<String, Object> elementToJSONObject(Element element ){
+        Object obj = elementToObject(element);
+        if(obj instanceof Map)
+            return (Map<String, Object> ) obj;
+        return null;
+    }
+
     public static Map<String, Object> xmlStringToJSONObject(String xmlString){
-        Map<String, Object> objectMap = new HashMap<>();
         try {
             Document doc = DocumentHelper.parseText(xmlString);
-            for(Element element : doc.getRootElement().elements()){
-                objectMap.put(element.getName(),
-                        element.getData());
-            }
+            return elementToJSONObject(doc.getRootElement());
         } catch (DocumentException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
+            return null;
         }
-        return objectMap;
+    }
+
+    public static Object xmlStringToObject(String xmlString){
+        try {
+            Document doc = DocumentHelper.parseText(xmlString);
+            return elementToObject(doc.getRootElement());
+        } catch (DocumentException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
