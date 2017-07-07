@@ -3,6 +3,7 @@ package com.centit.metaform.formaccess;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.support.database.metadata.SimpleTableField;
+import com.centit.support.xml.XMLObject;
 
 public class TestJSON {
 

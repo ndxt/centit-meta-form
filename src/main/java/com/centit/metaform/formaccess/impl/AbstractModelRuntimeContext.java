@@ -1,25 +1,16 @@
 package com.centit.metaform.formaccess.impl;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.metaform.formaccess.XMLObject;
-import com.centit.metaform.po.MetaColumn;
-import com.centit.metaform.po.ModelDataField;
-import com.centit.support.database.metadata.*;
-import com.centit.support.json.JSONOpt;
-import org.apache.commons.lang3.StringUtils;
-
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.metaform.formaccess.FieldType;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
+import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
+import com.centit.metaform.po.ModelDataField;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -27,6 +18,15 @@ import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.database.QueryAndNamedParams;
 import com.centit.support.database.QueryUtils;
 import com.centit.support.database.QueryUtils.SimpleFilterTranslater;
+import com.centit.support.database.metadata.SimpleTableField;
+import com.centit.support.database.metadata.SimpleTableInfo;
+import com.centit.support.database.metadata.TableField;
+import com.centit.support.database.metadata.TableInfo;
+import com.centit.support.xml.XMLObject;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext{
 	private String  modelCode;
