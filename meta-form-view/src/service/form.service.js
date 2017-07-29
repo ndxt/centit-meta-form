@@ -1,0 +1,11 @@
+(function() {
+  'use strict';
+
+  angular.module('metaForm')
+    .factory('FormAPI', FormAPI);
+
+  /* @ngInject */
+  function FormAPI(Restangular) {
+    return Restangular.service('service/metaform/formaccess');
+  }
+})();

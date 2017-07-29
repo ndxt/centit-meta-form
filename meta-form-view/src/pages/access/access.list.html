@@ -1,0 +1,24 @@
+<div class="sub-panel" ng-show="vm.visible">
+      <div class="operator-panel">
+          <button type="submit" class="btn btn-primary btn-block"
+                  ng-click="vm.options.search(vm.params)">查询</button>
+      </div>
+   <formly-form model="vm.params" fields="vm.filters">
+   </formly-form>
+</div>
+
+<div class="main-panel flex-item flex-row">
+    <div class="operator-panel">
+      <button class="btn btn-primary" ng-click="vm.options.create()">创建</button>
+      <button class="btn btn-default pull-right"
+              ng-class="{active: vm.visible}"
+              ng-click="vm.toggle()">
+        <span class="glyphicon glyphicon-filter"></span>
+      </button>
+    </div>
+
+    <table centit-form-table
+           data-model-code="{{vm.modelCode}}"
+           data-options="vm.options"
+           data-filters="vm.filters"></table>
+</div>

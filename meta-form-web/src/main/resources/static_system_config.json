@@ -1,0 +1,276 @@
+{
+  "userInfos": [
+    {
+      "userCode": "u0000000",
+      "userName": "管理员",
+      "isValid": "T",
+      "loginName": "admin",
+      "userPin": "d92ec26dec6234c5c79dfae76d375736"
+    }
+  ],
+  "optInfos": [
+    {
+      "optId": "LOGINCAS",
+      "optName": "CAS登录入口",
+      "preOptId": "0",
+      "optRoute": "/system/mainframe/logincas",
+      "optUrl": "/system/mainframe",
+      "optType": "O",
+      "isInToolbar": "N",
+      "pageType": "D"
+    },
+    {
+      "optId": "OPTNMANU",
+      "optName": "业务菜单",
+      "preOptId": "0",
+      "optRoute": "...",
+      "optUrl": "...",
+      "optType": "O",
+      "isInToolbar": "Y",
+      "pageType": "D"
+    },
+    {
+      "optId": "MDFORMMGR",
+      "optName": "表单管理",
+      "preOptId": "0",
+      "optRoute": "...",
+      "optUrl": "...",
+      "optType": "O",
+      "isInToolbar": "Y",
+      "pageType": "D"
+    },
+    {
+      "optId": "FIRSTPAGE",
+      "optName": "前期事务",
+      "preOptId": "OPTNMANU",
+      "optRoute": "form.access.list({modelCode: 'NEW_OPPORTUNITIE'})",
+      "optUrl": "...",
+      "optType": "O",
+      "isInToolbar": "Y",
+      "pageType": "D"
+    },
+    {
+      "optId": "MDTABLE",
+      "optName": "表元数据",
+      "preOptId": "MDFORMMGR",
+      "optRoute": "modules/metaform/mdtable/mdtable.html",
+      "optUrl": "service/metaform/mdtable",
+      "optType": "O",
+      "isInToolbar": "Y",
+      "pageType": "D"
+    },
+    {
+      "optId": "METAFORMMODEL",
+      "optName": "通用模块管理",
+      "preOptId": "MDFORMMGR",
+      "optRoute": "modules/metaform/metaformmodel/metaformmodel.html",
+      "optUrl": "service/metaform/metaformmodel",
+      "optType": "O",
+      "isInToolbar": "Y",
+      "pageType": "D"
+    },
+    {
+      "optId": "FORMCHANGELOG",
+      "optName": "元数据更改记录",
+      "preOptId": "MDFORMMGR",
+      "optRoute": "modules/metaform/mdchanglog/mdchanglog.html",
+      "optUrl": "service/metaform/mdchanglog",
+      "optType": "O",
+      "isInToolbar": "Y",
+      "pageType": "D"
+    }
+  ],
+  "optMethods": [
+    {
+      "optCode": "1000080",
+      "optId": "LOGINCAS",
+      "optName": "CAS登录入口",
+      "optUrl": "/logincas",
+      "optMethod": "logincas",
+      "optReq": "RCU"
+    },
+    {
+      "optCode": "1000079",
+      "optId": "FIRSTPAGE",
+      "optName": "业务首页",
+      "optUrl": "/firstpage",
+      "optMethod": "firstpage",
+      "optReq": "R"
+    },
+    {
+      "optCode": "1000082",
+      "optId": "MDTABLE",
+      "optName": "表单元数据",
+      "optUrl": "/",
+      "optMethod": "view",
+      "optReq": "R"
+    },
+    {
+      "optCode": "1000084",
+      "optId": "METAFORMMODEL",
+      "optName": "通用模块管理",
+      "optUrl": "/",
+      "optMethod": "view",
+      "optReq": "R"
+    },
+    {
+      "optCode": "1000083",
+      "optId": "FORMCHANGELOG",
+      "optName": "元数据更改记录",
+      "optUrl": "/",
+      "optMethod": "view",
+      "optReq": "R"
+    }
+  ],
+  "roleInfos": [
+    {
+      "roleCode": "G-SYSADMIN",
+      "roleName": "系统管理员",
+      "roleType": "S",
+      "isValid": "T",
+      "roleDesc": "所有系统配置功能"
+    }
+  ],
+  "rolePowers": [
+    {
+      "roleCode": "G-SYSADMIN",
+      "optCode": "1000080",
+      "optScopeCodes": ""
+    },
+    {
+      "roleCode": "G-SYSADMIN",
+      "optCode": "1000079",
+      "optScopeCodes": ""
+    },
+    {
+      "roleCode": "G-SYSADMIN",
+      "optCode": "1000078",
+      "optScopeCodes": ""
+    },
+    {
+      "roleCode": "G-SYSADMIN",
+      "optCode": "1000076",
+      "optScopeCodes": ""
+    },
+    {
+      "roleCode": "G-SYSADMIN",
+      "optCode": "1000082",
+      "optScopeCodes": ""
+    },
+    {
+      "roleCode": "G-SYSADMIN",
+      "optCode": "1000084",
+      "optScopeCodes": ""
+    },
+    {
+      "roleCode": "G-SYSADMIN",
+      "optCode": "1000083",
+      "optScopeCodes": ""
+    }
+  ],
+  "userRoles": [
+    {
+      "userCode": "u0000000",
+      "roleCode": "G-SYSADMIN",
+      "obtainDate": "2016-04-24",
+      "changeDesc": ""
+    }
+  ],
+  "unitInfos": [
+    {
+      "unitCode": "d0000000",
+      "unitName": "根部门",
+      "unitType": "D",
+      "isValid": "T",
+      "unitOrder": "1",
+      "depNo": "D00",
+      "unitPath": "/d0000000"
+    },
+    {
+      "unitCode": "d0000001",
+      "unitName": "管理部门",
+      "parentUnit": "d0000000",
+      "unitType": "D",
+      "isValid": "T",
+      "unitOrder": "1",
+      "depNo": "D01",
+      "unitPath": "/d0000000/d0000001"
+    },
+    {
+      "unitCode": "d0000002",
+      "unitName": "生产部门",
+      "parentUnit": "d0000000",
+      "unitType": "D",
+      "isValid": "T",
+      "unitOrder": "2",
+      "depNo": "D02",
+      "unitPath": "/d0000000/d0000002"
+    },
+    {
+      "unitCode": "d0000003",
+      "unitName": "财务部门",
+      "parentUnit": "d0000000",
+      "unitType": "D",
+      "isValid": "T",
+      "unitOrder": "3",
+      "depNo": "D03",
+      "unitPath": "/d0000000/d0000003"
+    }
+  ],
+  "userUnits": [
+    {
+      "UserUnitId": "1",
+      "unitCode": "d0000000",
+      "userCode": "u0000000",
+      "isPrimary": "T",
+      "userStation": "管理员",
+      "userRank": "部门经理"
+    }
+  ],
+  "dataCatalogs": [
+    {
+      "catalogCode": "YesOrNo",
+      "catalogName": "是否对应",
+      "optId": "system",
+      "catalogType": "L",
+      "catalogDesc": "Y:是，N:否"
+    },
+    {
+      "catalogCode": "TrueOrFalse",
+      "catalogName": "真假对应",
+      "optId": "system",
+      "catalogType": "L",
+      "catalogDesc": "T:真true，F:假false"
+    }
+  ],
+  "dataDictionaries": [
+    {
+      "catalogCode": "YesOrNo",
+      "dataCode": "Y",
+      "dataValue": "是",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "YesOrNo",
+      "dataCode": "N",
+      "dataValue": "否",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "TrueOrFalse",
+      "dataCode": "T",
+      "dataValue": "真",
+      "dataTag": "N",
+      "dataOrder": "1"
+    },
+    {
+      "catalogCode": "TrueOrFalse",
+      "dataCode": "F",
+      "dataValue": "假",
+      "dataTag": "N",
+      "dataOrder": "1"
+    }
+  ]
+}

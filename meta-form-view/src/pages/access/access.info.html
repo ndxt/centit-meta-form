@@ -1,0 +1,37 @@
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1 text-right">
+    <button class="btn btn-primary" centit-loading-button
+            ng-disabled="vm.Form.$pristine"
+            ng-if="vm.operation == 'create'"
+            ng-click="vm.handlers.submit()">创建</button>
+    <button class="btn btn-success" centit-loading-button
+            ng-if="vm.operation == 'edit'"
+            ng-disabled="vm.Form.$pristine"
+            ng-click="vm.handlers.submit()">修改</button>
+    <button class="btn btn-danger" centit-loading-button
+            ng-if="vm.operation == 'delete'"
+            ng-click="vm.handlers.submit()">删除</button>
+    <button class="btn btn-info"
+            ng-disabled="vm.Form.$pristine"
+            ng-if="['edit'].indexOf(vm.operation) > -1"
+            ng-click="vm.handlers.reset()">重置</button>
+    <button class="btn btn-default" ng-click="vm.handlers.back()">返回</button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div centit-form="vm.data"
+         data-handlers="vm.handlers"
+         data-form="vm.Form"
+         data-model-code="{{vm.modelCode}}"
+         data-operation="{{vm.operation}}"
+         data-primary-key="{{vm.primaryKey}}" data-primary-value="{{vm.primaryValue}}">
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <pre style="margin: 10px 0;">{{vm.data | json}}</pre>
+  </div>
+</div>
+
+

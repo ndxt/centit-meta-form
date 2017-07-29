@@ -1,0 +1,52 @@
+
+<table url="service/service/metaform/modeloperation"
+	idField="id" treeField="text"
+	rownumbers="false"
+	toolbar=".temp-toolbar" layoutH="0">
+    <thead>
+        <tr>
+        	<th data-options="field:'modelCode'">模块代码</th> <th data-options="field:'operation'">操作</th> 
+       		<th data-options="field:'optModelCode'">操作模块代码</th>
+       		<th data-options="field:'method'">操作方法</th>
+       		<th data-options="field:'label'">操作名称</th>
+       		<th data-options="field:'displayOrder'">显示顺序</th>
+       		<th data-options="field:'openType'">打开方式</th>
+       		<th data-options="field:'returnOperation'">返回后操作</th>
+       		<th data-options="field:'optHintType'">操作前提示类别</th>
+       		<th data-options="field:'optHintInfo'">操作提示信息</th>
+       		<th data-options="field:'extendOptions'">其他扩展属性</th>
+       		
+        </tr>
+    </thead>
+</table>
+
+<div class="temp-toolbar">
+	<a iconCls="icon-add" href="modules/metaform/modeloperation/modeloperation-info.html" trigger="none"
+		target="dialog" rel="modeloperation_add" title="新增模块操作定义" width="640" height="480" btnValue="添加">新增</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/modeloperation/modeloperation-info.html" trigger="single"
+		target="dialog" rel="modeloperation_edit" title="编辑 {{text}}" width="640" height="480" btnValue="更新">编辑</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/modeloperation/modeloperation-view.html" trigger="single"
+		target="dialog" rel="modeloperation_view" title="查看 {{text}}" width="640" height="480" btnValue="查看">查看</a>
+	<hr>
+		
+	<a iconCls="icon-base icon-base-ban" trigger="single"
+		target="confirm" rel="modeloperation_remove" title="是否确定删除 {{text}}？">删除</a>
+</div>
+
+<script>
+	$.parser.onComplete = function(panel) {
+		$.parser.onComplete = $.noop;
+		
+		requirejs([
+		           'modules/metaform/modeloperation/ctrl/modeloperation'
+		          ], function(ModelOperation) {
+			window.ModelOperation = new ModelOperation('modeloperation', panel);
+			window.ModelOperation.load(panel);
+		});
+	};
+
+</script>

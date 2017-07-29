@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+    <form name="LoginForm" class="login-form">
+      <legend>用户登录</legend>
+      <fields>
+        <div class="form-group">
+          <label for="username">用户名</label>
+          <input type="text" ng-model="vm.params.username"
+                 required
+                 class="form-control" id="username" placeholder="用户名">
+        </div>
+        <div class="form-group">
+          <label for="password">密码</label>
+          <input type="password" ng-model="vm.params.password"
+                 required
+                 class="form-control" id="password" placeholder="密码">
+        </div>
+
+        <a class="btn btn-primary btn-block"
+           ng-disabled="LoginForm.$invalid"
+           centit-loading-button ng-click="vm.login(vm.params)">
+          登录
+        </a>
+      </fields>
+    </form>
+  </div>
+</div>

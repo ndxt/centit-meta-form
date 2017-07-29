@@ -1,0 +1,194 @@
+
+<div class="easyui-tabs" style="width:100%;height:90%;">
+	<div title="1.表元详细信息">
+	
+		<form class="centit form" novalidate="true" style="height:600px;width:98%;">
+		 	<div class="fields three"> 	
+		       	<div class="field required">
+		       		<label>模块代码</label>
+		       		<input type="text" class="easyui-textbox" name="modelCode"
+						required 
+					/>
+				</div>
+		       	
+		   		<div class="field ">
+		       		<label>表ID</label>
+		       		<input class="easyui-combobox" name="tableId" required
+						url="service/metaform/mdtable?pageNo=1&pageSize=100" method="get"
+						data-options="valueField:'tableId',textField:'tableLabelName',loadFilter:function(data){return data.objList;}">
+				</div>
+		   		<div class="field ">
+		       		<label>模快描述</label>
+		       		<input type="text" class="easyui-textbox" 
+		       		name="modelComment" />
+				</div>
+		  </div>
+		   <div class="fields three"> 	  	
+		   		<div class="field required">
+		       		<label>模块名称</label>
+		       		<input type="text" class="easyui-textbox" 
+		       		name="modelName" required/>
+				</div>
+		    	
+		   		<div class="field ">
+		       		<label>存储类别</label>
+		       		<input type="text" class="easyui-textbox" 
+		       		name="accessType" />
+				</div>
+		    	
+		   		<div class="field ">
+		       		<label>与父模块关系</label>
+		       		<input type="text" class="easyui-textbox" 
+		       		name="relationType" />
+				</div>
+		   </div>
+		    <div class="fields three"> 	 	
+		   		<div class="field ">
+		       		<label>父模块</label>
+		       		<input class="easyui-combobox" name="parentModelCode"
+						url="service/metaform/metaformmodel?pageNo=1&pageSize=100" method="get"
+						data-options="valueField:'modelCode',textField:'modelCode',loadFilter:function(data){return data.objList;}">
+		       		
+				</div>
+		    	
+		   		<div class="field ">
+		       		<label>显示顺序</label>
+		       		<input type="text" class="easyui-numberbox" 
+		       		name="displayOrder" />
+				</div>
+		   </div> 	
+		</form>
+	</div>
+	<div title="2.模块数据字段">
+		<table  id="formmodel_dataField" style="height:600px;width:98%;"
+				editable="true"
+				pagination="false"
+				toolbar=".temp-toolbar_formmodel_datafield">
+			    <thead data-options="frozen:true">
+			        <tr>
+			       		<th data-options="field:'modelCode'" hidden=true>模块代码</th>
+			       		<th data-options="field:'columnName',editor:{type:'textbox',options:{required:true}}">字段代码</th>
+			       		<th data-options="field:'fieldLableName',editor:{type:'textbox',options:{}}">字段名称</th>
+			       		<th data-options="field:'columnType',editor:{type:'textbox',options:{required:true}}">字段类别</th>
+			       		<th data-options="field:'columnState',editor:{type:'textbox',options:{}}">字段状态</th>
+			       		<th data-options="field:'accessType',editor:{type:'textbox',options:{required:true}}">更改类别</th>
+			       		<th data-options="field:'focus',
+						formatter:function(value, rowData, rowIndex){
+							if(false==value)
+							{
+							rowData.focus='F';
+							return '否';
+							}
+							if(true==value)
+							{
+							rowData.focus='T';
+							return '是';
+							}
+							if(null==value)
+								return '否';
+						  	if(value=='')return '否';else
+						  	if(value=='T')return '是';else
+						  	if(value=='F')return '否';
+						  },
+						  editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',
+							data:[
+							{value:'T',label:'是'},
+							{value:'F',label:'否'}],
+							}}">是否是焦点</th>
+							<th data-options="field:'mandatory',
+						formatter:function(value, rowData, rowIndex){
+							if(false==value)
+							{
+							rowData.mandatory='F';
+							return '否';
+							}
+							if(true==value)
+							{
+							rowData.mandatory='T';
+							return '是';
+							}
+							if(null==value)
+								return '否';
+						  	if(value=='')return '否';else
+						  	if(value=='T')return '是';else
+						  	if(value=='F')return '否';
+						  },
+						  editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',
+							data:[
+							{value:'T',label:'是'},
+							{value:'F',label:'否'}],
+							}}">是否必填</th>
+			       		<th data-options="field:'displayOrder',editor:{type:'numberbox',options:{}}">显示顺序</th>
+			       		<th data-options="field:'referenceType',
+						formatter:function(value, rowData, rowIndex){
+						  	if(value=='1')return '数据字典';else
+						  	if(value=='2')return 'JSON表达式';else
+						  	if(value=='3')return 'sql语句';else
+						  	if(value=='Y')return '年份';else
+						  	if(value=='M')return '月份';
+						  }
+						,editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',
+							data:[
+							{value:'1',label:'数据字典 '},
+							{value:'2',label:'JSON表达式 '},
+							{value:'3',label:'sql语句'},
+							{value:'Y',label:'年份'},
+							{value:'M',label:'月份'}]}}">引用类型</th>
+						<th data-options="field:'validateRegex',editor:{type:'textbox',options:{}}">约束表达式</th>
+			       		<th data-options="field:'validateInfo',editor:{type:'textbox',options:{}}">约束提示</th>
+			       		<th data-options="field:'defaultValue',editor:{type:'textbox',options:{}}">默认值</th>
+			       		<th data-options="field:'autoCreateRule',editor:{type:'textbox',options:{}}">自动创建规则</th>
+		       			<th data-options="field:'autoCreateParam',editor:{type:'textbox',options:{}}">自动创建参数</th>
+		       			<th data-options="field:'databaseType',editor:{type:'textbox',options:{}}">数据库类别</th>
+		       			<th data-options="field:'referenceData',editor:{type:'textbox',options:{}}">引用数据</th>
+		       			<th data-options="field:'validateHint',editor:{type:'textbox',options:{}}">输入约束描述</th>
+		       			<th data-options="field:'inputHint',editor:{type:'textbox',options:{}}">输入说明</th>
+			       		<th data-options="field:'recorder'" format ="User">更改人</th>
+			       		<th data-options="field:'lastModifyDate'">更改时间</th>
+			        </tr>
+			    </thead>
+		</table>
+		<div class="temp-toolbar_formmodel_datafield">
+				<a iconCls="icon-add" trigger="none" href="/modules/metaform/metaformmodel/formmodel-datafield-add.html"
+					target="dialog" rel="formmodel_datafield_add" height="600px" width="700px" title="表字段" >增加</a>
+				<hr>
+				<a iconCls="icon-edit" trigger="single" href="/modules/metaform/metaformmodel/formmodel-datafield-info.html"
+					target="dialog" rel="formmodel_datafield_edit" height="600px" width="700px" title="表字段" >编辑</a>
+				<hr>
+				<a iconCls="icon-base icon-base-ban" trigger="single"
+					target="confirm" rel="formmodel_datafield_remove" title="确定删除吗？">删除</a>
+		</div>
+	</div>
+	<div title="3.模块操作定义">
+		<table id="formmodel_operation" style="height:600px;width:98%;"
+				editable="true"
+				pagination="false"
+				toolbar=".temp-toolbar_formmodel_operation">
+			    <thead data-options="frozen:true">
+			        <tr>
+			       		<th data-options="field:'operation',editor:{type:'textbox',options:{required: true}}">操作名称</th>
+			       		<th data-options="field:'optModelCode',editor:{type:'textbox',options:{}}">操作模块代码</th>
+			       		<th data-options="field:'method',editor:{type:'textbox',options:{}}">操作方法</th>
+			       		<th data-options="field:'label',editor:{type:'textbox',options:{}}">操作名称</th>
+			       		<th data-options="field:'displayOrder',editor:{type:'textbox',options:{}}">显示顺序</th>
+			       		<th data-options="field:'openType',editor:{type:'textbox',options:{}}"> 打开方式 </th>
+			       		<th data-options="field:'returnOperation',editor:{type:'textbox',options:{}}"> 返回后操作</th>
+			       		<th data-options="field:'optHintType',editor:{type:'textbox',options:{}}">操作前提示类别</th>
+			       		<th data-options="field:'optHintInfo',editor:{type:'textbox',options:{}}">操作提示信息 </th>
+			       		<th data-options="field:'extendOptions',editor:{type:'textbox',options:{}}">其他扩展属性</th>
+			        </tr>
+			    </thead>
+		</table>
+		<div class="temp-toolbar_formmodel_operation">
+				<a iconCls="icon-add" trigger="none" 
+					target="custom" rel="formmodel_operation_add" >add</a>
+				<hr>
+				<a iconCls="icon-base icon-base-ban" trigger="single"
+					target="confirm" rel="formmodel_operation_remove" title="确定删除吗？">delete</a>
+			</div>
+	</div>
+</div>
+<div style="width:98%;"><input type="button" value="保存" id="metaform_sub" style="position:relative;float:right;width:80px;height:30px;"/></div>

@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+.thumbnail.form-model .comment {
+  text-indent: 2rem;
+  -webkit-line-clamp: 3;
+
+  line-height: 1.7rem;
+  height: 5.1rem;
+}
+
+.thumbnail.form-model .modify-date {
+  line-height: 3rem;
+}

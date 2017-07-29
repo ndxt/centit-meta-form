@@ -1,0 +1,10 @@
+<div class="checkbox">
+	<label>
+		<input type="checkbox"
+      class="formly-field-checkbox"
+			  ng-click="model[options.key] = update($event)"
+			  ng-checked="'T' == model[options.key]">
+		{{to.label}}
+		{{to.required ? '*' : ''}}
+	</label>
+</div>

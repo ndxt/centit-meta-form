@@ -1,0 +1,21 @@
+<div class="modal-header">
+  <h3 class="modal-title">编辑基本信息</h3>
+</div>
+<div class="modal-body">
+  <form name="ModelEditForm">
+    <div class="form-group">
+      <label for="modelName">模块名称</label>
+      <input type="text" class="form-control" id="modelName" autofocus="autofocus" ng-model="vm.model.modelName"/>
+    </div>
+    <div class="form-group">
+      <label for="modelComment">模块描述</label>
+      <textarea class="form-control" id="modelComment" ng-model="vm.model.modelComment" rows="8"></textarea>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button"
+          ng-disabled="ModelEditForm.$invalid || ModelEditForm.$pristine"
+          centit-loading-button ng-click="vm.ok()">保存</button>
+  <button class="btn btn-warning" type="button" ng-click="vm.cancel()">取消</button>
+</div>

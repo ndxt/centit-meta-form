@@ -1,0 +1,26 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand">{{title}}</a>
+    </div>
+
+    <ul class="nav navbar-nav">
+      <li ui-sref-active="active"><a ui-sref="form.dashboard">首页</a></li>
+      <li class="dropdown" uib-dropdown ng-repeat="menu in vm.menus">
+        <a uib-dropdown-toggle ui-sref="{{::menu.url}}">{{::menu.text}}
+          <span class="caret" ng-if="menu.children && menu.children.length"></span>
+        </a>
+        <ul class="dropdown-menu" ng-if="menu.children && menu.children.length"
+            uib-dropdown-menu role="menu" aria-labelledby="single-button">
+          <li role="menuitem" ng-repeat="child in menu.children">
+            <a>{{::child.text}}</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li><a ui-sref="login">注销</a></li>
+    </ul>
+  </div>
+</nav>

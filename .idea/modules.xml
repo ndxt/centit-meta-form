@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/centit-meta-form.iml" filepath="$PROJECT_DIR$/centit-meta-form.iml" />
+      <module fileurl="file://$PROJECT_DIR$/meta-form-module/meta-form-module.iml" filepath="$PROJECT_DIR$/meta-form-module/meta-form-module.iml" />
+      <module fileurl="file://$PROJECT_DIR$/meta-form-view/meta-form-view.iml" filepath="$PROJECT_DIR$/meta-form-view/meta-form-view.iml" />
+      <module fileurl="file://$PROJECT_DIR$/meta-form-web/meta-form-web.iml" filepath="$PROJECT_DIR$/meta-form-web/meta-form-web.iml" />
+    </modules>
+  </component>
+</project>

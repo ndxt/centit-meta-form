@@ -1,0 +1,60 @@
+.wrapper {
+  width: 100vw; height: 100vh;
+  flex-wrap: nowrap!important;
+}
+
+.row {
+  padding-top: 1px;
+}
+
+#header {
+  flex: 0 0 auto;
+}
+
+#container {
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+#container.container-fluid {
+  width: 100%;
+}
+
+.meta-form {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.search-panel,
+.operator-panel {
+  margin-bottom: 20px;
+}
+
+.sub-panel {
+  flex: 0 0 256px;
+  order: 1;
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid #ddd;
+}
+.main-panel {
+  order: 0;
+}
+/*.sub-panel.collapse {
+  margin-left: 12px;
+}*/
+
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lines-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}

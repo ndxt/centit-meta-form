@@ -1,0 +1,60 @@
+
+<table url="service/metaform/mdtable/draft?field=tableId&field=tableName&field=tableLabelName
+&field=databaseCode&field=databaseName&field=tableType&field=tableState&field=tableComment&field=workFlowOptType
+&field=lastModifyDate&field=recorder" id="mdtable"
+	idField="tableId"
+	toolbar=".temp-toolbar" layoutH="0">
+    <thead frozen="true">
+        <tr>
+        	<th data-options="field:'tableId'">表ID</th> 
+       		<th data-options="field:'tableName'">表代码</th>
+       		<th data-options="field:'tableLabelName'">表名称</th>
+       		<th data-options="field:'databaseCode'" hidden="true">所属数据库ID</th>
+       		<th data-options="field:'databaseName'">所属数据库</th>
+       		<th data-options="field:'tableType'">类别</th>
+       		<th data-options="field:'tableState'">状态</th>
+       		<th data-options="field:'tableComment'">描述</th>
+       		<th data-options="field:'workFlowOptType',
+						formatter:function(value, rowData, rowIndex){
+						  	if(value=='0')return '不关联工作流';else
+						  	if(value=='1')return '和流程业务关联';else
+						  	if(value=='2')return '和流程过程关联';
+						  }">与流程中业务关联关系</th>
+       		<th data-options="field:'lastModifyDate'">更改时间</th>
+       		<th data-options="field:'recorder'">更改人员</th>
+       		
+        </tr>
+    </thead>
+</table>
+
+<div class="temp-toolbar">
+	<a iconCls="icon-add" href="/centit-meta-form/modules/metaform/mdtable/mdtable-info.html" trigger="none"
+		target="tab" rel="mdtable_add" title="新增表元数据表">新增</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="/centit-meta-form/modules/metaform/mdtable/mdtable-info.html" trigger="single"
+		target="tab" rel="mdtable_edit" title="编辑 【{{tableLabelName}}】 表元数据">编辑</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="/centit-meta-form/modules/metaform/mdtable/mdtable-view.html" trigger="single"
+		target="tab" rel="mdtable_view" title="查看 表元数据">查看</a>
+	<hr>
+	<a iconCls="icon-base icon-base-take_out"  href="/modules/metaform/mdtable/mdtable-publish.html" trigger="single"
+		target="dialog" rel="mdtable_publish" title="是否确定发布 表元数据？" width="600" height="300">发布</a>
+	<hr>
+	<a iconCls="icon-base icon-base-ban" trigger="single"
+		target="confirm" rel="mdtable_remove" title="是否确定删除 表元数据？">删除</a>
+</div>
+
+<script>
+	$.parser.onComplete = function(panel) {
+		$.parser.onComplete = $.noop;
+		
+		requirejs([
+		           'modules/metaform/mdtable/ctrl/mdtable'
+		          ], function(MdTable) {
+			window.MdTable = new MdTable('mdtable', panel);
+			window.MdTable.load(panel);
+		});
+	};
+</script>

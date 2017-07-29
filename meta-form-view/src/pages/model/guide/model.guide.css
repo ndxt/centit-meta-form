@@ -1,0 +1,61 @@
+@charset "UTF-8";
+
+.form-model-guide #container {
+  display: flex;
+}
+
+.form-model-guide [ui-view=main] {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+
+.form-model-guide .btn-guide {
+  width: 10rem;
+  height: 10rem;
+  margin: 1rem;
+
+  font-size: 14px;
+  color: #aaa;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.form-model-guide .btn-guide .glyphicon {
+  color: #aaa;
+  font-size: 32px;
+  margin: 1rem;
+}
+
+.form-model-guide .btn-guide:hover,
+.form-model-guide .btn-guide.active {
+  color: #333;
+}
+.form-model-guide .btn-guide:hover .glyphicon,
+.form-model-guide .btn-guide.active .glyphicon{
+  color: #333;
+}
+
+.form-model-guide .nav-details {
+  color: #aaa;
+  font-size: 20px;
+}
+
+.form-model-guide .nav-wizards {
+  line-height: 4rem;
+  font-size: 20px;
+  background: #449d44;
+  color: #fff;
+}
+
+.form-model-guide .nav-wizards li {
+  cursor: pointer;
+  border: 1px solid #fff;
+  background: rgba(255, 255, 255, .4);
+}
+.form-model-guide .nav-wizards li.active {
+  background: transparent;
+}

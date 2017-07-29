@@ -1,0 +1,18 @@
+<p class="input-group">
+  <input type="text" readonly
+      id="{{::id}}"
+      name="{{::id}}"
+      ng-model="datepicker.date"
+      class="form-control"
+      ng-click="datepicker.toggle($event)"
+      ng-change="datepicker.change()"
+      uib-datepicker-popup="{{to.datepickerOptions.format}}"
+      is-open="datepicker.opened"
+      datepicker-options="to.datepickerOptions"
+      clear-text="{{::datepicker.clearText}}"
+      close-text="{{::datepicker.closeText}}"
+      current-text="{{::datepicker.currentText}}" />
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-default" ng-click="datepicker.toggle($event)" ng-disabled="to.disabled"><i class="glyphicon glyphicon-calendar"></i></button>
+    </span>
+</p>

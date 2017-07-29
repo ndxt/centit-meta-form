@@ -1,0 +1,51 @@
+
+<table url="service/service/metaform/modeldatafield"
+	idField="id" treeField="text"
+	rownumbers="false"
+	toolbar=".temp-toolbar" layoutH="0">
+    <thead>
+        <tr>
+        	<th data-options="field:'modelCode'">模块代码</th> 
+        	<th data-options="field:'columnName'">字段代码</th> 
+       		<th data-options="field:'accessType'">更改类别</th>
+       		<th data-options="field:'displayOrder'">显示顺序</th>
+       		<th data-options="field:'inputHint'">输入说明</th>
+       		<th data-options="field:'validateHint'">输入约束描述</th>
+       		<th data-options="field:'fieldHeight'">字段高度</th>
+       		<th data-options="field:'labelLength'">标签长度</th>
+       		<th data-options="field:'fieldLength'">字段长度</th>
+       		
+        </tr>
+    </thead>
+</table>
+
+<div class="temp-toolbar">
+	<a iconCls="icon-add" href="modules/metaform/modeldatafield/modeldatafield-info.html" trigger="none"
+		target="dialog" rel="modeldatafield_add" title="新增数据模板字段" width="640" height="480" btnValue="添加">新增</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/modeldatafield/modeldatafield-info.html" trigger="single"
+		target="dialog" rel="modeldatafield_edit" title="编辑 {{text}}" width="640" height="480" btnValue="更新">编辑</a>
+	<hr>
+
+	<a iconCls="icon-edit" href="modules/metaform/modeldatafield/modeldatafield-view.html" trigger="single"
+		target="dialog" rel="modeldatafield_view" title="查看 {{text}}" width="640" height="480" btnValue="查看">查看</a>
+	<hr>
+		
+	<a iconCls="icon-base icon-base-ban" trigger="single"
+		target="confirm" rel="modeldatafield_remove" title="是否确定删除 {{text}}？">删除</a>
+</div>
+
+<script>
+	$.parser.onComplete = function(panel) {
+		$.parser.onComplete = $.noop;
+		
+		requirejs([
+		           'modules/metaform/modeldatafield/ctrl/modeldatafield'
+		          ], function(ModelDataField) {
+			window.ModelDataField = new ModelDataField('modeldatafield', panel);
+			window.ModelDataField.load(panel);
+		});
+	};
+
+</script>

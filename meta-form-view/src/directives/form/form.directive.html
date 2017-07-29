@@ -1,0 +1,10 @@
+<div class="meta-form">
+  <form name="{{name}}">
+    <legend ng-if="legend">{{legend}}</legend>
+    <fieldset>
+      <formly-form model="data" fields="fields" options="options">
+      </formly-form>
+    </fieldset>
+  </form>
+  <div cg-busy="formPromise"></div>
+</div>

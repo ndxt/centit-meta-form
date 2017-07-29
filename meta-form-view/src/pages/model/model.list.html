@@ -1,0 +1,71 @@
+<div class="row search-panel">
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+    <form>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="输入模块名称查询"
+               ng-model="vm.params.s_modelName"
+               ng-model-options="{debounce: {default: 500, blur: 0}}" />
+        <span class="input-group-btn">
+          <button class="btn btn-default" ng-click="vm.query(vm.params)">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <blockquote class="pull-left">
+      <p>{{vm.pageDesc | pageDescription:'表单模块'}}</p>
+    </blockquote>
+
+    <a class="btn btn-primary pull-right" ui-sref="form.model.guide" style="margin: 0 1rem;">
+      <span class="glyphicon glyphicon-plus"></span>
+      创建模块
+    </a>
+
+    <div class="pull-right" centit-page-sort="vm.params" data-sort-items="vm.sortItems">
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" ng-repeat="model in vm.models">
+    <div class="thumbnail form-model">
+      <div class="btn-group pull-right" uib-dropdown>
+        <button type="button" class="btn btn-default btn-xs" uib-dropdown-toggle >
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" uib-dropdown-menu>
+          <li><a ng-click="vm.remove(model, $index)" href="javascript:void(0)">删除</a></li>
+        </ul>
+      </div>
+      <div class="caption">
+        <h3 class="ellipsis" title="{{model.modelName}}">
+          <a ui-sref="form.access.list({modelCode: model.modelCode})">{{model.modelName}}</a>
+        </h3>
+        <h5>{{model.modelCode}}</h5>
+        <p class="comment lines-ellipsis" title="{{model.modelComment}}">{{model.modelComment}}</p>
+        <p class="text-right">
+          <small class="pull-left modify-date">{{model.lastModifyDate | fromNow}}更新</small>
+          <a class="btn btn-success" title="编辑基本信息" ng-click="vm.edit(model)">编辑</a>
+          <a class="btn btn-info" title="设计表单">设计</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row flex-item flex-row flex-bottom">
+  <div class="col-md-12 text-center">
+    <uib-pagination total-items="vm.pageDesc.totalRows" ng-model="vm.currentPage"
+                    items-per-page="vm.params.pageSize"
+                    max-size="5" force-ellipses="true"
+                    ng-change="vm.goPage(vm.currentPage)"
+                    boundary-links="true"
+                    first-text="首页" last-text="尾页"
+                    next-text="下一页" previous-text="上一页"></uib-pagination>
+  </div>
+</div>
