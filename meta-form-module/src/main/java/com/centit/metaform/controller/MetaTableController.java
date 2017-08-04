@@ -1,14 +1,16 @@
 package com.centit.metaform.controller;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSONArray;
+import com.centit.framework.core.common.JsonResultUtils;
+import com.centit.framework.core.common.ResponseData;
+import com.centit.framework.core.common.ResponseMapData;
+import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.dao.PageDesc;
+import com.centit.metaform.po.MetaColumn;
+import com.centit.metaform.po.MetaTable;
+import com.centit.metaform.po.PendingMetaTable;
+import com.centit.metaform.service.MetaChangLogManager;
+import com.centit.metaform.service.MetaTableManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,16 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.alibaba.fastjson.JSONArray;
-import com.centit.framework.core.common.JsonResultUtils;
-import com.centit.framework.core.common.ResponseData;
-import com.centit.framework.core.controller.BaseController;
-import com.centit.framework.core.dao.PageDesc;
-import com.centit.metaform.po.MetaColumn;
-import com.centit.metaform.po.MetaTable;
-import com.centit.metaform.po.PendingMetaTable;
-import com.centit.metaform.service.MetaChangLogManager;
-import com.centit.metaform.service.MetaTableManager;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -82,7 +80,7 @@ public class MetaTableController extends BaseController{
             return;
         }
         
-        ResponseData resData = new ResponseData();
+        ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, listObjects);
         resData.addResponseData(PAGE_DESC, pageDesc);
 
@@ -108,8 +106,8 @@ public class MetaTableController extends BaseController{
             JsonResultUtils.writeSingleDataJson(listObjects, response);
             return;
         }
-        
-        ResponseData resData = new ResponseData();
+
+        ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, listObjects);
         resData.addResponseData(PAGE_DESC, pageDesc);
 
@@ -124,7 +122,7 @@ public class MetaTableController extends BaseController{
             JsonResultUtils.writeSingleDataJson(listObjects, response);
             return;
         }
-        ResponseData resData = new ResponseData();
+        ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, listObjects);
         resData.addResponseData(PAGE_DESC, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
@@ -138,8 +136,6 @@ public class MetaTableController extends BaseController{
      * 查询单个  表元数据表 
 	
 	 * @param tableId  Table_ID
-     * @param catalogCode 主键
-     * 
      * @param response    {@link HttpServletResponse}
      * @return {data:{}}
      */
@@ -155,8 +151,6 @@ public class MetaTableController extends BaseController{
      * 查询单个  表元数据表  草稿
 	
 	 * @param tableId  Table_ID
-     * @param catalogCode 主键
-     * 
      * @param response    {@link HttpServletResponse}
      * @return {data:{}}
      */
@@ -168,12 +162,8 @@ public class MetaTableController extends BaseController{
         JsonResultUtils.writeSingleDataJson(mdTable, response);
     }
     
-    /**
+    /*
      * 新增 表元数据表 草稿
-     * 
-     *
-     * @param mdTable  {@link MetaTable}
-     * @return
      */
     @RequestMapping(value="/draft",method = {RequestMethod.POST})
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
@@ -181,30 +171,24 @@ public class MetaTableController extends BaseController{
     	table.copyNotNullProperty(mdTable);
 //    	mdTable.setTableType("T");// T 是数据表，后期会添加 V（视图）的选择
 //    	mdTable.setTableState("N");
-    	Serializable pk = mdTableMag.saveNewPendingMetaTable(table);
-        JsonResultUtils.writeSingleDataJson(pk,response);
+    	mdTableMag.saveNewPendingMetaTable(table);
+        JsonResultUtils.writeSingleDataJson(table.getTableId(),response);
     }
     
     
-    /**
+    /*
      * 发布 表元数据表
-     *
-     * @param mdTable  {@link MetaTable}
-     * @return
      */
     @RequestMapping(value="/beforePublish/{ptableId}",method = {RequestMethod.POST})
     public void alertSqlBeforePublish(@PathVariable Long ptableId,
     		HttpServletRequest request,HttpServletResponse response) {
     	List<String> sqls = mdTableMag.makeAlterTableSqls(ptableId);
-    	ResponseData resData = new ResponseData();
+        ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, sqls);
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
-    /**
+    /*
      * 发布 表元数据表
-     *
-     * @param mdTable  {@link MetaTable}
-     * @return
      */
     @RequestMapping(value="/publish/{ptableId}",method = {RequestMethod.POST})
     public void publishMdTable(@PathVariable Long ptableId,
@@ -269,7 +253,7 @@ public class MetaTableController extends BaseController{
        	
     	List<MetaColumn> meTadColumns =     			
     			mdTableMag.listFields(tableId);
-    	ResponseData resData = new ResponseData();
+        ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, meTadColumns);
         resData.addResponseData(PAGE_DESC, pageDesc);
         JsonResultUtils.writeSingleDataJson(meTadColumns, response);

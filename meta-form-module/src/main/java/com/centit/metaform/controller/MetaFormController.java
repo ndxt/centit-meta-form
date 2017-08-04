@@ -1,30 +1,28 @@
 package com.centit.metaform.controller;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.OptionItem;
+import com.centit.framework.core.common.JsonResultUtils;
+import com.centit.framework.core.common.ResponseMapData;
+import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.dao.PageDesc;
+import com.centit.metaform.formaccess.MetaFormDefine;
+import com.centit.metaform.formaccess.ModelFormService;
+import com.centit.metaform.formaccess.ModelRuntimeContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.OptionItem;
-import com.centit.framework.core.common.JsonResultUtils;
-import com.centit.framework.core.common.ResponseData;
-import com.centit.framework.core.controller.BaseController;
-import com.centit.framework.core.dao.PageDesc;
-import com.centit.metaform.formaccess.MetaFormDefine;
-import com.centit.metaform.formaccess.ModelFormService;
-import com.centit.metaform.formaccess.ModelRuntimeContext;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/metaform/formaccess")
@@ -40,8 +38,8 @@ public class MetaFormController  extends BaseController{
         
         ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
         rc.setCurrentUserDetails(this.getLoginUser(request));
-        
-        ResponseData resData = new ResponseData();
+
+		ResponseMapData resData = new ResponseMapData();
         //ListViewDefine metaData = formService.createListViewModel(rc);
         MetaFormDefine metaData = formService.createFormDefine(rc,"view");
         JSONArray objs = formService.listObjectsByFilter(rc, searchColumn, pageDesc);		
@@ -57,8 +55,8 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/{modelCode}/view",method = RequestMethod.GET)
 	public void view(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
 		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-    	Map<String,Object> jo = rc.fetchPkFromRequest(request);    	
-		ResponseData resData = new ResponseData();
+    	Map<String,Object> jo = rc.fetchPkFromRequest(request);
+		ResponseMapData resData = new ResponseMapData();
 		
 		JSONObject obj = formService.getObjectByProperties(rc, jo);
 		try {
@@ -83,8 +81,8 @@ public class MetaFormController  extends BaseController{
 	@RequestMapping(value = "/{modelCode}/viewlist",method = RequestMethod.GET)
 	public void viewList(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
 		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-    	Map<String,Object> jo = rc.fetchPkFromRequest(request);    	
-		ResponseData resData = new ResponseData();
+    	Map<String,Object> jo = rc.fetchPkFromRequest(request);
+		ResponseMapData resData = new ResponseMapData();
 		
 		JSONObject obj = formService.getObjectByProperties(rc, jo);
 		try {
@@ -125,7 +123,7 @@ public class MetaFormController  extends BaseController{
 			boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
     	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	try {
-    		ResponseData resData = new ResponseData();
+			ResponseMapData resData = new ResponseMapData();
     		JSONObject obj = formService.createInitialObject(rc);
     		if(obj!=null){
 	    		Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
@@ -153,7 +151,7 @@ public class MetaFormController  extends BaseController{
 			HttpServletRequest request, HttpServletResponse response) {
     	ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
     	try {
-    		ResponseData resData = new ResponseData();
+			ResponseMapData resData = new ResponseMapData();
     		resData.addResponseData("pk", formService.createNewPk(rc));    	
 			rc.close();
 			JsonResultUtils.writeSuccessJson(response);
@@ -211,8 +209,8 @@ public class MetaFormController  extends BaseController{
 			HttpServletRequest request, HttpServletResponse response) {
         
 		ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-    	Map<String,Object> jo = rc.fetchPkFromRequest(request);    	
-		ResponseData resData = new ResponseData();
+    	Map<String,Object> jo = rc.fetchPkFromRequest(request);
+		ResponseMapData resData = new ResponseMapData();
 		JSONObject obj = formService.getObjectByProperties(rc, jo);
 		if(obj!=null){
 			try {				

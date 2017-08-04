@@ -1,18 +1,26 @@
 package com.centit.metaform.service.impl;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
-
-import com.centit.framework.staticsystem.service.IntegrationEnvironment;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.core.dao.DictionaryMapUtils;
+import com.centit.framework.core.dao.PageDesc;
+import com.centit.framework.hibernate.dao.DatabaseOptUtils;
+import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
+import com.centit.framework.ip.po.DatabaseInfo;
+import com.centit.framework.ip.service.IntegrationEnvironment;
+import com.centit.metaform.dao.*;
+import com.centit.metaform.formaccess.FieldType;
+import com.centit.metaform.formaccess.PdmTableInfo;
+import com.centit.metaform.po.*;
+import com.centit.metaform.service.MetaTableManager;
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.database.DBType;
+import com.centit.support.database.DataSourceDescription;
+import com.centit.support.database.DbcpConnect;
+import com.centit.support.database.DbcpConnectPools;
+import com.centit.support.database.ddl.*;
+import com.centit.support.database.jsonmaptable.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -21,44 +29,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.hibernate.dao.DatabaseOptUtils;
-import com.centit.framework.hibernate.dao.SysDaoOptUtils;
-import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
-import com.centit.framework.staticsystem.po.DatabaseInfo;
-import com.centit.metaform.dao.MetaChangLogDao;
-import com.centit.metaform.dao.MetaColumnDao;
-import com.centit.metaform.dao.MetaTableDao;
-import com.centit.metaform.dao.PendingMetaRelationDao;
-import com.centit.metaform.dao.PendingMetaTableDao;
-import com.centit.metaform.formaccess.FieldType;
-import com.centit.metaform.formaccess.PdmTableInfo;
-import com.centit.metaform.po.MetaChangLog;
-import com.centit.metaform.po.MetaColumn;
-import com.centit.metaform.po.MetaTable;
-import com.centit.metaform.po.PendingMetaColumn;
-import com.centit.metaform.po.PendingMetaRelation;
-import com.centit.metaform.po.PendingMetaTable;
-import com.centit.metaform.service.MetaTableManager;
-import com.centit.support.algorithm.DatetimeOpt;
-import com.centit.support.database.DBType;
-import com.centit.support.database.DataSourceDescription;
-import com.centit.support.database.DbcpConnect;
-import com.centit.support.database.DbcpConnectPools;
-import com.centit.support.database.ddl.DB2DDLOperations;
-import com.centit.support.database.ddl.DDLOperations;
-import com.centit.support.database.ddl.GeneralDDLOperations;
-import com.centit.support.database.ddl.MySqlDDLOperations;
-import com.centit.support.database.ddl.OracleDDLOperations;
-import com.centit.support.database.ddl.SqlSvrDDLOperations;
-import com.centit.support.database.jsonmaptable.DB2JsonObjectDao;
-import com.centit.support.database.jsonmaptable.JsonObjectDao;
-import com.centit.support.database.jsonmaptable.MySqlJsonObjectDao;
-import com.centit.support.database.jsonmaptable.OracleJsonObjectDao;
-import com.centit.support.database.jsonmaptable.SqlSvrJsonObjectDao;
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * MdTable  Service.
@@ -114,15 +88,15 @@ public class MetaTableManagerImpl
 	public JSONArray listMdTablesAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
-			
-		return SysDaoOptUtils.listObjectsAsJson(baseDao, fields, MetaTable.class,
-    			filterMap, pageDesc);
+
+		return DictionaryMapUtils.objectsToJSONArray(
+				baseDao.listObjects(filterMap, pageDesc), fields);
 	}
 
 	@Override
 	@Transactional
-	public Serializable saveNewPendingMetaTable(PendingMetaTable pmt) {
-		return pendingMdTableDao.saveNewObject(pmt);
+	public void saveNewPendingMetaTable(PendingMetaTable pmt) {
+		pendingMdTableDao.saveNewObject(pmt);
 	}
 
 	@Override
@@ -350,9 +324,10 @@ public class MetaTableManagerImpl
 	@Transactional(readOnly=true)
 	public JSONArray listDrafts(String[] fields, Map<String, Object> searchColumn,
 			PageDesc pageDesc) {
-		JSONArray listTables = SysDaoOptUtils.listObjectsAsJson( baseDao ,
-	            fields,PendingMetaTable.class, 
-	            searchColumn,  pageDesc);
+
+		JSONArray listTables =  DictionaryMapUtils.objectsToJSONArray(
+				baseDao.listObjects(searchColumn, pageDesc), fields);
+
 		List<DatabaseInfo> databases = integrationEnvironment.listDatabaseInfo();
 		for(Object obj:listTables){
 			JSONObject table = (JSONObject)obj;

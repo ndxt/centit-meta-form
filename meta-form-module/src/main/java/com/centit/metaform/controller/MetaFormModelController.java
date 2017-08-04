@@ -1,15 +1,13 @@
 package com.centit.metaform.controller;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.centit.framework.core.common.JsonResultUtils;
+import com.centit.framework.core.common.ResponseData;
+import com.centit.framework.core.common.ResponseMapData;
+import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.dao.PageDesc;
+import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.service.MetaFormModelManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
-import com.centit.framework.core.common.JsonResultUtils;
-import com.centit.framework.core.common.ResponseData;
-import com.centit.framework.core.controller.BaseController;
-import com.centit.framework.core.dao.PageDesc;
-import com.centit.metaform.po.MetaFormModel;
-import com.centit.metaform.service.MetaFormModelManager;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -65,7 +64,7 @@ public class MetaFormModelController extends BaseController{
             JsonResultUtils.writeSingleDataJson(listObjects, response);
             return;
         }
-        ResponseData resData = new ResponseData();
+        ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, listObjects);
         resData.addResponseData(PAGE_DESC, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
@@ -106,8 +105,8 @@ public class MetaFormModelController extends BaseController{
     	model.copyNotNullProperty(metaFormModel);
     	model.setRecorder(usercode);
     	model.setLastModifyDate(new Date());
-    	Serializable pk = metaFormModelMag.saveNewObject(model);
-        JsonResultUtils.writeSingleDataJson(pk,response);
+    	metaFormModelMag.saveNewObject(model);
+        JsonResultUtils.writeSingleDataJson(model.getModelCode(),response);
     }
 
     /**

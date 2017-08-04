@@ -29,7 +29,7 @@ public interface MetaTableManager extends BaseEntityManager<MetaTable,java.lang.
 	JSONArray listMdTablesAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc);
-	Serializable saveNewPendingMetaTable(PendingMetaTable pmt);
+	void saveNewPendingMetaTable(PendingMetaTable pmt);
 	void deletePendingMetaTable(long tableId);
 	PendingMetaTable getPendingMetaTable(long tableId);
 	void savePendingMetaTable(PendingMetaTable pmt);

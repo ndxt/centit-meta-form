@@ -7,7 +7,8 @@ import java.util.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import com.centit.framework.staticsystem.service.IntegrationEnvironment;
+import com.centit.framework.ip.po.DatabaseInfo;
+import com.centit.framework.ip.service.IntegrationEnvironment;
 import com.centit.metaform.formaccess.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,7 +24,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.PageDesc;
-import com.centit.framework.staticsystem.po.DatabaseInfo;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.po.MetaColumn;
@@ -55,7 +55,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
      
     @Resource
     protected IntegrationEnvironment integrationEnvironment;
-    
+
     @Value("${metaform.dataaccess.embedded}")
     private boolean useLocalDatabase;
    
