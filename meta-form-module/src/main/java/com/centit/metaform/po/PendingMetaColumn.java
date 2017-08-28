@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.core.po.EntityWithTimestamp;
 import com.centit.metaform.formaccess.FieldType;
-import com.centit.support.database.DBType;
+import com.centit.support.database.utils.DBType;
 import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.TableField;
 

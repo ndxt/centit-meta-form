@@ -15,10 +15,9 @@ import com.centit.metaform.formaccess.PdmTableInfo;
 import com.centit.metaform.po.*;
 import com.centit.metaform.service.MetaTableManager;
 import com.centit.support.algorithm.DatetimeOpt;
-import com.centit.support.database.DBType;
-import com.centit.support.database.DataSourceDescription;
-import com.centit.support.database.DbcpConnect;
-import com.centit.support.database.DbcpConnectPools;
+import com.centit.support.database.utils.DBType;
+import com.centit.support.database.utils.DataSourceDescription;
+import com.centit.support.database.utils.DbcpConnectPools;
 import com.centit.support.database.ddl.*;
 import com.centit.support.database.jsonmaptable.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -31,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -269,10 +269,11 @@ public class MetaTableManagerImpl
 				dbc.setConnUrl(mdb.getDatabaseUrl());
 				dbc.setUsername(mdb.getUsername());
 				dbc.setPassword(mdb.getClearPassword());
-				DbcpConnect conn = DbcpConnectPools.getDbcpConnect(dbc);
+				Connection conn = DbcpConnectPools.getDbcpConnect(dbc);
 				JsonObjectDao jsonDao = null;
-				ptable.setDatabaseType(conn.getDatabaseType());
-				switch (conn.getDatabaseType()) {
+				DBType databaseType = DBType.mapDBType(conn);
+				ptable.setDatabaseType(databaseType);
+				switch (databaseType) {
 					case Oracle:
 						jsonDao = new OracleJsonObjectDao(conn);
 						break;

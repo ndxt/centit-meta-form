@@ -1,17 +1,14 @@
 package com.centit.metaform.formaccess;
 
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.centit.metaform.formaccess.PdmTableInfo;
 import com.centit.metaform.po.PendingMetaColumn;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.support.algorithm.NumberBaseOpt;
-import com.centit.support.database.DataSourceDescription;
-import com.centit.support.database.DatabaseAccess;
-import com.centit.support.database.DbcpConnect;
-import com.centit.support.database.DbcpConnectPools;
+import com.centit.support.database.utils.DataSourceDescription;
+import com.centit.support.database.utils.DatabaseAccess;
+import com.centit.support.database.utils.DbcpConnectPools;
+import org.apache.commons.lang3.tuple.Pair;
+import java.sql.Connection;
+import java.util.List;
 
 public class ImportTableInfo2Database {
 
@@ -29,7 +26,7 @@ public class ImportTableInfo2Database {
 			return;
 		}	
 		try {
-			DbcpConnect conn= DbcpConnectPools.getDbcpConnect(dbc);
+			Connection conn= DbcpConnectPools.getDbcpConnect(dbc);
 			for(Pair<String, String> t : tables){
 				Long tableId =  NumberBaseOpt.castObjectToLong(DatabaseAccess.getScalarObjectQuery(
 						 conn,

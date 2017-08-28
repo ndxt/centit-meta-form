@@ -23,7 +23,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.centit.framework.core.po.EntityWithTimestamp;
-import com.centit.support.database.DBType;
+import com.centit.support.database.utils.DBType;
 import com.centit.support.database.metadata.TableInfo;
 import com.centit.support.database.metadata.TableReference;
 

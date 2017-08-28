@@ -1,20 +1,16 @@
 package com.centit.metaform.formaccess.impl;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.centit.support.database.DBConnect;
-import com.centit.support.database.DataSourceDescription;
-import com.centit.support.database.DbcpConnect;
-import com.centit.support.database.DbcpConnectPools;
-import com.centit.support.database.jsonmaptable.DB2JsonObjectDao;
-import com.centit.support.database.jsonmaptable.JsonObjectDao;
-import com.centit.support.database.jsonmaptable.MySqlJsonObjectDao;
-import com.centit.support.database.jsonmaptable.OracleJsonObjectDao;
-import com.centit.support.database.jsonmaptable.SqlSvrJsonObjectDao;
+import com.centit.support.database.jsonmaptable.*;
+import com.centit.support.database.utils.DBType;
+import com.centit.support.database.utils.DataSourceDescription;
+import com.centit.support.database.utils.DbcpConnectPools;
 
 public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
 
-	private DbcpConnect conn;
+	private Connection conn;
 	private DataSourceDescription dataSource;
 
 	public JdbcModelRuntimeContext(){
@@ -26,7 +22,7 @@ public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
 	}
 	
 
-	public DBConnect getConnection() throws SQLException {
+	public Connection getConnection() throws SQLException {
 		if(conn==null){
 			 conn = DbcpConnectPools.getDbcpConnect(dataSource);
 		}
@@ -36,25 +32,13 @@ public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
 	public void setDataSource(DataSourceDescription dataSource) {
 		this.dataSource = dataSource;
 	}
-
-	
 	
 	private JsonObjectDao dao = null;
 	
 	public JsonObjectDao getJsonObjectDao() throws SQLException {
 		if(dao==null){
-			switch(getConnection().getDatabaseType()){
-			case Oracle:
-		  		return new OracleJsonObjectDao(getConnection() ,getPersistenceTableInfo());
-		  	case DB2:
-		  		return new DB2JsonObjectDao(getConnection() ,getPersistenceTableInfo());
-		  	case SqlServer:
-		  		return new SqlSvrJsonObjectDao(getConnection() ,getPersistenceTableInfo());
-		  	case MySql:
-		  		return new MySqlJsonObjectDao(getConnection() ,getPersistenceTableInfo());
-		  	default:
-		  		return new OracleJsonObjectDao(getConnection() ,getPersistenceTableInfo());
-			}
+			dao = GeneralJsonObjectDao.createJsonObjectDao(getConnection(),
+					getPersistenceTableInfo());
 		}
 		return dao;
 	}

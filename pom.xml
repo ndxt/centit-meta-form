@@ -16,9 +16,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <centit.meta.form.version>0.0.1-SNAPSHOT</centit.meta.form.version>
         <jdk.version>1.8</jdk.version>
-
-        <centit.commons.version>2.2.1</centit.commons.version>
-        <centit.framework.version>4.0.0-SNAPSHOT</centit.framework.version>
+        <centit.persistence.version>1.0-SNAPSHOT</centit.persistence.version>
+        <centit.commons.version>2.2.3-SNAPSHOT</centit.commons.version>
+        <centit.framework.version>4.0.1-SNAPSHOT</centit.framework.version>
         <centit.ui.version>3.0.1-SNAPSHOT</centit.ui.version>
         <centit.ip.version>0.0.2-SNAPSHOT</centit.ip.version>
         <centit.search.version>0.1</centit.search.version>
@@ -139,7 +139,7 @@
                 </executions>
             </plugin>
 
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.4</version>
@@ -151,7 +151,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
             <!-- GPG自动签名的插件 -->
 

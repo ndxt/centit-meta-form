@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
-import com.centit.support.database.QueryAndNamedParams;
+import com.centit.support.database.utils.QueryAndNamedParams;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.metadata.TableField;
 

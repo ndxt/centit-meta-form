@@ -3,7 +3,7 @@ package com.centit.metaform.formaccess;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.centit.support.database.DBType;
+import com.centit.support.database.utils.DBType;
 
 public abstract class FieldType {
 	public static final String STRING = "string";
@@ -17,10 +17,8 @@ public abstract class FieldType {
 	
 	/**
 	 * 转换到Oracle的字段
-	 * @param ft
-	 * @param maxLength
-	 * @param scala
-	 * @return
+	 * @param ft String
+	 * @return String
 	 */
 	public static String mapToOracleColumnType(String ft){
 		switch(ft){
@@ -46,10 +44,8 @@ public abstract class FieldType {
 
 	/**
 	 * 转换到Oracle的字段
-	 * @param ft
-	 * @param maxLength
-	 * @param scala
-	 * @return
+	 * @param ft String
+	 * @return String
 	 */
 	public static String mapToSqlServerColumnType(String ft){
 		switch(ft){
@@ -75,10 +71,8 @@ public abstract class FieldType {
 	
 	/**
 	 * 转换到Oracle的字段
-	 * @param ft
-	 * @param maxLength
-	 * @param scala
-	 * @return
+	 * @param ft String
+	 * @return String
 	 */
 	public static String mapToDB2ColumnType(String ft){
 		switch(ft){
@@ -104,10 +98,8 @@ public abstract class FieldType {
 	
 	/**
 	 * 转换到Oracle的字段
-	 * @param ft
-	 * @param maxLength
-	 * @param scala
-	 * @return
+	 * @param ft String
+	 * @return String
 	 */
 	public static String mapToMySqlColumnType(String ft){
 		switch(ft){
@@ -135,8 +127,6 @@ public abstract class FieldType {
 	 * 
 	 * @param dt 数据库类别
 	 * @param ft 字段类别
-	 * @param maxLength 最大长度（字符串）或者 最大有小位数
-	 * @param scala 精度
 	 * @return
 	 */
 	public static String mapToDBColumnType(DBType dt,String ft){
