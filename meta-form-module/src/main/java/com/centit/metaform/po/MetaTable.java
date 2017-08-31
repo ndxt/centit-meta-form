@@ -679,6 +679,15 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 	public String getSchema() {
 		return null;
 	}
+
+	/**
+	 * @return 默认排序语句
+	 */
+	@Override
+	public String getOrderBy() {
+		return null;
+	}
+
 	@Override
 	public MetaColumn findFieldByName(String name) {
 		if(mdColumns==null)

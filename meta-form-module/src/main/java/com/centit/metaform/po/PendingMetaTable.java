@@ -429,6 +429,15 @@ public class PendingMetaTable implements
 	public String getSchema() {
 		return null;
 	}
+
+	/**
+	 * @return 默认排序语句
+	 */
+	@Override
+	public String getOrderBy() {
+		return null;
+	}
+
 	@Override
 	public PendingMetaColumn findFieldByName(String name) {
 		if(mdColumns==null)
