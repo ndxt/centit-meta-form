@@ -1,6 +1,6 @@
 package com.centit.metaform.config;
 
-import com.centit.framework.hibernate.config.DataSourceConfig;
+import com.centit.framework.core.config.DataSourceConfig;
 import com.centit.framework.ip.app.config.IPAppSystemBeanConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
