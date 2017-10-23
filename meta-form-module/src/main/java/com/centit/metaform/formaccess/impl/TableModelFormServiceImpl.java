@@ -23,7 +23,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.core.dao.PageDesc;
+import com.centit.support.database.utils.PageDesc;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.po.MetaColumn;
@@ -599,7 +599,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
 		try {
 			JsonObjectDao dao = rc.getJsonObjectDao();
-			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSql(rc.getTableInfo(),null);
+			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSqlWithFieldName(rc.getTableInfo(),null);
 			String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
 		
 			QueryAndNamedParams qap = rc.getMetaFormFilter();
@@ -653,7 +653,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
 		try {
 			JsonObjectDao dao = rc.getJsonObjectDao();
-			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSql(rc.getTableInfo(),null);
+			Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSqlWithFieldName(rc.getTableInfo(),null);
 			String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
 			QueryAndNamedParams qap = rc.getMetaFormFilter();
 			String filter = buildFilterSql(rc,null,filters);

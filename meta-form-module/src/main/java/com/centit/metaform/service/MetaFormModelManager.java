@@ -3,7 +3,7 @@ package com.centit.metaform.service;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
-import com.centit.framework.core.dao.PageDesc;
+import com.centit.support.database.utils.PageDesc;
 import com.centit.framework.hibernate.service.BaseEntityManager;
 import com.centit.metaform.po.MetaFormModel;
 

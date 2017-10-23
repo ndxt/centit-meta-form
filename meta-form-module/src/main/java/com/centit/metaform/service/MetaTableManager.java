@@ -1,11 +1,11 @@
 package com.centit.metaform.service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.centit.framework.core.dao.PageDesc;
 import com.centit.framework.hibernate.service.BaseEntityManager;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaTable;
+import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
