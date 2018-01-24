@@ -25,7 +25,7 @@ public class WebInitializer implements WebApplicationInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         initializeSpringConfig(servletContext);
         initializeSystemSpringMvcConfig(servletContext);
-        initializeSpringMvcConfig(servletContext);
+        initializeNormalSpringMvcConfig(servletContext);
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);
         WebConfig.registerResponseCorsFilter(servletContext);
@@ -70,7 +70,7 @@ public class WebInitializer implements WebApplicationInitializer {
      * 加载Servlet 项目配置
      * @param servletContext ServletContext
      */
-    private void initializeSpringMvcConfig(ServletContext servletContext) {
+    private void initializeNormalSpringMvcConfig(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(NormalSpringMvcConfig.class);
         ServletRegistration.Dynamic system  = servletContext.addServlet("service", new DispatcherServlet(context));
