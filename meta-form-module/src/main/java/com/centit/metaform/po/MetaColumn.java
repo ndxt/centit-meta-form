@@ -40,8 +40,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	@NotBlank(message = "字段不能为空")
 	@Length(max = 64, message = "字段长度不能大于{max}")
 	private String  fieldLabelName;
-	
-	
+
 	/**
 	 * 字段描述 null 
 	 */
@@ -75,33 +74,28 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	 */
 	@Column(name = "ACCESS_TYPE")
 	@NotBlank(message = "字段不能为空")
-	@Length(  message = "字段长度不能大于{max}")
 	private String  accessType;
 	/**
 	 * 是否必填 null 
 	 */
 	@Column(name = "MANDATORY")
-	@Length(  message = "字段长度不能大于{max}")
-	private String  mandatory;
+	private String isMandatoryColumn;
 	/**
 	 * 是否为主键 null 
 	 */
 	@Column(name = "PRIMARYKEY")
-	@Length(  message = "字段长度不能大于{max}")
-	private String  primarykey;
+	private String isPrimarykeyColumn;
 	/**
 	 * 状态 null 
 	 */
 	@Column(name = "COLUMN_STATE")
 	@NotBlank(message = "字段不能为空")
-	@Length(  message = "字段长度不能大于{max}")
 	private String  columnState;
 	/**
 	 *  0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
 	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））
 	 */
 	@Column(name = "REFERENCE_TYPE")
-	@Length(  message = "字段长度不能大于{max}")
 	private String  referenceType;
 	/**
 	 * 引用数据 根据paramReferenceType类型（1,2,3）填写对应值 
@@ -174,11 +168,11 @@ public class MetaColumn implements TableField,java.io.Serializable {
 
 /** full constructor */
 	public MetaColumn(com.centit.metaform.po.MetaColumnId id			
-	,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,
-	Integer  maxLength,Integer  scale,String  accessType,String  mandatory,
-	String  primarykey,String  columnState,String  referenceType,String  referenceData,
-	String  validateRegex,String  validateInfo,String  autoCreateRule,String  autoCreateParam,
-	Date  lastModifyDate,String  recorder) {
+	, String  fieldLabelName, String  columnComment, Long  columnOrder, String  columnType,
+					  Integer  maxLength, Integer  scale, String  accessType, String isMandatoryColumn,
+					  String isPrimarykeyColumn, String  columnState, String  referenceType, String  referenceData,
+					  String  validateRegex, String  validateInfo, String  autoCreateRule, String  autoCreateParam,
+					  Date  lastModifyDate, String  recorder) {
 		this.cid = id; 
 			
 	
@@ -189,8 +183,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.maxLength= maxLength;
 		this.scale= scale;
 		this.accessType= accessType;
-		this.mandatory= mandatory;
-		this.primarykey= primarykey;
+		this.isMandatoryColumn = isMandatoryColumn;
+		this.isPrimarykeyColumn = isPrimarykeyColumn;
 		this.columnState= columnState;
 		this.referenceType= referenceType;
 		this.referenceData= referenceData;
@@ -212,8 +206,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.maxLength= next.getMaxLength();  
 		this.scale= next.getScale();  
 		this.accessType= next.getAccessType();  
-		this.mandatory= next.getMandatory();  
-		this.primarykey= next.getPrimarykey();  
+		this.isMandatoryColumn = next.getMandatory();
+		this.isPrimarykeyColumn = next.getPrimarykey();
 		this.columnState= next.getColumnState();  
 		this.referenceType= next.getReferenceType();  
 		this.referenceData= next.getReferenceData();  
@@ -300,20 +294,20 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.accessType = accessType;
 	}
   
-	public String getMandatory() {
-		return this.mandatory;
+	public String getIsMandatoryColumn() {
+		return this.isMandatoryColumn;
 	}
 	
-	public void setMandatory(String mandatory) {
-		this.mandatory = mandatory;
+	public void setIsMandatoryColumn(String isMandatoryColumn) {
+		this.isMandatoryColumn = isMandatoryColumn;
 	}
   
-	public String getPrimarykey() {
-		return this.primarykey;
+	public String getIsPrimarykeyColumn() {
+		return this.isPrimarykeyColumn;
 	}
 	
-	public void setPrimarykey(String primarykey) {
-		this.primarykey = primarykey;
+	public void setIsPrimarykeyColumn(String isPrimarykeyColumn) {
+		this.isPrimarykeyColumn = isPrimarykeyColumn;
 	}
   
 	public String getColumnState() {
@@ -430,8 +424,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.maxLength= other.getMaxLength();  
 		this.scale= other.getScale();  
 		this.accessType= other.getAccessType();  
-		this.mandatory= other.getMandatory();  
-		this.primarykey= other.getPrimarykey();  
+		this.isMandatoryColumn = other.getIsMandatoryColumn();
+		this.isPrimarykeyColumn = other.getIsPrimarykeyColumn();
 		this.columnState= other.getColumnState();  
 		this.referenceType= other.getReferenceType();  
 		this.referenceData= other.getReferenceData();  
@@ -465,10 +459,10 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.scale= other.getScale();  
 		if( other.getAccessType() != null)
 			this.accessType= other.getAccessType();  
-		if( other.getMandatory() != null)
-			this.mandatory= other.getMandatory();  
-		if( other.getPrimarykey() != null)
-			this.primarykey= other.getPrimarykey();  
+		if( other.getIsMandatoryColumn() != null)
+			this.isMandatoryColumn = other.getIsMandatoryColumn();
+		if( other.getIsPrimarykeyColumn() != null)
+			this.isPrimarykeyColumn = other.getIsPrimarykeyColumn();
 		if( other.getColumnState() != null)
 			this.columnState= other.getColumnState();  
 		if( other.getReferenceType() != null)
@@ -500,8 +494,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.maxLength= null;  
 		this.scale= null;  
 		this.accessType= null;  
-		this.mandatory= null;  
-		this.primarykey= null;  
+		this.isMandatoryColumn = null;
+		this.isPrimarykeyColumn = null;
 		this.columnState= null;  
 		this.referenceType= null;  
 		this.referenceData= null;  
@@ -554,14 +548,14 @@ public class MetaColumn implements TableField,java.io.Serializable {
 	public String getJavaType() {
 		return MetaColumn.mapToFieldType(this.columnFieldType,this.scale==null?0:this.scale);
 	}
-	
+
 	@Override
 	public boolean isMandatory() {
-		return "T".equals(mandatory) ||  "Y".equals(mandatory) || "1".equals(mandatory);
+		return "T".equals(isMandatoryColumn) || "Y".equals(isMandatoryColumn) || "1".equals(isMandatoryColumn);
 	}
 	
 	public boolean isPrimaryKey() {
-		return "T".equals(primarykey) ||  "Y".equals(primarykey) || "1".equals(primarykey);
+		return "T".equals(isPrimarykeyColumn) || "Y".equals(isPrimarykeyColumn) || "1".equals(isPrimarykeyColumn);
 	}
 	
 	@Override
@@ -571,7 +565,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 				"float".equalsIgnoreCase(this.columnFieldType) ||
 				"varchar".equalsIgnoreCase(this.columnFieldType)||
 				"number".equalsIgnoreCase(this.columnFieldType))
-			return maxLength==null?0:maxLength.intValue();
+			return maxLength==null? 0 : maxLength.intValue();
 		return 0;
 	}
 	@Override
