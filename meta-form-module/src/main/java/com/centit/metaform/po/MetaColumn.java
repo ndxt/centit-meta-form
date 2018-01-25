@@ -206,8 +206,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
         this.maxLength= next.getMaxLength();
         this.scale= next.getScale();
         this.accessType= next.getAccessType();
-        this.isMandatoryColumn = next.getMandatory();
-        this.isPrimarykeyColumn = next.getPrimarykey();
+        this.isMandatoryColumn = next.getIsMandatoryColumn();
+        this.isPrimarykeyColumn = next.getIsPrimarykeyColumn();
         this.columnState= next.getColumnState();
         this.referenceType= next.getReferenceType();
         this.referenceData= next.getReferenceData();
@@ -507,6 +507,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 
         return this;
     }
+
     @Override
     public String getPropertyName() {
         return SimpleTableField.mapPropName(getColumnName());

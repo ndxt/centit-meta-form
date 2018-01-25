@@ -47,8 +47,8 @@ public class PdmTableInfo{
                 mdColumn.setAutoCreateParam(field.getDefaultValue());
             }
             mdColumn.setAccessType("N");
-            mdColumn.setMandatory(field.isMandatory()?"T":"F");
-            mdColumn.setPrimarykey("F");
+            mdColumn.setIsMandatoryColumn(field.isMandatory()?"T":"F");
+            mdColumn.setIsPrimarykeyColumn("F");
             mdColumn.setColumnState("N");
 
             metaTable.addMdColumn(mdColumn);
@@ -57,7 +57,7 @@ public class PdmTableInfo{
         for(String pkcode : pdmTable.getPkColumns()){
             PendingMetaColumn col = metaTable.findFieldByColumn(pkcode);
             if(col!=null)
-                col.setPrimarykey("T");
+                col.setIsPrimarykeyColumn("T");
         }
 
         return metaTable;

@@ -625,7 +625,6 @@ public class TableModelFormServiceImpl implements ModelFormService {
         }
     }
 
-    @Transactional
     private Map<String, Object> makeTabulationFilter(ModelRuntimeContext rc, Map<String, Object> filters){
         if(StringUtils.isBlank(rc.getMetaFormModel().getRelationType()) || "0".equals(rc.getMetaFormModel().getRelationType()))
                 return filters;

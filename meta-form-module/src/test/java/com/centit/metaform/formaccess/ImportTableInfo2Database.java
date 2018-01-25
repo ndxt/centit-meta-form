@@ -44,7 +44,7 @@ public class ImportTableInfo2Database {
                             + "values(?,?,?,?,'N', ?,?,'N',?,?,?,?)",
                         new Object[]{tableId,col.getColumnName(),col.getFieldLabelName(),col.getColumnFieldType(),
                                 col.getMaxLength(),col.getScale(),col.getColumnComment(),col.getAutoCreateRule(),
-                                col.getAutoCreateParam(),col.getPrimarykey()});
+                                col.getAutoCreateParam(),col.getIsPrimarykeyColumn()});
                 }
                 conn.commit();
                 System.out.println("导入表:"+t.getRight()+"("+t.getLeft()+")!");
