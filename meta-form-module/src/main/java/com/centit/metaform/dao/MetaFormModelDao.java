@@ -31,59 +31,59 @@ import com.centit.support.database.metadata.SimpleTableField;
 public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String>
 {
 
-	public static final Log log = LogFactory.getLog(MetaFormModelDao.class);
-	
-	@Override
-	public Map<String, String> getFilterField() {
-		if( filterField == null){
-			filterField = new HashMap<String, String>();
+    public static final Log log = LogFactory.getLog(MetaFormModelDao.class);
 
-			filterField.put("modelCode" , CodeBook.EQUAL_HQL_ID);
+    @Override
+    public Map<String, String> getFilterField() {
+        if( filterField == null){
+            filterField = new HashMap<String, String>();
 
-
-			filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
-
-			filterField.put("modelComment" , CodeBook.EQUAL_HQL_ID);
-
-			filterField.put("modelName" , CodeBook.EQUAL_HQL_ID);
-
-			filterField.put("accessType" , CodeBook.EQUAL_HQL_ID);
-
-			filterField.put("relationType" , CodeBook.EQUAL_HQL_ID);
-
-			filterField.put("parentModelCode" , CodeBook.EQUAL_HQL_ID);
-
-			filterField.put("displayOrder" , CodeBook.EQUAL_HQL_ID);
-
-			filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
-
-			filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
-
-		}
-		return filterField;
-	}
-	
-	public List<Pair<String,String>> getSubModelPropertiesMap(Long parentTableId,Long childTableId){
-		@SuppressWarnings("unchecked")
-		List<Object[]> columnsMap = (List<Object[]> )DatabaseOptUtils.findObjectsBySql(this, 
-			"select b.parent_column_name,b.child_column_name "+
-			" from F_META_RELATION a join F_META_REL_DETIAL b on (a.relation_id=b.relation_id)"+
-			" where a.parent_table_id = ? and a.child_table_id = ? ",
-			new Object[]{parentTableId,childTableId});
-		if(columnsMap==null || columnsMap.size()==0)
-			return null;
-		List<Pair<String,String>> columnList = new ArrayList<>();
-		for(Object[] columnPair:columnsMap){
-			columnList.add(new ImmutablePair<String,String>(
-					SimpleTableField.mapPropName(StringBaseOpt.objectToString(columnPair[0])),
-					SimpleTableField.mapPropName(StringBaseOpt.objectToString(columnPair[1]))));
-		}
-		return columnList;
-	}
+            filterField.put("modelCode" , CodeBook.EQUAL_HQL_ID);
 
 
-	/*public List<MetaFormModel> listFormByTable(String tableId) {
-		return listObjects("From MetaFormModel where mdTable.tableId = ?", tableId);
-		//return listObjects("From MetaFormModel where tableId = ?", tableId);
-	}*/
+            filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("modelComment" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("modelName" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("accessType" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("relationType" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("parentModelCode" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("displayOrder" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
+
+        }
+        return filterField;
+    }
+
+    public List<Pair<String,String>> getSubModelPropertiesMap(Long parentTableId,Long childTableId){
+        @SuppressWarnings("unchecked")
+        List<Object[]> columnsMap = (List<Object[]> )DatabaseOptUtils.findObjectsBySql(this,
+            "select b.parent_column_name,b.child_column_name "+
+            " from F_META_RELATION a join F_META_REL_DETIAL b on (a.relation_id=b.relation_id)"+
+            " where a.parent_table_id = ? and a.child_table_id = ? ",
+            new Object[]{parentTableId,childTableId});
+        if(columnsMap==null || columnsMap.size()==0)
+            return null;
+        List<Pair<String,String>> columnList = new ArrayList<>();
+        for(Object[] columnPair:columnsMap){
+            columnList.add(new ImmutablePair<String,String>(
+                    SimpleTableField.mapPropName(StringBaseOpt.objectToString(columnPair[0])),
+                    SimpleTableField.mapPropName(StringBaseOpt.objectToString(columnPair[1]))));
+        }
+        return columnList;
+    }
+
+
+    /*public List<MetaFormModel> listFormByTable(String tableId) {
+        return listObjects("From MetaFormModel where mdTable.tableId = ?", tableId);
+        //return listObjects("From MetaFormModel where tableId = ?", tableId);
+    }*/
 }

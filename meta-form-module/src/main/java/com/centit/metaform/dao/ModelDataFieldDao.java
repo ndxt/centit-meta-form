@@ -22,35 +22,35 @@ import com.centit.metaform.po.ModelDataField;
 
 @Repository
 public class ModelDataFieldDao extends BaseDaoImpl<ModelDataField,com.centit.metaform.po.ModelDataFieldId>
-	{
+    {
 
-	public static final Log log = LogFactory.getLog(ModelDataFieldDao.class);
-	
-	@Override
-	public Map<String, String> getFilterField() {
-		if( filterField == null){
-			filterField = new HashMap<String, String>();
+    public static final Log log = LogFactory.getLog(ModelDataFieldDao.class);
 
-			filterField.put("modelCode" , CodeBook.EQUAL_HQL_ID);
+    @Override
+    public Map<String, String> getFilterField() {
+        if( filterField == null){
+            filterField = new HashMap<String, String>();
 
-			filterField.put("columnName" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("modelCode" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("columnName" , CodeBook.EQUAL_HQL_ID);
 
 
-			filterField.put("accessType" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("accessType" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("displayOrder" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("displayOrder" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("inputHint" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("inputHint" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("validateHint" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("validateHint" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("fieldHeight" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("fieldHeight" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("labelLength" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("labelLength" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("fieldLength" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("fieldLength" , CodeBook.EQUAL_HQL_ID);
 
-		}
-		return filterField;
-	} 
+        }
+        return filterField;
+    }
 }

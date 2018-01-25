@@ -16,8 +16,8 @@ import com.centit.metaform.po.MetaChangLog;
 
 public interface MetaChangLogManager extends BaseEntityManager<MetaChangLog,java.lang.Long> 
 {
-	
-	JSONArray listMdChangLogsAsJson(
+
+    JSONArray listMdChangLogsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc);
 }

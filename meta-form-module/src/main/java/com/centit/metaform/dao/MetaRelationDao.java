@@ -22,33 +22,33 @@ import com.centit.metaform.po.MetaRelation;
 
 @Repository
 public class MetaRelationDao extends BaseDaoImpl<MetaRelation,java.lang.Long>
-	{
+    {
 
-	public static final Log log = LogFactory.getLog(MetaRelationDao.class);
-	
-	@Override
-	public Map<String, String> getFilterField() {
-		if( filterField == null){
-			filterField = new HashMap<String, String>();
+    public static final Log log = LogFactory.getLog(MetaRelationDao.class);
 
-			filterField.put("relationId" , CodeBook.EQUAL_HQL_ID);
+    @Override
+    public Map<String, String> getFilterField() {
+        if( filterField == null){
+            filterField = new HashMap<String, String>();
+
+            filterField.put("relationId" , CodeBook.EQUAL_HQL_ID);
 
 
-			filterField.put("parentTableId" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("parentTableId" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("childTableId" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("childTableId" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("relationName" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("relationName" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("relationState" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("relationState" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("relationComment" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("relationComment" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
 
-		}
-		return filterField;
-	} 
+        }
+        return filterField;
+    }
 }

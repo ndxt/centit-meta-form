@@ -22,55 +22,55 @@ import com.centit.metaform.po.PendingMetaColumn;
 
 @Repository
 public class PendingMetaColumnDao extends BaseDaoImpl<PendingMetaColumn,java.lang.Long>
-	{
+    {
 
-	public static final Log log = LogFactory.getLog(PendingMetaColumnDao.class);
-	
-	@Override
-	public Map<String, String> getFilterField() {
-		if( filterField == null){
-			filterField = new HashMap<String, String>();
+    public static final Log log = LogFactory.getLog(PendingMetaColumnDao.class);
 
-			filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
+    @Override
+    public Map<String, String> getFilterField() {
+        if( filterField == null){
+            filterField = new HashMap<String, String>();
+
+            filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
 
 
-			filterField.put("columnName" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("columnName" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("fieldLabelName" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("fieldLabelName" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("columnComment" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("columnComment" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("columnOrder" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("columnOrder" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("columnType" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("columnType" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("maxLength" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("maxLength" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("scale" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("scale" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("accessType" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("accessType" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("mandatory" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("mandatory" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("primarykey" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("primarykey" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("columnState" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("columnState" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("referenceType" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("referenceType" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("referenceData" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("referenceData" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("validateRegex" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("validateRegex" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("validateInfo" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("validateInfo" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("defaultValue" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("defaultValue" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
 
-		}
-		return filterField;
-	} 
+        }
+        return filterField;
+    }
 }

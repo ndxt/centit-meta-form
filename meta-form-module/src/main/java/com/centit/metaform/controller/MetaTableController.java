@@ -43,23 +43,23 @@ import java.util.Map;
 @Controller
 @RequestMapping("/metaform/mdtable")
 public class MetaTableController extends BaseController{
-	//private static final Log log = LogFactory.getLog(MetaTableController.class);
-	
-	@Resource
-	private MetaTableManager mdTableMag;	
-	/*public void setMdTableMag(MdTableManager basemgr)
-	{
-		mdTableMag = basemgr;
-		//this.setBaseEntityManager(mdTableMag);
-	}*/
+    //private static final Log log = LogFactory.getLog(MetaTableController.class);
 
-	@Resource
-	private MetaChangLogManager mdChangLogMag;	
-	/*public void setMdChangLogMag(MdChangLogManager basemgr)
-	{
-		mdChangLogMag = basemgr;
-		//this.setBaseEntityManager(mdChangLogMag);
-	}*/
+    @Resource
+    private MetaTableManager mdTableMag;
+    /*public void setMdTableMag(MdTableManager basemgr)
+    {
+        mdTableMag = basemgr;
+        //this.setBaseEntityManager(mdTableMag);
+    }*/
+
+    @Resource
+    private MetaChangLogManager mdChangLogMag;
+    /*public void setMdChangLogMag(MdChangLogManager basemgr)
+    {
+        mdChangLogMag = basemgr;
+        //this.setBaseEntityManager(mdChangLogMag);
+    }*/
 
     /**
      * 查询所有   元数据更改记录  列表
@@ -86,8 +86,8 @@ public class MetaTableController extends BaseController{
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
-	
-	
+
+
     /**
      * 查询所有   表元数据表  列表
      *
@@ -128,37 +128,37 @@ public class MetaTableController extends BaseController{
         if (ArrayUtils.isNotEmpty(field)) {
             JsonResultUtils.writeResponseDataAsJson(resData, response);
         }else{
-        	JsonResultUtils.writeResponseDataAsJson(resData, response);
+            JsonResultUtils.writeResponseDataAsJson(resData, response);
         }        
     }
     
     /**
      * 查询单个  表元数据表 
-	
-	 * @param tableId  Table_ID
+
+     * @param tableId  Table_ID
      * @param response    {@link HttpServletResponse}
      * @return {data:{}}
      */
     @RequestMapping(value = "/{tableId}", method = {RequestMethod.GET})
     public void getMdTable(@PathVariable Long tableId, HttpServletResponse response) {
-    	
-    	MetaTable mdTable =     			
-    			mdTableMag.getObjectById( tableId);
+
+        MetaTable mdTable =
+                mdTableMag.getObjectById( tableId);
         JsonResultUtils.writeSingleDataJson(mdTable, response);
     }
     
     /**
      * 查询单个  表元数据表  草稿
-	
-	 * @param tableId  Table_ID
+
+     * @param tableId  Table_ID
      * @param response    {@link HttpServletResponse}
      * @return {data:{}}
      */
     @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.GET})
     public void getMdTableDraft(@PathVariable Long tableId, HttpServletResponse response) {
-    	
-    	PendingMetaTable mdTable =     			
-    			mdTableMag.getPendingMetaTable(tableId);
+
+        PendingMetaTable mdTable =
+                mdTableMag.getPendingMetaTable(tableId);
         JsonResultUtils.writeSingleDataJson(mdTable, response);
     }
     
@@ -167,11 +167,11 @@ public class MetaTableController extends BaseController{
      */
     @RequestMapping(value="/draft",method = {RequestMethod.POST})
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
-    	PendingMetaTable table=new PendingMetaTable();
-    	table.copyNotNullProperty(mdTable);
-//    	mdTable.setTableType("T");// T 是数据表，后期会添加 V（视图）的选择
-//    	mdTable.setTableState("N");
-    	mdTableMag.saveNewPendingMetaTable(table);
+        PendingMetaTable table=new PendingMetaTable();
+        table.copyNotNullProperty(mdTable);
+//        mdTable.setTableType("T");// T 是数据表，后期会添加 V（视图）的选择
+//        mdTable.setTableState("N");
+        mdTableMag.saveNewPendingMetaTable(table);
         JsonResultUtils.writeSingleDataJson(table.getTableId(),response);
     }
     
@@ -181,8 +181,8 @@ public class MetaTableController extends BaseController{
      */
     @RequestMapping(value="/beforePublish/{ptableId}",method = {RequestMethod.POST})
     public void alertSqlBeforePublish(@PathVariable Long ptableId,
-    		HttpServletRequest request,HttpServletResponse response) {
-    	List<String> sqls = mdTableMag.makeAlterTableSqls(ptableId);
+            HttpServletRequest request,HttpServletResponse response) {
+        List<String> sqls = mdTableMag.makeAlterTableSqls(ptableId);
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, sqls);
         JsonResultUtils.writeResponseDataAsJson(resData, response);
@@ -192,26 +192,26 @@ public class MetaTableController extends BaseController{
      */
     @RequestMapping(value="/publish/{ptableId}",method = {RequestMethod.POST})
     public void publishMdTable(@PathVariable Long ptableId,
-    		HttpServletRequest request,HttpServletResponse response) {
-    	String userCode = super.getLoginUserCode(request);
-    	if(StringUtils.isBlank(userCode)){
-    		JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_UNAUTHORIZED,
-    				"当前用户没有登录，请先登录。", response);
-    		return;
-    	}
-    	Pair<Integer, String> ret = mdTableMag.publishMetaTable(ptableId, userCode);
+            HttpServletRequest request,HttpServletResponse response) {
+        String userCode = super.getLoginUserCode(request);
+        if(StringUtils.isBlank(userCode)){
+            JsonResultUtils.writeErrorMessageJson(ResponseData.ERROR_UNAUTHORIZED,
+                    "当前用户没有登录，请先登录。", response);
+            return;
+        }
+        Pair<Integer, String> ret = mdTableMag.publishMetaTable(ptableId, userCode);
         JsonResultUtils.writeErrorMessageJson(ret.getLeft(),ret.getRight(),response);
     }
     
     /**
      * 删除单个  表元数据表 
-	
-	 * @param tableId  Table_ID
+
+     * @param tableId  Table_ID
      */
     @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.DELETE})
     public void deleteMdTable(@PathVariable Long tableId, HttpServletResponse response) {
-    	
-    	mdTableMag.deletePendingMetaTable(tableId);
+
+        mdTableMag.deletePendingMetaTable(tableId);
         
         JsonResultUtils.writeBlankJson(response);
     } 
@@ -219,21 +219,21 @@ public class MetaTableController extends BaseController{
     /**
      * 新增或保存 表元数据表 
     
-	 * @param tableId  Table_ID
-	 * @param mdTable  {@link MetaTable}
+     * @param tableId  Table_ID
+     * @param mdTable  {@link MetaTable}
      * @param response    {@link HttpServletResponse}
      */
     @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.PUT})
     public void updateMdTable(@PathVariable Long tableId, 
-    	@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
-    	
-    	
-    	PendingMetaTable dbMdTable  =     			
-    			mdTableMag.getPendingMetaTable(tableId);
+        @RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
+
+
+        PendingMetaTable dbMdTable  =
+                mdTableMag.getPendingMetaTable(tableId);
         
         if (null != mdTable) {
-        	dbMdTable .copyNotNullProperty(mdTable);
-        	mdTableMag.savePendingMetaTable(dbMdTable);
+            dbMdTable .copyNotNullProperty(mdTable);
+            mdTableMag.savePendingMetaTable(dbMdTable);
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);
             return;
@@ -250,9 +250,9 @@ public class MetaTableController extends BaseController{
      */
     @RequestMapping(value="/{tableId}/getField",method = RequestMethod.GET)
     public void listfield(@PathVariable Long tableId, HttpServletResponse response, PageDesc pageDesc) {
-       	
-    	List<MetaColumn> meTadColumns =     			
-    			mdTableMag.listFields(tableId);
+
+        List<MetaColumn> meTadColumns =
+                mdTableMag.listFields(tableId);
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, meTadColumns);
         resData.addResponseData(PAGE_DESC, pageDesc);

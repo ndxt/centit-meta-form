@@ -6,128 +6,128 @@ import java.util.List;
 import com.centit.framework.common.OptionItem;
 
 public class FieldTemplateOptions {
-	
-	private String label;
-	private Boolean required;
-	private List<OptionItem> options;
-	private String placeholder;
-	private String description;
-	private Boolean focus;
-	private Boolean readonly;
-	private Boolean disabled;
-	private String format;
-	/**
-	 * 正则表达式
-	 */	
-	private String pattern;
-	/**
-	 * 文件上传
-	 */
-	private String url;
-	
-	public FieldTemplateOptions(){
-		disabled = false;
-	}
 
-	public String getLabel() {
-		return label;
-	}
+    private String label;
+    private Boolean required;
+    private List<OptionItem> options;
+    private String placeholder;
+    private String description;
+    private Boolean focus;
+    private Boolean readonly;
+    private Boolean disabled;
+    private String format;
+    /**
+     * 正则表达式
+     */
+    private String pattern;
+    /**
+     * 文件上传
+     */
+    private String url;
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    public FieldTemplateOptions(){
+        disabled = false;
+    }
 
-	public Boolean isRequired() {
-		return required;
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public void setRequired(boolean required) {
-		this.required = required;
-	}
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	public List<OptionItem> getOptions() {
-		return options;
-	}
+    public Boolean isRequired() {
+        return required;
+    }
 
-	public void setOptions(List<OptionItem> options) {
-		this.options = options;
-	}
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
 
-	public void addOption(OptionItem option) {
-		if(this.options == null)
-			this.options = new ArrayList<>();
-		this.options.add(option);
-	}
-	
-	public Boolean getRequired() {
-		return required;
-	}
+    public List<OptionItem> getOptions() {
+        return options;
+    }
 
-	public void setRequired(Boolean required) {
-		this.required = required;
-	}
+    public void setOptions(List<OptionItem> options) {
+        this.options = options;
+    }
 
-	public Boolean getReadonly() {
-		return readonly;
-	}
+    public void addOption(OptionItem option) {
+        if(this.options == null)
+            this.options = new ArrayList<>();
+        this.options.add(option);
+    }
 
-	public void setReadonly(Boolean readonly) {
-		this.readonly = readonly;
-	}
+    public Boolean getRequired() {
+        return required;
+    }
 
-	public String getPlaceholder() {
-		return placeholder;
-	}
+    public void setRequired(Boolean required) {
+        this.required = required;
+    }
 
-	public void setPlaceholder(String placeholder) {
-		this.placeholder = placeholder;
-	}
+    public Boolean getReadonly() {
+        return readonly;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setReadonly(Boolean readonly) {
+        this.readonly = readonly;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getPlaceholder() {
+        return placeholder;
+    }
 
-	public Boolean isFocus() {
-		return focus;
-	}
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+    }
 
-	public void setFocus(boolean focus) {
-		this.focus = focus;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getPattern() {
-		return pattern;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setPattern(String pattern) {
-		this.pattern = pattern;
-	}
+    public Boolean isFocus() {
+        return focus;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setFocus(boolean focus) {
+        this.focus = focus;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public String getPattern() {
+        return pattern;
+    }
 
-	public Boolean isDisabled() {
-		return disabled;
-	}
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
 
-	public void setDisabled(Boolean disabled) {
-		this.disabled = disabled;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public String getFormat() {
-		return format;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setFormat(String format) {
-		this.format = format;
-	}	
+    public Boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
 }

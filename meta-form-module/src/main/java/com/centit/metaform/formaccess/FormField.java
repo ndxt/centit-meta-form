@@ -5,144 +5,144 @@ import java.util.Map;
 
 public class FormField {
 
-	private String key;
-	private String className;// 'col-xs-12',
-	private String type;
-	private String defaultValue;
-	private FieldTemplateOptions templateOptions;
-	private String hideExpression;
-	private Map<String,String> expressionProperties;
-	private Map<String,Object> modelOptions;
-	private Boolean noFormControl;
-	private String template;
-	private String templateUrl;
-	private Long rows;
-	
-	private Map<String,FieldValidator> validators;
-	
-	public FormField(){
-		
-	}
+    private String key;
+    private String className;// 'col-xs-12',
+    private String type;
+    private String defaultValue;
+    private FieldTemplateOptions templateOptions;
+    private String hideExpression;
+    private Map<String,String> expressionProperties;
+    private Map<String,Object> modelOptions;
+    private Boolean noFormControl;
+    private String template;
+    private String templateUrl;
+    private Long rows;
 
-	public String getKey() {
-		return key;
-	}
+    private Map<String,FieldValidator> validators;
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    public FormField(){
 
-	public String getType() {
-		return type;
-	}
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public String getDefaultValue() {
-		return defaultValue;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public FieldTemplateOptions getTemplateOptions() {
-		return templateOptions;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public void setTemplateOptions(FieldTemplateOptions templateOptions) {
-		this.templateOptions = templateOptions;
-	}
+    public String getDefaultValue() {
+        return defaultValue;
+    }
 
-	public String getHideExpression() {
-		return hideExpression;
-	}
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
 
-	public void setHideExpression(String hideExpression) {
-		this.hideExpression = hideExpression;
-	}
+    public FieldTemplateOptions getTemplateOptions() {
+        return templateOptions;
+    }
 
-	public Map<String, String> getExpressionProperties() {
-		return expressionProperties;
-	}
+    public void setTemplateOptions(FieldTemplateOptions templateOptions) {
+        this.templateOptions = templateOptions;
+    }
 
-	public void setExpressionProperties(Map<String, String> expressionProperties) {
-		this.expressionProperties = expressionProperties;
-	}
+    public String getHideExpression() {
+        return hideExpression;
+    }
 
-	public Map<String, Object> getModelOptions() {
-		return modelOptions;
-	}
+    public void setHideExpression(String hideExpression) {
+        this.hideExpression = hideExpression;
+    }
 
-	public void setModelOptions(Map<String, Object> modelOptions) {
-		this.modelOptions = modelOptions;
-	}
+    public Map<String, String> getExpressionProperties() {
+        return expressionProperties;
+    }
 
-	public Boolean isNoFormControl() {
-		return noFormControl;
-	}
+    public void setExpressionProperties(Map<String, String> expressionProperties) {
+        this.expressionProperties = expressionProperties;
+    }
 
-	public void setNoFormControl(boolean noFormControl) {
-		this.noFormControl = noFormControl;
-	}
+    public Map<String, Object> getModelOptions() {
+        return modelOptions;
+    }
 
-	public String getTemplate() {
-		return template;
-	}
+    public void setModelOptions(Map<String, Object> modelOptions) {
+        this.modelOptions = modelOptions;
+    }
 
-	public void setTemplate(String template) {
-		this.template = template;
-	}
+    public Boolean isNoFormControl() {
+        return noFormControl;
+    }
 
-	public String getTemplateUrl() {
-		return templateUrl;
-	}
+    public void setNoFormControl(boolean noFormControl) {
+        this.noFormControl = noFormControl;
+    }
 
-	public void setTemplateUrl(String templateUrl) {
-		this.templateUrl = templateUrl;
-	}
+    public String getTemplate() {
+        return template;
+    }
 
-	public Map<String, FieldValidator> getValidators() {
-		return validators;
-	}
+    public void setTemplate(String template) {
+        this.template = template;
+    }
 
-	public void setValidators(Map<String, FieldValidator> validators) {
-		this.validators = validators;
-	}
+    public String getTemplateUrl() {
+        return templateUrl;
+    }
 
-	public void addValidator(String key, FieldValidator  validator) {
-		if(this.validators ==null)
-			this.validators = new HashMap<>();
-		this.validators.put(key, validator);
-	}
-	
-	public void setValidatorHint(String setValidatorHint) {
-		if(this.validators ==null)
-			this.validators = new HashMap<>();
-		this.validators.put(key, new FieldValidator(setValidatorHint));
-	}
-	
-	public Long getRows() {
-		return rows;
-	}
+    public void setTemplateUrl(String templateUrl) {
+        this.templateUrl = templateUrl;
+    }
 
-	public void setRows(Long rows) {
-		this.rows = rows;
-	}
+    public Map<String, FieldValidator> getValidators() {
+        return validators;
+    }
 
-	public String getClassName() {
-		return className;
-	}
+    public void setValidators(Map<String, FieldValidator> validators) {
+        this.validators = validators;
+    }
 
-	public void setClassName(String className) {
-		this.className = className;
-	}
-	/**
-	 * private String className;// 'col-xs-12',
-	 */
-	public void setFieldWidth(int width) {
-		this.className = "col-xs-"+width;
-	}
+    public void addValidator(String key, FieldValidator  validator) {
+        if(this.validators ==null)
+            this.validators = new HashMap<>();
+        this.validators.put(key, validator);
+    }
+
+    public void setValidatorHint(String setValidatorHint) {
+        if(this.validators ==null)
+            this.validators = new HashMap<>();
+        this.validators.put(key, new FieldValidator(setValidatorHint));
+    }
+
+    public Long getRows() {
+        return rows;
+    }
+
+    public void setRows(Long rows) {
+        this.rows = rows;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+    /**
+     * private String className;// 'col-xs-12',
+     */
+    public void setFieldWidth(int width) {
+        this.className = "col-xs-"+width;
+    }
 }

@@ -22,23 +22,23 @@ import com.centit.metaform.po.PendingMetaRelDetail;
 
 @Repository
 public class PendingMetaRelDetialDao extends BaseDaoImpl<PendingMetaRelDetail,com.centit.metaform.po.PendingMetaRelDetailId>
-	{
+    {
 
-	public static final Log log = LogFactory.getLog(PendingMetaRelDetialDao.class);
-	
-	@Override
-	public Map<String, String> getFilterField() {
-		if( filterField == null){
-			filterField = new HashMap<String, String>();
+    public static final Log log = LogFactory.getLog(PendingMetaRelDetialDao.class);
 
-			filterField.put("relationId" , CodeBook.EQUAL_HQL_ID);
+    @Override
+    public Map<String, String> getFilterField() {
+        if( filterField == null){
+            filterField = new HashMap<String, String>();
 
-			filterField.put("parentColumnName" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("relationId" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("parentColumnName" , CodeBook.EQUAL_HQL_ID);
 
 
-			filterField.put("childColumnName" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("childColumnName" , CodeBook.EQUAL_HQL_ID);
 
-		}
-		return filterField;
-	} 
+        }
+        return filterField;
+    }
 }

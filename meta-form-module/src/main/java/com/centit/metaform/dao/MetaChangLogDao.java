@@ -23,41 +23,41 @@ import com.centit.metaform.po.MetaChangLog;
 
 @Repository
 public class MetaChangLogDao extends BaseDaoImpl<MetaChangLog,java.lang.Long>
-	{
+    {
 
-	public static final Log log = LogFactory.getLog(MetaChangLogDao.class);
-	
-	@Override
-	public Map<String, String> getFilterField() {
-		if( filterField == null){
-			filterField = new HashMap<String, String>();
+    public static final Log log = LogFactory.getLog(MetaChangLogDao.class);
 
-			filterField.put("version" , CodeBook.EQUAL_HQL_ID);
+    @Override
+    public Map<String, String> getFilterField() {
+        if( filterField == null){
+            filterField = new HashMap<String, String>();
+
+            filterField.put("version" , CodeBook.EQUAL_HQL_ID);
 
 
-			filterField.put("changeId" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("changeId" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("changeDate" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("changeDate" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("changer" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("changer" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("changeTableSum" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("changeTableSum" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("changeRelationSum" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("changeRelationSum" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("changeScript" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("changeScript" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("changeComment" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("changeComment" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("auditor" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("auditor" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("auditDate" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("auditDate" , CodeBook.EQUAL_HQL_ID);
 
-		}
-		return filterField;
-	}
-	
-	public Long getNextKey(){
-		return DatabaseOptUtils.getNextLongSequence(this, "S_META_CHANGLOG_ID");
-	}
+        }
+        return filterField;
+    }
+
+    public Long getNextKey(){
+        return DatabaseOptUtils.getNextLongSequence(this, "S_META_CHANGLOG_ID");
+    }
 }

@@ -22,39 +22,39 @@ import com.centit.metaform.po.ModelOperation;
 
 @Repository
 public class ModelOperationDao extends BaseDaoImpl<ModelOperation,com.centit.metaform.po.ModelOperationId>
-	{
+    {
 
-	public static final Log log = LogFactory.getLog(ModelOperationDao.class);
-	
-	@Override
-	public Map<String, String> getFilterField() {
-		if( filterField == null){
-			filterField = new HashMap<String, String>();
+    public static final Log log = LogFactory.getLog(ModelOperationDao.class);
 
-			filterField.put("modelCode" , CodeBook.EQUAL_HQL_ID);
+    @Override
+    public Map<String, String> getFilterField() {
+        if( filterField == null){
+            filterField = new HashMap<String, String>();
 
-			filterField.put("operation" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("modelCode" , CodeBook.EQUAL_HQL_ID);
+
+            filterField.put("operation" , CodeBook.EQUAL_HQL_ID);
 
 
-			filterField.put("optModelCode" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("optModelCode" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("method" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("method" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("label" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("label" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("displayOrder" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("displayOrder" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("openType" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("openType" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("returnOperation" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("returnOperation" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("optHintType" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("optHintType" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("optHintInfo" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("optHintInfo" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("extendOptions" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("extendOptions" , CodeBook.EQUAL_HQL_ID);
 
-		}
-		return filterField;
-	} 
+        }
+        return filterField;
+    }
 }

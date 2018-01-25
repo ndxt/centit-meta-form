@@ -16,8 +16,8 @@ import com.centit.metaform.po.ModelOperation;
 
 public interface ModelOperationManager extends BaseEntityManager<ModelOperation,com.centit.metaform.po.ModelOperationId> 
 {
-	
-	public JSONArray listModelOperationsAsJson(
+
+    public JSONArray listModelOperationsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc);
 }

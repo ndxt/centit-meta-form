@@ -26,45 +26,45 @@ import java.util.Map;
 */
 @Service
 public class MetaFormModelManagerImpl 
-		extends BaseEntityManagerImpl<MetaFormModel,java.lang.String,MetaFormModelDao>
-	implements MetaFormModelManager{
+        extends BaseEntityManagerImpl<MetaFormModel,java.lang.String,MetaFormModelDao>
+    implements MetaFormModelManager{
 
-	public static final Log log = LogFactory.getLog(MetaFormModelManager.class);
+    public static final Log log = LogFactory.getLog(MetaFormModelManager.class);
 
-	
-	private MetaFormModelDao metaFormModelDao ;
-	
-	@Resource(name = "metaFormModelDao")
+
+    private MetaFormModelDao metaFormModelDao ;
+
+    @Resource(name = "metaFormModelDao")
     @NotNull
-	public void setMetaFormModelDao(MetaFormModelDao baseDao)
-	{
-		this.metaFormModelDao = baseDao;
-		setBaseDao(this.metaFormModelDao);
-	}
-	
+    public void setMetaFormModelDao(MetaFormModelDao baseDao)
+    {
+        this.metaFormModelDao = baseDao;
+        setBaseDao(this.metaFormModelDao);
+    }
+
 /*
- 	@PostConstruct
+     @PostConstruct
     public void init() {
         
     }
- 	
+
  */
-	@Override
+    @Override
     @Transactional(propagation=Propagation.REQUIRED) 
-	public JSONArray listMetaFormModelsAsJson(
+    public JSONArray listMetaFormModelsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 
-		return DictionaryMapUtils.objectsToJSONArray(
-				baseDao.listObjects(filterMap, pageDesc), fields);
-	}
+        return DictionaryMapUtils.objectsToJSONArray(
+                baseDao.listObjects(filterMap, pageDesc), fields);
+    }
 
-	@Override
-	@Transactional(propagation=Propagation.REQUIRED)
-	public void updateMetaFormModel(MetaFormModel mtaFormModel) {
-		ModelRuntimeContextPool.invalidRuntimeContextPool(mtaFormModel.getModelCode());
-		metaFormModelDao.updateObject(mtaFormModel);
-	}
+    @Override
+    @Transactional(propagation=Propagation.REQUIRED)
+    public void updateMetaFormModel(MetaFormModel mtaFormModel) {
+        ModelRuntimeContextPool.invalidRuntimeContextPool(mtaFormModel.getModelCode());
+        metaFormModelDao.updateObject(mtaFormModel);
+    }
 
 }
 
