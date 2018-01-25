@@ -370,9 +370,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
 			templateOptions.setPlaceholder(field.getInputHint());
 			if(StringUtils.isNoneBlank(field.getValidateHint()))
 				ff.setValidatorHint(field.getValidateHint());
-			if(field.isFocus())
+			if("T".equals(field.getFocus()) ||  "Y".equals(field.getFocus()) || "1".equals(field.getFocus()))
 				templateOptions.setFocus(true);
-			if(field.isMandatory())
+			if("T".equals(field.getMandatory()) ||  "Y".equals(field.getMandatory()) || "1".equals(field.getMandatory()))
 				templateOptions.setRequired(true);
 			if(StringUtils.isNotBlank(field.getViewFormat()))
 				templateOptions.setFormat(field.getViewFormat());
@@ -625,7 +625,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 		}
 	}
 	
-	@Transactional
+//	@Transactional
 	private Map<String, Object> makeTabulationFilter(ModelRuntimeContext rc, Map<String, Object> filters){
 		if(StringUtils.isBlank(rc.getMetaFormModel().getRelationType()) || "0".equals(rc.getMetaFormModel().getRelationType()))
 				return filters;

@@ -343,9 +343,9 @@ public class ModelDataField implements java.io.Serializable {
 		return mandatory;
 	}
 	
-	public boolean isMandatory() {
-		return "T".equals(mandatory) ||  "Y".equals(mandatory) || "1".equals(mandatory);
-	}
+//	public boolean isMandatory() {
+//		return "T".equals(mandatory) ||  "Y".equals(mandatory) || "1".equals(mandatory);
+//	}
 	
 	public void setMandatory(String mandatory) {
 		this.mandatory = mandatory;
@@ -353,9 +353,9 @@ public class ModelDataField implements java.io.Serializable {
 	public String getFocus() {
 		return focus;
 	}
-	public boolean isFocus() {
-		return "T".equals(focus) ||  "Y".equals(focus) || "1".equals(focus);
-	}
+//	public boolean isFocus() {
+//		return "T".equals(focus) ||  "Y".equals(focus) || "1".equals(focus);
+//	}
 	
 	public void setFocus(String focus) {
 		this.focus = focus;

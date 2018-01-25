@@ -212,7 +212,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.maxLength= next.getMaxLength();  
 		this.scale= next.getScale();  
 		this.accessType= next.getAccessType();  
-		this.mandatory= next.getMandatory();  
+		this.mandatory= next.isMandatory()?"T":"F";
 		this.primarykey= next.getPrimarykey();  
 		this.columnState= next.getColumnState();  
 		this.referenceType= next.getReferenceType();  
@@ -300,9 +300,9 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.accessType = accessType;
 	}
   
-	public String getMandatory() {
-		return this.mandatory;
-	}
+//	public String getMandatory() {
+//		return this.mandatory;
+//	}
 	
 	public void setMandatory(String mandatory) {
 		this.mandatory = mandatory;
@@ -430,7 +430,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.maxLength= other.getMaxLength();  
 		this.scale= other.getScale();  
 		this.accessType= other.getAccessType();  
-		this.mandatory= other.getMandatory();  
+		this.mandatory= other.isMandatory()?"T":"F";
 		this.primarykey= other.getPrimarykey();  
 		this.columnState= other.getColumnState();  
 		this.referenceType= other.getReferenceType();  
@@ -465,8 +465,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
 		this.scale= other.getScale();  
 		if( other.getAccessType() != null)
 			this.accessType= other.getAccessType();  
-		if( other.getMandatory() != null)
-			this.mandatory= other.getMandatory();  
+//		if( other.isMandatory())
+		this.mandatory= other.isMandatory()?"T":"F";
 		if( other.getPrimarykey() != null)
 			this.primarykey= other.getPrimarykey();  
 		if( other.getColumnState() != null)

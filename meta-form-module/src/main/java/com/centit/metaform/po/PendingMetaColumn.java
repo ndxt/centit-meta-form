@@ -268,9 +268,9 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 		this.accessType = accessType;
 	}
   
-	public String getMandatory() {
-		return this.mandatory;
-	}
+//	public String getMandatory() {
+//		return this.mandatory;
+//	}
 	
 	public void setMandatory(String mandatory) {
 		this.mandatory = mandatory;
@@ -378,7 +378,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 		this.maxLength= other.getMaxLength();  
 		this.scale= other.getScale();  
 		this.accessType= other.getAccessType();  
-		this.mandatory= other.getMandatory();  
+		this.mandatory= other.isMandatory()?"T":"F";
 		this.primarykey= other.getPrimarykey();  
 		this.columnState= other.getColumnState();  
 		this.referenceType= other.getReferenceType();  
@@ -408,8 +408,8 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 		this.scale= other.getScale();  
 		if( other.getAccessType() != null)
 			this.accessType= other.getAccessType();  
-		if( other.getMandatory() != null)
-			this.mandatory= other.getMandatory();  
+//		if( other.getMandatory() != null)
+			this.mandatory= other.isMandatory()?"T":"F";
 		if( other.getPrimarykey() != null)
 			this.primarykey= other.getPrimarykey();  
 		if( other.getColumnState() != null)
