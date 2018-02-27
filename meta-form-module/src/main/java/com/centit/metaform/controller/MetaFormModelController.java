@@ -36,15 +36,15 @@ import java.util.Map;
 @Controller
 @RequestMapping("/metaform/metaformmodel")
 public class MetaFormModelController extends BaseController{
-	//private static final Log log = LogFactory.getLog(MetaFormModelController.class);
-	
-	@Resource
-	private MetaFormModelManager metaFormModelMag;	
-	/*public void setMetaFormModelMag(MetaFormModelManager basemgr)
-	{
-		metaFormModelMag = basemgr;
-		//this.setBaseEntityManager(metaFormModelMag);
-	}*/
+    //private static final Log log = LogFactory.getLog(MetaFormModelController.class);
+
+    @Resource
+    private MetaFormModelManager metaFormModelMag;
+    /*public void setMetaFormModelMag(MetaFormModelManager basemgr)
+    {
+        metaFormModelMag = basemgr;
+        //this.setBaseEntityManager(metaFormModelMag);
+    }*/
 
     /**
      * 查询所有   通用模块管理  列表
@@ -56,7 +56,7 @@ public class MetaFormModelController extends BaseController{
      */
     @RequestMapping(method = RequestMethod.GET)
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
-    	Map<String, Object> searchColumn = convertSearchColumn(request);
+        Map<String, Object> searchColumn = convertSearchColumn(request);
         List<MetaFormModel> listObjects = metaFormModelMag.listObjects(searchColumn, pageDesc);
         SimplePropertyPreFilter simplePropertyPreFilter = null;
         
@@ -72,21 +72,21 @@ public class MetaFormModelController extends BaseController{
             JsonResultUtils.writeResponseDataAsJson(resData, response,simplePropertyPreFilter);
         }
         else{
-        	JsonResultUtils.writeResponseDataAsJson(resData, response);
+            JsonResultUtils.writeResponseDataAsJson(resData, response);
         }
     }
     /**
      * 查询单个  通用模块管理 
-	
-	 * @param modelCode  Model_Code
+
+     * @param modelCode  Model_Code
      * @param response    {@link HttpServletResponse}
      * @return {data:{}}
      */
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.GET})
     public void getMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
-    	
-    	MetaFormModel metaFormModel =     			
-    			metaFormModelMag.getObjectById( modelCode);
+
+        MetaFormModel metaFormModel =
+                metaFormModelMag.getObjectById( modelCode);
         
         JsonResultUtils.writeSingleDataJson(metaFormModel, response);
     }
@@ -99,45 +99,45 @@ public class MetaFormModelController extends BaseController{
      */
     @RequestMapping(method = {RequestMethod.POST})
     public void createMetaFormModel(@RequestBody @Valid MetaFormModel metaFormModel,
-    		 HttpServletRequest request, HttpServletResponse response) {
-    	MetaFormModel model=new MetaFormModel();
-    	String usercode = getLoginUserCode(request);
-    	model.copyNotNullProperty(metaFormModel);
-    	model.setRecorder(usercode);
-    	model.setLastModifyDate(new Date());
-    	metaFormModelMag.saveNewObject(model);
+             HttpServletRequest request, HttpServletResponse response) {
+        MetaFormModel model=new MetaFormModel();
+        String usercode = getLoginUserCode(request);
+        model.copyNotNullProperty(metaFormModel);
+        model.setRecorder(usercode);
+        model.setLastModifyDate(new Date());
+        metaFormModelMag.saveNewObject(model);
         JsonResultUtils.writeSingleDataJson(model.getModelCode(),response);
     }
 
     /**
      * 删除单个  通用模块管理 
-	
-	 * @param modelCode  Model_Code
+
+     * @param modelCode  Model_Code
      */
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.DELETE})
     public void deleteMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
-    	
-    	//metaFormModelMag.deleteObjectById( modelCode);
+
+        //metaFormModelMag.deleteObjectById( modelCode);
         
         JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_METHOD_DISABLED,
-        		"系统已经禁用删除模块功能！", response);
+                "系统已经禁用删除模块功能！", response);
     } 
     
     /**
      * 新增或保存 通用模块管理 
     
-	 * @param modelCode  Model_Code
-	 * @param metaFormModel  {@link MetaFormModel}
+     * @param modelCode  Model_Code
+     * @param metaFormModel  {@link MetaFormModel}
      * @param response    {@link HttpServletResponse}
      */
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.PUT})
     public void updateMetaFormModel(@PathVariable String modelCode,
-    		@RequestBody @Valid MetaFormModel metaFormModel, HttpServletResponse response) {
-    	MetaFormModel dbMetaFormModel = metaFormModelMag.getObjectById( modelCode);
+            @RequestBody @Valid MetaFormModel metaFormModel, HttpServletResponse response) {
+        MetaFormModel dbMetaFormModel = metaFormModelMag.getObjectById( modelCode);
         if (null != metaFormModel) {
-        	dbMetaFormModel.copyNotNullProperty(metaFormModel);
-        	dbMetaFormModel.setLastModifyDate(new Date());
-        	metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
+            dbMetaFormModel.copyNotNullProperty(metaFormModel);
+            dbMetaFormModel.setLastModifyDate(new Date());
+            metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);
             return;

@@ -24,20 +24,20 @@ import java.util.Map;
 
 public interface MetaTableManager extends BaseEntityManager<MetaTable,java.lang.Long> 
 {
-	JSONArray listMdTablesAsJson(
+    JSONArray listMdTablesAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc);
-	void saveNewPendingMetaTable(PendingMetaTable pmt);
-	void deletePendingMetaTable(long tableId);
-	PendingMetaTable getPendingMetaTable(long tableId);
-	void savePendingMetaTable(PendingMetaTable pmt);
-	List<String> makeAlterTableSqls(Long tableId);
-	Pair<Integer, String> publishMetaTable(Long tableId,String currentUser);
-	JSONArray listDrafts(String[] fields, Map<String, Object> searchColumn,
-			PageDesc pageDesc);
-	
-	List<Pair<String, String>> listTablesInPdm(String pdmFilePath);
-	boolean importTableFromPdm(String pdmFilePath, String tableCode, String databaseCode);
-	List<MetaColumn> getNotInFormFields(Long tableId);
-	List<MetaColumn> listFields(Long tableId);
+    void saveNewPendingMetaTable(PendingMetaTable pmt);
+    void deletePendingMetaTable(long tableId);
+    PendingMetaTable getPendingMetaTable(long tableId);
+    void savePendingMetaTable(PendingMetaTable pmt);
+    List<String> makeAlterTableSqls(Long tableId);
+    Pair<Integer, String> publishMetaTable(Long tableId,String currentUser);
+    JSONArray listDrafts(String[] fields, Map<String, Object> searchColumn,
+            PageDesc pageDesc);
+
+    List<Pair<String, String>> listTablesInPdm(String pdmFilePath);
+    boolean importTableFromPdm(String pdmFilePath, String tableCode, String databaseCode);
+    List<MetaColumn> getNotInFormFields(Long tableId);
+    List<MetaColumn> listFields(Long tableId);
 }

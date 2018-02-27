@@ -26,37 +26,37 @@ import com.centit.metaform.po.MetaTable;
 
 @Repository
 public class MetaTableDao extends BaseDaoImpl<MetaTable,java.lang.Long>
-	{
+    {
 
-	public static final Log log = LogFactory.getLog(MetaTableDao.class);
-	
-	@Override
-	public Map<String, String> getFilterField() {
-		if( filterField == null){
-			filterField = new HashMap<String, String>();
+    public static final Log log = LogFactory.getLog(MetaTableDao.class);
 
-			filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
+    @Override
+    public Map<String, String> getFilterField() {
+        if( filterField == null){
+            filterField = new HashMap<String, String>();
+
+            filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
 
 
-			filterField.put("databaseCode" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("databaseCode" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("tableName" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("tableName" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("tableLabelName" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("tableLabelName" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("tableType" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("tableType" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("tableState" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("tableState" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("tableComment" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("tableComment" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("isInWorkflow" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("isInWorkflow" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
 
-			filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
 
-		}
-		return filterField;
-	} 
+        }
+        return filterField;
+    }
 }

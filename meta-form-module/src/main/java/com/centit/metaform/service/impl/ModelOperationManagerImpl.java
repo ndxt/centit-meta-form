@@ -24,35 +24,35 @@ import java.util.Map;
 */
 @Service
 public class ModelOperationManagerImpl 
-		extends BaseEntityManagerImpl<ModelOperation,com.centit.metaform.po.ModelOperationId,ModelOperationDao>
-	{
+        extends BaseEntityManagerImpl<ModelOperation,com.centit.metaform.po.ModelOperationId,ModelOperationDao>
+    {
 
-	public static final Log log = LogFactory.getLog(ModelOperationManagerImpl.class);
+    public static final Log log = LogFactory.getLog(ModelOperationManagerImpl.class);
 
-	
-	private ModelOperationDao modelOperationDao ;
-	
-	@Resource(name = "modelOperationDao")
+
+    private ModelOperationDao modelOperationDao ;
+
+    @Resource(name = "modelOperationDao")
     @NotNull
-	public void setModelOperationDao(ModelOperationDao baseDao)
-	{
-		this.modelOperationDao = baseDao;
-		setBaseDao(this.modelOperationDao);
-	}
-	
-/* 	@PostConstruct
+    public void setModelOperationDao(ModelOperationDao baseDao)
+    {
+        this.modelOperationDao = baseDao;
+        setBaseDao(this.modelOperationDao);
+    }
+
+/*     @PostConstruct
     public void init() {
         
     }
  */
-	@Transactional(propagation=Propagation.REQUIRED) 
-	public JSONArray listModelOperationsAsJson(
+    @Transactional(propagation=Propagation.REQUIRED)
+    public JSONArray listModelOperationsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 
-		return DictionaryMapUtils.objectsToJSONArray(
-				baseDao.listObjects(filterMap, pageDesc), fields);
-	}
-	
+        return DictionaryMapUtils.objectsToJSONArray(
+                baseDao.listObjects(filterMap, pageDesc), fields);
+    }
+
 }
 

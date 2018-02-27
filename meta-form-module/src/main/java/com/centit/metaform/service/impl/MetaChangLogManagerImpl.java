@@ -25,38 +25,38 @@ import java.util.Map;
 */
 @Service
 public class MetaChangLogManagerImpl 
-		extends BaseEntityManagerImpl<MetaChangLog,java.lang.Long,MetaChangLogDao>
-	implements MetaChangLogManager{
+        extends BaseEntityManagerImpl<MetaChangLog,java.lang.Long,MetaChangLogDao>
+    implements MetaChangLogManager{
 
-	public static final Log log = LogFactory.getLog(MetaChangLogManager.class);
+    public static final Log log = LogFactory.getLog(MetaChangLogManager.class);
 
-	
-	private MetaChangLogDao metaChangLogDao;
-	
-	@Resource(name = "metaChangLogDao")
+
+    private MetaChangLogDao metaChangLogDao;
+
+    @Resource(name = "metaChangLogDao")
     @NotNull
-	public void setMdChangLogDao(MetaChangLogDao baseDao)
-	{
-		this.metaChangLogDao = baseDao;
-		setBaseDao(this.metaChangLogDao);
-	}
-	
+    public void setMdChangLogDao(MetaChangLogDao baseDao)
+    {
+        this.metaChangLogDao = baseDao;
+        setBaseDao(this.metaChangLogDao);
+    }
+
 /*
- 	@PostConstruct
+     @PostConstruct
     public void init() {
         
     }
- 	
+
  */
-	@Override
+    @Override
     @Transactional(propagation=Propagation.REQUIRED) 
-	public JSONArray listMdChangLogsAsJson(
+    public JSONArray listMdChangLogsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 
-		return DictionaryMapUtils.objectsToJSONArray(
-				baseDao.listObjects(filterMap, pageDesc), fields);
-	}
-	
+        return DictionaryMapUtils.objectsToJSONArray(
+                baseDao.listObjects(filterMap, pageDesc), fields);
+    }
+
 }
 

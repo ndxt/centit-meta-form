@@ -16,8 +16,8 @@ import com.centit.metaform.po.ModelDataField;
 
 public interface ModelDataFieldManager extends BaseEntityManager<ModelDataField,com.centit.metaform.po.ModelDataFieldId> 
 {
-	
-	public JSONArray listModelDataFieldsAsJson(
+
+    public JSONArray listModelDataFieldsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc);
 }

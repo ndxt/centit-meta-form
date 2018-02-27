@@ -25,38 +25,38 @@ import java.util.Map;
 */
 @Service
 public class ModelDataFieldManagerImpl 
-		extends BaseEntityManagerImpl<ModelDataField,com.centit.metaform.po.ModelDataFieldId,ModelDataFieldDao>
-	implements ModelDataFieldManager{
+        extends BaseEntityManagerImpl<ModelDataField,com.centit.metaform.po.ModelDataFieldId,ModelDataFieldDao>
+    implements ModelDataFieldManager{
 
-	public static final Log log = LogFactory.getLog(ModelDataFieldManager.class);
+    public static final Log log = LogFactory.getLog(ModelDataFieldManager.class);
 
-	
-	private ModelDataFieldDao modelDataFieldDao ;
-	
-	@Resource(name = "modelDataFieldDao")
+
+    private ModelDataFieldDao modelDataFieldDao ;
+
+    @Resource(name = "modelDataFieldDao")
     @NotNull
-	public void setModelDataFieldDao(ModelDataFieldDao baseDao)
-	{
-		this.modelDataFieldDao = baseDao;
-		setBaseDao(this.modelDataFieldDao);
-	}
-	
+    public void setModelDataFieldDao(ModelDataFieldDao baseDao)
+    {
+        this.modelDataFieldDao = baseDao;
+        setBaseDao(this.modelDataFieldDao);
+    }
+
 /*
- 	@PostConstruct
+     @PostConstruct
     public void init() {
         
     }
- 	
+
  */
-	@Override
+    @Override
     @Transactional(propagation=Propagation.REQUIRED) 
-	public JSONArray listModelDataFieldsAsJson(
+    public JSONArray listModelDataFieldsAsJson(
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 
-		return DictionaryMapUtils.objectsToJSONArray(
-				baseDao.listObjects(filterMap, pageDesc), fields);
-	}
-	
+        return DictionaryMapUtils.objectsToJSONArray(
+                baseDao.listObjects(filterMap, pageDesc), fields);
+    }
+
 }
 
