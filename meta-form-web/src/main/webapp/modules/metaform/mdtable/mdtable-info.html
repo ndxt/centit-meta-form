@@ -20,18 +20,21 @@
                                 <div class="field required">
                                     <label>所属数据库ID</label>
                                     <input class="easyui-combobox" name="databaseCode" required panelHeight="auto"
+                                           editable="false"
                                            url="system/ipenvironment/databaseinfos" method="get"
                                            data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
                                 </div>
                                 <div class="field required">
                                     <label>与流程中业务关联关系</label>
                                     <input type="text" class="easyui-combobox"
+                                           editable="false"
                                            data-options="valueField:'value',textField:'text',data:[{value:'0',text:'不关联工作流'},{value:'1',text:'和流程业务关联'},{value:'2',text:'和流程过程关联'}]"
                                            name="workFlowOptType" required panelHeight="auto"/>
                                 </div>
                                 <div class="field required">
                                     <label>更新时是否校验时间戳</label>
                                     <input type="text" class="easyui-combobox"
+                                           editable="false"
                                            data-options="valueField:'value',textField:'text',data:[{value:'Y',text:'是'},{value:'N',text:'否'}]"
                                            name="updateCheckTimeStamp" required panelHeight="auto"/>
                                 </div>
@@ -262,6 +265,6 @@
     </div>
     <div region="south" border="false">
         <input type="button" value="提交" id="mdtable_sub"
-               style="position:relative;float:right;width:80px;height:30px; padding: 4px;"/>
+               style="position:relative; float:right;width:80px;height:30px; padding: 4px;"/>
     </div>
 </div>

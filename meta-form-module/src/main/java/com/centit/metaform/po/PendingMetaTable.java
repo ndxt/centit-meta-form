@@ -82,12 +82,10 @@ public class PendingMetaTable implements
 
 
     @Column(name = "EXT_COLUMN_NAME")
-    @NotBlank(message = "字段不能为空")
     @Length(max = 64, message = "字段长度不能大于{max}")
     private String  extColumnName;
 
     @Column(name = "EXT_COLUMN_FORMAT")
-    @NotBlank(message = "字段不能为空")
     @Length(max = 10, message = "字段长度不能大于{max}")
     private String  extColumnFormat;
     /**
