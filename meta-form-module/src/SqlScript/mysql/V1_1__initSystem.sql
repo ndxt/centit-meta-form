@@ -28,248 +28,248 @@ drop table if exists M_Model_OPERATION;
 
 create table D_DataBase_Info
 (
-   Database_Code        varchar(32) not null,
-   database_name        varchar(100),
-   OS_ID                varchar(20),
-   database_url         varchar(1000),
-   username             varchar(100),
-   password             varchar(100) comment '¼ÓÃÜ',
-   database_desc        varchar(500),
-   last_Modify_DATE     datetime,
-   create_time          datetime,
-   created              varchar(8),
-   primary key (Database_Code)
+  Database_Code        varchar(32) not null,
+  database_name        varchar(100),
+  OS_ID                varchar(20),
+  database_url         varchar(1000),
+  username             varchar(100),
+  password             varchar(100) comment 'åŠ å¯†',
+  database_desc        varchar(500),
+  last_Modify_DATE     datetime,
+  create_time          datetime,
+  created              varchar(8),
+  primary key (Database_Code)
 );
 
 create table D_OS_INFO
 (
-   OS_ID                varchar(20) not null,
-   OS_NAME              varchar(200) not null,
-   OS_URL               char(10),
-   DDE_SYNC_URL         char(10) comment 'Õâ¸ö½ö¹©DDEÊ¹ÓÃ',
-   SYS_DATA_PUSH_OPTION char(10),
-   last_Modify_DATE     datetime,
-   create_time          datetime,
-   created              varchar(8),
-   primary key (OS_ID)
+  OS_ID                varchar(20) not null,
+  OS_NAME              varchar(200) not null,
+  OS_URL               char(10),
+  DDE_SYNC_URL         char(10) comment 'è¿™ä¸ªä»…ä¾›DDEä½¿ç”¨',
+  SYS_DATA_PUSH_OPTION char(10),
+  last_Modify_DATE     datetime,
+  create_time          datetime,
+  created              varchar(8),
+  primary key (OS_ID)
 );
 
 create table F_META_CHANG_LOG
 (
-   change_ID            numeric(12,0) not null,
-   Table_ID             numeric(12,0) comment '±íµ¥Ö÷¼ü',
-   change_Date          datetime not null default NOW(),
-   changer              varchar(6) not null,
-   change_Script        text,
-   change_comment       varchar(2048),
-   primary key (change_ID)
+  change_ID            numeric(12,0) not null,
+  Table_ID             numeric(12,0) comment 'è¡¨å•ä¸»é”®',
+  change_Date          datetime not null default NOW(),
+  changer              varchar(6) not null,
+  change_Script        text,
+  change_comment       varchar(2048),
+  primary key (change_ID)
 );
 
 create table F_META_COLUMN
 (
-   Table_ID             numeric(12,0) not null comment '±íµ¥Ö÷¼ü',
-   column_Name          varchar(32) not null,
-   field_Label_Name     varchar(64) not null,
-   column_Comment       varchar(256),
-   column_Order         numeric(3,0) default 99,
-   column_Type          varchar(32) not null,
-   max_Length           numeric(6,0) comment 'precision',
-   scale                numeric(3,0),
-   access_type          char(1) not null,
-   mandatory            char(1),
-   primarykey           char(1),
-   column_state         char(1) not null,
-   reference_Type       char(1) comment ' 0£ºÃ»ÓĞ£º1£º Êı¾İ×Öµä(ÁĞ±í)   2£º Êı¾İ×Öµä(Ê÷ĞÍ)   3£ºJSON±í´ïÊ½ 4£ºsqlÓï¾ä   5£ºSQL£¨Ê÷£©
-            	   9 :¿ò¼ÜÄÚÖÃ×Öµä£¨ÓÃ»§¡¢»ú¹¹¡¢½ÇÉ«µÈµÈ£©  Y£ºÄê·İ M£ºÔÂ·İ   F:ÎÄ¼ş£¨column_Type ±ØĞëÎª varchar£¨64£©£©',
-   reference_Data       varchar(1000) comment '¸ù¾İparamReferenceTypeÀàĞÍ£¨1,2,3£©ÌîĞ´¶ÔÓ¦Öµ',
-   Validate_Regex       varchar(200) comment 'regex±í´ïÊ½',
-   Validate_Info        varchar(200) comment 'Ô¼Êø²»Í¨¹ıÌáÊ¾ĞÅÏ¢',
-   auto_create_Rule     char(1) comment 'C ³£Á¿  U uuid S sequence',
-   auto_create_Param    varchar(1000) comment '³£Á¿£¨Ä¬ÈÏÖµ£©»òÔò sequenceÃû×Ö',
-   last_modify_Date     datetime,
-   Recorder             varchar(8),
-   primary key (Table_ID, column_Name)
+  Table_ID             numeric(12,0) not null comment 'è¡¨å•ä¸»é”®',
+  column_Name          varchar(32) not null,
+  field_Label_Name     varchar(64) not null,
+  column_Comment       varchar(256),
+  column_Order         numeric(3,0) default 99,
+  column_Type          varchar(32) not null,
+  max_Length           numeric(6,0) comment 'precision',
+  scale                numeric(3,0),
+  access_type          char(1) not null,
+  mandatory            char(1),
+  primarykey           char(1),
+  column_state         char(1) not null,
+  reference_Type       char(1) comment ' 0ï¼šæ²¡æœ‰ï¼š1ï¼š æ•°æ®å­—å…¸(åˆ—è¡¨)   2ï¼š æ•°æ®å­—å…¸(æ ‘å‹)   3ï¼šJSONè¡¨è¾¾å¼ 4ï¼šsqlè¯­å¥   5ï¼šSQLï¼ˆæ ‘ï¼‰
+            	   9 :æ¡†æ¶å†…ç½®å­—å…¸ï¼ˆç”¨æˆ·ã€æœºæ„ã€è§’è‰²ç­‰ç­‰ï¼‰  Yï¼šå¹´ä»½ Mï¼šæœˆä»½   F:æ–‡ä»¶ï¼ˆcolumn_Type å¿…é¡»ä¸º varcharï¼ˆ64ï¼‰ï¼‰',
+  reference_Data       varchar(1000) comment 'æ ¹æ®paramReferenceTypeç±»å‹ï¼ˆ1,2,3ï¼‰å¡«å†™å¯¹åº”å€¼',
+  Validate_Regex       varchar(200) comment 'regexè¡¨è¾¾å¼',
+  Validate_Info        varchar(200) comment 'çº¦æŸä¸é€šè¿‡æç¤ºä¿¡æ¯',
+  auto_create_Rule     char(1) comment 'C å¸¸é‡  U uuid S sequence',
+  auto_create_Param    varchar(1000) comment 'å¸¸é‡ï¼ˆé»˜è®¤å€¼ï¼‰æˆ–åˆ™ sequenceåå­—',
+  last_modify_Date     datetime,
+  Recorder             varchar(8),
+  primary key (Table_ID, column_Name)
 );
 
 create table F_META_RELATION
 (
-   relation_ID          numeric(12,0) not null comment '¹ØÁª¹ØÏµ£¬ÀàËÆÓëÍâ¼ü£¬µ«²»´´½¨Íâ¼ü',
-   Parent_Table_ID      numeric(12,0) comment '±íµ¥Ö÷¼ü',
-   Child_Table_ID       numeric(12,0) comment '±íµ¥Ö÷¼ü',
-   relation_name        varchar(64) not null,
-   relation_state       char(1) not null,
-   relation_comment     varchar(256),
-   last_modify_Date     datetime,
-   Recorder             varchar(8),
-   primary key (relation_ID)
+  relation_ID          numeric(12,0) not null comment 'å…³è”å…³ç³»ï¼Œç±»ä¼¼ä¸å¤–é”®ï¼Œä½†ä¸åˆ›å»ºå¤–é”®',
+  Parent_Table_ID      numeric(12,0) comment 'è¡¨å•ä¸»é”®',
+  Child_Table_ID       numeric(12,0) comment 'è¡¨å•ä¸»é”®',
+  relation_name        varchar(64) not null,
+  relation_state       char(1) not null,
+  relation_comment     varchar(256),
+  last_modify_Date     datetime,
+  Recorder             varchar(8),
+  primary key (relation_ID)
 );
 
 create table F_META_REL_DETIAL
 (
-   relation_ID          varchar(32) not null,
-   parent_column_Name   varchar(32) not null,
-   child_column_Name    varchar(32) not null,
-   primary key (relation_ID, parent_column_Name)
+  relation_ID          varchar(32) not null,
+  parent_column_Name   varchar(32) not null,
+  child_column_Name    varchar(32) not null,
+  primary key (relation_ID, parent_column_Name)
 );
 
 create table F_META_TABLE
 (
-   Table_ID             numeric(12,0) not null comment '±í±àºÅ',
-   Database_Code        varchar(32),
-   table_type           char(1) not null comment '±í/ÊÓÍ¼/ÒÑ´æÔÚ±íµÄÀ©Õ¹×Ö¶Î    Ä¿Ç°Ö»ÄÜÊÇ±í',
-   Table_Name           varchar(64) not null,
-   Table_Label_Name     varchar(100) not null,
-   EXT_COLUMN_NAME      varchar(64) comment 'À©Õ¹×Ö¶ÎÃû³É(×Ö¶ÎÀàĞÍ ±ØĞëÊÇ CLOB »òÕß TEXT )',
-   EXT_COLUMN_FROMAT    varchar(10) comment 'XML\JSON',
-   Recorder             varchar(8),
-   table_state          char(1) not null comment 'ÏµÍ³ S / R ²éÑ¯(Ö»¶Á)/ N ĞÂ½¨(¶ÁĞ´)',
-   table_Comment        varchar(256),
-   Workflow_OPT_TYPE    char(1) not null default '0' comment '0: ²»¹ØÁª¹¤×÷Á÷ 1£ººÍÁ÷³ÌÒµÎñ¹ØÁª 2£º ºÍÁ÷³Ì¹ı³Ì¹ØÁª
-            1, Ìí¼Ó  WFINSTID Á÷³ÌÊµÀıID
-            2, Ìí¼Ó NODEINSTID WFINSTID	½ÚµãÊµÀı±àºÅ Á÷³ÌÊµÀıID
-            
-            
+  Table_ID             numeric(12,0) not null comment 'è¡¨ç¼–å·',
+  Database_Code        varchar(32),
+  table_type           char(1) not null comment 'è¡¨/è§†å›¾/å·²å­˜åœ¨è¡¨çš„æ‰©å±•å­—æ®µ    ç›®å‰åªèƒ½æ˜¯è¡¨',
+  Table_Name           varchar(64) not null,
+  Table_Label_Name     varchar(100) not null,
+  EXT_COLUMN_NAME      varchar(64) comment 'æ‰©å±•å­—æ®µåæˆ(å­—æ®µç±»å‹ å¿…é¡»æ˜¯ CLOB æˆ–è€… TEXT )',
+  EXT_COLUMN_FROMAT    varchar(10) comment 'XML\JSON',
+  Recorder             varchar(8),
+  table_state          char(1) not null comment 'ç³»ç»Ÿ S / R æŸ¥è¯¢(åªè¯»)/ N æ–°å»º(è¯»å†™)',
+  table_Comment        varchar(256),
+  Workflow_OPT_TYPE    char(1) not null default '0' comment '0: ä¸å…³è”å·¥ä½œæµ 1ï¼šå’Œæµç¨‹ä¸šåŠ¡å…³è” 2ï¼š å’Œæµç¨‹è¿‡ç¨‹å…³è”
+            1, æ·»åŠ   WFINSTID æµç¨‹å®ä¾‹ID
+            2, æ·»åŠ  NODEINSTID WFINSTID	èŠ‚ç‚¹å®ä¾‹ç¼–å· æµç¨‹å®ä¾‹ID
+
+
             Name	Code	Comment	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
-            ½ÚµãÊµÀı±àºÅ	NODEINSTID		NUMBER(12)	12		TRUE	FALSE	TRUE
-            Á÷³ÌÊµÀıID	WFINSTID		NUMBER(12)	12		FALSE	TRUE	FALSE',
-   update_check_timestamp char(1) comment 'Y/N ¸üĞÂÊ±ÊÇ·ñĞ£ÑéÊ±¼ä´Á Ìí¼Ó Last_modify_time datetime',
-   last_modify_Date     datetime,
-   primary key (Table_ID)
+            èŠ‚ç‚¹å®ä¾‹ç¼–å·	NODEINSTID		NUMBER(12)	12		TRUE	FALSE	TRUE
+            æµç¨‹å®ä¾‹ID	WFINSTID		NUMBER(12)	12		FALSE	TRUE	FALSE',
+  update_check_timestamp char(1) comment 'Y/N æ›´æ–°æ—¶æ˜¯å¦æ ¡éªŒæ—¶é—´æˆ³ æ·»åŠ  Last_modify_time datetime',
+  last_modify_Date     datetime,
+  primary key (Table_ID)
 );
 
-alter table F_META_TABLE comment '×´Ì¬·ÖÎª ÏµÍ³/²éÑ¯/¸üĞÂ
-ÏµÍ³£¬²»¿ÉÒÔ×öÈÎºÎ²Ù×÷
-²éÑ¯£¬½öÓÃÓÚÍ¨ÓÃ²éÑ¯Ä£¿é£¬²»¿ÉÒÔ¸üĞÂ
+alter table F_META_TABLE comment 'çŠ¶æ€åˆ†ä¸º ç³»ç»Ÿ/æŸ¥è¯¢/æ›´æ–°
+ç³»ç»Ÿï¼Œä¸å¯ä»¥åšä»»ä½•æ“ä½œ
+æŸ¥è¯¢ï¼Œä»…ç”¨äºé€šç”¨æŸ¥è¯¢æ¨¡å—ï¼Œä¸å¯ä»¥æ›´æ–°
                                  -&';
 
 create table F_PENDING_META_COLUMN
 (
-   Table_ID             numeric(12,0) not null comment '±íµ¥Ö÷¼ü',
-   column_Name          varchar(32) not null,
-   field_Label_Name     varchar(64) not null,
-   column_Comment       varchar(256),
-   column_Order         numeric(3,0) default 99,
-   column_Type          varchar(32) not null,
-   max_Length           numeric(6,0) comment 'precision',
-   scale                numeric(3,0),
-   access_type          char(1) not null,
-   mandatory            char(1),
-   primarykey           char(1),
-   column_state         char(1) not null,
-   reference_Type       char(1) comment ' 0£ºÃ»ÓĞ£º1£º Êı¾İ×Öµä(ÁĞ±í)   2£º Êı¾İ×Öµä(Ê÷ĞÍ)   3£ºJSON±í´ïÊ½ 4£ºsqlÓï¾ä   5£ºSQL£¨Ê÷£©
-            	   9 :¿ò¼ÜÄÚÖÃ×Öµä£¨ÓÃ»§¡¢»ú¹¹¡¢½ÇÉ«µÈµÈ£©  Y£ºÄê·İ M£ºÔÂ·İ   F:ÎÄ¼ş£¨column_Type ±ØĞëÎª varchar£¨64£©£©',
-   reference_Data       varchar(1000) comment '¸ù¾İparamReferenceTypeÀàĞÍ£¨1,2,3£©ÌîĞ´¶ÔÓ¦Öµ',
-   Validate_Regex       varchar(200) comment 'regex±í´ïÊ½',
-   Validate_Info        varchar(200) comment 'Ô¼Êø²»Í¨¹ıÌáÊ¾ĞÅÏ¢',
-   auto_create_Rule     char(1),
-   auto_create_Param    varchar(1000),
-   last_modify_Date     datetime,
-   Recorder             varchar(8),
-   primary key (Table_ID)
+  Table_ID             numeric(12,0) not null comment 'è¡¨å•ä¸»é”®',
+  column_Name          varchar(32) not null,
+  field_Label_Name     varchar(64) not null,
+  column_Comment       varchar(256),
+  column_Order         numeric(3,0) default 99,
+  column_Type          varchar(32) not null,
+  max_Length           numeric(6,0) comment 'precision',
+  scale                numeric(3,0),
+  access_type          char(1) not null,
+  mandatory            char(1),
+  primarykey           char(1),
+  column_state         char(1) not null,
+  reference_Type       char(1) comment ' 0ï¼šæ²¡æœ‰ï¼š1ï¼š æ•°æ®å­—å…¸(åˆ—è¡¨)   2ï¼š æ•°æ®å­—å…¸(æ ‘å‹)   3ï¼šJSONè¡¨è¾¾å¼ 4ï¼šsqlè¯­å¥   5ï¼šSQLï¼ˆæ ‘ï¼‰
+            	   9 :æ¡†æ¶å†…ç½®å­—å…¸ï¼ˆç”¨æˆ·ã€æœºæ„ã€è§’è‰²ç­‰ç­‰ï¼‰  Yï¼šå¹´ä»½ Mï¼šæœˆä»½   F:æ–‡ä»¶ï¼ˆcolumn_Type å¿…é¡»ä¸º varcharï¼ˆ64ï¼‰ï¼‰',
+  reference_Data       varchar(1000) comment 'æ ¹æ®paramReferenceTypeç±»å‹ï¼ˆ1,2,3ï¼‰å¡«å†™å¯¹åº”å€¼',
+  Validate_Regex       varchar(200) comment 'regexè¡¨è¾¾å¼',
+  Validate_Info        varchar(200) comment 'çº¦æŸä¸é€šè¿‡æç¤ºä¿¡æ¯',
+  auto_create_Rule     char(1),
+  auto_create_Param    varchar(1000),
+  last_modify_Date     datetime,
+  Recorder             varchar(8),
+  primary key (Table_ID)
 );
 
 create table F_PENDING_META_RELATION
 (
-   relation_ID          numeric(12,0) not null comment '¹ØÁª¹ØÏµ£¬ÀàËÆÓëÍâ¼ü£¬µ«²»´´½¨Íâ¼ü',
-   Parent_Table_ID      numeric(12,0) comment '±íµ¥Ö÷¼ü',
-   Child_Table_ID       numeric(12,0) comment '±íµ¥Ö÷¼ü',
-   relation_name        varchar(64) not null,
-   relation_state       char(1) not null,
-   relation_comment     varchar(256),
-   last_modify_Date     datetime,
-   Recorder             varchar(8),
-   primary key (relation_ID)
+  relation_ID          numeric(12,0) not null comment 'å…³è”å…³ç³»ï¼Œç±»ä¼¼ä¸å¤–é”®ï¼Œä½†ä¸åˆ›å»ºå¤–é”®',
+  Parent_Table_ID      numeric(12,0) comment 'è¡¨å•ä¸»é”®',
+  Child_Table_ID       numeric(12,0) comment 'è¡¨å•ä¸»é”®',
+  relation_name        varchar(64) not null,
+  relation_state       char(1) not null,
+  relation_comment     varchar(256),
+  last_modify_Date     datetime,
+  Recorder             varchar(8),
+  primary key (relation_ID)
 );
 
 create table F_PENDING_META_REL_DETIAL
 (
-   relation_ID          varchar(32) not null,
-   parent_column_Name   varchar(32) not null,
-   child_column_Name    varchar(32) not null,
-   primary key (relation_ID, parent_column_Name)
+  relation_ID          varchar(32) not null,
+  parent_column_Name   varchar(32) not null,
+  child_column_Name    varchar(32) not null,
+  primary key (relation_ID, parent_column_Name)
 );
 
 create table F_PENDING_META_TABLE
 (
-   Table_ID             numeric(12,0) not null comment '±íµ¥Ö÷¼ü',
-   Database_Code        varchar(32),
-   table_type           char(1) not null comment '±í/ÊÓÍ¼ Ä¿Ç°Ö»ÄÜÊÇ±í',
-   Table_Name           varchar(64) not null,
-   Table_Label_Name     varchar(100) not null,
-   EXT_COLUMN_NAME      varchar(64) comment 'À©Õ¹×Ö¶ÎÃû³É(×Ö¶ÎÀàĞÍ ±ØĞëÊÇ CLOB »òÕß TEXT )',
-   EXT_COLUMN_FROMAT    varchar(10) comment 'XML\JSON',
-   table_state          char(1) not null comment 'ÏµÍ³ S / R ²éÑ¯(Ö»¶Á)/ N ĞÂ½¨(¶ÁĞ´)',
-   table_Comment        varchar(256),
-   Workflow_OPT_TYPE    char(1) not null default '0' comment '0: ²»¹ØÁª¹¤×÷Á÷ 1£ººÍÁ÷³ÌÒµÎñ¹ØÁª 2£º ºÍÁ÷³Ì¹ı³Ì¹ØÁª',
-   update_check_timestamp char(1) comment 'Y/N ¸üĞÂÊ±ÊÇ·ñĞ£ÑéÊ±¼ä´Á',
-   last_modify_Date     datetime,
-   Recorder             varchar(8),
-   primary key (Table_ID)
+  Table_ID             numeric(12,0) not null comment 'è¡¨å•ä¸»é”®',
+  Database_Code        varchar(32),
+  table_type           char(1) not null comment 'è¡¨/è§†å›¾ ç›®å‰åªèƒ½æ˜¯è¡¨',
+  Table_Name           varchar(64) not null,
+  Table_Label_Name     varchar(100) not null,
+  EXT_COLUMN_NAME      varchar(64) comment 'æ‰©å±•å­—æ®µåæˆ(å­—æ®µç±»å‹ å¿…é¡»æ˜¯ CLOB æˆ–è€… TEXT )',
+  EXT_COLUMN_FROMAT    varchar(10) comment 'XML\JSON',
+  table_state          char(1) not null comment 'ç³»ç»Ÿ S / R æŸ¥è¯¢(åªè¯»)/ N æ–°å»º(è¯»å†™)',
+  table_Comment        varchar(256),
+  Workflow_OPT_TYPE    char(1) not null default '0' comment '0: ä¸å…³è”å·¥ä½œæµ 1ï¼šå’Œæµç¨‹ä¸šåŠ¡å…³è” 2ï¼š å’Œæµç¨‹è¿‡ç¨‹å…³è”',
+  update_check_timestamp char(1) comment 'Y/N æ›´æ–°æ—¶æ˜¯å¦æ ¡éªŒæ—¶é—´æˆ³',
+  last_modify_Date     datetime,
+  Recorder             varchar(8),
+  primary key (Table_ID)
 );
 
 create table M_Meta_Form_Model
 (
-   Model_Code           varchar(16) not null,
-   Table_ID             numeric(12,0) comment '±íµ¥Ö÷±í',
-   Model_Comment        varchar(256),
-   Model_Name           varchar(64) not null,
-   Access_Type          char(1) comment 'R Ö»¶Á£¨ÊÓÍ¼¡¢²éÑ¯£©£¬A  ĞÂÔö£¨Ö»ÄÜĞÂÔöÒ»Ìõ£©£¬W ĞŞ¸Ä £¬L ±à¼­ÁĞ±í£¨ÔöÉ¾¸Ä£©',
-   form_template        varchar(128),
-   list_as_tree         char(1),
-   Relation_type        char(1) comment '0 Ã»ÓĞ¸¸Ä£¿é  1  Ò»¶ÔÒ»£¬2 ¶à¶ÔÒ»',
-   Parent_Model_Code    varchar(16) comment '×ÓÄ£¿é±ØĞè¶ÔÓ¦¸¸Ä£¿é¶ÔÓ¦µÄ×Ó±í',
-   Display_Order        numeric(4,0),
-   last_modify_Date     datetime,
-   Recorder             varchar(8),
-   extend_Options       varchar(800),
-   extend_opt_bean      varchar(64) comment 'ÊµÏÖÌØ¶¨½Ó¿ÚµÄbean£¬Õâ¸ö¿ÉÒÔÔÚÒµÎñ±£´æ¡¢Ìá½»¡¢ĞŞ¸Ä¡¢É¾³ıµÄÊ±ºòµ÷ÓÃ¶ÔÓ¦µÄÒµÎñ´¦Àí·½·¨',
-   extend_opt_bean_param varchar(800) comment 'json String ¸ñÊ½µÄ²ÎÊı',
-   Data_filter_Sql      varchar(800) comment 'Ìõ¼şÓï¾ä',
-   REL_WFCODE           varchar(32),
-   primary key (Model_Code)
+  Model_Code           varchar(16) not null,
+  Table_ID             numeric(12,0) comment 'è¡¨å•ä¸»è¡¨',
+  Model_Comment        varchar(256),
+  Model_Name           varchar(64) not null,
+  Access_Type          char(1) comment 'R åªè¯»ï¼ˆè§†å›¾ã€æŸ¥è¯¢ï¼‰ï¼ŒA  æ–°å¢ï¼ˆåªèƒ½æ–°å¢ä¸€æ¡ï¼‰ï¼ŒW ä¿®æ”¹ ï¼ŒL ç¼–è¾‘åˆ—è¡¨ï¼ˆå¢åˆ æ”¹ï¼‰',
+  form_template        varchar(128),
+  list_as_tree         char(1),
+  Relation_type        char(1) comment '0 æ²¡æœ‰çˆ¶æ¨¡å—  1  ä¸€å¯¹ä¸€ï¼Œ2 å¤šå¯¹ä¸€',
+  Parent_Model_Code    varchar(16) comment 'å­æ¨¡å—å¿…éœ€å¯¹åº”çˆ¶æ¨¡å—å¯¹åº”çš„å­è¡¨',
+  Display_Order        numeric(4,0),
+  last_modify_Date     datetime,
+  Recorder             varchar(8),
+  extend_Options       varchar(800),
+  extend_opt_bean      varchar(64) comment 'å®ç°ç‰¹å®šæ¥å£çš„beanï¼Œè¿™ä¸ªå¯ä»¥åœ¨ä¸šåŠ¡ä¿å­˜ã€æäº¤ã€ä¿®æ”¹ã€åˆ é™¤çš„æ—¶å€™è°ƒç”¨å¯¹åº”çš„ä¸šåŠ¡å¤„ç†æ–¹æ³•',
+  extend_opt_bean_param varchar(800) comment 'json String æ ¼å¼çš„å‚æ•°',
+  Data_filter_Sql      varchar(800) comment 'æ¡ä»¶è¯­å¥',
+  REL_WFCODE           varchar(32),
+  primary key (Model_Code)
 );
 
 create table M_Model_Data_Field
 (
-   Model_Code           varchar(16) not null,
-   column_Name          varchar(32) not null,
-   column_type          char(1) not null comment '±í×Ö¶Î£¬¹ØÁªÖ»¶Á×Ö¶Î£¨reference_Data ÖĞÎª¹ØÁªSQLÓï¾ä£©',
-   Access_Type          char(1) default 'W' comment 'H Òş²Ø  R Ö»¶Á C ĞÂ½¨ÊÇ¿ÉÒÔ±à¼­ F ·Ç¿ÕÊ±¿ÉÒÔ±à¼­ N Õı³£±à¼­',
-   Display_Order        numeric(4,0),
-   input_TYPE           varchar(32),
-   input_hint           varchar(256) comment 'ÓëÏµÍ³¹ØÁª£¬±ÈÈç×Ô¶¯ÓëµÇÂ¼ÓÃ»§´úÂë¹ØÁª£¬Ñ¡ÔñÏµÍ³ÓÃ»§£¬Ñ¡ÔñÏµÍ³»ú¹¹£¬µÈµÈ',
-   reference_Type       char(1) comment ' 0£ºÃ»ÓĞ£º1£º Êı¾İ×Öµä(ÁĞ±í)   2£º Êı¾İ×Öµä(Ê÷ĞÍ)   3£ºJSON±í´ïÊ½ 4£ºsqlÓï¾ä   5£ºSQL£¨Ê÷£©
-            	   9 :¿ò¼ÜÄÚÖÃ×Öµä£¨ÓÃ»§¡¢»ú¹¹¡¢½ÇÉ«µÈµÈ£©  Y£ºÄê·İ M£ºÔÂ·İ   F:ÎÄ¼ş£¨column_Type ±ØĞëÎª varchar£¨64£©£©',
-   reference_Data       varchar(500) comment '¸ù¾İparamReferenceTypeÀàĞÍ£¨1,2,3£©ÌîĞ´¶ÔÓ¦Öµ',
-   Validate_Regex       varchar(200) comment 'regex±í´ïÊ½',
-   Validate_Info        varchar(200) comment 'Ô¼Êø²»Í¨¹ıÌáÊ¾ĞÅÏ¢',
-   default_Value        varchar(200) comment '²ÎÊıÄ¬ÈÏÖµ',
-   Validate_hint        varchar(256),
-   filter_type          char(2) comment 'HI ²éÑ¯Ê±Õâ¸ö×Ö¶ÎÒş²Ø NO Ã»ÓĞ£¬ MC £¨match)  LT Ğ¡ÓÚ GT ´óÓÚ EQ µÈÓÚ BT ½éÓÚ  LE Ğ¡ÓÚµÈÓÚ GE ´óÓÚµÈÓÚ ',
-   mandatory            char(1),
-   focus                char(1),
-   url                  varchar(256),
-   extend_Options       varchar(1000),
-   field_height         numeric(4,0) default 1 comment 'Íø¸ñ²¼¾ÖÄ¬ÈÏÎª 1',
-   field_width          numeric(4,0) default 1 comment 'Íø¸ñ²¼¾ÖÄ¬ÈÏÎª 1',
-   view_format          varchar(50) comment 'ÏÔÊ¾Ê±¸ñÊ½»¯£¬Õë¶ÔnumberºÍdatetimeÀàĞÍ£¬Ä¿Ç°½öÊµÏÖÈÕÆÚÀàĞÍ',
-   primary key (Model_Code, column_Name)
+  Model_Code           varchar(16) not null,
+  column_Name          varchar(32) not null,
+  column_type          char(1) not null comment 'è¡¨å­—æ®µï¼Œå…³è”åªè¯»å­—æ®µï¼ˆreference_Data ä¸­ä¸ºå…³è”SQLè¯­å¥ï¼‰',
+  Access_Type          char(1) default 'W' comment 'H éšè—  R åªè¯» C æ–°å»ºæ˜¯å¯ä»¥ç¼–è¾‘ F éç©ºæ—¶å¯ä»¥ç¼–è¾‘ N æ­£å¸¸ç¼–è¾‘',
+  Display_Order        numeric(4,0),
+  input_TYPE           varchar(32),
+  input_hint           varchar(256) comment 'ä¸ç³»ç»Ÿå…³è”ï¼Œæ¯”å¦‚è‡ªåŠ¨ä¸ç™»å½•ç”¨æˆ·ä»£ç å…³è”ï¼Œé€‰æ‹©ç³»ç»Ÿç”¨æˆ·ï¼Œé€‰æ‹©ç³»ç»Ÿæœºæ„ï¼Œç­‰ç­‰',
+  reference_Type       char(1) comment ' 0ï¼šæ²¡æœ‰ï¼š1ï¼š æ•°æ®å­—å…¸(åˆ—è¡¨)   2ï¼š æ•°æ®å­—å…¸(æ ‘å‹)   3ï¼šJSONè¡¨è¾¾å¼ 4ï¼šsqlè¯­å¥   5ï¼šSQLï¼ˆæ ‘ï¼‰
+            	   9 :æ¡†æ¶å†…ç½®å­—å…¸ï¼ˆç”¨æˆ·ã€æœºæ„ã€è§’è‰²ç­‰ç­‰ï¼‰  Yï¼šå¹´ä»½ Mï¼šæœˆä»½   F:æ–‡ä»¶ï¼ˆcolumn_Type å¿…é¡»ä¸º varcharï¼ˆ64ï¼‰ï¼‰',
+  reference_Data       varchar(500) comment 'æ ¹æ®paramReferenceTypeç±»å‹ï¼ˆ1,2,3ï¼‰å¡«å†™å¯¹åº”å€¼',
+  Validate_Regex       varchar(200) comment 'regexè¡¨è¾¾å¼',
+  Validate_Info        varchar(200) comment 'çº¦æŸä¸é€šè¿‡æç¤ºä¿¡æ¯',
+  default_Value        varchar(200) comment 'å‚æ•°é»˜è®¤å€¼',
+  Validate_hint        varchar(256),
+  filter_type          char(2) comment 'HI æŸ¥è¯¢æ—¶è¿™ä¸ªå­—æ®µéšè— NO æ²¡æœ‰ï¼Œ MC ï¼ˆmatch)  LT å°äº GT å¤§äº EQ ç­‰äº BT ä»‹äº  LE å°äºç­‰äº GE å¤§äºç­‰äº ',
+  mandatory            char(1),
+  focus                char(1),
+  url                  varchar(256),
+  extend_Options       varchar(1000),
+  field_height         numeric(4,0) default 1 comment 'ç½‘æ ¼å¸ƒå±€é»˜è®¤ä¸º 1',
+  field_width          numeric(4,0) default 1 comment 'ç½‘æ ¼å¸ƒå±€é»˜è®¤ä¸º 1',
+  view_format          varchar(50) comment 'æ˜¾ç¤ºæ—¶æ ¼å¼åŒ–ï¼Œé’ˆå¯¹numberå’Œdatetimeç±»å‹ï¼Œç›®å‰ä»…å®ç°æ—¥æœŸç±»å‹',
+  primary key (Model_Code, column_Name)
 );
 
 create table M_Model_OPERATION
 (
-   Model_Code           varchar(16) not null comment 'ËùÊô£¨¹ØÁª£©',
-   OPERATION            varchar(32) not null,
-   OPT_Model_Code       varchar(16) comment 'Ò»¸öÄ£¿éÖĞµÄ²Ù×÷¿ÉÄÜÊÇÕë¶ÔÆäËûÄ£¿éµÄ',
-   method               varchar(16),
-   label              varchar(32),
-   DATA_RELATION_TYPE   varchar(1) comment 'L: list ÁĞ±í   N £º²»¹ØÁªÊı¾İ   S£ºµ¥Ñ¡Ôñ  M¶àÑ¡',
-   Display_Order        numeric(4,0),
-   open_type            varchar(1) comment '0£ºÃ»ÓĞ£º1£º ÌáÊ¾ĞÅÏ¢  2£ºÖ»¶Á±íµ¥  3£º¶ÁĞ´±íµ¥  ',
-   return_operation     varchar(1) comment '0£º²»²Ù×÷ 1£º Ë¢ĞÂÒ³Ãæ  2£ºÉ¾³ıµ±Ç°ĞĞ 3£º¸üĞÂµ±Ç°ĞĞ',
-   opt_hint_title       varchar(100),
-   opt_hint_info        varchar(500) comment '²Ù×÷Ç°ÌáÊ¾ĞÅÏ¢',
-   extend_Options       varchar(1000),
-   OPT_MESSAGE          varchar(500),
-   primary key (Model_Code, OPERATION)
+  Model_Code           varchar(16) not null comment 'æ‰€å±ï¼ˆå…³è”ï¼‰',
+  OPERATION            varchar(32) not null,
+  OPT_Model_Code       varchar(16) comment 'ä¸€ä¸ªæ¨¡å—ä¸­çš„æ“ä½œå¯èƒ½æ˜¯é’ˆå¯¹å…¶ä»–æ¨¡å—çš„',
+  method               varchar(16),
+  label              varchar(32),
+  DATA_RELATION_TYPE   varchar(1) comment 'L: list åˆ—è¡¨   N ï¼šä¸å…³è”æ•°æ®   Sï¼šå•é€‰æ‹©  Må¤šé€‰',
+  Display_Order        numeric(4,0),
+  open_type            varchar(1) comment '0ï¼šæ²¡æœ‰ï¼š1ï¼š æç¤ºä¿¡æ¯  2ï¼šåªè¯»è¡¨å•  3ï¼šè¯»å†™è¡¨å•  ',
+  return_operation     varchar(1) comment '0ï¼šä¸æ“ä½œ 1ï¼š åˆ·æ–°é¡µé¢  2ï¼šåˆ é™¤å½“å‰è¡Œ 3ï¼šæ›´æ–°å½“å‰è¡Œ',
+  opt_hint_title       varchar(100),
+  opt_hint_info        varchar(500) comment 'æ“ä½œå‰æç¤ºä¿¡æ¯',
+  extend_Options       varchar(1000),
+  OPT_MESSAGE          varchar(500),
+  primary key (Model_Code, OPERATION)
 );
