@@ -1,59 +1,73 @@
+<div class="easyui-layout" fit="true">
+    <div region="center" border="false">
+        <div class="easyui-tabs" fit="true" border="false">
+            <div title="1.表元详细信息">
+                <div class="easyui-layout" fit="true">
+                    <div region="north" border="false">
+                        <form class="centit form" novalidate="true">
+                            <div class="fields ">
+                                <div class="field required">
+                                    <label>表代码</label>
+                                    <input type="text" class="easyui-textbox"
+                                           name="tableName" required/>
+                                </div>
 
-<div class="easyui-tabs" style="width:100%;" layoutH="0">
-	<div title="1.表元详细信息">
-	     <form class="centit form" novalidate="true" style="width:98%;">
+                                <div class="field required">
+                                    <label>表名称</label>
+                                    <input type="text" class="easyui-textbox"
+                                           name="tableLabelName" required/>
+                                </div>
+                                <div class="field required">
+                                    <label>所属数据库ID</label>
+                                    <input class="easyui-combobox" name="databaseCode" required panelHeight="auto"
+                                           url="system/ipenvironment/databaseinfos" method="get"
+                                           data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
+                                </div>
+                                <div class="field required">
+                                    <label>与流程中业务关联关系</label>
+                                    <input type="text" class="easyui-combobox"
+                                           data-options="valueField:'value',textField:'text',data:[{value:'0',text:'不关联工作流'},{value:'1',text:'和流程业务关联'},{value:'2',text:'和流程过程关联'}]"
+                                           name="workFlowOptType" required panelHeight="auto"/>
+                                </div>
+                                <div class="field required">
+                                    <label>更新时是否校验时间戳</label>
+                                    <input type="text" class="easyui-combobox"
+                                           data-options="valueField:'value',textField:'text',data:[{value:'Y',text:'是'},{value:'N',text:'否'}]"
+                                           name="updateCheckTimeStamp" required panelHeight="auto"/>
+                                </div>
+                            </div>
+                            <div class="field ">
+                                <label>描述</label>
+                                <input type="text" class="easyui-textbox" multiline="true" style="height: 50px;"
+                                       name="tableComment"/>
+                            </div>
 
-		      <div class="fields "> 	
-		   		<div class="field required">
-		       		<label>表代码</label>
-		       		<input type="text" class="easyui-textbox" 
-		       		name="tableName" required/>
-				</div>
-				
-				<div class="field required">
-		       		<label>表名称</label>
-		       		<input type="text" class="easyui-textbox" 
-		       		name="tableLabelName" required/>
-				</div>
-				<div class="field ">
-		       		<label>所属数据库ID</label>
-		       		<input class="easyui-combobox" name="databaseCode" required panelHeight="auto"
-						url="system/ipenvironment/databaseinfos" method="get"
-						data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
-				</div>
-				<div class="field required">
-		       		<label>与流程中业务关联关系</label>
-		       		<input type="text" class="easyui-combobox" 
-		       		data-options="valueField:'value',textField:'text',data:[{value:'0',text:'不关联工作流'},{value:'1',text:'和流程业务关联'},{value:'2',text:'和流程过程关联'}]"
-		       		name="workFlowOptType" required panelHeight="auto" />
-				</div>
-				<div class="field required">
-		       		<label>更新时是否校验时间戳</label>
-		       		<input type="text" class="easyui-combobox" 
-		       		data-options="valueField:'value',textField:'text',data:[{value:'Y',text:'是'},{value:'N',text:'否'}]"
-		       		name="updateCheckTimeStamp" required panelHeight="auto"/>
-				</div>
-		    </div>	
-		    <div class="field ">
-	       		<label>描述</label>
-	       		<input type="text" class="easyui-textbox" multiline="true" style="height: 50px;"
-	       		name="tableComment" />
-			</div>
-		    
-		</form>
-
-		<table title="表字段" idField="tableId" id="mdtable_columns" style="width:98%;"layoutH="240px"
-			editable="true"
-			pagination="false" 
-			sortName="columnOrder"
-			toolbar=".temp-toolbar_mdtable_columns">
-		    <thead data-options="frozen:true">
-		        <tr>
-		        	<th data-options="field:'tableId'" hidden="true">表ID</th>
-					<th data-options="field:'columnName',editor:{type:'textbox',options:{required: true}}">字段代码</th> 
-		       		<th data-options="field:'fieldLabelName',editor:{type:'textbox',options:{required: true}}">字段名称</th>
-		       		<th data-options="field:'columnOrder',editor:{type:'textbox',options:{}}">显示次序</th>
-		       		<th data-options="field:'columnFieldType',
+                        </form>
+                    </div>
+                    <div region="center" style="border-width: 1px 0;">
+                        <table title="表字段" idField="tableId" id="mdtable_columns" style="width:98%;"
+                               border="false"
+                               fit="true"
+                               editable="true"
+                               pagination="false"
+                               sortName="columnOrder"
+                               toolbar=".temp-toolbar_mdtable_columns">
+                            <thead data-options="frozen:true">
+                            <tr>
+                                <th data-options="field:'tableId', width:100" hidden="true">表ID</th>
+                                <th data-options="field:'columnName', width:100,editor:{type:'textbox',options:{required: true}}">
+                                    字段代码
+                                </th>
+                                <th data-options="field:'fieldLabelName', width:100,editor:{type:'textbox',options:{required: true}}">
+                                    字段名称
+                                </th>
+                            </tr>
+                            <thead>
+                            <tr>
+                                <th data-options="field:'columnOrder', width:100,editor:{type:'textbox',options:{}}">
+                                    显示次序
+                                </th>
+                                <th data-options="field:'columnFieldType', width:100,
 						formatter:function(value, rowData, rowIndex){
 							return value;
 						  },
@@ -70,11 +84,16 @@
 							{value:'file',label:'file'}
 							],
 							}}
-					">字段类型</th>
-		       		<th data-options="field:'maxLength',editor:{type:'textbox',options:{}}">字段长度</th>
-		       		<th data-options="field:'scale',editor:{type:'textbox',options:{}}">字段精度</th>
-		       		<th data-options="field:'accessType',editor:{type:'textbox',options:{required: true}}">字段类别</th>
-		       		<th data-options="field:'mandatory',
+					">字段类型
+                                </th>
+                                <th data-options="field:'maxLength', width:100,editor:{type:'textbox',options:{}}">
+                                    字段长度
+                                </th>
+                                <th data-options="field:'scale', width:100,editor:{type:'textbox',options:{}}">字段精度</th>
+                                <th data-options="field:'accessType', width:100,editor:{type:'textbox',options:{required: true}}">
+                                    字段类别
+                                </th>
+                                <th data-options="field:'mandatory', width:100,
 						formatter:function(value, rowData, rowIndex){
 							if(false==value)
 							{
@@ -97,8 +116,9 @@
 							data:[
 							{value:'T',label:'是'},
 							{value:'F',label:'否'}],
-							}}">是否必填</th>
-		       		<th data-options="field:'primarykey',
+							}}">是否必填
+                                </th>
+                                <th data-options="field:'primarykey', width:100,
 						formatter:function(value, rowData, rowIndex){
 							if(null==value){
 								rowData.primarykey='F';
@@ -108,12 +128,13 @@
 						  	if(value=='F')return '否';
 						  }
 						,editor:{ type:'combobox',
-						  options:{valueField:'value',textField:'label',
+						  options:{valueField:'value',textField:'label', width:100,
 							data:[
 							{value:'T',label:'是'},
-							{value:'F',label:'否'}]}}">是否为主键</th>
-		       		<th data-options="field:'columnState'">状态</th>
-		       		<th data-options="field:'referenceType',
+							{value:'F',label:'否'}]}}">是否为主键
+                                </th>
+                                <th data-options="field:'columnState', width:100">状态</th>
+                                <th data-options="field:'referenceType', width:100,
 					formatter:function(value, rowData, rowIndex){
 					    if(value=='1')return '数据字典';else
 					  	if(value=='2')return 'JSON表达式';else
@@ -129,45 +150,65 @@
 						{value:'2',label:'JSON表达式 '},
 						{value:'3',label:'sql语句'},
 						{value:'Y',label:'年份'},
-						{value:'M',label:'月份'}]}}">引用类型</th>
-		       		<th data-options="field:'validateRegex',editor:{type:'textbox',options:{}}">约束表达式</th>
-		       		<th data-options="field:'validateInfo',editor:{type:'textbox',options:{}}">约束提示</th>
-		       		<th data-options="field:'defaultValue',editor:{type:'textbox',options:{}}">默认值</th>
-		       		<th data-options="field:'autoCreateRule',editor:{type:'textbox',options:{}}">自动创建规则</th>
-		       		<th data-options="field:'autoCreateParam',editor:{type:'textbox',options:{}}">自动创建参数</th>
-		       		<th data-options="field:'referenceData',editor:{type:'textbox',options:{}}">引用数据</th>
-		       		<th data-options="field:'columnComment',editor:{type:'textbox',options:{}}">字段描述</th>
-		       		
-		        </tr>
-		    </thead>
-		</table>
-		
-		<div class="temp-toolbar_mdtable_columns">
-			<a iconCls="icon-add" trigger="none" target="custom" rel="mdtable_column_add" >新增</a>
-			<hr>
-			<a iconCls="icon-edit" trigger="single" href="/modules/metaform/mdtable/mdtable-column-edit.html"
-					target="dialog" rel="mdtable_column_edit" height="600px" width="700px" title="表字段" >编辑</a>
-			<hr>
-			<a iconCls="icon-base icon-base-ban" trigger="single"
-				target="confirm" rel="mdtable_column_remove" title="确定删除吗？">删除</a>
-		</div>
-		
-	</div>
-	<div  title="2.子表">
-			<table title="子表" idField="tableId" id="mdtable_subtables" style="width:98%;" layoutH="80px"
-				editable="true"
-				pagination="false"
-				toolbar=".temp-toolbar_mdtable_subtables">
-			    <thead data-options="frozen:true">
-			        <tr>
-			        	<th data-options="field:'childTableId',
+						{value:'M',label:'月份'}]}}">引用类型
+                                </th>
+                                <th data-options="field:'validateRegex', width:100,editor:{type:'textbox',options:{}}">
+                                    约束表达式
+                                </th>
+                                <th data-options="field:'validateInfo', width:100,editor:{type:'textbox',options:{}}">
+                                    约束提示
+                                </th>
+                                <th data-options="field:'defaultValue', width:100,editor:{type:'textbox',options:{}}">
+                                    默认值
+                                </th>
+                                <th data-options="field:'autoCreateRule', width:100,editor:{type:'textbox',options:{}}">
+                                    自动创建规则
+                                </th>
+                                <th data-options="field:'autoCreateParam', width:100,editor:{type:'textbox',options:{}}">
+                                    自动创建参数
+                                </th>
+                                <th data-options="field:'referenceData', width:100,editor:{type:'textbox',options:{}}">
+                                    引用数据
+                                </th>
+                                <th data-options="field:'columnComment', width:100,editor:{type:'textbox',options:{}}">
+                                    字段描述
+                                </th>
+
+                            </tr>
+                            </thead>
+                        </table>
+
+                        <div class="temp-toolbar_mdtable_columns">
+                            <a iconCls="icon-add" trigger="none" target="custom" rel="mdtable_column_add">新增</a>
+                            <hr>
+                            <a iconCls="icon-edit" trigger="single"
+                               href="/modules/metaform/mdtable/mdtable-column-edit.html"
+                               target="dialog" rel="mdtable_column_edit" height="600px" width="700px" title="表字段">编辑</a>
+                            <hr>
+                            <a iconCls="icon-base icon-base-ban" trigger="single"
+                               target="confirm" rel="mdtable_column_remove" title="确定删除吗？">删除</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div title="2.子表">
+                <table idField="tableId" id="mdtable_subtables" style="border-width: 0 0 1px 0;"
+                       border="false"
+                       fit="true"
+                       fitColumns="true"
+                       editable="true"
+                       pagination="false"
+                       toolbar=".temp-toolbar_mdtable_subtables">
+                    <thead>
+                    <tr>
+                        <th data-options="field:'childTableId', width:100,
 			        	 formatter:function(value,rec){
 				        	 var _self=this;
 				        	 if(null==this.data)
 				        		{
 				        			$.ajax({
 										type: 'get',
-										async:false, 
+										async:false,
 									    url: '/centit-meta-form/service/metaform/mdtable/draft?pageNo=1&pageSize=100&field=tableId&field=tableLabelName',
 									    success: function(res){
 									    	var list={};
@@ -191,27 +232,36 @@
                          	return data.objList;
                          },
                          required: true
-			        	}}">子表名称</th>
-			       		<th data-options="field:'relationName',editor:{type:'textbox',options:{required: true}}">关系名称</th>
-			       		<th data-options="field:'relationComment',editor:{type:'textbox',options:{}}">关系说明</th>
-			       		<th data-options="field:'recorder',editor:{type:'textbox',options:{}}">更改人</th>
-			       		<th data-options="field:'lastModifyDate',editor:{type:'textbox',options:{}}">更改时间</th>
-			        </tr>
-			    </thead>
-			</table>
-			
-			<div class="temp-toolbar_mdtable_subtables">
-				<a iconCls="icon-add" trigger="none"
-					target="custom" rel="mdtable_subtable_add" >新增</a>
-				<hr>
-			
-				<a iconCls="icon-edit" href="modules/metaform/mdtable/mdtable-subtable-details.html" trigger="single"
-					target="dialog" rel="mdtable_subtable_details" style="width:500px;height:400px;" title="{{relationName}}详情">关系详情</a>
-				<hr>
-				
-				<a iconCls="icon-base icon-base-ban" trigger="single"
-					target="confirm" rel="mdtable_subtable_remove" title="确定删除吗？">删除</a>
-			</div>
-	</div>
+			        	}}">子表名称
+                        </th>
+                        <th data-options="field:'relationName', width:100,editor:{type:'textbox',options:{required: true}}">关系名称
+                        </th>
+                        <th data-options="field:'relationComment', width:100,editor:{type:'textbox',options:{}}">关系说明</th>
+                        <th data-options="field:'recorder', width:100,editor:{type:'textbox',options:{}}">更改人</th>
+                        <th data-options="field:'lastModifyDate', width:100,editor:{type:'textbox',options:{}}">更改时间</th>
+                    </tr>
+                    </thead>
+                </table>
+
+                <div class="temp-toolbar_mdtable_subtables">
+                    <a iconCls="icon-add" trigger="none"
+                       target="custom" rel="mdtable_subtable_add">新增</a>
+                    <hr>
+
+                    <a iconCls="icon-edit" href="modules/metaform/mdtable/mdtable-subtable-details.html"
+                       trigger="single"
+                       target="dialog" rel="mdtable_subtable_details" style="width:500px;height:400px;"
+                       title="{{relationName}}详情">关系详情</a>
+                    <hr>
+
+                    <a iconCls="icon-base icon-base-ban" trigger="single"
+                       target="confirm" rel="mdtable_subtable_remove" title="确定删除吗？">删除</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div region="south" border="false">
+        <input type="button" value="提交" id="mdtable_sub"
+               style="position:relative;float:right;width:80px;height:30px; padding: 4px;"/>
+    </div>
 </div>
-<div style="width:98%;"><input type="button" value="提交" id="mdtable_sub" style="position:relative;float:right;width:80px;height:30px;"/></div>
