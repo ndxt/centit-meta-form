@@ -7,17 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -45,12 +35,12 @@ public class PendingMetaTable implements
     @Id
     @Column(name = "TABLE_ID")
     //1.用一张hibernate_sequences表管理主键,需要建hibernate_sequences表
-    /*@GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
-    @TableGenerator(name = "table_generator",table="hibernate_sequences",initialValue=200000001,
-    pkColumnName="SEQ_NAME",pkColumnValue="pendingtableId",allocationSize=1,valueColumnName="SEQ_VALUE")*/
+    @GeneratedValue(strategy=GenerationType.TABLE,generator="table_generator")
+    @TableGenerator(name = "table_generator",table="f_mysql_sequence",initialValue=200000001,
+    pkColumnName="name",pkColumnValue="seq_pendingtableid",allocationSize=1,valueColumnName="currvalue")
     //2.用序列
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seqgen")
-    @SequenceGenerator(sequenceName="SEQ_PENDINGTABLEID",name="seqgen",allocationSize=1,initialValue=1)
+//    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seqgen")
+//    @SequenceGenerator(sequenceName="SEQ_PENDINGTABLEID",name="seqgen",allocationSize=1,initialValue=1)
     private Long tableId;
 
     /**
