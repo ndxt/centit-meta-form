@@ -327,7 +327,7 @@ public class MetaTableManagerImpl
             PageDesc pageDesc) {
 
         JSONArray listTables =  DictionaryMapUtils.objectsToJSONArray(
-                baseDao.listObjects(searchColumn, pageDesc), fields);
+                pendingMdTableDao.listObjects(searchColumn, pageDesc), fields);
 
         List<DatabaseInfo> databases = integrationEnvironment.listDatabaseInfo();
         for(Object obj:listTables){

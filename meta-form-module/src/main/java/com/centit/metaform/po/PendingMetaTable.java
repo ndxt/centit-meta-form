@@ -117,10 +117,10 @@ public class PendingMetaTable implements
     @Length(max = 8, message = "字段长度不能大于{max}")
     private String  recorder;
 
-    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<PendingMetaColumn> mdColumns;
 
-    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<PendingMetaRelation> mdRelations;
 
 
