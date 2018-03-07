@@ -46,7 +46,7 @@ import java.util.*;
 */
 @Service
 public class MetaTableManagerImpl 
-        extends BaseEntityManagerImpl<MetaTable,java.lang.Long,MetaTableDao>
+        extends BaseEntityManagerImpl<MetaTable,Long,MetaTableDao>
     implements MetaTableManager{
 
     public static final Log log = LogFactory.getLog(MetaTableManager.class);
@@ -327,7 +327,7 @@ public class MetaTableManagerImpl
             PageDesc pageDesc) {
 
         JSONArray listTables =  DictionaryMapUtils.objectsToJSONArray(
-                baseDao.listObjects(searchColumn, pageDesc), fields);
+                pendingMdTableDao.listObjects(searchColumn, pageDesc), fields);
 
         List<DatabaseInfo> databases = integrationEnvironment.listDatabaseInfo();
         for(Object obj:listTables){
