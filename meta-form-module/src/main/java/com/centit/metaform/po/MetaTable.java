@@ -7,15 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
@@ -72,12 +64,10 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 
 
     @Column(name = "EXT_COLUMN_NAME")
-    @NotBlank(message = "字段不能为空")
     @Length(max = 64, message = "字段长度不能大于{max}")
     private String  extColumnName;
 
     @Column(name = "EXT_COLUMN_FORMAT")
-    @NotBlank(message = "字段不能为空")
     @Length(max = 10, message = "字段长度不能大于{max}")
     private String  extColumnFormat;
 
@@ -126,14 +116,14 @@ public class MetaTable implements TableInfo,java.io.Serializable {
      * 更改人员 null
      */
     @Column(name = "RECORDER")
-    @Length(max = 8, message = "字段长度不能大于{max}")
+    @Length(max = 64, message = "字段长度不能大于{max}")
     private String  recorder;
 
 
-    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<MetaColumn> mdColumns;
 
-    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<MetaRelation> mdRelations;
 
 
@@ -514,7 +504,7 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 
     public MetaFormModel newMetaFormModel(){
         MetaFormModel res = new MetaFormModel();
-  
+
         res.setTableId(this.getTableId());
 
         return res;
