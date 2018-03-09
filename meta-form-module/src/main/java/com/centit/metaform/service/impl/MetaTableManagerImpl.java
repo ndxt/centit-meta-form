@@ -46,7 +46,7 @@ import java.util.*;
 */
 @Service
 public class MetaTableManagerImpl 
-        extends BaseEntityManagerImpl<MetaTable,java.lang.Long,MetaTableDao>
+        extends BaseEntityManagerImpl<MetaTable,Long,MetaTableDao>
     implements MetaTableManager{
 
     public static final Log log = LogFactory.getLog(MetaTableManager.class);
