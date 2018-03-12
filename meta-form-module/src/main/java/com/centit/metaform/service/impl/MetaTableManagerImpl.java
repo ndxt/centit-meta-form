@@ -311,6 +311,7 @@ public class MetaTableManagerImpl
             if(errors.size()==0){
                 ptable.setRecorder(currentUser);
                 pendingMdTableDao.mergeObject(ptable);
+
                 MetaTable table= new MetaTable(ptable);
                 metaTableDao.mergeObject(table);
                 return new ImmutablePair<>(0,"发布成功！");

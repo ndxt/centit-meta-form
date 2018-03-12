@@ -114,7 +114,7 @@ public class PendingMetaTable implements
      * 更改人员 null
      */
     @Column(name = "RECORDER")
-    @Length(max = 8, message = "字段长度不能大于{max}")
+    @Length(max = 64, message = "字段长度不能大于{max}")
     private String  recorder;
 
     @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)

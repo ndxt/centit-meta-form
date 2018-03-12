@@ -7,15 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
@@ -72,12 +64,10 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 
 
     @Column(name = "EXT_COLUMN_NAME")
-    @NotBlank(message = "字段不能为空")
     @Length(max = 64, message = "字段长度不能大于{max}")
     private String  extColumnName;
 
     @Column(name = "EXT_COLUMN_FORMAT")
-    @NotBlank(message = "字段不能为空")
     @Length(max = 10, message = "字段长度不能大于{max}")
     private String  extColumnFormat;
 
@@ -126,19 +116,20 @@ public class MetaTable implements TableInfo,java.io.Serializable {
      * 更改人员 null
      */
     @Column(name = "RECORDER")
-    @Length(max = 8, message = "字段长度不能大于{max}")
+    @Length(max = 64, message = "字段长度不能大于{max}")
     private String  recorder;
 
 
-    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<MetaColumn> mdColumns;
 
-    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<MetaRelation> mdRelations;
 
 
-    @Transient
-    private Set<MetaFormModel> metaFormModels;
+//    @Transient
+//    @OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private Set<MetaFormModel> metaFormModels;
 
     @Transient
     private DBType databaseType;
@@ -490,31 +481,31 @@ public class MetaTable implements TableInfo,java.io.Serializable {
         }
     }
 
-    public Set<MetaFormModel> getMetaFormModels(){
-        if(this.metaFormModels==null)
-            this.metaFormModels = new HashSet<MetaFormModel>();
-        return this.metaFormModels;
-    }
-
-    public void setMetaFormModels(Set<MetaFormModel> metaFormModels) {
-        this.metaFormModels = metaFormModels;
-    }
-
-    public void addMetaFormModel(MetaFormModel metaFormModel ){
-        if (this.metaFormModels==null)
-            this.metaFormModels = new HashSet<MetaFormModel>();
-        this.metaFormModels.add(metaFormModel);
-    }
-
-    public void removeMetaFormModel(MetaFormModel metaFormModel ){
-        if (this.metaFormModels==null)
-            return;
-        this.metaFormModels.remove(metaFormModel);
-    }
+//    public Set<MetaFormModel> getMetaFormModels(){
+//        if(this.metaFormModels==null)
+//            this.metaFormModels = new HashSet<MetaFormModel>();
+//        return this.metaFormModels;
+//    }
+//
+//    public void setMetaFormModels(Set<MetaFormModel> metaFormModels) {
+//        this.metaFormModels = metaFormModels;
+//    }
+//
+//    public void addMetaFormModel(MetaFormModel metaFormModel ){
+//        if (this.metaFormModels==null)
+//            this.metaFormModels = new HashSet<MetaFormModel>();
+//        this.metaFormModels.add(metaFormModel);
+//    }
+//
+//    public void removeMetaFormModel(MetaFormModel metaFormModel ){
+//        if (this.metaFormModels==null)
+//            return;
+//        this.metaFormModels.remove(metaFormModel);
+//    }
 
     public MetaFormModel newMetaFormModel(){
         MetaFormModel res = new MetaFormModel();
-  
+
         res.setTableId(this.getTableId());
 
         return res;
@@ -523,49 +514,49 @@ public class MetaTable implements TableInfo,java.io.Serializable {
      * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
      *
      */
-    public void replaceMetaFormModels(Set<MetaFormModel> set) {
-        List<MetaFormModel> newObjs = new ArrayList<MetaFormModel>();
-        for(MetaFormModel p :set){
-            if(p==null)
-                continue;
-            MetaFormModel newdt = newMetaFormModel();
-            newdt.copyNotNullProperty(p);
-            newObjs.add(newdt);
-        }
-        //delete
-        boolean found = false;
-        Set<MetaFormModel> oldObjs = new HashSet<MetaFormModel>();
-        oldObjs.addAll(getMetaFormModels());
-
-        for(Iterator<MetaFormModel> it=oldObjs.iterator(); it.hasNext();){
-            MetaFormModel odt = it.next();
-            found = false;
-            for(MetaFormModel newdt :newObjs){
-                if(odt.getModelCode().equals( newdt.getModelCode())){
-                    found = true;
-                    break;
-                }
-            }
-            if(! found)
-                removeMetaFormModel(odt);
-        }
-        oldObjs.clear();
-        //insert or update
-        for(MetaFormModel newdt :newObjs){
-            found = false;
-            for(Iterator<MetaFormModel> it=getMetaFormModels().iterator();
-             it.hasNext();){
-                MetaFormModel odt = it.next();
-                if(odt.getModelCode().equals( newdt.getModelCode())){
-                    odt.copy(newdt);
-                    found = true;
-                    break;
-                }
-            }
-            if(! found)
-                addMetaFormModel(newdt);
-        }
-    }
+//    public void replaceMetaFormModels(Set<MetaFormModel> set) {
+//        List<MetaFormModel> newObjs = new ArrayList<MetaFormModel>();
+//        for(MetaFormModel p :set){
+//            if(p==null)
+//                continue;
+//            MetaFormModel newdt = newMetaFormModel();
+//            newdt.copyNotNullProperty(p);
+//            newObjs.add(newdt);
+//        }
+//        //delete
+//        boolean found = false;
+//        Set<MetaFormModel> oldObjs = new HashSet<MetaFormModel>();
+//        oldObjs.addAll(getMetaFormModels());
+//
+//        for(Iterator<MetaFormModel> it=oldObjs.iterator(); it.hasNext();){
+//            MetaFormModel odt = it.next();
+//            found = false;
+//            for(MetaFormModel newdt :newObjs){
+//                if(odt.getModelCode().equals( newdt.getModelCode())){
+//                    found = true;
+//                    break;
+//                }
+//            }
+//            if(! found)
+//                removeMetaFormModel(odt);
+//        }
+//        oldObjs.clear();
+//        //insert or update
+//        for(MetaFormModel newdt :newObjs){
+//            found = false;
+//            for(Iterator<MetaFormModel> it=getMetaFormModels().iterator();
+//             it.hasNext();){
+//                MetaFormModel odt = it.next();
+//                if(odt.getModelCode().equals( newdt.getModelCode())){
+//                    odt.copy(newdt);
+//                    found = true;
+//                    break;
+//                }
+//            }
+//            if(! found)
+//                addMetaFormModel(newdt);
+//        }
+//    }
 
     public String getExtColumnName() {
         return extColumnName;
@@ -599,7 +590,7 @@ public class MetaTable implements TableInfo,java.io.Serializable {
         this.mdColumns = other.getMdColumns();
         this.mdRelations = other.getMdRelations();
         this.mdRelations = other.getMdRelations();
-        this.metaFormModels = other.getMetaFormModels();
+//        this.metaFormModels = other.getMetaFormModels();
         this.extColumnFormat = other.getExtColumnFormat();
         this.extColumnName = other.getExtColumnName();
         return this;
@@ -667,7 +658,7 @@ public class MetaTable implements TableInfo,java.io.Serializable {
         this.mdColumns = new HashSet<MetaColumn>();
         this.mdRelations = new HashSet<MetaRelation>();
         this.mdRelations = new HashSet<MetaRelation>();
-        this.metaFormModels = new HashSet<MetaFormModel>();
+//        this.metaFormModels = new HashSet<MetaFormModel>();
         return this;
     }
 

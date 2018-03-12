@@ -83,7 +83,10 @@ public class TableModelFormServiceImpl implements ModelFormService {
         JdbcModelRuntimeContext rc = new JdbcModelRuntimeContext(modelCode);
 
         MetaFormModel mfm = formModelDao.getObjectById(modelCode);
-        MetaTable mtab = mfm.getMdTable();
+//        MetaTable mtab = mfm.getMdTable();
+        Long tableId = mfm.getTableId();
+        MetaTable mtab = tableDao.getObjectById(tableId);
+
 
         rc.setTableInfo(mtab);
         rc.setMetaFormModel(mfm);
@@ -107,7 +110,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
         HibernateModelRuntimeContext rc = new HibernateModelRuntimeContext(modelCode);
 
         MetaFormModel mfm = formModelDao.getObjectById(modelCode);
-        MetaTable mtab = mfm.getMdTable();
+//        MetaTable mtab = mfm.getMdTable();
+        Long tableId = mfm.getTableId();
+        MetaTable mtab = tableDao.getObjectById(tableId);
 
         rc.setTableInfo(mtab);
         rc.setMetaFormModel(mfm);

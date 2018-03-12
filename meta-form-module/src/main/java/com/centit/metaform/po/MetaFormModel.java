@@ -47,14 +47,17 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     @GenericGenerator(name = "paymentableGenerator", strategy = "assigned")
     private String modelCode;
 
+    @Column(name = "TABLE_ID")
+    private Long tableId;
+
     /**
      * 表ID 表单主表
      */
-    @JoinColumn(name="TABLE_ID")
-    @ManyToOne
-    @JSONField(serialize=false)
-    @NotFound(action=NotFoundAction.IGNORE)
-    private MetaTable mdTable;
+//    @JoinColumn(name="TABLE_ID")
+//    @ManyToOne
+//    @JSONField(serialize=false)
+//    @NotFound(action=NotFoundAction.IGNORE)
+//    private MetaTable mdTable;
     /**
      * 模快描述 null
      */
@@ -151,15 +154,15 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     @Length(max = 800, message = "字段长度不能大于{max}")
     private String  dataFilterSql;
 
-    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderBy(value="displayOrder asc")
     private Set<ModelDataField> modelDataFields;
 
-    @OneToMany(mappedBy="parentModel",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="parentModel",fetch = FetchType.EAGER)
     @OrderBy(value="displayOrder asc")
     private Set<MetaFormModel> childFormModels;
 
-    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderBy(value="displayOrder asc")
     private Set<ModelOperation> modelOperations;
 
@@ -187,7 +190,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
             String extendOptBeanParam) {
         super();
         this.modelCode = modelCode;
-        this.mdTable = mdTable;
+//        this.mdTable = mdTable;
         this.modelComment = modelComment;
         this.modelName = modelName;
         this.accessType = accessType;
@@ -206,16 +209,17 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     }
 
 
-    public String getTableLabelName(){
-            if(null==this.mdTable)
-                return null;
-            return this.mdTable.getTableLabelName();
-    }
+//    public String getTableLabelName(){
+//            if(null==this.mdTable)
+//                return null;
+//            return this.mdTable.getTableLabelName();
+//    }
 
     public Long getTableId(){
-        if(null==this.mdTable)
-            return null;
-        return this.mdTable.getTableId();
+//        if(null==this.mdTable)
+//            return null;
+//        return this.mdTable.getTableId();
+        return this.tableId;
     }
   
     public MetaFormModel getParentModel() {
@@ -239,18 +243,19 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         this.modelCode = modelCode;
     }
   
-    public MetaTable getMdTable() {
-        if(null==this.mdTable)
-            this.mdTable=new MetaTable();
-        return this.mdTable;
-    }
-    public void setMdTable(MetaTable mdTable) {
-        this.mdTable = mdTable;
-    }
+//    public MetaTable getMdTable() {
+//        if(null==this.mdTable)
+//            this.mdTable=new MetaTable();
+//        return this.mdTable;
+//    }
+//    public void setMdTable(MetaTable mdTable) {
+//        this.mdTable = mdTable;
+//    }
     public void setTableId(Long tableId) {
-        MetaTable tb=new MetaTable();
-        tb.setTableId(tableId);
-        this.setMdTable(tb);
+//        MetaTable tb=new MetaTable();
+//        tb.setTableId(tableId);
+//        this.setMdTable(tb);
+        this.tableId = tableId;
     }
   
     public String getModelComment() {
@@ -629,7 +634,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
   
         this.setModelCode(other.getModelCode());
   
-        this.setMdTable(other.getMdTable());
+//        this.setMdTable(other.getMdTable());
         this.modelComment= other.getModelComment();
         this.modelName= other.getModelName();
         this.accessType= other.getAccessType();
@@ -656,9 +661,9 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
   
     if( other.getModelCode() != null)
         this.setModelCode(other.getModelCode());
-  
-        if( other.getMdTable()!= null)
-            this.setMdTable(other.getMdTable());
+//
+//        if( other.getMdTable()!= null)
+//            this.setMdTable(other.getMdTable());
         if( other.getModelComment() != null)
             this.modelComment= other.getModelComment();
         if( other.getModelName() != null)
@@ -699,7 +704,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 
     public MetaFormModel clearProperties(){
   
-        this.setMdTable(null);
+//        this.setMdTable(null);
         this.modelComment= null;
         this.modelName= null;
         this.accessType= null;
