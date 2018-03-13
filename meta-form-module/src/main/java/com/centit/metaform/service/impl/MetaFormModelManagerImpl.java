@@ -3,6 +3,7 @@ package com.centit.metaform.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.core.dao.DictionaryMapUtils;
+import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.service.MetaTableManager;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,7 +80,16 @@ public class MetaFormModelManagerImpl
             for (int i=0; i<listObjects.size(); i++) {
                 JSONObject tempObj = listObjects.getJSONObject(i);
                 Long tableId = tempObj.getLong("tableId");
-                tempObj.put("tableLabelName", metaTableManager.getObjectById(tableId).getTableLabelName());
+                List<MetaTable> tableObjects = metaTableManager.listObjects();
+                if (tableObjects != null && tableObjects.size()>0) {
+                    for (int j=0; j<tableObjects.size(); j++) {
+                        if (tableId == tableObjects.get(j).getTableId()) {
+                            tempObj.put("tableLabelName", tableObjects.get(j).getTableLabelName());
+                            break;
+                        }
+                    }
+                }
+//                tempObj.put("tableLabelName", metaTableManager.getObjectById(tableId).getTableLabelName());
             }
         }
         return listObjects;
