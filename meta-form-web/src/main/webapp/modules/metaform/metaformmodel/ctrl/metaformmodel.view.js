@@ -6,6 +6,8 @@ define(function(require) {
 	var MetaFormModelView = Page.extend(function() {
 		
 		var _self = this;
+
+
 		
 		// @override
 		this.load = function(panel, data) {
