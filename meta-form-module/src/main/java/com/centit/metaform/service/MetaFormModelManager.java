@@ -22,4 +22,6 @@ public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel,ja
             Map<String, Object> filterMap, PageDesc pageDesc);
 
     void updateMetaFormModel(MetaFormModel mtaFormModel);
+
+    JSONArray addTableNameToList(JSONArray listObjects);
 }

@@ -257,7 +257,8 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 //        this.setMdTable(tb);
         this.tableId = tableId;
     }
-  
+
+
     public String getModelComment() {
         return this.modelComment;
     }
@@ -664,6 +665,8 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 //
 //        if( other.getMdTable()!= null)
 //            this.setMdTable(other.getMdTable());
+        if( other.getTableId() != null)
+            this.tableId= other.getTableId();
         if( other.getModelComment() != null)
             this.modelComment= other.getModelComment();
         if( other.getModelName() != null)

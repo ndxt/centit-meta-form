@@ -1,7 +1,9 @@
 package com.centit.metaform.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.core.dao.DictionaryMapUtils;
+import com.centit.metaform.service.MetaTableManager;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaFormModelDao;
@@ -42,6 +44,9 @@ public class MetaFormModelManagerImpl
         setBaseDao(this.metaFormModelDao);
     }
 
+    @Resource
+    MetaTableManager metaTableManager;
+
 /*
      @PostConstruct
     public void init() {
@@ -55,8 +60,9 @@ public class MetaFormModelManagerImpl
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 
-        return DictionaryMapUtils.objectsToJSONArray(
+        JSONArray resultArray = DictionaryMapUtils.objectsToJSONArray(
                 baseDao.listObjects(filterMap, pageDesc), fields);
+        return resultArray;
     }
 
     @Override
@@ -64,6 +70,18 @@ public class MetaFormModelManagerImpl
     public void updateMetaFormModel(MetaFormModel mtaFormModel) {
         ModelRuntimeContextPool.invalidRuntimeContextPool(mtaFormModel.getModelCode());
         metaFormModelDao.updateObject(mtaFormModel);
+    }
+
+    @Override
+    public JSONArray addTableNameToList(JSONArray listObjects) {
+        if (listObjects != null && listObjects.size()>0) {
+            for (int i=0; i<listObjects.size(); i++) {
+                JSONObject tempObj = listObjects.getJSONObject(i);
+                Long tableId = tempObj.getLong("tableId");
+                tempObj.put("tableLabelName", metaTableManager.getObjectById(tableId).getTableLabelName());
+            }
+        }
+        return listObjects;
     }
 
 }
