@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -141,9 +142,16 @@ public class MetaTableController extends BaseController{
      */
     @RequestMapping(value = "/{tableId}", method = {RequestMethod.GET})
     public void getMdTable(@PathVariable Long tableId, HttpServletResponse response) {
+        Map<String, Object> searchColumn = new HashMap<>();
+        searchColumn.put("tableId", tableId);
+        List<MetaTable> listObjects = mdTableMag.listObjects(searchColumn, null);
 
-        MetaTable mdTable =
-                mdTableMag.getObjectById( tableId);
+        MetaTable mdTable = new MetaTable();
+        if (listObjects != null && listObjects.size()>0) {
+            mdTable = listObjects.get(0);
+        }
+//        MetaTable mdTable =
+//                mdTableMag.getObjectById( tableId);
         JsonResultUtils.writeSingleDataJson(mdTable, response);
     }
     

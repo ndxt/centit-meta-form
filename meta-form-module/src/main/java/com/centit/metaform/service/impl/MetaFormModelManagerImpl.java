@@ -89,7 +89,6 @@ public class MetaFormModelManagerImpl
                         }
                     }
                 }
-//                tempObj.put("tableLabelName", metaTableManager.getObjectById(tableId).getTableLabelName());
             }
         }
         return listObjects;
