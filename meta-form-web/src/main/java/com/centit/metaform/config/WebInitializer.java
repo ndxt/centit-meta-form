@@ -3,6 +3,7 @@ package com.centit.metaform.config;
 import com.centit.framework.config.SystemSpringMvcConfig;
 import com.centit.framework.config.WebConfig;
 import com.centit.support.file.PropertiesReader;
+import org.springframework.orm.hibernate5.support.OpenSessionInViewFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -34,6 +35,7 @@ public class WebInitializer implements WebApplicationInitializer {
         WebConfig.registerHiddenHttpMethodFilter(servletContext);
         WebConfig.registerRequestThreadLocalFilter(servletContext);
         WebConfig.registerSpringSecurityFilter(servletContext);
+        registerOpenSessionInViewFilter(servletContext);
 
         Properties properties = PropertiesReader.getClassPathProperties("/system.properties");
         String jdbcUrl = properties.getProperty("jdbc.url");
@@ -77,5 +79,12 @@ public class WebInitializer implements WebApplicationInitializer {
         system.addMapping("/service/*");
         system.setLoadOnStartup(1);
         system.setAsyncSupported(true);
+    }
+
+    public void registerOpenSessionInViewFilter(ServletContext servletContext) {
+        javax.servlet.FilterRegistration.Dynamic openSessionInViewFilter
+                = servletContext.addFilter("openSessionInViewFilter", OpenSessionInViewFilter.class);
+        openSessionInViewFilter.addMappingForUrlPatterns(null, false, "/service/*", "/system/*");
+        openSessionInViewFilter.setAsyncSupported(true);
     }
 }
