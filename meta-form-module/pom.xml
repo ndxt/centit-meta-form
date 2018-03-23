@@ -25,6 +25,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.centit.support</groupId>
+            <artifactId>centit-database-datasource</artifactId>
+            <version>${centit.commons.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate.validator.version}</version>
