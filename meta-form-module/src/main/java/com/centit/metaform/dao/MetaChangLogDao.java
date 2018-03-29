@@ -8,8 +8,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 
 import com.centit.framework.core.dao.CodeBook;
-import com.centit.framework.hibernate.dao.BaseDaoImpl;
-import com.centit.framework.hibernate.dao.DatabaseOptUtils;
+import com.centit.framework.jdbc.dao.BaseDaoImpl;
+import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import com.centit.metaform.po.MetaChangLog;
 
 
@@ -30,7 +30,7 @@ public class MetaChangLogDao extends BaseDaoImpl<MetaChangLog,java.lang.Long>
     @Override
     public Map<String, String> getFilterField() {
         if( filterField == null){
-            filterField = new HashMap<String, String>();
+            filterField = new HashMap<>();
 
             filterField.put("version" , CodeBook.EQUAL_HQL_ID);
 
@@ -58,6 +58,6 @@ public class MetaChangLogDao extends BaseDaoImpl<MetaChangLog,java.lang.Long>
     }
 
     public Long getNextKey(){
-        return DatabaseOptUtils.getNextLongSequence(this, "S_META_CHANGLOG_ID");
+        return DatabaseOptUtils.getSequenceNextValue(this, "S_META_CHANGLOG_ID");
     }
 }

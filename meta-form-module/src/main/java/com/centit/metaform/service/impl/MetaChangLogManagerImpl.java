@@ -3,7 +3,7 @@ package com.centit.metaform.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.dao.DictionaryMapUtils;
 import com.centit.support.database.utils.PageDesc;
-import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
+import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaChangLogDao;
 import com.centit.metaform.po.MetaChangLog;
 import com.centit.metaform.service.MetaChangLogManager;
@@ -54,8 +54,7 @@ public class MetaChangLogManagerImpl
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 
-        return DictionaryMapUtils.objectsToJSONArray(
-                baseDao.listObjects(filterMap, pageDesc), fields);
+        return baseDao.listObjectsAsJson(filterMap, pageDesc);
     }
 
 }

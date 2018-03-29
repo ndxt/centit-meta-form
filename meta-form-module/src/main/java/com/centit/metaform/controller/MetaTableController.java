@@ -5,12 +5,12 @@ import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
-import com.centit.support.database.utils.PageDesc;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.metaform.service.MetaChangLogManager;
 import com.centit.metaform.service.MetaTableManager;
+import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -24,7 +24,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -101,7 +100,7 @@ public class MetaTableController extends BaseController{
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);        
         
-        List<MetaTable> listObjects = mdTableMag.listObjects(searchColumn, pageDesc);
+        JSONArray listObjects = mdTableMag.listObjectsAsJson(searchColumn, pageDesc);
 
         if (null == pageDesc) {
             JsonResultUtils.writeSingleDataJson(listObjects, response);
@@ -142,14 +141,8 @@ public class MetaTableController extends BaseController{
      */
     @RequestMapping(value = "/{tableId}", method = {RequestMethod.GET})
     public void getMdTable(@PathVariable Long tableId, HttpServletResponse response) {
-        Map<String, Object> searchColumn = new HashMap<>();
-        searchColumn.put("tableId", tableId);
-        List<MetaTable> listObjects = mdTableMag.listObjects(searchColumn, null);
 
-        MetaTable mdTable = new MetaTable();
-        if (listObjects != null && listObjects.size()>0) {
-            mdTable = listObjects.get(0);
-        }
+        MetaTable mdTable = mdTableMag.getObjectByProperty("tableId", tableId );
 //        MetaTable mdTable =
 //                mdTableMag.getObjectById( tableId);
         JsonResultUtils.writeSingleDataJson(mdTable, response);

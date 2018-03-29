@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
-
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -37,7 +35,7 @@ public class MetaTable implements TableInfo,java.io.Serializable {
     @Id
     @Column(name = "TABLE_ID")
     @GeneratedValue(generator = "assignedGenerator")
-    @GenericGenerator(name = "assignedGenerator", strategy = "assigned")
+    //@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
     private Long tableId;
 
     /**

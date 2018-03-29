@@ -2,15 +2,14 @@ package com.centit.metaform.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.core.dao.DictionaryMapUtils;
-import com.centit.metaform.po.MetaTable;
-import com.centit.metaform.service.MetaTableManager;
-import com.centit.support.database.utils.PageDesc;
-import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
+import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.formaccess.ModelRuntimeContextPool;
 import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.service.MetaFormModelManager;
+import com.centit.metaform.service.MetaTableManager;
+import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -62,8 +61,8 @@ public class MetaFormModelManagerImpl
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 
-        JSONArray resultArray = DictionaryMapUtils.objectsToJSONArray(
-                baseDao.listObjects(filterMap, pageDesc), fields);
+        JSONArray resultArray =
+                baseDao.listObjectsAsJson(filterMap, pageDesc);
         return resultArray;
     }
 

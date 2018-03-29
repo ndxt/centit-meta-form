@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -12,8 +14,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 
 import com.centit.framework.core.dao.CodeBook;
-import com.centit.framework.hibernate.dao.BaseDaoImpl;
-import com.centit.framework.hibernate.dao.DatabaseOptUtils;
+import com.centit.framework.jdbc.dao.BaseDaoImpl;
+import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.database.metadata.SimpleTableField;
@@ -36,7 +38,7 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String
     @Override
     public Map<String, String> getFilterField() {
         if( filterField == null){
-            filterField = new HashMap<String, String>();
+            filterField = new HashMap<>();
 
             filterField.put("modelCode" , CodeBook.EQUAL_HQL_ID);
 
@@ -65,18 +67,18 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String
 
     public List<Pair<String,String>> getSubModelPropertiesMap(Long parentTableId,Long childTableId){
         @SuppressWarnings("unchecked")
-        List<Object[]> columnsMap = (List<Object[]> )DatabaseOptUtils.findObjectsBySql(this,
-            "select b.parent_column_name,b.child_column_name "+
+        JSONArray columnsMap = DatabaseOptUtils.listObjectsBySqlAsJson(this,
+            "select b.parent_column_name as parent ,b.child_column_name as child"+
             " from F_META_RELATION a join F_META_REL_DETIAL b on (a.relation_id=b.relation_id)"+
             " where a.parent_table_id = ? and a.child_table_id = ? ",
             new Object[]{parentTableId,childTableId});
         if(columnsMap==null || columnsMap.size()==0)
             return null;
         List<Pair<String,String>> columnList = new ArrayList<>();
-        for(Object[] columnPair:columnsMap){
-            columnList.add(new ImmutablePair<String,String>(
-                    SimpleTableField.mapPropName(StringBaseOpt.objectToString(columnPair[0])),
-                    SimpleTableField.mapPropName(StringBaseOpt.objectToString(columnPair[1]))));
+        for(Object columnPair:columnsMap){
+            columnList.add(new ImmutablePair<>(
+                    SimpleTableField.mapPropName(StringBaseOpt.objectToString(((JSONObject)columnPair).get("parent"))),
+                    SimpleTableField.mapPropName(StringBaseOpt.objectToString(((JSONObject)columnPair).get("child")))));
         }
         return columnList;
     }

@@ -1,10 +1,12 @@
 package com.centit.metaform.formaccess.impl;
 
-import com.centit.framework.hibernate.dao.BaseDaoImpl;
-import com.centit.framework.hibernate.dao.JsonObjectWork;
+
+import com.centit.framework.jdbc.dao.BaseDaoImpl;
+import com.centit.framework.jdbc.dao.JsonObjectWork;
+import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 
-public class HibernateModelRuntimeContext extends AbstractModelRuntimeContext {
+public class HostModelRuntimeContext extends AbstractModelRuntimeContext {
 
 
     public void setBaseObjectDao(BaseDaoImpl<?, ?> baseObjectDao) {
@@ -13,11 +15,11 @@ public class HibernateModelRuntimeContext extends AbstractModelRuntimeContext {
 
     private BaseDaoImpl<?, ?> baseObjectDao;
 
-    public HibernateModelRuntimeContext(){
+    public HostModelRuntimeContext(){
 
     }
 
-    public HibernateModelRuntimeContext(String  modelCode){
+    public HostModelRuntimeContext(String  modelCode){
          super(modelCode);
     }
 

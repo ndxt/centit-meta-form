@@ -105,9 +105,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
     }
 
     @Transactional(readOnly=true)
-    public HibernateModelRuntimeContext createHibernateRuntimeContext(String modelCode) {
+    public HostModelRuntimeContext createHibernateRuntimeContext(String modelCode) {
 
-        HibernateModelRuntimeContext rc = new HibernateModelRuntimeContext(modelCode);
+        HostModelRuntimeContext rc = new HostModelRuntimeContext(modelCode);
 
         MetaFormModel mfm = formModelDao.getObjectById(modelCode);
 //        MetaTable mtab = mfm.getMdTable();

@@ -3,23 +3,18 @@ package com.centit.metaform.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.core.dao.DictionaryMapUtils;
-import com.centit.support.database.utils.PageDesc;
-import com.centit.framework.hibernate.dao.DatabaseOptUtils;
-import com.centit.framework.hibernate.service.BaseEntityManagerImpl;
 import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
+import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.*;
 import com.centit.metaform.formaccess.FieldType;
 import com.centit.metaform.formaccess.PdmTableInfo;
 import com.centit.metaform.po.*;
 import com.centit.metaform.service.MetaTableManager;
 import com.centit.support.algorithm.DatetimeOpt;
-import com.centit.support.database.utils.DBType;
-import com.centit.support.database.utils.DataSourceDescription;
-import com.centit.support.database.utils.DbcpConnectPools;
 import com.centit.support.database.ddl.*;
 import com.centit.support.database.jsonmaptable.*;
+import com.centit.support.database.utils.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -89,8 +84,7 @@ public class MetaTableManagerImpl
             String[] fields,
             Map<String, Object> filterMap, PageDesc pageDesc){
 
-        return DictionaryMapUtils.objectsToJSONArray(
-                baseDao.listObjects(filterMap, pageDesc), fields);
+        return baseDao.listObjectsAsJson(filterMap, pageDesc);
     }
 
     @Override
@@ -327,8 +321,8 @@ public class MetaTableManagerImpl
     public JSONArray listDrafts(String[] fields, Map<String, Object> searchColumn,
             PageDesc pageDesc) {
 
-        JSONArray listTables =  DictionaryMapUtils.objectsToJSONArray(
-                pendingMdTableDao.listObjects(searchColumn, pageDesc), fields);
+        JSONArray listTables =
+                pendingMdTableDao.listObjectsAsJson(searchColumn, pageDesc);
 
         List<DatabaseInfo> databases = integrationEnvironment.listDatabaseInfo();
         for(Object obj:listTables){
@@ -365,12 +359,12 @@ public class MetaTableManagerImpl
     @Override
     @Transactional
     public List<MetaColumn> getNotInFormFields(Long tableId) {
-        String sql = "select * from F_META_COLUMN  t where t.table_id=? " +
+        String sql = "select * from F_META_COLUMN  t where t.table_id= :tableId " +
                 "and t.column_name not in " +
                 "(select f.column_name from m_model_data_field f join m_meta_form_model m" +
-                " on f.model_code=m.model_code and m.table_id=? )";
-        return
-                (List<MetaColumn>) DatabaseOptUtils.findObjectsBySql(metaColumnDao, sql, new Object[]{tableId,tableId},MetaColumn.class);
+                " on f.model_code=m.model_code and m.table_id=:tableId  )";
+        return metaColumnDao.listObjectsBySql( sql,
+                QueryUtils.createSqlParamsMap("tableId",tableId));
     }
 
     @Override

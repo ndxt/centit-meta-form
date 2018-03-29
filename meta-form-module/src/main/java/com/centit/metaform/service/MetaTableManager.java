@@ -1,7 +1,7 @@
 package com.centit.metaform.service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.centit.framework.hibernate.service.BaseEntityManager;
+import com.centit.framework.jdbc.service.BaseEntityManager;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaTable;

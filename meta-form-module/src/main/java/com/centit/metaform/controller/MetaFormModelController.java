@@ -58,8 +58,8 @@ public class MetaFormModelController extends BaseController{
     @RequestMapping(method = RequestMethod.GET)
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
-        List<MetaFormModel> listObjects = metaFormModelMag.listObjects(searchColumn, pageDesc);
-        JSONArray jsonObjects = metaFormModelMag.addTableNameToList(JSON.parseArray(JSON.toJSONString(listObjects)));
+        JSONArray listObjects = metaFormModelMag.listObjectsAsJson(searchColumn, pageDesc);
+        JSONArray jsonObjects = metaFormModelMag.addTableNameToList(listObjects);
         SimplePropertyPreFilter simplePropertyPreFilter = null;
         
         if (null == pageDesc) {

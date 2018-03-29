@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.support.database.utils.PageDesc;
-import com.centit.framework.hibernate.service.BaseEntityManager;
+import com.centit.framework.jdbc.service.BaseEntityManager;
 import com.centit.metaform.po.MetaFormModel;
 
 /**

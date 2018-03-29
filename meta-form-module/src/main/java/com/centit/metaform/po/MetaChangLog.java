@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -32,7 +31,7 @@ public class MetaChangLog implements java.io.Serializable {
     @Id
     @Column(name = "CHANGE_ID")
     @GeneratedValue(generator = "assignedGenerator")
-    @GenericGenerator(name = "assignedGenerator", strategy = "assigned")
+    //@GenericGenerator(name = "assignedGenerator", strategy = "assigned")
     private Long  changeId;
     /**
      * 版本号 null
