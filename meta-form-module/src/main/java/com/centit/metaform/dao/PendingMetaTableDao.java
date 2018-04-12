@@ -3,6 +3,7 @@ package com.centit.metaform.dao;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
@@ -55,4 +56,8 @@ public class PendingMetaTableDao extends BaseDaoImpl<PendingMetaTable,java.lang.
         }
         return filterField;
     }
+
+        public Long getNextKey(){
+            return DatabaseOptUtils.getSequenceNextValue(this, "seq_pendingtableid");
+        }
 }

@@ -5,6 +5,7 @@ import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.metaform.dao.PendingMetaTableDao;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaTable;
@@ -24,6 +25,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +62,9 @@ public class MetaTableController extends BaseController{
         mdChangLogMag = basemgr;
         //this.setBaseEntityManager(mdChangLogMag);
     }*/
+
+    @Resource
+    private PendingMetaTableDao pendingMetaTableDao;
 
     /**
      * 查询所有   元数据更改记录  列表
@@ -170,6 +175,8 @@ public class MetaTableController extends BaseController{
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
         PendingMetaTable table=new PendingMetaTable();
         table.copyNotNullProperty(mdTable);
+        table.setTableId(pendingMetaTableDao.getNextKey());
+        table.setLastModifyDate(new Date());
 //      mdTable.setTableType("T");// T 是数据表，后期会添加 V（视图）的选择
 //      mdTable.setTableState("N");
         mdTableMag.saveNewPendingMetaTable(table);
