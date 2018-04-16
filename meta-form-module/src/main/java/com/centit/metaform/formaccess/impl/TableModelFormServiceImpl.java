@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
+import com.centit.metaform.dao.MetaColumnDao;
+import com.centit.metaform.dao.MetaRelationDao;
 import com.centit.metaform.formaccess.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -52,6 +54,12 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
     @Resource
     private MetaFormModelDao formModelDao;
+
+    @Resource
+    private MetaColumnDao metaColumnDao;
+
+    @Resource
+    private MetaRelationDao metaRelationDao;
      
     @Resource
     protected IntegrationEnvironment integrationEnvironment;
@@ -86,6 +94,15 @@ public class TableModelFormServiceImpl implements ModelFormService {
 //        MetaTable mtab = mfm.getMdTable();
         Long tableId = mfm.getTableId();
         MetaTable mtab = tableDao.getObjectById(tableId);
+
+        Map<String, Object> tempFilter = new HashMap<>();
+        tempFilter.put("tableId", tableId);
+        Set<MetaColumn> tempColumn = new HashSet<>(metaColumnDao.listObjectsByProperties(tempFilter));
+        mtab.setMdColumns(tempColumn);
+
+//        if (mtab != null) {
+//            MetaColumn mColumn =
+//        }
 
 
         rc.setTableInfo(mtab);

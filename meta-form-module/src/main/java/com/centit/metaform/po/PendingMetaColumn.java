@@ -3,7 +3,6 @@ package com.centit.metaform.po;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -30,8 +29,22 @@ import com.centit.support.database.metadata.TableField;
 public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.io.Serializable {
     private static final long serialVersionUID =  1L;
 
-    @EmbeddedId
-    private PendingMetaColumnId cid;
+//    @EmbeddedId
+//    private PendingMetaColumnId cid;
+
+    /**
+     * 字段名称 null
+     */
+    @Column(name = "TABLE_ID")
+    @NotBlank(message = "字段不能为空")
+    private Long  tableId;
+
+    /**
+     * 字段名称 null
+     */
+    @Column(name = "COLUMN_NAME")
+    @NotBlank(message = "字段不能为空")
+    private String  columnName;
 
     /**
      * 字段名称 null
@@ -79,7 +92,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
      * 是否必填 null
      */
     @Column(name = "MANDATORY")
-    @Length(  message = "字段长度不能大于{max}")
+    @Length( message = "字段长度不能大于{max}")
     private String  mandatory;
     /**
      * 是否为主键 null
@@ -158,26 +171,28 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     }
 
     public PendingMetaColumn(PendingMetaTable mdTable, String columnName) {
-        this.cid= new PendingMetaColumnId(mdTable,columnName);
+//        this.cid= new PendingMetaColumnId(mdTable,columnName);
+        this.tableId = mdTable.getTableId();
+        this.columnName = columnName;
         this.columnState="0";
     }
 
     /** minimal constructor */
-    public PendingMetaColumn(
-        PendingMetaColumnId cid,String  fieldLabelName,String  columnType,String  accessType,String  columnState) {
-        this.cid=cid;
-        this.fieldLabelName= fieldLabelName;
-        this.columnFieldType= columnType;
-        this.accessType= accessType;
-        this.columnState= columnState;
-    }
+//    public PendingMetaColumn(
+//        PendingMetaColumnId cid,String  fieldLabelName,String  columnType,String  accessType,String  columnState) {
+//        this.cid=cid;
+//        this.fieldLabelName= fieldLabelName;
+//        this.columnFieldType= columnType;
+//        this.accessType= accessType;
+//        this.columnState= columnState;
+//    }
 
 /** full constructor */
     public PendingMetaColumn(
             PendingMetaColumnId cid,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,
             Integer  maxLength,Integer  scale,String  accessType,String  mandatory,String  primarykey,String  columnState,String  referenceType,String  referenceData,String  validateRegex,String  validateInfo,String  defaultValue,Date  lastModifyDate,String  recorder) {
 
-        this.cid=cid;
+//        this.cid=cid;
         this.fieldLabelName= fieldLabelName;
         this.columnComment= columnComment;
         this.columnOrder= columnOrder;
@@ -199,24 +214,28 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 
   
     public Long getTableId() {
-        return this.cid.getTableId();
+//        return this.cid.getTableId();
+        return this.tableId;
     }
 
 
 
     public void setTableId(Long tableId) {
-        if(null==this.cid)
-            this.cid=new PendingMetaColumnId();
-        this.cid.setTableId(tableId);
+//        if(null==this.cid)
+//            this.cid=new PendingMetaColumnId();
+//        this.cid.setTableId(tableId);
+        this.tableId = tableId;
     }
     // Property accessors
   
     public String getColumnName() {
-        return this.getCid().getColumnName();
+//        return this.getCid().getColumnName();
+        return this.columnName;
     }
 
     public void setColumnName(String columnName) {
-        this.getCid().setColumnName(columnName);
+//        this.getCid().setColumnName(columnName);
+        this.columnName = columnName;
     }
   
     public String getFieldLabelName() {
@@ -268,9 +287,9 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
         this.accessType = accessType;
     }
   
-//    public String getMandatory() {
-//        return this.mandatory;
-//    }
+    public String getMandatory() {
+        return this.mandatory;
+    }
 
     public void setMandatory(String mandatory) {
         this.mandatory = mandatory;
@@ -357,20 +376,20 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
         this.autoCreateParam = autoCreateParam;
     }
 
-    public PendingMetaColumnId getCid() {
-        if(null==this.cid)
-            this.cid=new PendingMetaColumnId();
-        return cid;
-    }
-    public void setCid(PendingMetaColumnId cid1) {
-        if(null==cid1.getTableId())
-            this.cid=null;
-        else
-            this.cid = cid1;
-    }
+//    public PendingMetaColumnId getCid() {
+//        if(null==this.cid)
+//            this.cid=new PendingMetaColumnId();
+//        return cid;
+//    }
+//    public void setCid(PendingMetaColumnId cid1) {
+//        if(null==cid1.getTableId())
+//            this.cid=null;
+//        else
+//            this.cid = cid1;
+//    }
     public PendingMetaColumn copy(PendingMetaColumn other){
   
-        this.setCid(other.getCid());
+//        this.setCid(other.getCid());
         this.fieldLabelName= other.getFieldLabelName();
         this.columnComment= other.getColumnComment();
         this.columnOrder= other.getColumnOrder();
@@ -394,8 +413,8 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     public PendingMetaColumn copyNotNullProperty(PendingMetaColumn other){
   
   
-        if( other.getCid() != null)
-            this.setCid(other.getCid());
+//        if( other.getCid() != null)
+//            this.setCid(other.getCid());
         if( other.getFieldLabelName() != null)
             this.fieldLabelName= other.getFieldLabelName();
         if( other.getColumnComment() != null)
@@ -408,7 +427,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
         this.scale= other.getScale();
         if( other.getAccessType() != null)
             this.accessType= other.getAccessType();
-//        if( other.getMandatory() != null)
+        if( other.getMandatory() != null)
             this.mandatory= other.isMandatory()?"T":"F";
         if( other.getPrimarykey() != null)
             this.primarykey= other.getPrimarykey();
@@ -431,7 +450,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     }
 
     public PendingMetaColumn clearProperties(){
-        this.setCid(null);
+//        this.setCid(null);
         this.fieldLabelName= null;
         this.columnComment= null;
         this.columnOrder= null;

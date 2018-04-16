@@ -118,10 +118,10 @@ public class MetaTable implements TableInfo,java.io.Serializable {
     private String  recorder;
 
 
-    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<MetaColumn> mdColumns;
 
-    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<MetaRelation> mdRelations;
 
 
@@ -162,18 +162,18 @@ public class MetaTable implements TableInfo,java.io.Serializable {
         this.mdRelations= new HashSet<MetaRelation>();
         this.extColumnFormat = ptable.getExtColumnFormat();
         this.extColumnName = ptable.getExtColumnName();
-        this.setColumnsFromPending(ptable.getMdColumns());
+//        this.setColumnsFromPending(ptable.getMdColumns());
         this.setRelationsFromPending(ptable.getMdRelations());
     }
 
-    public void setColumnsFromPending(Set<PendingMetaColumn> pcolumns){
-        Iterator<PendingMetaColumn> itr= pcolumns.iterator();
-        while(itr.hasNext()){
-            MetaColumn column=new MetaColumn(itr.next());
-            column.getCid().setMdTable(this);
-            this.mdColumns.add(column);
-        }
-    }
+//    public void setColumnsFromPending(Set<PendingMetaColumn> pcolumns){
+//        Iterator<PendingMetaColumn> itr= pcolumns.iterator();
+//        while(itr.hasNext()){
+//            MetaColumn column=new MetaColumn(itr.next());
+//            column.getCid().setMdTable(this);
+//            this.mdColumns.add(column);
+//        }
+//    }
     public void setRelationsFromPending(Set<PendingMetaRelation> prelations){
         Iterator<PendingMetaRelation> itr= prelations.iterator();
         while(itr.hasNext()){
@@ -284,9 +284,12 @@ public class MetaTable implements TableInfo,java.io.Serializable {
     public void setTableComment(String tableComment) {
         this.tableComment = tableComment;
     }
-  
 
-  
+
+    public void setMdColumns(Set<MetaColumn> mdColumns) {
+        this.mdColumns = mdColumns;
+    }
+
     public String getWorkFlowOptType() {
         return workFlowOptType;
     }
@@ -322,14 +325,14 @@ public class MetaTable implements TableInfo,java.io.Serializable {
         return this.mdColumns;
     }
 
-    public void setMdColumns(Set<MetaColumn> mdColumns1) {
-        this.getMdColumns().clear();
-        Iterator<MetaColumn> itr=mdColumns1.iterator();
-        while(itr.hasNext()){
-            itr.next().getCid().setMdTable(this);
-        }
-        this.getMdColumns().addAll(mdColumns1);
-    }
+//    public void setMdColumns(Set<MetaColumn> mdColumns1) {
+//        this.getMdColumns().clear();
+//        Iterator<MetaColumn> itr=mdColumns1.iterator();
+//        while(itr.hasNext()){
+//            itr.next().getCid().setMdTable(this);
+//        }
+//        this.getMdColumns().addAll(mdColumns1);
+//    }
 
     public void addMdColumn(MetaColumn mdColumn ){
         if (this.mdColumns==null)
@@ -354,49 +357,49 @@ public class MetaTable implements TableInfo,java.io.Serializable {
      * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
      *
      */
-    public void replaceMdColumns(Set<MetaColumn> set) {
-        List<MetaColumn> newObjs = new ArrayList<MetaColumn>();
-        for(MetaColumn p :set){
-            if(p==null)
-                continue;
-            MetaColumn newdt = newMdColumn();
-            newdt.copyNotNullProperty(p);
-            newObjs.add(newdt);
-        }
-        //delete
-        boolean found = false;
-        Set<MetaColumn> oldObjs = new HashSet<MetaColumn>();
-        oldObjs.addAll(getMdColumns());
-
-        for(Iterator<MetaColumn> it=oldObjs.iterator(); it.hasNext();){
-            MetaColumn odt = it.next();
-            found = false;
-            for(MetaColumn newdt :newObjs){
-                if(odt.getCid().equals( newdt.getCid())){
-                    found = true;
-                    break;
-                }
-            }
-            if(! found)
-                removeMdColumn(odt);
-        }
-        oldObjs.clear();
-        //insert or update
-        for(MetaColumn newdt :newObjs){
-            found = false;
-            for(Iterator<MetaColumn> it=getMdColumns().iterator();
-             it.hasNext();){
-                MetaColumn odt = it.next();
-                if(odt.getCid().equals( newdt.getCid())){
-                    odt.copy(newdt);
-                    found = true;
-                    break;
-                }
-            }
-            if(! found)
-                addMdColumn(newdt);
-        }
-    }
+//    public void replaceMdColumns(Set<MetaColumn> set) {
+//        List<MetaColumn> newObjs = new ArrayList<MetaColumn>();
+//        for(MetaColumn p :set){
+//            if(p==null)
+//                continue;
+//            MetaColumn newdt = newMdColumn();
+//            newdt.copyNotNullProperty(p);
+//            newObjs.add(newdt);
+//        }
+//        //delete
+//        boolean found = false;
+//        Set<MetaColumn> oldObjs = new HashSet<MetaColumn>();
+//        oldObjs.addAll(getMdColumns());
+//
+//        for(Iterator<MetaColumn> it=oldObjs.iterator(); it.hasNext();){
+//            MetaColumn odt = it.next();
+//            found = false;
+//            for(MetaColumn newdt :newObjs){
+//                if(odt.getCid().equals( newdt.getCid())){
+//                    found = true;
+//                    break;
+//                }
+//            }
+//            if(! found)
+//                removeMdColumn(odt);
+//        }
+//        oldObjs.clear();
+//        //insert or update
+//        for(MetaColumn newdt :newObjs){
+//            found = false;
+//            for(Iterator<MetaColumn> it=getMdColumns().iterator();
+//             it.hasNext();){
+//                MetaColumn odt = it.next();
+//                if(odt.getCid().equals( newdt.getCid())){
+//                    odt.copy(newdt);
+//                    found = true;
+//                    break;
+//                }
+//            }
+//            if(! found)
+//                addMdColumn(newdt);
+//        }
+//    }
 
 
 
@@ -596,8 +599,8 @@ public class MetaTable implements TableInfo,java.io.Serializable {
 
     public MetaTable copyNotNullProperty(MetaTable other){
   
-        if(null!=other.getMdColumns())
-            this.setMdColumns(other.getMdColumns());
+//        if(null!=other.getMdColumns())
+//            this.setMdColumns(other.getMdColumns());
         if( other.getTableId() != null)
             this.setTableId(other.getTableId());
         if( other.getDatabaseCode() != null)

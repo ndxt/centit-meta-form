@@ -67,7 +67,10 @@ public class MetaTableManagerImpl
     private PendingMetaTableDao pendingMdTableDao;
 
     @Resource
-    private PendingMetaRelationDao pendignRelationDao;
+    private PendingMetaColumnDao pendingMetaColumnDao;
+
+    @Resource
+    private PendingMetaRelationDao pendingRelationDao;
 
     @Resource
     protected IntegrationEnvironment integrationEnvironment;
@@ -91,6 +94,28 @@ public class MetaTableManagerImpl
     @Transactional
     public void saveNewPendingMetaTable(PendingMetaTable pmt) {
         pendingMdTableDao.saveNewObject(pmt);
+        if (pmt != null) {
+            List<PendingMetaColumn> pdMetaColumn = new ArrayList<>(pmt.getMdColumns());
+            if (pdMetaColumn != null && pdMetaColumn.size()>0) {
+                for (int i=0; i<pdMetaColumn.size(); i++) {
+                    PendingMetaColumn tempColumn = pdMetaColumn.get(i);
+                    tempColumn.setTableId(pmt.getTableId());
+                    if (null == tempColumn.getColumnOrder()) {
+                        tempColumn.setColumnOrder(new Long(0));
+                    }
+                    pendingMetaColumnDao.saveNewObject(tempColumn);
+                }
+            }
+
+            List<PendingMetaRelation> pdMetaRelation = new ArrayList<>(pmt.getMdRelations());
+            if (pdMetaRelation != null && pdMetaRelation.size()>0) {
+                for (int j=0; j<pdMetaColumn.size(); j++) {
+                    PendingMetaRelation tempRelation = pdMetaRelation.get(j);
+                    tempRelation.setRelationId(pendingRelationDao.getNextKey());
+                    pendingRelationDao.saveNewObject(tempRelation);
+                }
+            }
+        }
     }
 
     @Override
@@ -102,7 +127,14 @@ public class MetaTableManagerImpl
     @Override
     @Transactional
     public PendingMetaTable getPendingMetaTable(long tableId) {
-        return pendingMdTableDao.getObjectById(tableId);
+        PendingMetaTable resultPdMetaTable =  pendingMdTableDao.getObjectById(tableId);
+
+        Map<String, Object> tempFilter = new HashMap<>();
+        tempFilter.put("tableId", tableId);
+        Set<PendingMetaColumn> tempColumn = new HashSet<>(pendingMetaColumnDao.listObjectsByProperties(tempFilter));
+        resultPdMetaTable.setMdColumns(tempColumn);
+
+        return resultPdMetaTable;
     }
 
     @Override
@@ -114,9 +146,9 @@ public class MetaTableManagerImpl
             PendingMetaRelation relation =itr.next();
             relation.setParentTable(pmt);
             if(relation.getRelationId()==null)
-                pendignRelationDao.saveNewObject(relation);
+                pendingRelationDao.saveNewObject(relation);
             else{
-                pendignRelationDao.mergeObject(relation);
+                pendingRelationDao.mergeObject(relation);
             }
         }
         pendingMdTableDao.mergeObject(pmt);

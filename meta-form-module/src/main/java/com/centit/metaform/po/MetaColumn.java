@@ -3,7 +3,6 @@ package com.centit.metaform.po;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -29,9 +28,19 @@ import com.centit.support.database.metadata.TableField;
 public class MetaColumn implements TableField,java.io.Serializable {
     private static final long serialVersionUID =  1L;
 
-    @EmbeddedId
-    private com.centit.metaform.po.MetaColumnId cid;
+    /**
+     * 字段名称 null
+     */
+    @Column(name = "TABLE_ID")
+    @NotBlank(message = "字段不能为空")
+    private Long  tableId;
 
+    /**
+     * 字段名称 null
+     */
+    @Column(name = "COLUMN_NAME")
+    @NotBlank(message = "字段不能为空")
+    private String  columnName;
 
     /**
      * 字段名称 null
@@ -160,17 +169,17 @@ public class MetaColumn implements TableField,java.io.Serializable {
         this.columnState="0";
     }
     /** minimal constructor */
-    public MetaColumn(com.centit.metaform.po.MetaColumnId id
-
-        ,String  fieldLabelName,String  columnType,String  accessType,String  columnState) {
-        this.cid = id;
-
-
-        this.fieldLabelName= fieldLabelName;
-        this.columnFieldType= columnType;
-        this.accessType= accessType;
-        this.columnState= columnState;
-    }
+//    public MetaColumn(com.centit.metaform.po.MetaColumnId id
+//
+//        ,String  fieldLabelName,String  columnType,String  accessType,String  columnState) {
+////        this.cid = id;
+//
+//
+//        this.fieldLabelName= fieldLabelName;
+//        this.columnFieldType= columnType;
+//        this.accessType= accessType;
+//        this.columnState= columnState;
+//    }
 
 /** full constructor */
     public MetaColumn(com.centit.metaform.po.MetaColumnId id
@@ -179,7 +188,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
     String  primarykey,String  columnState,String  referenceType,String  referenceData,
     String  validateRegex,String  validateInfo,String  autoCreateRule,String  autoCreateParam,
     Date  lastModifyDate,String  recorder) {
-        this.cid = id;
+//        this.cid = id;
 
 
         this.fieldLabelName= fieldLabelName;
@@ -224,36 +233,40 @@ public class MetaColumn implements TableField,java.io.Serializable {
         this.lastModifyDate= next.getLastModifyDate();
         this.recorder= next.getRecorder();
     }
-    public com.centit.metaform.po.MetaColumnId getCid() {
-        return this.cid;
-    }
+//    public com.centit.metaform.po.MetaColumnId getCid() {
+//        return this.cid;
+//    }
 
-    public void setCid(com.centit.metaform.po.MetaColumnId id) {
-        this.cid = id;
-    }
+//    public void setCid(com.centit.metaform.po.MetaColumnId id) {
+//        this.cid = id;
+//    }
   
     public Long getTableId() {
-        if(this.cid==null)
-            return null;
-        return this.cid.getTableId();
+//        if(this.cid==null)
+//            return null;
+//        return this.cid.getTableId();
+        return this.tableId;
     }
 
     public void setTableId(Long tableId) {
-        if(this.cid==null)
-            this.cid = new com.centit.metaform.po.MetaColumnId();
-        this.cid.setTableId(tableId);
+//        if(this.cid==null)
+//            this.cid = new com.centit.metaform.po.MetaColumnId();
+//        this.cid.setTableId(tableId);
+        this.tableId = tableId;
     }
   
     public String getColumnName() {
-        if(this.cid==null)
-            this.cid = new com.centit.metaform.po.MetaColumnId();
-        return this.cid.getColumnName();
+//        if(this.cid==null)
+//            this.cid = new com.centit.metaform.po.MetaColumnId();
+//        return this.cid.getColumnName();
+        return this.columnName;
     }
 
     public void setColumnName(String columnName) {
-        if(this.cid==null)
-            this.cid = new com.centit.metaform.po.MetaColumnId();
-        this.cid.setColumnName(columnName);
+//        if(this.cid==null)
+//            this.cid = new com.centit.metaform.po.MetaColumnId();
+//        this.cid.setColumnName(columnName);
+        this.columnName = columnName;
     }
 
 

@@ -117,10 +117,10 @@ public class PendingMetaTable implements
     @Length(max = 64, message = "字段长度不能大于{max}")
     private String  recorder;
 
-    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<PendingMetaColumn> mdColumns;
 
-    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<PendingMetaRelation> mdRelations;
 
 
@@ -182,29 +182,30 @@ public class PendingMetaTable implements
 
 
     public Set<PendingMetaColumn> getMdColumns() {
-        if(null==this.mdColumns)
-            this.mdColumns=new HashSet<PendingMetaColumn>();
-        return mdColumns;
+//        if(null==this.mdColumns)
+//            this.mdColumns=new HashSet<PendingMetaColumn>();
+        return this.mdColumns;
     }
 
     public void setMdColumns(Set<PendingMetaColumn> mdColumns1) {
-        if(mdColumns1==null)
-        {
-            this.mdColumns=null;
-        }else{
-            this.getMdColumns().clear();
-            Iterator<PendingMetaColumn> itr=mdColumns1.iterator();
-            while(itr.hasNext()){
-                itr.next().getCid().setMdTable(this);
-            }
-            this.getMdColumns().addAll(mdColumns1);
-        }
+//        if(mdColumns1==null)
+//        {
+//            this.mdColumns=null;
+//        }else{
+//            this.getMdColumns().clear();
+//            Iterator<PendingMetaColumn> itr=mdColumns1.iterator();
+//            while(itr.hasNext()){
+//                itr.next().getCid().setMdTable(this);
+//            }
+//            this.getMdColumns().addAll(mdColumns1);
+//        }
+        this.mdColumns = mdColumns1;
     }
 
     public void addMdColumn(PendingMetaColumn mdColumn) {
         if(mdColumn==null)
             return;
-        mdColumn.getCid().setMdTable(this);
+        mdColumn.setTableId(this.tableId);
         this.getMdColumns().add(mdColumn);
     }
 
