@@ -240,7 +240,7 @@ public class MetaTableController extends BaseController{
                 mdTableMag.getPendingMetaTable(tableId);
         
         if (null != mdTable) {
-            dbMdTable .copyNotNullProperty(mdTable);
+            dbMdTable.copyNotNullProperty(mdTable);
             mdTableMag.savePendingMetaTable(dbMdTable);
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);

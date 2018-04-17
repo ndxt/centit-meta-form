@@ -220,7 +220,7 @@ public class PendingMetaTable implements
         {this.getMdRelations().clear();
         Iterator<PendingMetaRelation> itr=mdRelations.iterator();
         while(itr.hasNext()){
-            itr.next().setParentTable(this);
+            itr.next().setParentTableId(this.tableId);
         }
         this.getMdRelations().addAll(mdRelations);}
         else{
