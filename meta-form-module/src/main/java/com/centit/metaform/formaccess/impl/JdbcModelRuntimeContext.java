@@ -36,10 +36,10 @@ public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
     private JsonObjectDao dao = null;
 
     public JsonObjectDao getJsonObjectDao() throws SQLException {
-        if(dao==null){
-            dao = GeneralJsonObjectDao.createJsonObjectDao(getConnection(),
-                    getPersistenceTableInfo());
-        }
+//        if(dao==null){
+        dao = GeneralJsonObjectDao.createJsonObjectDao(getConnection(),
+        getPersistenceTableInfo());
+//        }
         return dao;
     }
 

@@ -796,7 +796,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
         if( n<=0 ){
             JsonObjectDao dao = rc.getJsonObjectDao();
             dao.saveNewObject(rc.castObjectToTableObject(object));
-             n = runOperationEvent(rc, object, "afterSave", response);
+            n = runOperationEvent(rc, object, "afterSave", response);
         }
         //rc.commitAndClose();
         return n;
