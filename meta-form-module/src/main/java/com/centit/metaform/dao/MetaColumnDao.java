@@ -31,7 +31,7 @@ public class MetaColumnDao extends BaseDaoImpl<MetaColumn,com.centit.metaform.po
         if( filterField == null){
             filterField = new HashMap<String, String>();
 
-            filterField.put("tableId" , "cid.mdTable.tableId = ?");
+            filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
 
             filterField.put("columnName" , CodeBook.EQUAL_HQL_ID);
 

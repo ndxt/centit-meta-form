@@ -437,7 +437,7 @@ public class MetaTableManagerImpl
     @Override
     public List<MetaColumn> listFields(Long tableId) {
         Map<String,Object> filterMap = new HashMap<String,Object>();
-           filterMap.put("tableId", tableId);
+        filterMap.put("tableId", tableId);
 
         return metaColumnDao.listObjects(filterMap);
     }

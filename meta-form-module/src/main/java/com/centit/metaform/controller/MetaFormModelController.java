@@ -7,8 +7,14 @@ import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.metaform.dao.ModelDataFieldDao;
+import com.centit.metaform.dao.ModelOperationDao;
 import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.ModelDataField;
+import com.centit.metaform.po.ModelOperation;
 import com.centit.metaform.service.MetaFormModelManager;
+import com.centit.metaform.service.ModelDataFieldManager;
+import com.centit.metaform.service.ModelOperationManager;
 import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Controller;
@@ -21,9 +27,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -46,6 +50,11 @@ public class MetaFormModelController extends BaseController{
         metaFormModelMag = basemgr;
         //this.setBaseEntityManager(metaFormModelMag);
     }*/
+    @Resource
+    private ModelDataFieldDao modelDataFieldDao;
+
+    @Resource
+    private ModelOperationDao modelOperationDao;
 
     /**
      * 查询所有   通用模块管理  列表
@@ -89,7 +98,14 @@ public class MetaFormModelController extends BaseController{
 
         MetaFormModel metaFormModel =
                 metaFormModelMag.getObjectById( modelCode);
-        
+        Set<ModelDataField> modelDataFields =
+                new HashSet<>(modelDataFieldDao.listObjectsByProperty("modelCode", modelCode));
+        Set<ModelOperation> modelOperations =
+                new HashSet<>(modelOperationDao.listObjectsByProperty("modelCode", modelCode));
+
+        metaFormModel.setModelDataFields(modelDataFields);
+        metaFormModel.setModelOperations(modelOperations);
+
         JsonResultUtils.writeSingleDataJson(metaFormModel, response);
     }
     
@@ -108,6 +124,25 @@ public class MetaFormModelController extends BaseController{
         model.setRecorder(usercode);
         model.setLastModifyDate(new Date());
         metaFormModelMag.saveNewObject(model);
+
+        Set<ModelDataField> modelDataFields = model.getModelDataFields();
+        if (modelDataFields != null && modelDataFields.size()>0) {
+            Iterator<ModelDataField> itr= modelDataFields.iterator();
+            while(itr.hasNext()){
+                ModelDataField tempDataField = itr.next();
+                modelDataFieldDao.saveNewObject(tempDataField);
+            }
+        }
+
+        Set<ModelOperation> modelOperations = model.getModelOperations();
+        if (modelOperations != null && modelOperations.size()>0) {
+            Iterator<ModelOperation> itr= modelOperations.iterator();
+            while(itr.hasNext()){
+                ModelOperation tempOperation = itr.next();
+                modelOperationDao.saveNewObject(tempOperation);
+            }
+        }
+
         JsonResultUtils.writeSingleDataJson(model.getModelCode(),response);
     }
 
@@ -121,8 +156,9 @@ public class MetaFormModelController extends BaseController{
 
         //metaFormModelMag.deleteObjectById( modelCode);
         
-        JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_METHOD_DISABLED,
-                "系统已经禁用删除模块功能！", response);
+//        JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_METHOD_DISABLED,
+//                "系统已经禁用删除模块功能！", response);
+        JsonResultUtils.writeErrorMessageJson("系统已经禁用删除模块功能！", response);
     } 
     
     /**
@@ -140,6 +176,29 @@ public class MetaFormModelController extends BaseController{
             dbMetaFormModel.copyNotNullProperty(metaFormModel);
             dbMetaFormModel.setLastModifyDate(new Date());
             metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
+
+            Map<String, Object> tempFilter = new HashMap<>();
+            tempFilter.put("modelCode", modelCode);
+            modelDataFieldDao.deleteObjectsByProperties(tempFilter);
+            modelOperationDao.deleteObjectsByProperties(tempFilter);
+
+            Set<ModelDataField> modelDataFields = metaFormModel.getModelDataFields();
+            if (modelDataFields != null && modelDataFields.size()>0) {
+                Iterator<ModelDataField> itr= modelDataFields.iterator();
+                while(itr.hasNext()){
+                    ModelDataField tempDataField = itr.next();
+                    modelDataFieldDao.saveNewObject(tempDataField);
+                }
+            }
+
+            Set<ModelOperation> modelOperations = metaFormModel.getModelOperations();
+            if (modelOperations != null && modelOperations.size()>0) {
+                Iterator<ModelOperation> itr= modelOperations.iterator();
+                while(itr.hasNext()){
+                    ModelOperation tempOperation = itr.next();
+                    modelOperationDao.saveNewObject(tempOperation);
+                }
+            }
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);
             return;

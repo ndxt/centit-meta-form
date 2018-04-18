@@ -29,11 +29,11 @@ public class MetaColumn implements TableField,java.io.Serializable {
     private static final long serialVersionUID =  1L;
 
     /**
-     * 字段名称 null
+     * 表名称 null
      */
     @Column(name = "TABLE_ID")
     @NotBlank(message = "字段不能为空")
-    private Long  tableId;
+    private Long tableId;
 
     /**
      * 字段名称 null
@@ -43,7 +43,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
     private String  columnName;
 
     /**
-     * 字段名称 null
+     * 列名称 null
      */
     @Column(name = "FIELD_LABEL_NAME")
     @NotBlank(message = "字段不能为空")

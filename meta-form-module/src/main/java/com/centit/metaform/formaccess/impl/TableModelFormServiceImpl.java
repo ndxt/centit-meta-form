@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
-import com.centit.metaform.dao.MetaColumnDao;
-import com.centit.metaform.dao.MetaRelationDao;
+import com.centit.metaform.dao.*;
 import com.centit.metaform.formaccess.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -26,8 +25,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.support.database.utils.PageDesc;
-import com.centit.metaform.dao.MetaFormModelDao;
-import com.centit.metaform.dao.MetaTableDao;
 import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
@@ -60,6 +57,12 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
     @Resource
     private MetaRelationDao metaRelationDao;
+
+    @Resource
+    private ModelDataFieldDao modelDataFieldDao;
+
+    @Resource
+    private ModelOperationDao modelOperationDao;
      
     @Resource
     protected IntegrationEnvironment integrationEnvironment;
@@ -100,10 +103,12 @@ public class TableModelFormServiceImpl implements ModelFormService {
         Set<MetaColumn> tempColumn = new HashSet<>(metaColumnDao.listObjectsByProperties(tempFilter));
         mtab.setMdColumns(tempColumn);
 
-//        if (mtab != null) {
-//            MetaColumn mColumn =
-//        }
-
+        Set<ModelDataField> modelDataFields =
+                new HashSet<>(modelDataFieldDao.listObjectsByProperty("modelCode", modelCode));
+        Set<ModelOperation> modelOperations =
+                new HashSet<>(modelOperationDao.listObjectsByProperty("modelCode", modelCode));
+        mfm.setModelDataFields(modelDataFields);
+        mfm.setModelOperations(modelOperations);
 
         rc.setTableInfo(mtab);
         rc.setMetaFormModel(mfm);
@@ -463,11 +468,13 @@ public class TableModelFormServiceImpl implements ModelFormService {
         mff.setAccessType(mfm.getAccessType());
         mff.setExtendOptBean(mfm.getExtendOptBean());
         mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
-        for(MetaColumn c: tableInfo.getColumns()){
-            if(c.isPrimaryKey()){
-                mff.addPrimaryKey(c.getPropertyName());
-            }
-        }
+//        for(MetaColumn c: tableInfo.getColumns()){
+//            if(c.isPrimaryKey()){
+//                mff.addColumn(new ListColumn(c));
+//                mff.addPrimaryKey(c.getPropertyName());
+//            }
+//        }
+
 
         for(ModelDataField field:mfm.getModelDataFields()){
             MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
@@ -651,7 +658,8 @@ public class TableModelFormServiceImpl implements ModelFormService {
     private Map<String, Object> makeTabulationFilter(ModelRuntimeContext rc, Map<String, Object> filters){
         if(StringUtils.isBlank(rc.getMetaFormModel().getRelationType()) || "0".equals(rc.getMetaFormModel().getRelationType()))
                 return filters;
-        MetaFormModel parentModel = rc.getMetaFormModel().getParentModel();
+//        MetaFormModel parentModel = rc.getMetaFormModel().getParentModel();
+        MetaFormModel parentModel = formModelDao.getObjectById(rc.getMetaFormModel().getParentModelCode());
         if(parentModel==null)
             return filters;
         List<Pair<String,String>> pMap = formModelDao.getSubModelPropertiesMap(parentModel.getTableId(),

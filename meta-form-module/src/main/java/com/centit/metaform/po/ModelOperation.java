@@ -19,8 +19,22 @@ import org.hibernate.validator.constraints.Length;
 public class ModelOperation implements java.io.Serializable {
     private static final long serialVersionUID =  1L;
 
-    @EmbeddedId
-    private com.centit.metaform.po.ModelOperationId cid;
+//    @EmbeddedId
+//    private com.centit.metaform.po.ModelOperationId cid;
+
+    /**
+     *
+     */
+    @Column(name = "MODEL_CODE")
+    @Length(max = 16, message = "字段长度不能大于{max}")
+    private String  modelCode;
+
+    /**
+     *
+     */
+    @Column(name = "OPERATION")
+    @Length(max = 32, message = "字段长度不能大于{max}")
+    private String  operation;
 
 
     /**
@@ -102,12 +116,16 @@ public class ModelOperation implements java.io.Serializable {
     public ModelOperation(ModelOperationId id
 
         ) {
-        this.cid = id;
+//        this.cid = id;
+        this.modelCode = id.getModelCode();
+        this.operation = id.getOperation();
     }
 
     public ModelOperation(String modelCode, String operation, String method,String label){
 
-        this.cid =  new ModelOperationId( modelCode,operation);
+//        this.cid =  new ModelOperationId( modelCode,operation);
+        this.modelCode = modelCode;
+        this.operation = operation;
         this.method = method;
         this.label = label;
     }
@@ -116,7 +134,9 @@ public class ModelOperation implements java.io.Serializable {
     public ModelOperation(com.centit.metaform.po.ModelOperationId id
         ,String  optModelCode,String  method,String  label,String  dataRelationType,
         Long  displayOrder,String  openType,String  returnOperation,String  optMessage,String  optHintInfo,String  extendOptions) {
-        this.cid = id;
+//        this.cid = id;
+        this.modelCode = id.getModelCode();
+        this.operation = id.getOperation();
         this.optModelCode= optModelCode;
         this.method= method;
         this.label= label;
@@ -128,36 +148,40 @@ public class ModelOperation implements java.io.Serializable {
         this.extendOptions= extendOptions;
     }
 
-    public com.centit.metaform.po.ModelOperationId getCid() {
-        return this.cid;
-    }
+//    public com.centit.metaform.po.ModelOperationId getCid() {
+//        return this.cid;
+//    }
 
-    public void setCid(com.centit.metaform.po.ModelOperationId id) {
-        this.cid = id;
-    }
+//    public void setCid(com.centit.metaform.po.ModelOperationId id) {
+//        this.cid = id;
+//    }
   
     public String getModelCode() {
-        if(this.cid==null)
-            this.cid = new com.centit.metaform.po.ModelOperationId();
-        return this.cid.getModelCode();
+//        if(this.cid==null)
+//            this.cid = new com.centit.metaform.po.ModelOperationId();
+//        return this.cid.getModelCode();
+        return this.modelCode;
     }
 
     public void setModelCode(String modelCode) {
-        if(this.cid==null)
-            this.cid = new com.centit.metaform.po.ModelOperationId();
-        this.cid.setModelCode(modelCode);
+//        if(this.cid==null)
+//            this.cid = new com.centit.metaform.po.ModelOperationId();
+//        this.cid.setModelCode(modelCode);
+        this.modelCode = modelCode;
     }
   
     public String getOperation() {
-        if(this.cid==null)
-            this.cid = new com.centit.metaform.po.ModelOperationId();
-        return this.cid.getOperation();
+//        if(this.cid==null)
+//            this.cid = new com.centit.metaform.po.ModelOperationId();
+//        return this.cid.getOperation();
+        return this.operation;
     }
 
     public void setOperation(String operation) {
-        if(this.cid==null)
-            this.cid = new com.centit.metaform.po.ModelOperationId();
-        this.cid.setOperation(operation);
+//        if(this.cid==null)
+//            this.cid = new com.centit.metaform.po.ModelOperationId();
+//        this.cid.setOperation(operation);
+        this.operation = operation;
     }
 
 

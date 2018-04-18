@@ -7,17 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -56,7 +46,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 //    @NotFound(action=NotFoundAction.IGNORE)
 //    private MetaTable mdTable;
     /**
-     * 模快描述 null
+     * 模块描述 null
      */
     @Column(name = "MODEL_COMMENT")
     @Length(max = 256, message = "字段长度不能大于{max}")
@@ -110,13 +100,17 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         this.relFlowCode = relWfCode;
     }
 
-    /**
-     * 父模块代码 子模块必需对应父模块对应的子表
-     */
-    @JoinColumn(name = "PARENT_MODEL_CODE")
-    @ManyToOne
-    @JSONField(serialize=false)
-    private MetaFormModel  parentModel;
+//    /**
+//     * 父模块代码 子模块必需对应父模块对应的子表
+//     */
+//    @JoinColumn(name = "PARENT_MODEL_CODE")
+//    @ManyToOne
+//    @JSONField(serialize=false)
+//    private MetaFormModel  parentModel;
+
+    @Column(name = "PARENT_MODEL_CODE")
+    private String  parentModelCode;
+
     /**
      * 显示顺序 null
      */
@@ -150,16 +144,18 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     @Length(max = 800, message = "字段长度不能大于{max}")
     private String  dataFilterSql;
 
-    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @OrderBy(value="displayOrder asc")
+//    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @OrderBy(value="displayOrder asc")
     private Set<ModelDataField> modelDataFields;
 
-    @OneToMany(mappedBy="parentModel",fetch = FetchType.EAGER)
-    @OrderBy(value="displayOrder asc")
+//    @OneToMany(mappedBy="parentModel",fetch = FetchType.EAGER)
+//    @OrderBy(value="displayOrder asc")
     private Set<MetaFormModel> childFormModels;
 
-    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @OrderBy(value="displayOrder asc")
+//    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @OneToMany(mappedBy="modelCode",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @OrderBy(value="displayOrder asc")
+//    @JoinColumn(name="modelCode", referencedColumnName="modelCode")
     private Set<ModelOperation> modelOperations;
 
     // Constructors
@@ -193,7 +189,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         this.formTemplate = formTemplate;
         this.listAsTree = listAsTree;
         this.relationType = relationType;
-        this.setParentModelCode(parentModelCode);
+        this.parentModelCode = parentModelCode;
         this.displayOrder = displayOrder;
         this.lastModifyDate = lastModifyDate;
         this.recorder = recorder;
@@ -217,13 +213,13 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 //        return this.mdTable.getTableId();
         return this.tableId;
     }
-  
-    public MetaFormModel getParentModel() {
-        return parentModel;
-    }
-    public void setParentModel(MetaFormModel parentModel) {
-        this.parentModel = parentModel;
-    }
+
+    //    public MetaFormModel getParentModel() {
+//        return parentModel;
+//    }
+//    public void setParentModel(MetaFormModel parentModel) {
+//        this.parentModel = parentModel;
+//    }
     public Set<MetaFormModel> getChildFormModels() {
         return childFormModels;
     }
@@ -300,14 +296,16 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         this.listAsTree = listAsTree;
     }
     public String getParentModelCode() {
-        if(null==this.parentModel)
-            return null;
-        return this.parentModel.getModelCode();
+//        if(null==this.parentModel)
+//            return null;
+//        return this.parentModel.getModelCode();
+        return this.parentModelCode;
     }
 
     public void setParentModelCode(String parentModelCode) {
-        this.parentModel=new MetaFormModel();
-        this.parentModel.setModelCode(parentModelCode);
+//        this.parentModel=new MetaFormModel();
+//        this.parentModel.setModelCode(parentModelCode);
+        this.parentModelCode = parentModelCode;
     }
   
     public Long getDisplayOrder() {
@@ -353,7 +351,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         Iterator<ModelDataField> it=modelDataFields.iterator();
         while(it.hasNext())
         {
-            it.next().getCid().setMetaFormModel(this);
+            it.next().setModelCode(this.modelCode);
         }
         this.getModelDataFields().addAll(modelDataFields);
     }
@@ -421,7 +419,9 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
             ModelDataField odt = it.next();
             found = false;
             for(ModelDataField newdt :newObjs){
-                if(odt.getCid().equals( newdt.getCid())){
+//                if(odt.getCid().equals( newdt.getCid())){
+                if(odt.getModelCode().equals( newdt.getModelCode())
+                        && odt.getColumnName().equals( newdt.getColumnName())){
                     found = true;
                     break;
                 }
@@ -436,7 +436,9 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
             for(Iterator<ModelDataField> it=getModelDataFields().iterator();
              it.hasNext();){
                 ModelDataField odt = it.next();
-                if(odt.getCid().equals( newdt.getCid())){
+//                if(odt.getCid().equals( newdt.getCid())){
+                if(odt.getModelCode().equals( newdt.getModelCode())
+                        && odt.getColumnName().equals( newdt.getColumnName())){
                     odt.copy(newdt);
                     found = true;
                     break;
@@ -535,7 +537,9 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         Iterator<ModelOperation> it=modelOperations.iterator();
         while(it.hasNext())
         {
-            it.next().getCid().setMetaFormModel(this);
+//            it.next().getCid().setMetaFormModel(this);
+            it.next().setModelCode(this.modelCode);
+
         }
         this.getModelOperations().addAll(modelOperations);
     }
@@ -579,7 +583,9 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
             ModelOperation odt = it.next();
             found = false;
             for(ModelOperation newdt :newObjs){
-                if(odt.getCid().equals( newdt.getCid())){
+//                if(odt.getCid().equals( newdt.getCid())){
+                if(odt.getModelCode().equals( newdt.getModelCode())
+                        && odt.getOperation().equals( newdt.getOperation())){
                     found = true;
                     break;
                 }
@@ -594,7 +600,9 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
             for(Iterator<ModelOperation> it=getModelOperations().iterator();
              it.hasNext();){
                 ModelOperation odt = it.next();
-                if(odt.getCid().equals( newdt.getCid())){
+//                if(odt.getCid().equals( newdt.getCid())){
+                if(odt.getModelCode().equals( newdt.getModelCode())
+                        && odt.getOperation().equals( newdt.getOperation())){
                     odt.copy(newdt);
                     found = true;
                     break;
@@ -636,7 +644,8 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         this.modelName= other.getModelName();
         this.accessType= other.getAccessType();
         this.relationType= other.getRelationType();
-        this.setParentModel(other.getParentModel());
+//        this.setParentModel(other.getParentModel());
+        this.parentModelCode= other.getParentModelCode();
         this.displayOrder= other.getDisplayOrder();
         this.formTemplate=other.getFormTemplate();
         this.listAsTree=other.getListAsTree();
@@ -681,8 +690,8 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
             this.lastModifyDate= other.getLastModifyDate();
         if( other.getRecorder() != null)
             this.recorder= other.getRecorder();
-        if(null!=other.getParentModel())
-            this.setParentModel(other.getParentModel());
+        if(null!=other.getParentModelCode())
+            this.setParentModelCode(other.getParentModelCode());
         if( other.getMetaFormModels() != null)
         this.childFormModels = other.getMetaFormModels();
         if( other.getExtendOptBean() != null)
@@ -708,7 +717,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         this.modelName= null;
         this.accessType= null;
         this.relationType= null;
-        this.parentModel=null;
+        this.parentModelCode=null;
         this.displayOrder= null;
         this.lastModifyDate= null;
         this.recorder= null;

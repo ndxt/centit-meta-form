@@ -21,8 +21,22 @@ import com.centit.support.database.metadata.SimpleTableField;
 public class ModelDataField implements java.io.Serializable {
     private static final long serialVersionUID =  1L;
 
-    @EmbeddedId
-    private com.centit.metaform.po.ModelDataFieldId cid;
+//    @EmbeddedId
+//    private com.centit.metaform.po.ModelDataFieldId cid;
+
+    /**
+     *
+     */
+    @Column(name = "MODEL_CODE")
+    @Length(max = 16, message = "字段长度不能大于{max}")
+    private String  modelCode;
+
+    /**
+     *
+     */
+    @Column(name = "COLUMN_NAME")
+    @Length(max = 32, message = "字段长度不能大于{max}")
+    private String  columnName;
 
     /**
      * 字段类别 ，关联只读字段（reference_Data 中为关联SQL语句）
@@ -154,7 +168,9 @@ public class ModelDataField implements java.io.Serializable {
     /** minimal constructor */
     public ModelDataField(ModelDataFieldId cid, String columnType) {
         super();
-        this.cid = cid;
+//        this.cid = cid;
+        this.modelCode = cid.getModelCode();
+        this.columnName = cid.getColumnName();
         this.columnType = columnType;
     }
 
@@ -166,7 +182,9 @@ public class ModelDataField implements java.io.Serializable {
             String filterType, String mandatory, String focus, String url,
             String extendOptions, Long fieldHeight, Long fieldWidth) {
         super();
-        this.cid = cid;
+//        this.cid = cid;
+        this.modelCode = cid.getModelCode();
+        this.columnName = cid.getColumnName();
         this.columnType = columnType;
         this.accessType = accessType;
         this.displayOrder = displayOrder;
@@ -187,44 +205,49 @@ public class ModelDataField implements java.io.Serializable {
     }
 
 
-    public ModelDataFieldId getCid() {
-        return this.cid;
-    }
+//    public ModelDataFieldId getCid() {
+//        return this.cid;
+//    }
 
-    public void setCid(ModelDataFieldId id) {
-        this.cid = id;
-    }
+//    public void setCid(ModelDataFieldId id) {
+//        this.cid = id;
+//    }
   
     public String getModelCode() {
-        if(this.cid==null)
-            return null;
-        return this.cid.getModelCode();
+//        if(this.cid==null)
+//            return null;
+//        return this.cid.getModelCode();
+        return this.modelCode;
     }
 
     public void setModelCode(String modelCode) {
-        if(this.cid==null)
-            this.cid = new ModelDataFieldId();
-        this.cid.setModelCode(modelCode);
+//        if(this.cid==null)
+//            this.cid = new ModelDataFieldId();
+//        this.cid.setModelCode(modelCode);
+        this.modelCode = modelCode;
     }
   
     public String getColumnName() {
-        if(this.cid==null)
-            return null;//this.cid = new ModelDataFieldId();
-        return this.cid.getColumnName();
+//        if(this.cid==null)
+//            return null;//this.cid = new ModelDataFieldId();
+//        return this.cid.getColumnName();
+        return this.columnName;
     }
 
 
     public String getPropertyName(){
-        if(this.cid==null)
-            return null;
-        return SimpleTableField.mapPropName(
-                 this.cid.getColumnName());
+//        if(this.cid==null)
+//            return null;
+//        return SimpleTableField.mapPropName(
+//                 this.cid.getColumnName());
+        return SimpleTableField.mapPropName(this.columnName);
     }
 
     public void setColumnName(String columnName) {
-        if(this.cid==null)
-            this.cid = new ModelDataFieldId();
-        this.cid.setColumnName(columnName);
+//        if(this.cid==null)
+//            this.cid = new ModelDataFieldId();
+//        this.cid.setColumnName(columnName);
+        this.columnName = columnName;
     }
 
 
@@ -458,7 +481,9 @@ public class ModelDataField implements java.io.Serializable {
     }
 
     public ModelDataField clearProperties(){
-        this.cid=null;
+//        this.cid=null;
+        this.modelCode= null;
+        this.columnName= null;
         this.accessType= null;
         this.columnType=null;
         this.defaultValue=null;

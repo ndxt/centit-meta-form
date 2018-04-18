@@ -1,5 +1,7 @@
 package com.centit.metaform.formaccess;
 
+import com.centit.metaform.po.MetaColumn;
+
 public class ListColumn {
     private String name;
     private String label;
@@ -45,4 +47,9 @@ public class ListColumn {
     }
 
 
+    public ListColumn(MetaColumn metaColumn) {
+        this.name = metaColumn.getColumnName();
+        this.label = metaColumn.getFieldLabelName();
+        this.primaryKey = metaColumn.isPrimaryKey();
+    }
 }
