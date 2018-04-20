@@ -61,6 +61,9 @@ public class MetaTableManagerImpl
     private MetaColumnDao metaColumnDao;
 
     @Resource
+    private MetaRelationDao metaRelationDao;
+
+    @Resource
     private MetaChangLogDao metaChangLogDao;
 
     @Resource
@@ -198,6 +201,13 @@ public class MetaTableManagerImpl
     @Transactional
     public List<String> makeAlterTableSqls(Long tableId) {
         PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
+
+        Set<PendingMetaColumn> pColumn =
+                new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
+        Set<PendingMetaRelation> pRelation =
+                new HashSet<>(pendingRelationDao.listObjectsByProperty("parentTableId", tableId));
+        ptable.setMdColumns(pColumn);
+        ptable.setMdRelations(pRelation);
         return  makeAlterTableSqls(ptable);
     }
 
@@ -316,6 +326,13 @@ public class MetaTableManagerImpl
         try{
             PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
 
+            Set<PendingMetaColumn> pColumn =
+                    new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
+            Set<PendingMetaRelation> pRelation =
+                    new HashSet<>(pendingRelationDao.listObjectsByProperty("parentTableId", tableId));
+            ptable.setMdColumns(pColumn);
+            ptable.setMdRelations(pRelation);
+
             Pair<Integer, String> ret = GeneralDDLOperations.checkTableWellDefined(ptable);
             if(ret.getLeft().intValue() != 0)
                 return ret;
@@ -375,6 +392,27 @@ public class MetaTableManagerImpl
 
                 MetaTable table= new MetaTable(ptable);
                 metaTableDao.mergeObject(table);
+
+                List<MetaColumn> metaColumn = table.getColumns();
+                Map<String, Object> cFilter = new HashMap<>();
+                cFilter.put("tableId", table.getTableId());
+                metaColumnDao.deleteObjectsByProperties(cFilter);
+                if (metaColumn != null && metaColumn.size() > 0) {
+                    for (int i=0; i<metaColumn.size(); i++) {
+                        metaColumnDao.saveNewObject(metaColumn.get(i));
+                    }
+                }
+
+                List<MetaRelation> metaRelations = new ArrayList<>(table.getMdRelations());
+                Map<String, Object> rFilter = new HashMap<>();
+                rFilter.put("parentTableId", table.getTableId());
+                metaRelationDao.deleteObjectsByProperties(rFilter);
+                if (metaRelations != null && metaRelations.size() > 0) {
+                    for (int j=0; j<metaRelations.size(); j++) {
+                        metaRelationDao.saveNewObject(metaRelations.get(j));
+                    }
+                }
+
                 return new ImmutablePair<>(0,"发布成功！");
             }else
                 return new ImmutablePair<>(-10,JSON.toJSONString(errors));

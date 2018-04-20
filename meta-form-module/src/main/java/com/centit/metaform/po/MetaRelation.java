@@ -39,17 +39,13 @@ public class MetaRelation implements TableReference, java.io.Serializable {
     /**
      * 主表表ID 表单主键
      */
-    @JoinColumn(name = "PARENT_TABLE_ID")
-    @ManyToOne
-    @JSONField(serialize=false)
-    private MetaTable  parentTable;
+    @Column(name = "PARENT_TABLE_ID")
+    private Long  parentTableId;
     /**
      * 从表表ID 表单主键
      */
-    @JoinColumn(name = "CHILD_TABLE_ID")
-    @ManyToOne
-    @JSONField(serialize=false)
-    private MetaTable  childTable;
+    @Column(name = "CHILD_TABLE_ID")
+    private Long  childTableId;
     /**
      * 关联名称 null
      */
@@ -104,12 +100,12 @@ public class MetaRelation implements TableReference, java.io.Serializable {
     /** full constructor */
     public MetaRelation(
      Long relationId
-    ,MetaTable  parentTableId,MetaTable  childTableId,String  relationName,String  relationState,String  relationComment,Date  lastModifyDate,String  recorder) {
+    ,Long  parentTableId,Long  childTableId,String  relationName,String  relationState,String  relationComment,Date  lastModifyDate,String  recorder) {
 
 
         this.relationId = relationId;
-        this.parentTable= parentTableId;
-        this.childTable= childTableId;
+        this.parentTableId= parentTableId;
+        this.childTableId= childTableId;
         this.relationName= relationName;
         this.relationState= relationState;
         this.relationComment= relationComment;
@@ -157,27 +153,19 @@ public class MetaRelation implements TableReference, java.io.Serializable {
     // Property accessors
   
     public Long getParentTableId() {
-        if(null==this.parentTable)
-            return null;
-        return this.parentTable.getTableId();
+        return this.parentTableId;
     }
 
     public void setParentTableId(Long parentTableId) {
-        if(null==this.parentTable)
-            this.parentTable=new MetaTable();
-        this.parentTable.setTableId(parentTableId);
+        this.parentTableId = parentTableId;
     }
   
     public Long getChildTableId() {
-        if(null==this.childTable)
-            return null;
-        return this.childTable.getTableId();
+        return this.childTableId;
     }
 
     public void setChildTableId(Long childTableId) {
-        if(null==this.childTable)
-            this.childTable=new MetaTable();
-        this.parentTable.setTableId(childTableId);
+        this.childTableId = childTableId;
     }
   
     public String getRelationName() {
@@ -242,9 +230,9 @@ public class MetaRelation implements TableReference, java.io.Serializable {
         this.setRelationId(other.getRelationId());
   
         if( other.getParentTableId() != null)
-            this.parentTable=other.getParentTable();
+            this.parentTableId=other.getParentTableId();
         if( other.getChildTableId() != null)
-            this.childTable= other.getChildTable();
+            this.childTableId= other.getChildTableId();
         if( other.getRelationName() != null)
             this.relationName= other.getRelationName();
         if( other.getRelationState() != null)
@@ -259,22 +247,22 @@ public class MetaRelation implements TableReference, java.io.Serializable {
         return this;
     }
 
-    public MetaTable getParentTable() {
-        return parentTable;
-    }
-    public void setParentTable(MetaTable parentTable) {
-        this.parentTable = parentTable;
-    }
-    public MetaTable getChildTable() {
-        return childTable;
-    }
-    public void setChildTable(MetaTable childTable) {
-        this.childTable = childTable;
-    }
+//    public MetaTable getParentTable() {
+//        return parentTable;
+//    }
+//    public void setParentTable(MetaTable parentTable) {
+//        this.parentTable = parentTable;
+//    }
+//    public MetaTable getChildTable() {
+//        return childTable;
+//    }
+//    public void setChildTable(MetaTable childTable) {
+//        this.childTable = childTable;
+//    }
     public MetaRelation clearProperties(){
   
-        this.parentTable= null;
-        this.childTable= null;
+        this.parentTableId= null;
+        this.childTableId= null;
         this.relationName= null;
         this.relationState= null;
         this.relationComment= null;
@@ -295,12 +283,12 @@ public class MetaRelation implements TableReference, java.io.Serializable {
     @Override
     public String getTableName() {
         // TODO Auto-generated method stub
-        return String.valueOf( this.childTable);
+        return String.valueOf( this.childTableId);
     }
     @Override
     public String getParentTableName() {
         // TODO Auto-generated method stub
-        return String.valueOf( this.parentTable);
+        return String.valueOf( this.parentTableId);
     }
     @Override
     public Map<String, String> getReferenceColumns() {

@@ -468,13 +468,6 @@ public class TableModelFormServiceImpl implements ModelFormService {
         mff.setAccessType(mfm.getAccessType());
         mff.setExtendOptBean(mfm.getExtendOptBean());
         mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
-//        for(MetaColumn c: tableInfo.getColumns()){
-//            if(c.isPrimaryKey()){
-//                mff.addColumn(new ListColumn(c));
-//                mff.addPrimaryKey(c.getPropertyName());
-//            }
-//        }
-
 
         for(ModelDataField field:mfm.getModelDataFields()){
             MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());

@@ -162,23 +162,23 @@ public class MetaTable implements TableInfo,java.io.Serializable {
         this.mdRelations= new HashSet<MetaRelation>();
         this.extColumnFormat = ptable.getExtColumnFormat();
         this.extColumnName = ptable.getExtColumnName();
-//        this.setColumnsFromPending(ptable.getMdColumns());
+        this.setColumnsFromPending(ptable.getMdColumns());
         this.setRelationsFromPending(ptable.getMdRelations());
     }
 
-//    public void setColumnsFromPending(Set<PendingMetaColumn> pcolumns){
-//        Iterator<PendingMetaColumn> itr= pcolumns.iterator();
-//        while(itr.hasNext()){
-//            MetaColumn column=new MetaColumn(itr.next());
-//            column.getCid().setMdTable(this);
-//            this.mdColumns.add(column);
-//        }
-//    }
+    public void setColumnsFromPending(Set<PendingMetaColumn> pcolumns){
+        Iterator<PendingMetaColumn> itr= pcolumns.iterator();
+        while(itr.hasNext()){
+            MetaColumn column=new MetaColumn(itr.next());
+            column.setTableId(this.tableId);
+            this.mdColumns.add(column);
+        }
+    }
     public void setRelationsFromPending(Set<PendingMetaRelation> prelations){
         Iterator<PendingMetaRelation> itr= prelations.iterator();
         while(itr.hasNext()){
             MetaRelation relation=new MetaRelation(itr.next());
-            relation.setParentTable(this);
+            relation.setParentTableId(this.tableId);
             this.mdRelations.add(relation);
         }
     }
