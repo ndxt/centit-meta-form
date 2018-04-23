@@ -226,7 +226,7 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
      */
     @Override
     public JSONObject castTableObjectToObject(JSONObject object){
-        if(object==null)
+        if(object==null || tableInfo.getExtColumnName() == null)
             return object;
         String lobFieldColumn = SimpleTableField.mapPropName(
                 tableInfo.getExtColumnName());

@@ -485,8 +485,10 @@ public class TableModelFormServiceImpl implements ModelFormService {
                 ListColumn col = new ListColumn(
                         fieldName,
                         mc.getFieldLabelName());
-                if(mc.isPrimaryKey())
+                if(mc.isPrimaryKey()) {
                     col.setPrimaryKey(true);
+                    mff.addPrimaryKey("id");
+                }
                 //if("H".equals(field.getAccessType()))
                     //col.setShow(false);
                 mff.addColumn(col);
