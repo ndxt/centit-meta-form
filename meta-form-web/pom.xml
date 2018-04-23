@@ -20,6 +20,12 @@
 
         <dependency>
             <groupId>com.centit.framework</groupId>
+            <artifactId>framework-core-web</artifactId>
+            <version>${centit.framework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.centit.framework</groupId>
             <artifactId>centit-persistence-jdbc-config</artifactId>
             <version>${centit.persistence.version}</version>
         </dependency>
@@ -33,6 +39,12 @@
         <dependency>
             <groupId>com.centit.product</groupId>
             <artifactId>meta-form-module</artifactId>
+            <version>${centit.meta.form.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.centit.product</groupId>
+            <artifactId>meta-form-view</artifactId>
             <version>${centit.meta.form.version}</version>
         </dependency>
 
@@ -70,23 +82,9 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet-api.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.centit.framework</groupId>
-            <artifactId>framework-core</artifactId>
-            <version>4.0.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.centit.framework</groupId>
-            <artifactId>centit-ip-app-config</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-        </dependency>
+       </dependency>
     </dependencies>
-
     <!--  end -->
-
     <build>
         <plugins>
             <plugin>
