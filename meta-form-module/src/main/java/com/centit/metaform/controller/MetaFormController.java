@@ -207,7 +207,6 @@ public class MetaFormController  extends BaseController{
     @RequestMapping(value = "/{modelCode}/edit",method = RequestMethod.GET)
     public void edit(@PathVariable String modelCode,boolean noMeta,
             HttpServletRequest request, HttpServletResponse response) {
-        
         ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
         Map<String,Object> jo = rc.fetchPkFromRequest(request);
         ResponseMapData resData = new ResponseMapData();

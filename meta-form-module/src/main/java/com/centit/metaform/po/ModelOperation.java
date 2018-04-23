@@ -87,6 +87,20 @@ public class ModelOperation implements java.io.Serializable {
     @Column(name = "OPT_MESSAGE")
     @Length(max = 500, message = "字段长度不能大于{max}")
     private String  optMessage;
+
+    /**
+     * 返回操作 0：不操作 1： 刷新页面  2：删除当前行 3：更新当前行
+     */
+    @Column(name = "RETURN_OPERATION")
+    @Length(max = 1, message = "字段长度不能大于{max}")
+    private String  returnOperation;
+
+    /**
+     * 操作前提示类别
+     */
+    @Column(name = "OPT_HINT_TYPE")
+    private String  optHintType;
+
     /**
      * 操作提示信息 操作前提示信息 标题
      */
@@ -146,6 +160,7 @@ public class ModelOperation implements java.io.Serializable {
         this.optMessage= optMessage;
         this.optHintInfo= optHintInfo;
         this.extendOptions= extendOptions;
+        this.returnOperation = returnOperation;
     }
 
 //    public com.centit.metaform.po.ModelOperationId getCid() {
@@ -273,6 +288,22 @@ public class ModelOperation implements java.io.Serializable {
         this.optHintTitle = optHintTitle;
     }
 
+    public String getReturnOperation() {
+        return returnOperation;
+    }
+
+    public void setReturnOperation(String returnOperation) {
+        this.returnOperation = returnOperation;
+    }
+
+    public String getOptHintType() {
+        return optHintType;
+    }
+
+    public void setOptHintType(String optHintType) {
+        this.optHintType = optHintType;
+    }
+
     public ModelOperation copy(ModelOperation other){
   
         this.setModelCode(other.getModelCode());
@@ -288,6 +319,8 @@ public class ModelOperation implements java.io.Serializable {
         this.optHintInfo= other.getOptHintInfo();
         this.extendOptions= other.getExtendOptions();
         this.optHintTitle = other.getOptHintTitle();
+        this.returnOperation = other.getReturnOperation();
+        this.optHintType = other.getOptHintType();
         return this;
     }
 
@@ -320,6 +353,10 @@ public class ModelOperation implements java.io.Serializable {
             this.extendOptions= other.getExtendOptions();
         if( other.getOptHintTitle() != null)
             this.optHintTitle = other.getOptHintTitle();
+        if( other.getReturnOperation() != null)
+            this.returnOperation = other.getReturnOperation();
+        if( other.getOptHintType() != null)
+            this.optHintType = other.getOptHintType();
         return this;
     }
 
@@ -337,6 +374,8 @@ public class ModelOperation implements java.io.Serializable {
         this.optHintInfo= null;
         this.extendOptions= null;
         this.optHintTitle = null;
+        this.optHintType = null;
+        this.returnOperation= null;
         return this;
     }
 }
