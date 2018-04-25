@@ -267,4 +267,18 @@ public class MetaTableController extends BaseController{
         JsonResultUtils.writeSingleDataJson(meTadColumns, response);
         
     }
+
+    /**
+     * 获取草稿序列中的tableId
+     * @param response
+     * @param pageDesc
+     */
+    @RequestMapping(value="/draft/getNextKey",method = RequestMethod.GET)
+    public void getPdNextKey(HttpServletResponse response, PageDesc pageDesc) {
+
+        ResponseMapData resData = new ResponseMapData();
+        resData.addResponseData("tableId", pendingMetaTableDao.getNextKey());
+        JsonResultUtils.writeSingleDataJson(resData, response);
+
+    }
 }

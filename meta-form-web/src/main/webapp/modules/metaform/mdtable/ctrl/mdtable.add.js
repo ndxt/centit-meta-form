@@ -35,6 +35,13 @@ define(function (require) {
                 controller: _self
             });
 
+            //获取tableId
+            Core.ajax(Config.ContextPath + 'service/metaform/mdtable/draft/getNextKey', {
+                        type:'json',
+                        method:'get',
+                    }).then(function(data){
+                    });
+
             //
             form.form('disableValidation')
                 .form('focus');
