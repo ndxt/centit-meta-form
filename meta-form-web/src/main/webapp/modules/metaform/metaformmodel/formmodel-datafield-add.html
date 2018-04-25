@@ -22,9 +22,12 @@
 						  }">是否必填</th>
 		       		<th data-options="field:'referenceType',
 						formatter:function(value, rowData, rowIndex){
-						  	if(value=='1')return '数据字典';else
-						  	if(value=='2')return 'JSON表达式';else
-						  	if(value=='3')return 'sql语句';else
+							if(value=='0')return '无';else
+						  	if(value=='1')return '数据字典（列表）';else
+						  	if(value=='2')return '数据字典（树）';else
+						  	if(value=='3')return 'JSON表达式';else
+						  	if(value=='4')return 'sql语句（列表）';else
+						  	if(value=='5')return 'sql语句（树）';else
 						  	if(value=='Y')return '年份';else
 						  	if(value=='M')return '月份';
 						  }">引用类型</th>
@@ -32,8 +35,7 @@
 					<th data-options="field:'validateRegex'">约束表达式</th>
 		       		<th data-options="field:'validateInfo'">约束提示</th>
 		       		
-		       		<th data-options="field:'columnComment'">字段描述</th> 
-		       		
+		       		<th data-options="field:'columnComment'">字段描述</th>
 		        </tr>
 		    </thead>
 		</table>

@@ -136,24 +136,29 @@
 							{value:'T',label:'是'},
 							{value:'F',label:'否'}]}}">是否为主键
                                 </th>
-                                <th data-options="field:'columnState', width:100">状态</th>
                                 <th data-options="field:'referenceType', width:100,
 					formatter:function(value, rowData, rowIndex){
-					    if(value=='1')return '数据字典';else
-					  	if(value=='2')return 'JSON表达式';else
-					  	if(value=='3')return 'sql语句';else
-					  	if(value=='Y')return '年份';else
-					  	if(value=='M')return '月份';else
+					    if(value=='0')return '无';else
+						  	if(value=='1')return '数据字典（列表）';else
+						  	if(value=='2')return '数据字典（树）';else
+						  	if(value=='3')return 'JSON表达式';else
+						  	if(value=='4')return 'sql语句（列表）';else
+						  	if(value=='5')return 'sql语句（树）';else
+						  	if(value=='Y')return '年份';else
+						  	if(value=='M')return '月份';else
 					  	return '';
 					  }
 					,editor:{ type:'combobox',
 					  options:{valueField:'value',textField:'label',
 						data:[
-						{value:'1',label:'数据字典 '},
-						{value:'2',label:'JSON表达式 '},
-						{value:'3',label:'sql语句'},
-						{value:'Y',label:'年份'},
-						{value:'M',label:'月份'}]}}">引用类型
+						{value:'0',label:'无'},
+								{value:'1',label:'数据字典（列表）'},
+								{value:'2',label:'数据字典（树）'},
+								{value:'3',label:'JSON表达式 '},
+								{value:'4',label:'sql语句（列表）'},
+								{value:'5',label:'sql语句（树）'},
+								{value:'Y',label:'年份'},
+								{value:'M',label:'月份'}]}}">引用类型
                                 </th>
                                 <th data-options="field:'validateRegex', width:100,editor:{type:'textbox',options:{}}">
                                     约束表达式

@@ -94,6 +94,7 @@ public class PendingMetaTable implements
     /**
      * 与流程中业务关联关系
      * 0: 不关联工作流 1：和流程业务关联 2： 和流程过程关联
+     * 如果关联会添加外键与工作流表关联
      */
     @Column(name = "WORKFLOW_OPT_TYPE")
     @NotBlank(message = "字段不能为空")
