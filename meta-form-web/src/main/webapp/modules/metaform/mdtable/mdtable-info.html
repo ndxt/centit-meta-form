@@ -99,9 +99,27 @@
                                     字段长度
                                 </th>
                                 <th data-options="field:'scale2', width:100,editor:{type:'textbox',options:{}}">字段精度</th>
-                                <th data-options="field:'accessType', width:100,editor:{type:'textbox',options:{required: true}}">
-                                    字段类别
+
+                                <th data-options="field:'accessType', width:100,
+						formatter:function(value, rowData, rowIndex){
+						    if(value=='H'){return '隐藏'}
+						    if(value=='R'){return '只读'}
+						    if(value=='c'){return '只能创建不可修改'}
+						    if(value=='N'){return '可读写'}
+						    if(value==''){return ''}
+						  },
+						  editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',required: true,
+							data:[
+							{value:'H',label:'隐藏'},
+							{value:'R',label:'只读'},
+							{value:'C',label:'只能创建不可修改'},
+							{value:'N',label:'可读写'}
+							],
+							}}
+					">字段类别
                                 </th>
+
                                 <th data-options="field:'mandatory', width:100,
 						formatter:function(value, rowData, rowIndex){
 							if(false==value)
