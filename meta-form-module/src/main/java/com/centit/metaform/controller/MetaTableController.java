@@ -175,7 +175,9 @@ public class MetaTableController extends BaseController{
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
         PendingMetaTable table=new PendingMetaTable();
         table.copyNotNullProperty(mdTable);
-        table.setTableId(pendingMetaTableDao.getNextKey());
+        if (null == table.getTableId()) {
+            table.setTableId(pendingMetaTableDao.getNextKey());
+        }
         table.setLastModifyDate(new Date());
 //      mdTable.setTableType("T");// T 是数据表，后期会添加 V（视图）的选择
 //      mdTable.setTableState("N");

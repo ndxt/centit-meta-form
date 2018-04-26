@@ -96,7 +96,19 @@ public class MetaTableManagerImpl
     @Override
     @Transactional
     public void saveNewPendingMetaTable(PendingMetaTable pmt) {
-        pendingMdTableDao.saveNewObject(pmt);
+        PendingMetaTable oriPmt = pendingMdTableDao.getObjectById(pmt.getTableId());
+        if (oriPmt != null) {
+            pendingMdTableDao.mergeObject(pmt);
+            Map<String, Object> tempFilter = new HashMap<>();
+            tempFilter.put("tableId", pmt.getTableId());
+            pendingMetaColumnDao.deleteObjectsForceByProperties(tempFilter);
+
+            Map<String, Object> tempFilter2 = new HashMap<>();
+            tempFilter2.put("parentTableId", pmt.getTableId());
+            pendingRelationDao.deleteObjectsForceByProperties(tempFilter2);
+        } else {
+            pendingMdTableDao.saveNewObject(pmt);
+        }
         if (pmt != null) {
             List<PendingMetaColumn> pdMetaColumn = new ArrayList<>(pmt.getMdColumns());
             if (pdMetaColumn != null && pdMetaColumn.size()>0) {
