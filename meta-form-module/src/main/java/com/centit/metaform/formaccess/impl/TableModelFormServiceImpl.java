@@ -1,16 +1,23 @@
 package com.centit.metaform.formaccess.impl;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.OptionItem;
+import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
 import com.centit.metaform.dao.*;
 import com.centit.metaform.formaccess.*;
+import com.centit.metaform.po.*;
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.algorithm.UuidOpt;
+import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
+import com.centit.support.database.jsonmaptable.JsonObjectDao;
+import com.centit.support.database.metadata.SimpleTableField;
+import com.centit.support.database.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
@@ -19,28 +26,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ContextLoaderListener;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.OptionItem;
-import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.support.database.utils.PageDesc;
-import com.centit.metaform.po.MetaColumn;
-import com.centit.metaform.po.MetaFormModel;
-import com.centit.metaform.po.MetaTable;
-import com.centit.metaform.po.ModelDataField;
-import com.centit.metaform.po.ModelOperation;
-import com.centit.support.algorithm.DatetimeOpt;
-import com.centit.support.algorithm.NumberBaseOpt;
-import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.algorithm.UuidOpt;
-import com.centit.support.database.utils.DataSourceDescription;
-import com.centit.support.database.utils.DatabaseAccess;
-import com.centit.support.database.utils.QueryAndNamedParams;
-import com.centit.support.database.utils.QueryUtils;
-import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
-import com.centit.support.database.jsonmaptable.JsonObjectDao;
-import com.centit.support.database.metadata.SimpleTableField;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
 
 @Service(value="modelFormService")
 public class TableModelFormServiceImpl implements ModelFormService {
@@ -67,7 +57,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
     @Resource
     protected IntegrationEnvironment integrationEnvironment;
 
-    @Value("${metaform.dataaccess.embedded}")
+    @Value("${metaform.dataaccess.embedded:false}")
     private boolean useLocalDatabase;
    
     private Map<String,List<OptionItem>> propertyOptionCache;
@@ -78,6 +68,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
         ModelRuntimeContext runtimeContext =
                 ModelRuntimeContextPool.getRuntimeContextPool(modelCode);
+
         if(runtimeContext!=null)
             return runtimeContext;
         if(useLocalDatabase)
@@ -86,6 +77,17 @@ public class TableModelFormServiceImpl implements ModelFormService {
             runtimeContext = createJdbcRuntimeContext(modelCode);
         ModelRuntimeContextPool.registerRuntimeContextPool(runtimeContext);
         return runtimeContext;
+    }
+
+    /**
+     * 查找模块的子模块
+     *
+     * @param rc
+     * @return
+     */
+    @Override
+    public List<MetaFormModel> listSubModel(ModelRuntimeContext rc) {
+        return null;
     }
 
     @Transactional(readOnly=true)
@@ -382,7 +384,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
         mff.setExtendOptBean(mfm.getExtendOptBean());
         mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
 
-        for(ModelDataField field:mfm.getModelDataFields()){
+        for(ModelDataField field : mfm.getModelDataFields()){
             if("H".equals(field.getAccessType()))
                 continue;
             if("viewlist".equals(operation) && "HI".equals(field.getFilterType()) )
@@ -422,7 +424,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
             ff.setTemplateOptions(templateOptions);
             mff.addField(ff);
         }
-        for(ModelOperation mo :mfm.getModelOperations())
+        for(ModelOperation mo : mfm.getModelOperations())
             mff.addOperation(mo);
         return mff;
     }
@@ -709,6 +711,16 @@ public class TableModelFormServiceImpl implements ModelFormService {
         } catch (SQLException | IOException e) {
             return null;
         }
+    }
+
+    @Override
+    public JSONArray listObjectsAsSubModelByFilter(ModelRuntimeContext rc, Map<String, Object> parentObj) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public JSONArray listObjectsAsSubModelByFilter(ModelRuntimeContext rc, Map<String, Object> parentObj, PageDesc pageDesc) {
+        return null;
     }
 
 

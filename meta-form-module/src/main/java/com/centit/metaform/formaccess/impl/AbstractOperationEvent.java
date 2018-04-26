@@ -1,11 +1,10 @@
 package com.centit.metaform.formaccess.impl;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.centit.metaform.formaccess.ModelRuntimeContext;
 import com.centit.metaform.formaccess.OperationEvent;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 public abstract class AbstractOperationEvent implements OperationEvent {
 
