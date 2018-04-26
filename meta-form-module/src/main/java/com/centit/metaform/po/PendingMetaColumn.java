@@ -75,12 +75,12 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
      * 字段长度 precision
      */
     @Column(name = "MAX_LENGTH")
-    private Integer  maxLength;
+    private Integer  maxLength2;
     /**
      * 字段精度 null
      */
     @Column(name = "SCALE")
-    private Integer  scale;
+    private Integer  scale2;
     /**
      * 字段类别 null
      */
@@ -197,8 +197,8 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
         this.columnComment= columnComment;
         this.columnOrder= columnOrder;
         this.columnFieldType= columnType;
-        this.maxLength= maxLength;
-        this.scale= scale;
+        this.maxLength2= maxLength;
+        this.scale2= scale;
         this.accessType= accessType;
         this.mandatory= mandatory;
         this.primarykey= primarykey;
@@ -270,13 +270,13 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
         this.columnFieldType = columnType;
     }
   
-    public void setMaxLength(Integer maxLength) {
-        this.maxLength = maxLength;
+    public void setMaxLength2(Integer maxLength) {
+        this.maxLength2 = maxLength;
     }
   
 
-    public void setScale(Integer scale) {
-        this.scale = scale;
+    public void setScale2(Integer scale) {
+        this.scale2 = scale;
     }
   
     public String getAccessType() {
@@ -394,8 +394,8 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
         this.columnComment= other.getColumnComment();
         this.columnOrder= other.getColumnOrder();
         this.columnFieldType= other.getColumnFieldType();
-        this.maxLength= other.getMaxLength();
-        this.scale= other.getScale();
+        this.maxLength2= other.getMaxLength();
+        this.scale2= other.getScale();
         this.accessType= other.getAccessType();
         this.mandatory= other.isMandatory()?"T":"F";
         this.primarykey= other.getPrimarykey();
@@ -423,8 +423,10 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
             this.columnOrder= other.getColumnOrder();
         if( other.getColumnType() != null)
             this.columnFieldType= other.getColumnFieldType();
-        this.maxLength= other.getMaxLength();
-        this.scale= other.getScale();
+        if( other.getMaxLength() != 0)
+            this.maxLength2= other.getMaxLength();
+        if( other.getScale() != 0)
+            this.scale2= other.getScale();
         if( other.getAccessType() != null)
             this.accessType= other.getAccessType();
         if( other.getMandatory() != null)
@@ -455,8 +457,8 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
         this.columnComment= null;
         this.columnOrder= null;
         this.columnFieldType= null;
-        this.maxLength= null;
-        this.scale= null;
+        this.maxLength2= null;
+        this.scale2= null;
         this.accessType= null;
         this.mandatory= null;
         this.primarykey= null;
@@ -476,7 +478,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     }
     @Override
     public String getJavaType() {
-        return MetaColumn.mapToFieldType(this.columnFieldType,this.scale==null?0:this.scale);
+        return MetaColumn.mapToFieldType(this.columnFieldType,this.scale2==null?0:this.scale2);
     }
     @Override
     public boolean isMandatory() {
@@ -487,6 +489,14 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
         return "T".equals(primarykey) ||  "Y".equals(primarykey) || "1".equals(primarykey);
     }
 
+    public Integer getMaxLength2() {
+        return this.maxLength2;
+    }
+
+    public Integer getScale2() {
+        return this.scale2;
+    }
+
     @Override
     public int getMaxLength() {
         if("string".equalsIgnoreCase(this.columnFieldType) ||
@@ -494,7 +504,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
                 "float".equalsIgnoreCase(this.columnFieldType) ||
                 "varchar".equalsIgnoreCase(this.columnFieldType)||
                 "number".equalsIgnoreCase(this.columnFieldType))
-            return maxLength==null?0:maxLength.intValue();
+            return this.maxLength2==null?0:this.maxLength2.intValue();
         return 0;
     }
     @Override
@@ -505,7 +515,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     public int getScale() {
         if("float".equalsIgnoreCase(this.columnFieldType) ||
                 "number".equalsIgnoreCase(this.columnFieldType))
-            return scale==null?0:scale.intValue();
+            return this.scale2==null?0:this.scale2.intValue();
         return 0;
     }
 
