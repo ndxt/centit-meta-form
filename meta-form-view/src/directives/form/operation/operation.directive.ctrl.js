@@ -5,7 +5,7 @@
     .controller('FormOperationController', FormOperationController);
 
   /* @ngInject */
-  function FormOperationController($scope, $q, $state, $uibModal, $confirm, toastr) {
+  function FormOperationController($scope, $q, $state, $uibModal,$http, $confirm, toastr) {
 
     $scope.operate = operate;
 
@@ -88,6 +88,7 @@
       }
 
       else if ('C' == openType) {
+        _delete();
         return _openInConfirm();
       }
     }
@@ -129,5 +130,37 @@
         modelCode: operation.optModelCode
       });
     }
+
+    /**
+     * 删除某一行数据
+     * @private
+     */
+    function _delete(){
+      var item = $scope.item,
+          operation = $scope.operation,
+          formModel = $scope.formModel;
+
+      var primaryKey = formModel.primaryKey || [],
+          primaryValue = primaryKey.map(function(key) {
+            return item[key]
+          });
+
+      var url = '/access/'+operation.optModelCode+'/delete';
+
+      $http.post(url,{},{params:{primaryKey: primaryKey, primaryValue: primaryValue}}).
+      then(function success(data){
+
+               //响应成功时调用
+                console.log(data);
+          },function error(mesage){
+
+              // 响应失败时调用
+              console.log(mesage)
+
+          }
+        );
+
+    }
+
   }
 })();
