@@ -176,7 +176,18 @@
 			        <tr>
 			       		<th data-options="field:'operation',editor:{type:'textbox',options:{required: true}}">操作名称</th>
 			       		<th data-options="field:'optModelCode',editor:{type:'textbox',options:{}}">操作模块代码</th>
-			       		<th data-options="field:'method',editor:{type:'textbox',options:{}}">操作方法</th>
+			       		<th data-options="field:'method',formatter:function(value){
+						    return value
+						  },
+						  editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',required: true,
+							data:[
+							{value:'create',label:'create'},
+							{value:'delete',label:'delete'},
+							{value:'view',label:'view'},
+							{value:'edit',label:'edit'}
+							],
+							}}">操作方法</th>
 			       		<th data-options="field:'label',editor:{type:'textbox',options:{}}">操作名称</th>
 			       		<th data-options="field:'displayOrder',editor:{type:'textbox',options:{}}">显示顺序</th>
 			       		<th data-options="field:'openType',editor:{type:'textbox',options:{}}"> 打开方式 </th>
