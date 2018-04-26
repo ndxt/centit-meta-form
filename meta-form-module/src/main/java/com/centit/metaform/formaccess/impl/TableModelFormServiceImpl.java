@@ -487,7 +487,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
                         mc.getFieldLabelName());
                 if(mc.isPrimaryKey()) {
                     col.setPrimaryKey(true);
-                    mff.addPrimaryKey("id");
+                    mff.addPrimaryKey(fieldName);
                 }
                 //if("H".equals(field.getAccessType()))
                     //col.setShow(false);
