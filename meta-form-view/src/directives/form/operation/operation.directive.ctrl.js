@@ -88,7 +88,9 @@
       }
 
       else if ('C' == openType) {
-        _delete();
+        if($scope.operation.method=='delete'){
+          _delete();
+        }
         return _openInConfirm();
       }
     }
