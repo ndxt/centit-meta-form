@@ -34,4 +34,20 @@
   </div>
 </div>
 
+<div ng-repeat="item in vm.items">
+<!--    <div data-model-code="{{item.modelCode}}"
+         data-primary-key="{{vm.primaryKey}}"
+         data-primary-value="{{vm.primaryValue}}">{{item.modelCode}}</div>-->
+  <table centit-form-sub-table
+         data-model-code="{{item.modelCode}}"
+         data-primary-key="{{vm.primaryKey}}"
+         data-primary-value="{{vm.primaryValue}}"
+         data-options="vm.options"
+         data-filters="vm.filters"></table>
+
+</div>
+
+
+
+
 
