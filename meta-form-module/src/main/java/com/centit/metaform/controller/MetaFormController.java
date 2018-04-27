@@ -314,10 +314,12 @@ public class MetaFormController  extends BaseController{
         }
     }
 
-    @RequestMapping(value = "/{modelCode}/delete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{modelCode}/delete",method = RequestMethod.POST)
     public void delete(@PathVariable String modelCode,  @RequestBody String jsonStr,
             HttpServletRequest request, HttpServletResponse response) {
-        JSONObject jo = JSON.parseObject(jsonStr);
+        Map<String, Object> joOri = convertSearchColumn(request);
+        JSONObject jo = new JSONObject();
+        jo.put(((String[])joOri.get("primaryKey"))[0] , ((String[])(joOri.get("primaryValue")))[0]);
         ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
         try {
             int n = formService.deleteObjectById(rc, jo,response);
