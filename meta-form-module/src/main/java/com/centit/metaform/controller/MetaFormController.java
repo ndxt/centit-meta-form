@@ -7,6 +7,7 @@ import com.centit.framework.common.OptionItem;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.metaform.po.MetaFormModel;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.metaform.formaccess.MetaFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
@@ -21,6 +22,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +37,7 @@ public class MetaFormController  extends BaseController{
     @RequestMapping(value = "/{modelCode}/list",method = RequestMethod.GET)
     public void list(@PathVariable String modelCode,boolean noMeta, PageDesc pageDesc ,HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = collectRequestParameters(request);//convertSearchColumn(request);
-        
+
         ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
         rc.setCurrentUserDetails(this.getLoginUser(request));
 
@@ -99,6 +101,53 @@ public class MetaFormController  extends BaseController{
         if(!noMeta){
             metaData.updateReadOnlyRefrenceField();
             resData.addResponseData("formModel", metaData);
+        }
+
+        JsonResultUtils.writeResponseDataAsJson(resData, response);
+    }
+
+    /**
+     * 获取主模块和所有子模块的数据
+     */
+    @RequestMapping(value = "/{modelCode}/viewAll",method = RequestMethod.GET)
+    public void viewAll(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) throws SQLException {
+        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+        Map<String,Object> jo = rc.fetchPkFromRequest(request);
+        ResponseMapData resData = new ResponseMapData();
+
+        JSONObject obj = formService.getObjectByProperties(rc, jo);
+        try {
+            if(obj!=null){
+                Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
+                obj.putAll(refField);
+            }
+        } catch (SQLException e) {
+        }
+
+        MetaFormDefine metaData = formService.createFormDefine(rc,"view");
+        resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
+        rc.close();
+        if(!noMeta){
+            metaData.updateReadOnlyRefrenceField();
+            resData.addResponseData("formModel", metaData);
+        }
+
+        List<MetaFormModel> subModel = formService.listSubModel(modelCode);
+        if (subModel != null && subModel.size()>0) {
+            JSONArray allSubObjs = new JSONArray();
+            JSONArray allSubFields = new JSONArray();
+            for(int i=0; i<subModel.size(); i++) {
+                Map<String, Object> subJo = new HashMap<>();
+                subJo.put("user_code", "centit01");
+                ModelRuntimeContext subRc = formService.createRuntimeContext(subModel.get(i).getModelCode());
+                JSONArray subObjs = formService.listSubModelObjectsByFilter(subRc, subJo);
+                allSubObjs.add(subObjs);
+
+                MetaFormDefine subMetaData = formService.createFormDefine(subRc,"list");
+                allSubFields.add(subMetaData);
+            }
+            resData.addResponseData("subObjs", allSubObjs);
+            resData.addResponseData("subFields", allSubFields);
         }
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);

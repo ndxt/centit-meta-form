@@ -9,15 +9,22 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
+import com.centit.metaform.po.MetaFormModel;
 import com.centit.support.database.utils.PageDesc;
 
 public interface ModelFormService {
 
     ModelRuntimeContext createRuntimeContext(String modelCode);
 
+    List<MetaFormModel> listSubModel(String modelCode);
+
     JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters) throws SQLException;
 
     JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters, PageDesc pageDesc );
+
+    JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters) throws SQLException;
+
+    JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters, PageDesc pageDesc );
 
     JSONObject getObjectByProperties(ModelRuntimeContext rc,Map<String, Object> properties);
 

@@ -547,6 +547,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
                 if(i>0)
                     sBuilder.append(" and ");
 
+                if (field.getFilterType() == null) {
+                    field.setFilterType("");
+                }
                 switch(field.getFilterType()){
                 case "MC":
                     if(StringUtils.isNotBlank(alias))
@@ -671,6 +674,85 @@ public class TableModelFormServiceImpl implements ModelFormService {
     }
 
     @Override
+    public List<MetaFormModel> listSubModel(String modelCode) {
+        return formModelDao.listObjectsByProperty("parentModelCode", modelCode);
+    }
+
+    @Override
+    @Transactional
+    public JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters, PageDesc pageDesc) {
+
+        Map<String, Object> filters = makeTabulationFilter(rc, requestFilters);
+//TODO requestFilters 是父模块字段，需要根据relationdetail转化为子模块字段
+        try {
+            JsonObjectDao dao = rc.getJsonObjectDao();
+            Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSqlWithFieldName(rc.getTableInfo(),null);
+            String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
+            QueryAndNamedParams qap = rc.getMetaFormFilter();
+            String filter = buildFilterSql(rc,null,filters);
+            String whereSql="";
+            if(qap!=null){
+                whereSql = " where (" + qap.getQuery()+")";
+                if(StringUtils.isNotBlank(filter))
+                    whereSql = whereSql + " and " + filter;
+                filters.putAll(qap.getParams());
+            }else if(StringUtils.isNotBlank(filter))
+                whereSql = " where " + filter;
+
+            JSONArray ja = dao.findObjectsByNamedSqlAsJSON(sql + whereSql,filters,q.getRight(),
+                        (pageDesc.getPageNo()-1)>0? (pageDesc.getPageNo()-1)*pageDesc.getPageSize():0,
+                        pageDesc.getPageSize());
+
+            sql = "select count(1) as rs from " +
+                    rc.getTableInfo().getTableName() + whereSql;
+
+            List<Object[]> objList = dao.findObjectsByNamedSql(sql,filters);
+            Long ts = NumberBaseOpt.castObjectToLong(
+                    DatabaseAccess.fetchScalarObject(objList));
+            if(ts!=null)
+                pageDesc.setTotalRows(ts.intValue());
+            else
+                pageDesc.setTotalRows(ja.size());
+            return rc.castTableObjectListToObjectList(ja);
+        } catch (SQLException | IOException e) {
+            return null;
+        }
+    }
+
+    @Override
+    @Transactional
+    public JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters) {
+        Map<String, Object> filters = makeTabulationFilter(rc, requestFilters);
+
+        try {
+            JsonObjectDao dao = rc.getJsonObjectDao();
+            Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSqlWithFieldName(rc.getTableInfo(),null);
+            String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
+
+            QueryAndNamedParams qap = rc.getMetaFormFilter();
+            String filter = buildFilterSql(rc,null,filters);
+            if(qap!=null){
+                sql = sql + " where (" + qap.getQuery()+")";
+                if(StringUtils.isNotBlank(filter))
+                    sql = sql + " and " + filter;
+                filters.putAll(qap.getParams());
+            }else if(StringUtils.isNotBlank(filter))
+                sql = sql + " where " + filter;
+
+            if(StringUtils.isNotBlank(filter))
+                sql = sql + " where " + filter;
+            return rc.castTableObjectListToObjectList(
+                    dao.findObjectsByNamedSqlAsJSON(
+                            sql,
+                            filters,
+                            q.getRight())
+            );
+        } catch (SQLException | IOException e) {
+            return null;
+        }
+    }
+
+    @Override
     @Transactional
     public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters, PageDesc pageDesc) {
 
@@ -692,8 +774,8 @@ public class TableModelFormServiceImpl implements ModelFormService {
                 whereSql = " where " + filter;
 
             JSONArray ja = dao.findObjectsByNamedSqlAsJSON(sql + whereSql,filters,q.getRight(),
-                        (pageDesc.getPageNo()-1)>0? (pageDesc.getPageNo()-1)*pageDesc.getPageSize():0,
-                        pageDesc.getPageSize());
+                    (pageDesc.getPageNo()-1)>0? (pageDesc.getPageNo()-1)*pageDesc.getPageSize():0,
+                    pageDesc.getPageSize());
 
             sql = "select count(1) as rs from " +
                     rc.getTableInfo().getTableName() + whereSql;

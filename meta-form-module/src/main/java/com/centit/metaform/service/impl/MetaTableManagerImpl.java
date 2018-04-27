@@ -307,7 +307,7 @@ public class MetaTableManagerImpl
                 col.setFieldLabelName("流程实例ID");
                 col.setColumnComment("业务对应的工作流程实例ID");
                 col.setColumnFieldType(FieldType.INTEGER);
-                col.setMaxLength2(12);
+                col.setMaxLength(12);
                 col.setLastModifyDate(DatetimeOpt.currentUtilDate());
                 col.setRecorder(currentUser);
                 ptable.getColumns().add(col);
@@ -319,7 +319,7 @@ public class MetaTableManagerImpl
                 col.setFieldLabelName("流程实例ID");
                 col.setColumnComment("业务对应的工作流程实例ID");
                 col.setColumnFieldType(FieldType.INTEGER);
-                col.setMaxLength2(12);
+                col.setMaxLength(12);
                 col.setLastModifyDate(DatetimeOpt.currentUtilDate());
                 col.setRecorder(currentUser);
                 ptable.getColumns().add(col);

@@ -82,7 +82,7 @@ public class MetaFormModelManagerImpl
                 List<MetaTable> tableObjects = metaTableManager.listObjects();
                 if (tableObjects != null && tableObjects.size()>0) {
                     for (int j=0; j<tableObjects.size(); j++) {
-                        if (tableId == tableObjects.get(j).getTableId()) {
+                        if (tableId != null &&tableId.equals(tableObjects.get(j).getTableId())) {
                             tempObj.put("tableLabelName", tableObjects.get(j).getTableLabelName());
                             break;
                         }
