@@ -107,6 +107,19 @@ public class MetaFormController  extends BaseController{
     }
 
     /**
+     * 根据父模块code查询所有子模块code
+     */
+    @RequestMapping(value = "/{modelCode}/listSubModel",method = RequestMethod.GET)
+    public void listSubModelCode(@PathVariable String modelCode, HttpServletRequest request, HttpServletResponse response) {
+        JSONArray subModels = formService.listSubModelCode(modelCode);
+        ResponseMapData resData = new ResponseMapData();
+
+        resData.addResponseData("subModelCode", subModels);
+
+        JsonResultUtils.writeResponseDataAsJson(resData, response);
+    }
+
+    /**
      * 获取主模块和所有子模块的数据
      */
     @RequestMapping(value = "/{modelCode}/viewAll",method = RequestMethod.GET)

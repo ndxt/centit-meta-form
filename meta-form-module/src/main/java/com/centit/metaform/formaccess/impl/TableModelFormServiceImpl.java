@@ -11,6 +11,7 @@ import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
 import com.centit.metaform.dao.*;
 import com.centit.metaform.formaccess.*;
+import com.centit.metaform.po.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
@@ -25,11 +26,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.support.database.utils.PageDesc;
-import com.centit.metaform.po.MetaColumn;
-import com.centit.metaform.po.MetaFormModel;
-import com.centit.metaform.po.MetaTable;
-import com.centit.metaform.po.ModelDataField;
-import com.centit.metaform.po.ModelOperation;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -678,12 +674,30 @@ public class TableModelFormServiceImpl implements ModelFormService {
         return formModelDao.listObjectsByProperty("parentModelCode", modelCode);
     }
 
+    /**
+     * 根据父模块code获取子模块code
+     */
+    @Override
+    public JSONArray listSubModelCode(String modelCode) {
+        List<MetaFormModel> subModels = formModelDao.listObjectsByProperty("parentModelCode", modelCode);
+
+        JSONArray result = new JSONArray();
+        if (subModels == null || subModels.size()==0) {
+            return result;
+        }
+
+        for (MetaFormModel subModel:subModels) {
+            result.add(subModel.getModelCode());
+        }
+        return result;
+    }
+
     @Override
     @Transactional
     public JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters, PageDesc pageDesc) {
 
         Map<String, Object> filters = makeTabulationFilter(rc, requestFilters);
-//TODO requestFilters 是父模块字段，需要根据relationdetail转化为子模块字段
+
         try {
             JsonObjectDao dao = rc.getJsonObjectDao();
             Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSqlWithFieldName(rc.getTableInfo(),null);
