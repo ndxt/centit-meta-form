@@ -55,6 +55,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
     private MetaRelationDao metaRelationDao;
 
     @Resource
+    private MetaRelDetialDao metaRelDetialDao;
+
+    @Resource
     private ModelDataFieldDao modelDataFieldDao;
 
     @Resource
@@ -736,7 +739,52 @@ public class TableModelFormServiceImpl implements ModelFormService {
     @Override
     @Transactional
     public JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters) {
-        Map<String, Object> filters = makeTabulationFilter(rc, requestFilters);
+        //前台传递的父模块字段
+        Map<String, Object> pModelParam = makeTabulationFilter(rc, requestFilters);
+        //构造的过滤器
+        Map<String, Object> filters = new HashMap<>();
+
+        Long tTableId = rc.getTableInfo().getTableId();
+        MetaFormModel parentModel = formModelDao.getObjectById(rc.getMetaFormModel().getParentModelCode());
+
+        Map<String, Object> relSearchColumn = new HashMap<>();
+        relSearchColumn.put("childTableId", tTableId);
+        relSearchColumn.put("parentTableId", parentModel.getTableId());
+        MetaRelation tRelations = metaRelationDao.getObjectByProperties(relSearchColumn);
+        List<MetaRelDetail> tRelationDetails = metaRelDetialDao.listObjectsByProperty("relationId", tRelations.getRelationId());
+        if (tRelationDetails == null || tRelationDetails.size() == 0
+                || pModelParam == null || pModelParam.size()==0) {
+            return null;
+        }
+
+        for (MetaRelDetail tRelationDetail:tRelationDetails) {
+            String parentColumnName = tRelationDetail.getParentColumnName();
+
+            String parentColumnNameKey = "";
+            parentColumnName.split("_");
+            if (parentColumnName.contains("_")) {
+                String[] tempNames = parentColumnName.split("_");
+                for (int tns=0; tns<tempNames.length; tns++) {
+                    String tempName = tempNames[tns];
+                    if (tns == 0) {
+                        parentColumnNameKey += tempName.toLowerCase();
+                    } else {
+                        parentColumnNameKey += tempName.toUpperCase().charAt(0);
+                        parentColumnNameKey += tempName.toLowerCase().substring(1);
+                    }
+                }
+            } else {
+                parentColumnNameKey += parentColumnName;
+            }
+
+            if (pModelParam.containsKey(parentColumnNameKey)) {
+                filters.put(tRelationDetail.getChildColumnName(), pModelParam.get(parentColumnName));
+            }
+        }
+
+        if (filters == null || filters.size()==0) {
+            return null;
+        }
 
         try {
             JsonObjectDao dao = rc.getJsonObjectDao();

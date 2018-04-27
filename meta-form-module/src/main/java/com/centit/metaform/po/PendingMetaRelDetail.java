@@ -20,9 +20,15 @@ import org.hibernate.validator.constraints.NotBlank;
 public class PendingMetaRelDetail implements java.io.Serializable {
     private static final long serialVersionUID =  1L;
 
-    @EmbeddedId
-    private PendingMetaRelDetailId cid;
+//    @EmbeddedId
+//    private PendingMetaRelDetailId cid;
 
+    @Column(name = "RELATION_ID")
+    private Long relationId;
+
+    @Column(name = "PARENT_COLUMN_NAME")
+    @NotBlank(message = "字段不能为空")
+    private String parentColumnName;
 
     /**
      * C字段代码 null
@@ -37,51 +43,55 @@ public class PendingMetaRelDetail implements java.io.Serializable {
     public PendingMetaRelDetail() {
     }
     /** minimal constructor */
-    public PendingMetaRelDetail(PendingMetaRelDetailId id
+//    public PendingMetaRelDetail(PendingMetaRelDetailId id
+//
+//        ,String  childColumnName) {
+//        this.cid = id;
+//
+//
+//        this.childColumnName= childColumnName;
+//    }
 
-        ,String  childColumnName) {
-        this.cid = id;
 
+//    public PendingMetaRelDetailId getCid() {
+//        if(null==this.cid)
+//            this.cid=new PendingMetaRelDetailId();
+//        return this.cid;
+//    }
 
-        this.childColumnName= childColumnName;
-    }
-
-
-    public PendingMetaRelDetailId getCid() {
-        if(null==this.cid)
-            this.cid=new PendingMetaRelDetailId();
-        return this.cid;
-    }
-
-    public void setCid(PendingMetaRelDetailId id) {
-        if(null==id.getRelationId())
-            this.cid=null;
-        else
-            this.cid = id;
-    }
+//    public void setCid(PendingMetaRelDetailId id) {
+//        if(null==id.getRelationId())
+//            this.cid=null;
+//        else
+//            this.cid = id;
+//    }
   
     public Long getRelationId() {
-        if(this.cid==null)
-            return null;
-        return this.cid.getRelationId();
+//        if(this.cid==null)
+//            return null;
+//        return this.cid.getRelationId();
+        return this.relationId;
     }
 
     public void setRelationId(Long relationId) {
-        if(this.cid==null)
-            this.cid = new PendingMetaRelDetailId();
-        this.cid.setRelationId(relationId);
+//        if(this.cid==null)
+//            this.cid = new PendingMetaRelDetailId();
+//        this.cid.setRelationId(relationId);
+        this.relationId = relationId;
     }
   
     public String getParentColumnName() {
-        if(this.cid==null)
-            return null;
-        return this.cid.getParentColumnName();
+//        if(this.cid==null)
+//            return null;
+//        return this.cid.getParentColumnName();
+        return this.parentColumnName;
     }
 
     public void setParentColumnName(String parentColumnName) {
-        if(this.cid==null)
-            this.cid = new PendingMetaRelDetailId();
-        this.cid.setParentColumnName(parentColumnName);
+//        if(this.cid==null)
+//            this.cid = new PendingMetaRelDetailId();
+//        this.cid.setParentColumnName(parentColumnName);
+        this.parentColumnName = parentColumnName;
     }
 
 

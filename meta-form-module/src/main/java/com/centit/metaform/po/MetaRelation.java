@@ -77,7 +77,7 @@ public class MetaRelation implements TableReference, java.io.Serializable {
     private String  recorder;
 
 
-    @OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<MetaRelDetail> relationDetails;
 
 
@@ -128,7 +128,7 @@ public class MetaRelation implements TableReference, java.io.Serializable {
         Iterator<PendingMetaRelDetail> itr=pRelationDetails.iterator();
         while(itr.hasNext()){
             PendingMetaRelDetail pdetail=itr.next();
-            MetaRelDetail  detail=new MetaRelDetail(new MetaRelDetailId(this,pdetail.getParentColumnName()),pdetail.getChildColumnName());
+            MetaRelDetail  detail=new MetaRelDetail(this.relationId, pdetail.getParentColumnName(), pdetail.getChildColumnName());
             this.relationDetails.add(detail);
         }
     }

@@ -83,28 +83,25 @@ public class MetaFormController  extends BaseController{
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
-    @RequestMapping(value = "/{modelCode}/viewlist",method = RequestMethod.GET)
+    @RequestMapping(value = "/{modelCode}/viewList",method = RequestMethod.GET)
     public void viewList(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-        Map<String,Object> jo = rc.fetchPkFromRequest(request);
-        ResponseMapData resData = new ResponseMapData();
+        Map<String, Object> searchColumn = convertSearchColumn(request);
+        JSONArray allSubFields = new JSONArray();
 
-        JSONObject obj = formService.getObjectByProperties(rc, jo);
+        ModelRuntimeContext subRc = formService.createRuntimeContext(modelCode);
+        JSONArray subObjs = null;
         try {
-            if(obj!=null){
-                Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
-                obj.putAll(refField);
-            }
+            subObjs = formService.listSubModelObjectsByFilter(subRc, searchColumn);
         } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        MetaFormDefine metaData = formService.createFormDefine(rc,"viewlist");
-        resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
-        rc.close();
-        if(!noMeta){
-            metaData.updateReadOnlyRefrenceField();
-            resData.addResponseData("formModel", metaData);
-        }
+        MetaFormDefine subMetaData = formService.createFormDefine(subRc,"list");
+        allSubFields.add(subMetaData);
+
+        ResponseMapData resData = new ResponseMapData();
+        resData.addResponseData(OBJLIST, subObjs);
+        resData.addResponseData("formModel", allSubFields);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
@@ -126,9 +123,14 @@ public class MetaFormController  extends BaseController{
      * 获取主模块和所有子模块的数据
      */
     @RequestMapping(value = "/{modelCode}/viewAll",method = RequestMethod.GET)
-    public void viewAll(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) throws SQLException {
+    public void viewAll(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
         ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-        Map<String,Object> jo = rc.fetchPkFromRequest(request);
+
+        Map<String, Object> searchColumn = convertSearchColumn(request);
+
+        Map<String,Object> jo = new HashMap<>();
+        jo.put(((String[])searchColumn.get("primaryKey"))[0] , ((String[])(searchColumn.get("primaryValue")))[0]);
+
         ResponseMapData resData = new ResponseMapData();
 
         JSONObject obj = formService.getObjectByProperties(rc, jo);
@@ -153,10 +155,13 @@ public class MetaFormController  extends BaseController{
             JSONArray allSubObjs = new JSONArray();
             JSONArray allSubFields = new JSONArray();
             for(int i=0; i<subModel.size(); i++) {
-                Map<String, Object> subJo = new HashMap<>();
-                subJo.put("user_code", "centit01");
                 ModelRuntimeContext subRc = formService.createRuntimeContext(subModel.get(i).getModelCode());
-                JSONArray subObjs = formService.listSubModelObjectsByFilter(subRc, subJo);
+                JSONArray subObjs = null;
+                try {
+                    subObjs = formService.listSubModelObjectsByFilter(subRc, obj);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 allSubObjs.add(subObjs);
 
                 MetaFormDefine subMetaData = formService.createFormDefine(subRc,"list");

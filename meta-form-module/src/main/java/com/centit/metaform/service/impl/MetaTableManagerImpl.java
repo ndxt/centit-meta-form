@@ -76,6 +76,9 @@ public class MetaTableManagerImpl
     private PendingMetaRelationDao pendingRelationDao;
 
     @Resource
+    private PendingMetaRelDetialDao pendingMetaRelDetialDao;
+
+    @Resource
     protected IntegrationEnvironment integrationEnvironment;
 /*
      @PostConstruct
@@ -129,6 +132,14 @@ public class MetaTableManagerImpl
                     tempRelation.setParentTableId(pmt.getTableId());
                     tempRelation.setRelationId(pendingRelationDao.getNextKey());
                     pendingRelationDao.saveNewObject(tempRelation);
+
+                    List<PendingMetaRelDetail> relDetails = new ArrayList(tempRelation.getRelationDetails());
+                    if (relDetails != null && relDetails.size()>0) {
+                        for (PendingMetaRelDetail relDetail:relDetails) {
+                            relDetail.setRelationId(tempRelation.getRelationId());
+                            pendingMetaRelDetialDao.saveNewObject(relDetail);
+                        }
+                    }
                 }
             }
         }
@@ -197,8 +208,25 @@ public class MetaTableManagerImpl
             if(relation.getRelationId()==null) {
                 relation.setRelationId(pendingRelationDao.getNextKey());
                 pendingRelationDao.saveNewObject(relation);
+                List<PendingMetaRelDetail> relDetails = new ArrayList(relation.getRelationDetails());
+                if (relDetails != null && relDetails.size()>0) {
+                    for (PendingMetaRelDetail relDetail:relDetails) {
+                        relDetail.setRelationId(relation.getRelationId());
+                        pendingMetaRelDetialDao.saveNewObject(relDetail);
+                    }
+                }
             } else {
                 pendingRelationDao.mergeObject(relation);
+                Map<String, Object> tempRelFilter = new HashMap<>();
+                tempRelFilter.put("relationId", relation.getRelationId());
+                pendingRelationDao.deleteObjectsForceByProperties(tempRelFilter);
+                List<PendingMetaRelDetail> relDetails = new ArrayList(relation.getRelationDetails());
+                if (relDetails != null && relDetails.size()>0) {
+                    for (PendingMetaRelDetail relDetail:relDetails) {
+                        relDetail.setRelationId(relation.getRelationId());
+                        pendingMetaRelDetialDao.saveNewObject(relDetail);
+                    }
+                }
             }
         }
         pendingMdTableDao.mergeObject(pmt);
@@ -422,6 +450,14 @@ public class MetaTableManagerImpl
                 if (metaRelations != null && metaRelations.size() > 0) {
                     for (int j=0; j<metaRelations.size(); j++) {
                         metaRelationDao.saveNewObject(metaRelations.get(j));
+
+                        List<PendingMetaRelDetail> relDetails = new ArrayList(metaRelations.get(j).getRelationDetails());
+                        if (relDetails != null && relDetails.size()>0) {
+                            for (PendingMetaRelDetail relDetail:relDetails) {
+                                relDetail.setRelationId(metaRelations.get(j).getRelationId());
+                                pendingMetaRelDetialDao.saveNewObject(relDetail);
+                            }
+                        }
                     }
                 }
 

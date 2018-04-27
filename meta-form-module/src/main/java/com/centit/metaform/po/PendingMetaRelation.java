@@ -103,7 +103,7 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 
 
 
-    @OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<PendingMetaRelDetail> relationDetails;
 
     // Constructors
@@ -159,7 +159,7 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
             this.getRelationDetails().clear();
             Iterator<PendingMetaRelDetail> itr=relationDetails.iterator();
             while(itr.hasNext()){
-                itr.next().getCid().setRelation(this);
+                itr.next().setRelationId(this.relationId);
             }
             this.getRelationDetails().addAll(relationDetails);
         }
