@@ -1,0 +1,29 @@
+<div class="table-layout">
+<table class="table table-striped table-hover table-bordered flex-item {{cls}}">
+  <thead>
+  <tr>
+    <th ng-repeat="column in columns">
+      {{::column.label}}
+    </th>
+    <th ng-if="showOperation">
+      操作
+    </th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr ng-repeat="item in items">
+    <td ng-repeat="column in columns">
+      {{::item[column.name]}}
+    </td>
+    <td class="text-center" ng-if="showOperation">
+      <button ng-repeat="operator in operations.list"
+              centit-form-operation="operator"
+              data-form-model="formModel"
+              data-item="item" data-cls="btn-xs"></button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div cg-busy="tablePromise"></div>
+</div>
