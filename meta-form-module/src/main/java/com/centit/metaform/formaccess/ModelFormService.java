@@ -18,6 +18,8 @@ public interface ModelFormService {
 
     List<MetaFormModel> listSubModel(String modelCode);
 
+    JSONArray listSubModelCode(String modelCode);
+
     JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters) throws SQLException;
 
     JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters, PageDesc pageDesc );

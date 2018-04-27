@@ -77,6 +77,9 @@ public class MetaFormController  extends BaseController{
             resData.addResponseData("formModel", metaData);
         }
 
+        JSONArray subModels = formService.listSubModelCode(modelCode);
+        resData.addResponseData("subModelCode", subModels);
+
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
