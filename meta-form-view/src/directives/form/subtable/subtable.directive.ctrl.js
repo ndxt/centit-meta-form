@@ -48,7 +48,7 @@
       var paramsobj ={};
       paramsobj[primaryKey] = primaryValue;
       return $scope.tablePromise = FormAPI.one(modelCode)
-        .customGETLIST('list', angular.extend({noMeta: $scope.formModel ? true : undefined}, params,paramsobj))
+        .customGETLIST('viewList', angular.extend({noMeta: $scope.formModel ? true : undefined}, params,paramsobj))
         .then(function(data) {
           $scope.items = data;
           if (data.formModel) {
