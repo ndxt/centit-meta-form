@@ -86,7 +86,6 @@ public class MetaFormController  extends BaseController{
     @RequestMapping(value = "/{modelCode}/viewList",method = RequestMethod.GET)
     public void viewList(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
-        JSONArray allSubFields = new JSONArray();
 
         ModelRuntimeContext subRc = formService.createRuntimeContext(modelCode);
         JSONArray subObjs = null;
@@ -100,11 +99,10 @@ public class MetaFormController  extends BaseController{
         MetaFormDefine metaData = formService.createListViewModel(subRc);
 
         metaData.setFields(subMetaData.getFields());
-        allSubFields.add(metaData);
 
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, subObjs);
-        resData.addResponseData("formModel", allSubFields);
+        resData.addResponseData("formModel", metaData);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
