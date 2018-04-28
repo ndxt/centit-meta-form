@@ -97,7 +97,10 @@ public class MetaFormController  extends BaseController{
         }
 
         MetaFormDefine subMetaData = formService.createFormDefine(subRc,"list");
-        allSubFields.add(subMetaData);
+        MetaFormDefine metaData = formService.createListViewModel(subRc);
+
+        metaData.setFields(subMetaData.getFields());
+        allSubFields.add(metaData);
 
         ResponseMapData resData = new ResponseMapData();
         resData.addResponseData(OBJLIST, subObjs);

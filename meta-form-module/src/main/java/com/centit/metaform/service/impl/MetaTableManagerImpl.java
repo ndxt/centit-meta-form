@@ -217,9 +217,6 @@ public class MetaTableManagerImpl
                 }
             } else {
                 pendingRelationDao.mergeObject(relation);
-                Map<String, Object> tempRelFilter = new HashMap<>();
-                tempRelFilter.put("relationId", relation.getRelationId());
-                pendingRelationDao.deleteObjectsForceByProperties(tempRelFilter);
                 List<PendingMetaRelDetail> relDetails = new ArrayList(relation.getRelationDetails());
                 if (relDetails != null && relDetails.size()>0) {
                     for (PendingMetaRelDetail relDetail:relDetails) {
