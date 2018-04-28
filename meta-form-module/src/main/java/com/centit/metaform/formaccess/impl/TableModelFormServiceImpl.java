@@ -751,6 +751,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
         relSearchColumn.put("childTableId", tTableId);
         relSearchColumn.put("parentTableId", parentModel.getTableId());
         MetaRelation tRelations = metaRelationDao.getObjectByProperties(relSearchColumn);
+        if (tRelations == null || tRelations.getRelationId() == null) {
+            return null;
+        }
         List<MetaRelDetail> tRelationDetails = metaRelDetialDao.listObjectsByProperty("relationId", tRelations.getRelationId());
         if (tRelationDetails == null || tRelationDetails.size() == 0
                 || pModelParam == null || pModelParam.size()==0) {
