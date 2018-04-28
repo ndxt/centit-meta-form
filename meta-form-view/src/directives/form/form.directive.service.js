@@ -43,6 +43,7 @@
           // 重新定义数据格式
           return $q.resolve({
             data: data.obj || {},
+            subModelCode:data.subModelCode||[],
             fields: formModel.fields ? formModel.fields : [],
             formType: formModel.formType,
             modelName: formModel.modelName
