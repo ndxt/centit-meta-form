@@ -618,6 +618,32 @@ public class TableModelFormServiceImpl implements ModelFormService {
         return sBuilder.toString();
     }
 
+    /**
+     * 根据传递的Map构造查询条件
+     * @param filters
+     * @return
+     */
+    public static String buildSimpleFilterSql(String alias, Map<String, Object> filters){
+        StringBuilder sBuilder= new StringBuilder();
+        int i=0;
+
+        for (Map.Entry<String, Object> entry : filters.entrySet()) {
+            if (entry.getValue() == null || StringUtils.isBlank(entry.getKey())) {
+                continue;
+            }
+
+            if(i>0)
+                sBuilder.append(" and ");
+
+            if(StringUtils.isNotBlank(alias))
+                sBuilder.append(alias).append('.');
+
+            sBuilder.append(entry.getKey()).append(" = '").append(entry.getValue()).append("'");
+            i++;
+        }
+        return sBuilder.toString();
+    }
+
     @Override
     @Transactional
     public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters) {
@@ -781,7 +807,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
             }
 
             if (pModelParam.containsKey(parentColumnNameKey)) {
-                filters.put(tRelationDetail.getChildColumnName(), pModelParam.get(parentColumnName));
+                filters.put(tRelationDetail.getChildColumnName(), ((String[])pModelParam.get(parentColumnNameKey))[0]);
             }
         }
 
@@ -794,23 +820,13 @@ public class TableModelFormServiceImpl implements ModelFormService {
             Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSqlWithFieldName(rc.getTableInfo(),null);
             String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
 
-            QueryAndNamedParams qap = rc.getMetaFormFilter();
-            String filter = buildFilterSql(rc,null,filters);
-            if(qap!=null){
-                sql = sql + " where (" + qap.getQuery()+")";
-                if(StringUtils.isNotBlank(filter))
-                    sql = sql + " and " + filter;
-                filters.putAll(qap.getParams());
-            }else if(StringUtils.isNotBlank(filter))
-                sql = sql + " where " + filter;
+            String filter = buildSimpleFilterSql(null,filters);
 
             if(StringUtils.isNotBlank(filter))
                 sql = sql + " where " + filter;
             return rc.castTableObjectListToObjectList(
-                    dao.findObjectsByNamedSqlAsJSON(
-                            sql,
-                            filters,
-                            q.getRight())
+                    dao.findObjectsAsJSON(
+                            sql, null, null)
             );
         } catch (SQLException | IOException e) {
             return null;
