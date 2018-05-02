@@ -176,6 +176,15 @@ public class MetaTableManagerImpl
         Map<String, Object> tempFilter2 = new HashMap<>();
         tempFilter2.put("parentTableId", tableId);
         Set<PendingMetaRelation> tempRelation = new HashSet<>(pendingRelationDao.listObjectsByProperties(tempFilter2));
+
+        Iterator<PendingMetaRelation> itr= tempRelation.iterator();
+        while(itr.hasNext()){
+            PendingMetaRelation relation=itr.next();
+            Set<PendingMetaRelDetail> relDetails = new HashSet<>(
+                    pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
+            relation.setRelationDetails(relDetails);
+        }
+
         resultPdMetaTable.setMdRelations(tempRelation);
 
         return resultPdMetaTable;
@@ -217,6 +226,10 @@ public class MetaTableManagerImpl
                 }
             } else {
                 pendingRelationDao.mergeObject(relation);
+
+                Map<String, Object> detailFilter = new HashMap<>();
+                detailFilter.put("relationId", relation.getRelationId());
+                pendingMetaRelDetialDao.deleteObjectsForceByProperties(detailFilter);
                 List<PendingMetaRelDetail> relDetails = new ArrayList(relation.getRelationDetails());
                 if (relDetails != null && relDetails.size()>0) {
                     for (PendingMetaRelDetail relDetail:relDetails) {
@@ -449,6 +462,9 @@ public class MetaTableManagerImpl
                         metaRelationDao.saveNewObject(metaRelations.get(j));
 
                         List<PendingMetaRelDetail> relDetails = new ArrayList(metaRelations.get(j).getRelationDetails());
+                        Map<String, Object> relFilter = new HashMap<>();
+                        relFilter.put("parentTableId", table.getTableId());
+                        pendingMetaRelDetialDao.deleteObjectsByProperties(relFilter);
                         if (relDetails != null && relDetails.size()>0) {
                             for (PendingMetaRelDetail relDetail:relDetails) {
                                 relDetail.setRelationId(metaRelations.get(j).getRelationId());
