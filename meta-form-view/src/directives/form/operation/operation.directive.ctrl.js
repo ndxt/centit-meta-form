@@ -140,7 +140,9 @@
     function _delete(){
       var item = $scope.item,
           operation = $scope.operation,
-          formModel = $scope.formModel;
+          formModel = $scope.formModel,
+          items = $scope.items;
+
 
       var primaryKey = formModel.primaryKey || [],
           primaryValue = primaryKey.map(function(key) {
@@ -153,6 +155,8 @@
       then(function success(data){
 
                //响应成功时调用
+            var index=items.indexOf(item);//获取被删除行在列表items中的index值
+            if(index > -1) $scope.items.splice(index,1);//删除数组中的数据（index）
                 console.log(data);
           },function error(mesage){
 
