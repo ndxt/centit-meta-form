@@ -122,6 +122,8 @@ public class MetaRelation implements TableReference, java.io.Serializable {
         this.relationComment= next.getRelationComment();
         this.lastModifyDate= next.getLastModifyDate();
         this.recorder= next.getRecorder();
+        this.parentTableId= next.getParentTableId();
+        this.childTableId= next.getChildTableId();
 
         Set<PendingMetaRelDetail> pRelationDetails=next.getRelationDetails();
         this.relationDetails=new HashSet<MetaRelDetail>();

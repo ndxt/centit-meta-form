@@ -178,7 +178,6 @@ public class MetaTable implements TableInfo,java.io.Serializable {
         Iterator<PendingMetaRelation> itr= prelations.iterator();
         while(itr.hasNext()){
             MetaRelation relation=new MetaRelation(itr.next());
-            relation.setParentTableId(this.tableId);
             this.mdRelations.add(relation);
         }
     }

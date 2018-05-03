@@ -488,11 +488,15 @@ public class MetaTableManagerImpl
                 metaRelationDao.deleteObjectsByProperties(rFilter);
                 if (metaRelations != null && metaRelations.size() > 0) {
                     for (int j=0; j<metaRelations.size(); j++) {
+                        MetaRelation tempRelation = metaRelations.get(j);
+                        if (tempRelation.getRelationState() == null) {
+                            tempRelation.setRelationState("N");
+                        }
                         metaRelationDao.saveNewObject(metaRelations.get(j));
 
                         List<PendingMetaRelDetail> relDetails = new ArrayList(metaRelations.get(j).getRelationDetails());
                         Map<String, Object> relFilter = new HashMap<>();
-                        relFilter.put("parentTableId", table.getTableId());
+                        relFilter.put("parentColumnName", table.getTableId());
                         pendingMetaRelDetialDao.deleteObjectsByProperties(relFilter);
                         if (relDetails != null && relDetails.size()>0) {
                             for (PendingMetaRelDetail relDetail:relDetails) {
