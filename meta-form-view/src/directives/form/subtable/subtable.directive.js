@@ -22,7 +22,7 @@
           modelCode: '@',
           primaryKey: '@',
           primaryValue: '@',
-          paramsData:'@',
+          paramsData:'=paramsData',
           cls: '@'
         },
 

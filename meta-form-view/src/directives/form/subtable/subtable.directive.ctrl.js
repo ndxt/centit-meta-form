@@ -43,12 +43,14 @@
      */
     function search(params) {
       var modelCode = $scope.modelCode;
+
       var primaryKey = $scope.primaryKey;
       var primaryValue = $scope.primaryValue;
+      var paramsData = $scope.paramsData;
       var paramsobj ={};
       paramsobj[primaryKey] = primaryValue;
       return $scope.tablePromise = FormAPI.one(modelCode)
-        .customGETLIST('viewList', angular.extend({noMeta: $scope.formModel ? true : undefined}, params,paramsobj))
+        .customGETLIST('viewList', angular.extend({noMeta: $scope.formModel ? true : undefined}, params,paramsobj,paramsData))
         .then(function(data) {
           $scope.items = data;
           if (data.formModel) {
