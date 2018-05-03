@@ -278,21 +278,23 @@ public class MetaTableManagerImpl
     public List<String> makeAlterTableSqls(PendingMetaTable ptable) {
         MetaTable stable = metaTableDao.getObjectById(ptable.getTableId());
 
-        Set<MetaColumn> mtColumn =
-                new HashSet<>(metaColumnDao.listObjectsByProperty("tableId", ptable.getTableId()));
-        Set<MetaRelation> mtRelation =
-                new HashSet<>(metaRelationDao.listObjectsByProperty("parentTableId", ptable.getTableId()));
+        if (stable != null) {
+            Set<MetaColumn> mtColumn =
+                    new HashSet<>(metaColumnDao.listObjectsByProperty("tableId", ptable.getTableId()));
+            Set<MetaRelation> mtRelation =
+                    new HashSet<>(metaRelationDao.listObjectsByProperty("parentTableId", ptable.getTableId()));
 
-        Iterator<MetaRelation> itr= mtRelation.iterator();
-        while(itr.hasNext()){
-            MetaRelation relation=itr.next();
-            Set<MetaRelDetail> relDetails = new HashSet<>(
-                    metaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
-            relation.setRelationDetails(relDetails);
+            Iterator<MetaRelation> itr = mtRelation.iterator();
+            while (itr.hasNext()) {
+                MetaRelation relation = itr.next();
+                Set<MetaRelDetail> relDetails = new HashSet<>(
+                        metaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
+                relation.setRelationDetails(relDetails);
+            }
+
+            stable.setMdColumns(mtColumn);
+            stable.setMdRelations(mtRelation);
         }
-
-        stable.setMdColumns(mtColumn);
-        stable.setMdRelations(mtRelation);
 
         DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
                 //databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
@@ -409,6 +411,13 @@ public class MetaTableManagerImpl
                     new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
             Set<PendingMetaRelation> pRelation =
                     new HashSet<>(pendingRelationDao.listObjectsByProperty("parentTableId", tableId));
+            Iterator<PendingMetaRelation> itr= pRelation.iterator();
+            while(itr.hasNext()){
+                PendingMetaRelation relation=itr.next();
+                Set<PendingMetaRelDetail> relDetails = new HashSet<>(
+                        pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
+                relation.setRelationDetails(relDetails);
+            }
             ptable.setMdColumns(pColumn);
             ptable.setMdRelations(pRelation);
 
@@ -494,14 +503,16 @@ public class MetaTableManagerImpl
                         }
                         metaRelationDao.saveNewObject(metaRelations.get(j));
 
-                        List<PendingMetaRelDetail> relDetails = new ArrayList(metaRelations.get(j).getRelationDetails());
-                        Map<String, Object> relFilter = new HashMap<>();
-                        relFilter.put("parentColumnName", table.getTableId());
-                        pendingMetaRelDetialDao.deleteObjectsByProperties(relFilter);
+                        List<MetaRelDetail> relDetails = new ArrayList(metaRelations.get(j).getRelationDetails());
+
                         if (relDetails != null && relDetails.size()>0) {
-                            for (PendingMetaRelDetail relDetail:relDetails) {
+                            for (MetaRelDetail relDetail:relDetails) {
+                                Map<String, Object> relFilter = new HashMap<>();
+                                relFilter.put("relationId", relDetail.getRelationId());
+                                metaRelDetialDao.deleteObjectsByProperties(relFilter);
+
                                 relDetail.setRelationId(metaRelations.get(j).getRelationId());
-                                pendingMetaRelDetialDao.saveNewObject(relDetail);
+                                metaRelDetialDao.saveNewObject(relDetail);
                             }
                         }
                     }

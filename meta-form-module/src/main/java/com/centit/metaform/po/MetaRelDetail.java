@@ -5,6 +5,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.centit.metaform.dao.PendingMetaRelDetialDao;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -54,6 +55,12 @@ public class MetaRelDetail implements java.io.Serializable {
         this.parentColumnName = parentColumnName;
 
         this.childColumnName= childColumnName;
+    }
+
+    public MetaRelDetail(PendingMetaRelDetail pdMetaRelDetail) {
+        this.relationId = pdMetaRelDetail.getRelationId();
+        this.parentColumnName = pdMetaRelDetail.getParentColumnName();
+        this.childColumnName = pdMetaRelDetail.getChildColumnName();
     }
 
 
