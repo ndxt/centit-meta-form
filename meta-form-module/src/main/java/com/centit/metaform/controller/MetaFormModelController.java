@@ -1,10 +1,8 @@
 package com.centit.metaform.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.metaform.dao.ModelDataFieldDao;
@@ -13,8 +11,6 @@ import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.ModelDataField;
 import com.centit.metaform.po.ModelOperation;
 import com.centit.metaform.service.MetaFormModelManager;
-import com.centit.metaform.service.ModelDataFieldManager;
-import com.centit.metaform.service.ModelOperationManager;
 import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Controller;

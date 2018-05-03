@@ -1,9 +1,9 @@
 package com.centit.metaform.formaccess;
 
+import com.centit.support.database.utils.DBType;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.centit.support.database.utils.DBType;
 
 public abstract class FieldType {
     public static final String STRING = "string";

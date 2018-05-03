@@ -3,15 +3,15 @@ package com.centit.metaform.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.OptionItem;
 import com.centit.framework.common.JsonResultUtils;
+import com.centit.framework.common.OptionItem;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
-import com.centit.metaform.po.MetaFormModel;
-import com.centit.support.database.utils.PageDesc;
 import com.centit.metaform.formaccess.MetaFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
+import com.centit.metaform.po.MetaFormModel;
+import com.centit.support.database.utils.PageDesc;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +34,9 @@ public class MetaFormController  extends BaseController{
     @Resource(name="modelFormService")
     private ModelFormService formService;
 
+    /**
+     * 作为主表的查看列表
+     */
     @RequestMapping(value = "/{modelCode}/list",method = RequestMethod.GET)
     public void list(@PathVariable String modelCode,boolean noMeta, PageDesc pageDesc ,HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = collectRequestParameters(request);//convertSearchColumn(request);
@@ -54,6 +57,9 @@ public class MetaFormController  extends BaseController{
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
+    /**
+     * 查看模块主表的详细信息
+     */
     @RequestMapping(value = "/{modelCode}/view",method = RequestMethod.GET)
     public void view(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
         ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);

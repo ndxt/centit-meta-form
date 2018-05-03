@@ -1,12 +1,12 @@
 package com.centit.metaform.formaccess.impl;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import com.centit.support.database.jsonmaptable.*;
-import com.centit.support.database.utils.DBType;
+import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
+import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.utils.DataSourceDescription;
 import com.centit.support.database.utils.DbcpConnectPools;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class JdbcModelRuntimeContext extends AbstractModelRuntimeContext{
 
