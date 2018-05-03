@@ -5,19 +5,16 @@
     .controller('AccessInfoController', AccessInfoController);
 
   /* @ngInject */
-  function AccessInfoController($state, $stateParams,FormAPI) {
+  function AccessInfoController($state,$stateParams,FormAPI) {
     var vm = this;
 
     vm.operation = $state.current.data.operation;
     vm.modelCode = $stateParams.modelCode;
     vm.primaryKey = $stateParams.primaryKey;
     vm.primaryValue = $stateParams.primaryValue;
-
     vm.params = {
-
     };
     vm.params[vm.primaryKey] = vm.primaryValue;
     //////////////////////////////////////
-
   }
 })();

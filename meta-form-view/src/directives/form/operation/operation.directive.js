@@ -14,6 +14,7 @@
           operation: '=centitFormOperation',
           formModel: '=',
           item: '=',
+          items:'=items',
           modelCode: '@',
           modelOperation: '@',
           cls: '@'

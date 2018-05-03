@@ -22,6 +22,7 @@
 <div class="row">
   <div class="col-md-10 col-md-offset-1">
     <div centit-form="vm.data"
+         sub-model-code="vm.subModelCode"
          data-handlers="vm.handlers"
          data-form="vm.Form"
          data-model-code="{{vm.modelCode}}"
@@ -33,5 +34,18 @@
     <pre style="margin: 10px 0;">{{vm.data | json}}</pre>
   </div>
 </div>
+<div ng-repeat="item in vm.subModelCode">
+    <h3>{{item}}</h3>
+ <table centit-form-sub-table
+         data-model-code="{{item}}"
+         data-primary-key="{{vm.primaryKey}}"
+         data-primary-value="{{vm.primaryValue}}"
+         data-params-data="vm.data"
+         data-options="vm.options"
+         data-filters="vm.filters"></table>
+
+</div>
+
+
 
 

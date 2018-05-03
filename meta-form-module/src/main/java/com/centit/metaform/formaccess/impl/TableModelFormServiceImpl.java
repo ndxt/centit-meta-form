@@ -1,23 +1,17 @@
 package com.centit.metaform.formaccess.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.OptionItem;
-import com.centit.framework.components.CodeRepositoryUtil;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+
 import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
 import com.centit.metaform.dao.*;
 import com.centit.metaform.formaccess.*;
 import com.centit.metaform.po.*;
-import com.centit.support.algorithm.DatetimeOpt;
-import com.centit.support.algorithm.NumberBaseOpt;
-import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.algorithm.UuidOpt;
-import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
-import com.centit.support.database.jsonmaptable.JsonObjectDao;
-import com.centit.support.database.metadata.SimpleTableField;
-import com.centit.support.database.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
@@ -26,11 +20,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ContextLoaderListener;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.OptionItem;
+import com.centit.framework.components.CodeRepositoryUtil;
+import com.centit.support.database.utils.PageDesc;
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.algorithm.UuidOpt;
+import com.centit.support.database.utils.DataSourceDescription;
+import com.centit.support.database.utils.DatabaseAccess;
+import com.centit.support.database.utils.QueryAndNamedParams;
+import com.centit.support.database.utils.QueryUtils;
+import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
+import com.centit.support.database.jsonmaptable.JsonObjectDao;
+import com.centit.support.database.metadata.SimpleTableField;
 
 @Service(value="modelFormService")
 public class TableModelFormServiceImpl implements ModelFormService {
@@ -49,6 +55,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
     private MetaRelationDao metaRelationDao;
 
     @Resource
+    private MetaRelDetialDao metaRelDetialDao;
+
+    @Resource
     private ModelDataFieldDao modelDataFieldDao;
 
     @Resource
@@ -57,7 +66,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
     @Resource
     protected IntegrationEnvironment integrationEnvironment;
 
-    @Value("${metaform.dataaccess.embedded:false}")
+    @Value("${metaform.dataaccess.embedded}")
     private boolean useLocalDatabase;
    
     private Map<String,List<OptionItem>> propertyOptionCache;
@@ -68,7 +77,6 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
         ModelRuntimeContext runtimeContext =
                 ModelRuntimeContextPool.getRuntimeContextPool(modelCode);
-
         if(runtimeContext!=null)
             return runtimeContext;
         if(useLocalDatabase)
@@ -77,17 +85,6 @@ public class TableModelFormServiceImpl implements ModelFormService {
             runtimeContext = createJdbcRuntimeContext(modelCode);
         ModelRuntimeContextPool.registerRuntimeContextPool(runtimeContext);
         return runtimeContext;
-    }
-
-    /**
-     * 查找模块的子模块
-     *
-     * @param rc
-     * @return
-     */
-    @Override
-    public List<MetaFormModel> listSubModel(ModelRuntimeContext rc) {
-        return null;
     }
 
     @Transactional(readOnly=true)
@@ -384,7 +381,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
         mff.setExtendOptBean(mfm.getExtendOptBean());
         mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
 
-        for(ModelDataField field : mfm.getModelDataFields()){
+        for(ModelDataField field:mfm.getModelDataFields()){
             if("H".equals(field.getAccessType()))
                 continue;
             if("viewlist".equals(operation) && "HI".equals(field.getFilterType()) )
@@ -424,7 +421,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
             ff.setTemplateOptions(templateOptions);
             mff.addField(ff);
         }
-        for(ModelOperation mo : mfm.getModelOperations())
+        for(ModelOperation mo :mfm.getModelOperations())
             mff.addOperation(mo);
         return mff;
     }
@@ -549,6 +546,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
                 if(i>0)
                     sBuilder.append(" and ");
 
+                if (field.getFilterType() == null) {
+                    field.setFilterType("");
+                }
                 switch(field.getFilterType()){
                 case "MC":
                     if(StringUtils.isNotBlank(alias))
@@ -618,6 +618,32 @@ public class TableModelFormServiceImpl implements ModelFormService {
         return sBuilder.toString();
     }
 
+    /**
+     * 根据传递的Map构造查询条件
+     * @param filters
+     * @return
+     */
+    public static String buildSimpleFilterSql(String alias, Map<String, Object> filters){
+        StringBuilder sBuilder= new StringBuilder();
+        int i=0;
+
+        for (Map.Entry<String, Object> entry : filters.entrySet()) {
+            if (entry.getValue() == null || StringUtils.isBlank(entry.getKey())) {
+                continue;
+            }
+
+            if(i>0)
+                sBuilder.append(" and ");
+
+            if(StringUtils.isNotBlank(alias))
+                sBuilder.append(alias).append('.');
+
+            sBuilder.append(entry.getKey()).append(" = '").append(entry.getValue()).append("'");
+            i++;
+        }
+        return sBuilder.toString();
+    }
+
     @Override
     @Transactional
     public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters) {
@@ -673,8 +699,31 @@ public class TableModelFormServiceImpl implements ModelFormService {
     }
 
     @Override
+    public List<MetaFormModel> listSubModel(String modelCode) {
+        return formModelDao.listObjectsByProperty("parentModelCode", modelCode);
+    }
+
+    /**
+     * 根据父模块code获取子模块code
+     */
+    @Override
+    public JSONArray listSubModelCode(String modelCode) {
+        List<MetaFormModel> subModels = formModelDao.listObjectsByProperty("parentModelCode", modelCode);
+
+        JSONArray result = new JSONArray();
+        if (subModels == null || subModels.size()==0) {
+            return result;
+        }
+
+        for (MetaFormModel subModel:subModels) {
+            result.add(subModel.getModelCode());
+        }
+        return result;
+    }
+
+    @Override
     @Transactional
-    public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters, PageDesc pageDesc) {
+    public JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters, PageDesc pageDesc) {
 
         Map<String, Object> filters = makeTabulationFilter(rc, requestFilters);
 
@@ -714,13 +763,115 @@ public class TableModelFormServiceImpl implements ModelFormService {
     }
 
     @Override
-    public JSONArray listObjectsAsSubModelByFilter(ModelRuntimeContext rc, Map<String, Object> parentObj) throws SQLException {
-        return null;
+    @Transactional
+    public JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters) {
+        //前台传递的父模块字段
+        Map<String, Object> pModelParam = makeTabulationFilter(rc, requestFilters);
+        //构造的过滤器
+        Map<String, Object> filters = new HashMap<>();
+
+        Long tTableId = rc.getTableInfo().getTableId();
+        MetaFormModel parentModel = formModelDao.getObjectById(rc.getMetaFormModel().getParentModelCode());
+
+        Map<String, Object> relSearchColumn = new HashMap<>();
+        relSearchColumn.put("childTableId", tTableId);
+        relSearchColumn.put("parentTableId", parentModel.getTableId());
+        MetaRelation tRelations = metaRelationDao.getObjectByProperties(relSearchColumn);
+        if (tRelations == null || tRelations.getRelationId() == null) {
+            return null;
+        }
+        List<MetaRelDetail> tRelationDetails = metaRelDetialDao.listObjectsByProperty("relationId", tRelations.getRelationId());
+        if (tRelationDetails == null || tRelationDetails.size() == 0
+                || pModelParam == null || pModelParam.size()==0) {
+            return null;
+        }
+
+        for (MetaRelDetail tRelationDetail:tRelationDetails) {
+            String parentColumnName = tRelationDetail.getParentColumnName();
+
+            String parentColumnNameKey = "";
+            parentColumnName.split("_");
+            if (parentColumnName.contains("_")) {
+                String[] tempNames = parentColumnName.split("_");
+                for (int tns=0; tns<tempNames.length; tns++) {
+                    String tempName = tempNames[tns];
+                    if (tns == 0) {
+                        parentColumnNameKey += tempName.toLowerCase();
+                    } else {
+                        parentColumnNameKey += tempName.toUpperCase().charAt(0);
+                        parentColumnNameKey += tempName.toLowerCase().substring(1);
+                    }
+                }
+            } else {
+                parentColumnNameKey += parentColumnName;
+            }
+
+            if (pModelParam.containsKey(parentColumnNameKey)) {
+                filters.put(tRelationDetail.getChildColumnName(), ((String[])pModelParam.get(parentColumnNameKey))[0]);
+            }
+        }
+
+        if (filters == null || filters.size()==0) {
+            return null;
+        }
+
+        try {
+            JsonObjectDao dao = rc.getJsonObjectDao();
+            Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSqlWithFieldName(rc.getTableInfo(),null);
+            String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
+
+            String filter = buildSimpleFilterSql(null,filters);
+
+            if(StringUtils.isNotBlank(filter))
+                sql = sql + " where " + filter;
+            return rc.castTableObjectListToObjectList(
+                    dao.findObjectsAsJSON(
+                            sql, null, null)
+            );
+        } catch (SQLException | IOException e) {
+            return null;
+        }
     }
 
     @Override
-    public JSONArray listObjectsAsSubModelByFilter(ModelRuntimeContext rc, Map<String, Object> parentObj, PageDesc pageDesc) {
-        return null;
+    @Transactional
+    public JSONArray listObjectsByFilter(ModelRuntimeContext rc, Map<String, Object> requestFilters, PageDesc pageDesc) {
+
+        Map<String, Object> filters = makeTabulationFilter(rc, requestFilters);
+
+        try {
+            JsonObjectDao dao = rc.getJsonObjectDao();
+            Pair<String,String[]> q = GeneralJsonObjectDao.buildFieldSqlWithFieldName(rc.getTableInfo(),null);
+            String sql = "select " + q.getLeft() +" from " +rc.getTableInfo().getTableName();
+            QueryAndNamedParams qap = rc.getMetaFormFilter();
+            String filter = buildFilterSql(rc,null,filters);
+            String whereSql="";
+            if(qap!=null){
+                whereSql = " where (" + qap.getQuery()+")";
+                if(StringUtils.isNotBlank(filter))
+                    whereSql = whereSql + " and " + filter;
+                filters.putAll(qap.getParams());
+            }else if(StringUtils.isNotBlank(filter))
+                whereSql = " where " + filter;
+
+            JSONArray ja = dao.findObjectsByNamedSqlAsJSON(sql + whereSql,filters,q.getRight(),
+                    (pageDesc.getPageNo()-1)>0? (pageDesc.getPageNo()-1)*pageDesc.getPageSize():0,
+                    pageDesc.getPageSize());
+
+            sql = "select count(1) as rs from " +
+                    rc.getTableInfo().getTableName() + whereSql;
+
+            List<Object[]> objList = dao.findObjectsByNamedSql(sql,filters);
+            Long ts = NumberBaseOpt.castObjectToLong(
+                    DatabaseAccess.fetchScalarObject(objList));
+            if(ts!=null)
+                pageDesc.setTotalRows(ts.intValue());
+            else
+                pageDesc.setTotalRows(ja.size());
+            return rc.castTableObjectListToObjectList(ja);
+        } catch (SQLException | IOException e) {
+            return null;
+        }
     }
 
 

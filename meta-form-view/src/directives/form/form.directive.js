@@ -11,6 +11,7 @@
 
         scope: {
           data: '=centitForm',
+          subModelCode:'=subModelCode',
           form: '=',
           handlers: '=?',
 
@@ -20,7 +21,6 @@
           dataId: '@',
           modelCode: '@',
           operation: '@',
-
           name: '@',
           legend: '@'
         },

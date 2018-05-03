@@ -100,9 +100,9 @@
       }).then(function(res) {
         // 映射到数据接口，供其他模块调用
         $scope.data = res.data;
+        $scope.subModelCode = res.subModelCode;
         $scope.fields = res.fields;
         $scope.legend = $scope.legend;
-
         return $q.resolve(res.data);
       });
     }

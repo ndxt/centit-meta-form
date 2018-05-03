@@ -5,7 +5,7 @@
     .controller('FormOperationController', FormOperationController);
 
   /* @ngInject */
-  function FormOperationController($scope, $q, $state, $uibModal, $confirm, toastr) {
+  function FormOperationController($scope, $q, $state, $uibModal,$http, $confirm, toastr) {
 
     $scope.operate = operate;
 
@@ -88,6 +88,9 @@
       }
 
       else if ('C' == openType) {
+        if($scope.operation.method=='delete'){
+          _delete();
+        }
         return _openInConfirm();
       }
     }
@@ -129,5 +132,41 @@
         modelCode: operation.optModelCode
       });
     }
+
+    /**
+     * 删除某一行数据
+     * @private
+     */
+    function _delete(){
+      var item = $scope.item,
+          operation = $scope.operation,
+          formModel = $scope.formModel,
+          items = $scope.items;
+
+
+      var primaryKey = formModel.primaryKey || [],
+          primaryValue = primaryKey.map(function(key) {
+            return item[key]
+          });
+
+      var url = '/api/service/metaform/formaccess/'+operation.optModelCode+'/delete';
+
+      $http.post(url,{},{params:{primaryKey: primaryKey, primaryValue: primaryValue}}).
+      then(function success(data){
+
+               //响应成功时调用
+            var index=items.indexOf(item);//获取被删除行在列表items中的index值
+            if(index > -1) $scope.items.splice(index,1);//删除数组中的数据（index）
+                console.log(data);
+          },function error(mesage){
+
+              // 响应失败时调用
+              console.log(mesage)
+
+          }
+        );
+
+    }
+
   }
 })();

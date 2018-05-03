@@ -1,6 +1,6 @@
 <button class="btn {{cls}}"
         style="margin: 0 .4rem;"
         ng-click="operate()"
-        ng-class="{'btn-primary': 'create' == operation.method, 'btn-success': 'edit' == operation.method, 'btn-default': 'view' == operation.method, 'btn-danger': 'delete' == operation.method}">
+        ng-class="{'btn-primary': 'create' == operation.method, 'btn-success': 'edit' == operation.method, 'btn-default': 'view' == operation.method,'btn-default': 'viewAll' == operation.method,'btn-danger': 'delete' == operation.method}">
   {{operation.label}}
 </button>

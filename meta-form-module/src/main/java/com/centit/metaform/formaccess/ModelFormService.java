@@ -1,41 +1,37 @@
 package com.centit.metaform.formaccess;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.support.database.utils.PageDesc;
 
-import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
 public interface ModelFormService {
 
     ModelRuntimeContext createRuntimeContext(String modelCode);
 
-    /**
-     * 查找模块的子模块
-     * @return
-     */
-    List<MetaFormModel> listSubModel(ModelRuntimeContext rc);
+    List<MetaFormModel> listSubModel(String modelCode);
+
+    JSONArray listSubModelCode(String modelCode);
 
     JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters) throws SQLException;
 
     JSONArray listObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters, PageDesc pageDesc );
 
-    JSONArray listObjectsAsSubModelByFilter(ModelRuntimeContext rc, Map<String, Object> parentObj) throws SQLException;
+    JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters) throws SQLException;
 
-    JSONArray listObjectsAsSubModelByFilter(ModelRuntimeContext rc, Map<String, Object> parentObj, PageDesc pageDesc );
+    JSONArray listSubModelObjectsByFilter(ModelRuntimeContext rc,Map<String, Object> filters, PageDesc pageDesc );
 
     JSONObject getObjectByProperties(ModelRuntimeContext rc,Map<String, Object> properties);
 
     Map<String,Object> createNewPk(ModelRuntimeContext rc ) throws SQLException;
 
-    /**
-     * 获取引用类型字段
-     */
     Map<String,Object> getModelReferenceFields(ModelRuntimeContext rc, JSONObject object) throws SQLException;
 
     JSONObject createInitialObject(ModelRuntimeContext rc ) throws SQLException;
@@ -64,6 +60,10 @@ public interface ModelFormService {
 
     /**
      * 获取级联查询的数据选项
+     * @param rc
+     * @param propertyName
+     * @param startGroup
+     * @return
      */
     List<OptionItem> getAsyncReferenceData(ModelRuntimeContext rc,
             String propertyName,String startGroup);
