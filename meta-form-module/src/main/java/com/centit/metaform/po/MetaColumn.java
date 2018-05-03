@@ -73,12 +73,12 @@ public class MetaColumn implements TableField,java.io.Serializable {
      * 字段长度 precision
      */
     @Column(name = "MAX_LENGTH")
-    private Integer  maxLength;
+    private Integer  maxLengthM;
     /**
      * 字段精度 null
      */
     @Column(name = "SCALE")
-    private Integer  scale;
+    private Integer  scaleM;
     /**
      * 字段类别 null
      */
@@ -195,8 +195,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
         this.columnComment= columnComment;
         this.columnOrder= columnOrder;
         this.columnFieldType= columnType;
-        this.maxLength= maxLength;
-        this.scale= scale;
+        this.maxLengthM= maxLength;
+        this.scaleM= scale;
         this.accessType= accessType;
         this.mandatory= mandatory;
         this.primarykey= primarykey;
@@ -212,14 +212,14 @@ public class MetaColumn implements TableField,java.io.Serializable {
     }
 
     public MetaColumn(PendingMetaColumn next) {
-        this.setTableId(next.getTableId());
-        this.setColumnName(next.getColumnName());
+        this.tableId = next.getTableId();
+        this.columnName = next.getColumnName();
         this.fieldLabelName= next.getFieldLabelName();
         this.columnComment= next.getColumnComment();
         this.columnOrder= next.getColumnOrder();
         this.columnFieldType= next.getColumnFieldType();
-        this.maxLength= next.getMaxLength();
-        this.scale= next.getScale();
+        this.maxLengthM= next.getMaxLength();
+        this.scaleM= next.getScale();
         this.accessType= next.getAccessType();
         this.mandatory= next.isMandatory()?"T":"F";
         this.primarykey= next.getPrimarykey();
@@ -313,9 +313,9 @@ public class MetaColumn implements TableField,java.io.Serializable {
         this.accessType = accessType;
     }
   
-//    public String getMandatory() {
-//        return this.mandatory;
-//    }
+    public String getMandatory() {
+        return this.mandatory;
+    }
 
     public void setMandatory(String mandatory) {
         this.mandatory = mandatory;
@@ -424,24 +424,32 @@ public class MetaColumn implements TableField,java.io.Serializable {
     public void setAutoCreateParam(String autoCreateParam) {
         this.autoCreateParam = autoCreateParam;
     }
-    public void setMaxLength(Integer maxLength) {
-        this.maxLength = maxLength;
+    public void setMaxLengthM(Integer maxLength) {
+        this.maxLengthM = maxLength;
     }
-    public void setScale(Integer scale) {
-        this.scale = scale;
+    public void setScaleM(Integer scale) {
+        this.scaleM = scale;
+    }
+
+    public Integer getMaxLengthM() {
+        return maxLengthM;
+    }
+
+    public Integer getScaleM() {
+        return scaleM;
     }
 
     public MetaColumn copy(MetaColumn other){
   
-        this.setTableId(other.getTableId());
-        this.setColumnName(other.getColumnName());
+        this.tableId = other.getTableId();
+        this.columnName = other.getColumnName();
   
         this.fieldLabelName= other.getFieldLabelName();
         this.columnComment= other.getColumnComment();
         this.columnOrder= other.getColumnOrder();
         this.columnFieldType= other.getColumnFieldType();
-        this.maxLength= other.getMaxLength();
-        this.scale= other.getScale();
+        this.maxLengthM= other.getMaxLengthM();
+        this.scaleM= other.getScaleM();
         this.accessType= other.getAccessType();
         this.mandatory= other.isMandatory()?"T":"F";
         this.primarykey= other.getPrimarykey();
@@ -461,9 +469,9 @@ public class MetaColumn implements TableField,java.io.Serializable {
     public MetaColumn copyNotNullProperty(MetaColumn other){
   
         if( other.getTableId() != null)
-            this.setTableId(other.getTableId());
+            this.tableId = other.getTableId();
         if( other.getColumnName() != null)
-            this.setColumnName(other.getColumnName());
+            this.columnName = other.getColumnName();
 
         if( other.getFieldLabelName() != null)
             this.fieldLabelName= other.getFieldLabelName();
@@ -474,8 +482,10 @@ public class MetaColumn implements TableField,java.io.Serializable {
         if( other.getColumnFieldType() != null)
             this.columnFieldType= other.getColumnFieldType();
         //if( other.getMaxLength() != null)
-        this.maxLength= other.getMaxLength();
-        this.scale= other.getScale();
+        if( other.getMaxLengthM() != null)
+            this.maxLengthM= other.getMaxLengthM();
+        if( other.getScaleM() != null)
+            this.scaleM= other.getScaleM();
         if( other.getAccessType() != null)
             this.accessType= other.getAccessType();
 //        if( other.isMandatory())
@@ -510,8 +520,8 @@ public class MetaColumn implements TableField,java.io.Serializable {
         this.columnComment= null;
         this.columnOrder= null;
         this.columnFieldType= null;
-        this.maxLength= null;
-        this.scale= null;
+        this.maxLengthM= null;
+        this.scaleM= null;
         this.accessType= null;
         this.mandatory= null;
         this.primarykey= null;
@@ -565,7 +575,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 
     @Override
     public String getJavaType() {
-        return MetaColumn.mapToFieldType(this.columnFieldType,this.scale==null?0:this.scale);
+        return MetaColumn.mapToFieldType(this.columnFieldType,this.scaleM==null?0:this.scaleM);
     }
 
     @Override
@@ -584,7 +594,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
                 "float".equalsIgnoreCase(this.columnFieldType) ||
                 "varchar".equalsIgnoreCase(this.columnFieldType)||
                 "number".equalsIgnoreCase(this.columnFieldType))
-            return maxLength==null?0:maxLength.intValue();
+            return maxLengthM==null?0:maxLengthM.intValue();
         return 0;
     }
     @Override
@@ -595,7 +605,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
     public int getScale() {
         if("float".equalsIgnoreCase(this.columnFieldType) ||
                 "number".equalsIgnoreCase(this.columnFieldType))
-            return scale==null?0:scale.intValue();
+            return scaleM==null?0:scaleM.intValue();
         return 0;
     }
 

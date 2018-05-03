@@ -64,6 +64,9 @@ public class MetaTableManagerImpl
     private MetaRelationDao metaRelationDao;
 
     @Resource
+    private MetaRelDetialDao metaRelDetialDao;
+
+    @Resource
     private MetaChangLogDao metaChangLogDao;
 
     @Resource
@@ -256,14 +259,40 @@ public class MetaTableManagerImpl
                 new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
         Set<PendingMetaRelation> pRelation =
                 new HashSet<>(pendingRelationDao.listObjectsByProperty("parentTableId", tableId));
+
+        Iterator<PendingMetaRelation> itr= pRelation.iterator();
+        while(itr.hasNext()){
+            PendingMetaRelation relation=itr.next();
+            Set<PendingMetaRelDetail> relDetails = new HashSet<>(
+                    pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
+            relation.setRelationDetails(relDetails);
+        }
+
         ptable.setMdColumns(pColumn);
         ptable.setMdRelations(pRelation);
+
         return  makeAlterTableSqls(ptable);
     }
 
     @Transactional
     public List<String> makeAlterTableSqls(PendingMetaTable ptable) {
         MetaTable stable = metaTableDao.getObjectById(ptable.getTableId());
+
+        Set<MetaColumn> mtColumn =
+                new HashSet<>(metaColumnDao.listObjectsByProperty("tableId", ptable.getTableId()));
+        Set<MetaRelation> mtRelation =
+                new HashSet<>(metaRelationDao.listObjectsByProperty("parentTableId", ptable.getTableId()));
+
+        Iterator<MetaRelation> itr= mtRelation.iterator();
+        while(itr.hasNext()){
+            MetaRelation relation=itr.next();
+            Set<MetaRelDetail> relDetails = new HashSet<>(
+                    metaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
+            relation.setRelationDetails(relDetails);
+        }
+
+        stable.setMdColumns(mtColumn);
+        stable.setMdRelations(mtRelation);
 
         DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
                 //databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
@@ -443,13 +472,13 @@ public class MetaTableManagerImpl
                 MetaTable table= new MetaTable(ptable);
                 metaTableDao.mergeObject(table);
 
-                List<MetaColumn> metaColumn = table.getColumns();
+                List<MetaColumn> metaColumns = table.getColumns();
                 Map<String, Object> cFilter = new HashMap<>();
                 cFilter.put("tableId", table.getTableId());
                 metaColumnDao.deleteObjectsByProperties(cFilter);
-                if (metaColumn != null && metaColumn.size() > 0) {
-                    for (int i=0; i<metaColumn.size(); i++) {
-                        metaColumnDao.saveNewObject(metaColumn.get(i));
+                if (metaColumns != null && metaColumns.size() > 0) {
+                    for (MetaColumn metaColumn : metaColumns) {
+                        metaColumnDao.saveNewObject(metaColumn);
                     }
                 }
 
