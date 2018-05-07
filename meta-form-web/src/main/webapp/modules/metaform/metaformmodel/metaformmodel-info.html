@@ -18,7 +18,7 @@
 						data-options="valueField:'tableId',textField:'tableLabelName',loadFilter:function(data){return data.objList;}">
 				</div>
 		   		<div class="field ">
-		       		<label>模快描述</label>
+		       		<label>模块描述</label>
 		       		<input type="text" class="easyui-textbox" 
 		       		name="modelComment" />
 				</div>
@@ -142,19 +142,43 @@
 								{value:'5',label:'sql语句（树）'},
 								{value:'Y',label:'年份'},
 								{value:'M',label:'月份'}]}}">引用类型</th>
+						<th data-options="field:'referenceData',editor:{type:'textbox',options:{}}">引用数据</th>
 						<th data-options="field:'validateRegex',editor:{type:'textbox',options:{}}">约束表达式</th>
 			       		<th data-options="field:'validateInfo',editor:{type:'textbox',options:{}}">约束提示</th>
 			       		<th data-options="field:'defaultValue',editor:{type:'textbox',options:{}}">默认值</th>
-			       		<th data-options="field:'autoCreateRule',editor:{type:'textbox',options:{}}">自动创建规则</th>
-		       			<th data-options="field:'autoCreateParam',editor:{type:'textbox',options:{}}">自动创建参数</th>
-		       			<th data-options="field:'databaseType',editor:{type:'textbox',options:{}}">数据库类别</th>
-		       			<th data-options="field:'referenceData',editor:{type:'textbox',options:{}}">引用数据</th>
 		       			<th data-options="field:'validateHint',editor:{type:'textbox',options:{}}">输入约束描述</th>
 		       			<th data-options="field:'inputHint',editor:{type:'textbox',options:{}}">输入说明</th>
-			       		<th data-options="field:'recorder'" format ="User">更改人</th>
-			       		<th data-options="field:'lastModifyDate'">更改时间</th>
+                        <th data-options="field:'filterType',
+						formatter:function(value, rowData, rowIndex){
+						  	if(value=='HI')return '查询时隐藏';else
+						  	if(value=='NO')return '没有';else
+						  	if(value=='MC')return 'match';else
+						  	if(value=='LT')return '小于';else
+						  	if(value=='GT')return '大于';else
+						  	if(value=='EQ')return '等于';else
+						  	if(value=='BT')return '介于';else
+						  	if(value=='LE')return '小于等于';else
+						  	if(value=='GE')return '大于等于';
+						  }
+						,editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',
+							data:[
+							{value:'HI',label:'查询时隐藏'},
+								{value:'NO',label:'没有'},
+								{value:'MC',label:'match'},
+								{value:'LT',label:'小于 '},
+								{value:'GT',label:'大于'},
+								{value:'EQ',label:'等于'},
+								{value:'BT',label:'介于'},
+								{value:'LE',label:'小于等于'},
+								{value:'GE',label:'大于等于'}]}}">查询类型</th>
+                        <th data-options="field:'url',editor:{type:'textbox',options:{}}">url</th>
+                        <th data-options="field:'extendOptions',editor:{type:'textbox',options:{}}">其他扩展属性</th>
+                        <th data-options="field:'fieldHeight',editor:{type:'textbox',options:{}}">网格布局高度</th>
+                        <th data-options="field:'fieldWidth',editor:{type:'textbox',options:{}}">网格布局宽度</th>
+                        <th data-options="field:'viewFormat',editor:{type:'textbox',options:{}}">显示格式</th>
 			        </tr>
-			    </thead>
+                </thead>
 		</table>
 		<div class="temp-toolbar_formmodel_datafield">
 				<a iconCls="icon-add" trigger="none" href="/modules/metaform/metaformmodel/formmodel-datafield-add.html"

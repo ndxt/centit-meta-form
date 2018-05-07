@@ -85,8 +85,12 @@
 				name="defaultValue" />
 		</div>
 		<div class="field ">
-			<label>自动创建规则</label> <input type="text" class="easyui-textbox"
-				name="autoCreateRule" />
+			<label>自动创建规则</label> <input type="text" class="easyui-combobox" panelHeight="auto"
+                name="autoCreateRule" data-options="valueField:'value',textField:'label',
+								data:[
+								{value:'C',label:'常量'},
+								{value:'U',label:'UUID'},
+								{value:'S',label:'sequence'}]"/>
 		</div>
 		<div class="field ">
 			<label>自动创建参数</label> <input type="text" class="easyui-textbox"

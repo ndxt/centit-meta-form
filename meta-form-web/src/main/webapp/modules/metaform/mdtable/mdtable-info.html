@@ -193,7 +193,19 @@
                                 <th data-options="field:'defaultValue', width:100,editor:{type:'textbox',options:{}}">
                                     默认值
                                 </th>
-                                <th data-options="field:'autoCreateRule', width:100,editor:{type:'textbox',options:{}}">
+                                <th data-options="field:'autoCreateRule', width:100,
+					formatter:function(value, rowData, rowIndex){
+					    if(value=='C')return '常量';else
+						  	if(value=='U')return 'UUID';else
+						  	if(value=='S')return 'sequence';else
+					  	return '';
+					  }
+					,editor:{ type:'combobox',
+					  options:{valueField:'value',textField:'label',
+						data:[
+						{value:'C',label:'常量'},
+								{value:'U',label:'UUID'},
+								{value:'S',label:'sequence'}]}}">
                                     自动创建规则
                                 </th>
                                 <th data-options="field:'autoCreateParam', width:100,editor:{type:'textbox',options:{}}">

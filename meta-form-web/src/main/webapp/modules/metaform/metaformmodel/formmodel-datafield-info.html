@@ -58,18 +58,41 @@
 			<label>默认值</label> <input type="text" class="easyui-textbox"
 				name="defaultValue" />
 		</div>
+
 		<div class="field ">
-			<label>自动创建规则</label> <input type="text" class="easyui-textbox"
-				name="autoCreateRule" />
+			<label>查询类型</label> <input type="text" class="easyui-combobox" panelHeight="auto"
+									   name="filterType" data-options="valueField:'value',textField:'label',
+								data:[
+								{value:'HI',label:'查询时隐藏'},
+								{value:'NO',label:'没有'},
+								{value:'MC',label:'match'},
+								{value:'LT',label:'小于 '},
+								{value:'GT',label:'大于'},
+								{value:'EQ',label:'等于'},
+								{value:'BT',label:'介于'},
+								{value:'LE',label:'小于等于'},
+								{value:'GE',label:'大于等于'}]"/>
 		</div>
 		<div class="field ">
-			<label>自动创建参数</label> <input type="text" class="easyui-textbox"
-				name="autoCreateParam" />
+			<label>url</label> <input type="text" class="easyui-textbox"
+									  name="url" />
 		</div>
 		<div class="field ">
-			<label>数据库类别</label> <input type="text" class="easyui-textbox"
-				name="databaseType" />
+			<label>其他扩展属性</label> <input type="text" class="easyui-textbox"
+									  name="extendOptions" />
 		</div>
+        <div class="field ">
+            <label>网格布局高度</label> <input type="text" class="easyui-textbox"
+                                      name="fieldHeight" />
+        </div>
+        <div class="field ">
+            <label>网格布局宽度</label> <input type="text" class="easyui-textbox"
+                                         name="fieldWidth" />
+        </div>
+        <div class="field ">
+            <label>显示格式</label> <input type="text" class="easyui-textbox"
+                                         name="viewFormat" />
+        </div>
 		
 	</div>
 	<div class="field">

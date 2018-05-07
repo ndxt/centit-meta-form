@@ -139,7 +139,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
     private String  autoCreateRule;
 
     /**
-     * 自动生成参数
+     * 自动生成参数 常量的值或者sequence的名字
      */
     @Column(name = "AUTO_CREATE_PARAM")
     @Length(max = 200, message = "字段长度不能大于{max}")
