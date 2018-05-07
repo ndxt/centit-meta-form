@@ -1,6 +1,7 @@
 package com.centit.metaform.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseMapData;
@@ -102,7 +103,10 @@ public class MetaFormModelController extends BaseController{
         metaFormModel.setModelDataFields(modelDataFields);
         metaFormModel.setModelOperations(modelOperations);
 
-        JsonResultUtils.writeSingleDataJson(metaFormModel, response);
+        JSONObject modelResult = JSONObject.parseObject(JSONObject.toJSONString(metaFormModel));
+        modelResult.put("lastModifyDate",metaFormModel.getLastModifyDate().toString());
+
+        JsonResultUtils.writeSingleDataJson(modelResult, response);
     }
     
     /**
