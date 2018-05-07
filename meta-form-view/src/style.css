@@ -58,3 +58,7 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
+
+.col-xs-1 {
+  width: auto;
+}
