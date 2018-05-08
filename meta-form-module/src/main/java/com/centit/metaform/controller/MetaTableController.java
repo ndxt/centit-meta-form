@@ -243,6 +243,7 @@ public class MetaTableController extends BaseController{
         
         if (null != mdTable) {
             dbMdTable.copyNotNullProperty(mdTable);
+            dbMdTable.setLastModifyDate(new Date());
             mdTableMag.savePendingMetaTable(dbMdTable);
         } else {
             JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);

@@ -476,6 +476,7 @@ public class MetaTableManagerImpl
             metaChangLogDao.saveNewObject(chgLog);
             if(errors.size()==0){
                 ptable.setRecorder(currentUser);
+                ptable.setLastModifyDate(new Date());
                 pendingMdTableDao.mergeObject(ptable);
 
                 MetaTable table= new MetaTable(ptable);

@@ -375,7 +375,10 @@ public class TableModelFormServiceImpl implements ModelFormService {
         mff.setExtendOptBean(mfm.getExtendOptBean());
         mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
 
-        for(ModelDataField field:mfm.getModelDataFields()){
+        List<ModelDataField> fieldList = new ArrayList<>(mfm.getModelDataFields());
+        sortFieldListByDisplayOrder(fieldList);
+
+        for(ModelDataField field:fieldList){
             if("H".equals(field.getAccessType()))
                 continue;
             if("viewlist".equals(operation) && "HI".equals(field.getFilterType()) )
@@ -420,6 +423,24 @@ public class TableModelFormServiceImpl implements ModelFormService {
         return mff;
     }
 
+    public void sortFieldListByDisplayOrder(List<ModelDataField> fieldList) {
+        Collections.sort(fieldList, new Comparator<ModelDataField>() {
+
+            @Override
+            public int compare(ModelDataField o1, ModelDataField o2) {
+                Long order1 = (o1.getDisplayOrder()==null)?0:o1.getDisplayOrder();
+                Long order2 = (o2.getDisplayOrder()==null)?0:o2.getDisplayOrder();
+                if (order1 > order2) {
+                    return 1;
+                } else if (order1 == order2) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+        });
+    }
+
 
     @Override
     @Transactional(readOnly=true)
@@ -462,7 +483,10 @@ public class TableModelFormServiceImpl implements ModelFormService {
         mff.setExtendOptBean(mfm.getExtendOptBean());
         mff.setExtendOptBeanParam(mfm.getExtendOptBeanParam());
 
-        for(ModelDataField field:mfm.getModelDataFields()){
+        List<ModelDataField> fieldList = new ArrayList<>(mfm.getModelDataFields());
+        sortFieldListByDisplayOrder(fieldList);
+
+        for(ModelDataField field:fieldList){
             MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
             if(!"H".equals(field.getAccessType()) && !"HI".equals(field.getFilterType())){
 
