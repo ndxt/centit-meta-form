@@ -19,7 +19,7 @@
               }
             },
             data: {
-              title: '首页',
+              title: '我的首页',
               _class: 'dashboard'
             }
           }
