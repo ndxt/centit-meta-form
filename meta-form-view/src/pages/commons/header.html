@@ -5,7 +5,7 @@
     </div>
 
     <ul class="nav navbar-nav">
-      <li ui-sref-active="active"><a ui-sref="form.dashboard">首页</a></li>
+      <li ui-sref-active="active"><a ui-sref="form.dashboard">我的首页</a></li>
       <li class="dropdown" uib-dropdown ng-repeat="menu in vm.menus">
         <a uib-dropdown-toggle ui-sref="{{::menu.url}}">{{::menu.text}}
           <span class="caret" ng-if="menu.children && menu.children.length"></span>
