@@ -221,7 +221,14 @@
 			       		{value:'D',label:'Dialog'}
 			       		]
 			       		}}"> 打开方式 </th>
-			       		<th data-options="field:'returnOperation',editor:{type:'textbox',options:{}}"> 返回后操作</th>
+			       		<th data-options="field:'returnOperation',editor:{type:'combobox',options:{valueField:'value',textField:'label',
+			       		data:[
+			       		{value:'0',label:'不操作'},
+			       		{value:'1',label:'刷新页面'},
+			       		{value:'2',label:'删除当前行'},
+			       		{value:'3',label:'更新当前行'}
+			       		]
+			       		}}"> 返回后操作</th>
 			       		<th data-options="field:'optHintType',editor:{type:'textbox',options:{}}">操作前提示类别</th>
 			       		<th data-options="field:'optHintInfo',editor:{type:'textbox',options:{}}">操作提示信息 </th>
 			       		<th data-options="field:'extendOptions',editor:{type:'textbox',options:{}}">其他扩展属性</th>
