@@ -335,7 +335,7 @@ public class MetaTableManagerImpl
                         if( pcol.getMaxLength() != ocol.getMaxLength() ||
                                 pcol.getScale() != ocol.getScale()){
                             sqls.add(ddlOpt.makeModifyColumnSql(
-                                    ptable.getTableName(), pcol) );
+                                    ptable.getTableName(),ocol, pcol) );
                         }
                     }else{
                         sqls.addAll(ddlOpt.makeReconfigurationColumnSqls(
