@@ -99,6 +99,9 @@
         primaryData: primaryData
       }).then(function(res) {
         // 映射到数据接口，供其他模块调用
+        for(var index in res.fields){
+          res.fields[index]
+        }
         $scope.data = res.data;
         $scope.subModelCode = res.subModelCode;
         $scope.fields = res.fields;

@@ -66,7 +66,7 @@
        target="dialog" rel="mdtable_publish" title="是否确定发布 表元数据？" width="600" height="300">发布</a>
     <hr>
     <a iconCls="icon-base icon-base-ban" trigger="single"
-       target="confirm" rel="mdtable_remove" title="是否确定删除 表元数据？">删除</a>
+       target="confirm" rel="mdtable_remove" title="是否确定删除 表元数据？" checkbox="同时删除数据库中的表">删除</a>
 </div>
 
 <script>
@@ -81,3 +81,17 @@
         });
     };
 </script>
+<style>
+    .message-checkbox{
+        padding: 10px;
+        color: red;
+        text-indent: 15px;}
+    .message-checkbox input{
+        margin-right: 10px;
+        display: inline-block;
+        margin-top: 5px;
+        position: absolute;
+        left: 50px;
+        top: 30px;
+    }
+</style>
