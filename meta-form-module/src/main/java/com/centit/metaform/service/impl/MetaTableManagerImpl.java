@@ -213,32 +213,29 @@ public class MetaTableManagerImpl
         }
 
         Set<PendingMetaRelation> relations =pmt.getMdRelations();
+
+        Map<String, Object> relationFilter = new HashMap<>();
+        relationFilter.put("parentTableId", pmt.getTableId());
+        pendingRelationDao.deleteObjectsForceByProperties(relationFilter);
+
         Iterator<PendingMetaRelation> itr=relations.iterator();
         while(itr.hasNext()){
             PendingMetaRelation relation =itr.next();
             relation.setParentTableId(pmt.getTableId());
-            if(relation.getRelationId()==null) {
-                relation.setRelationId(pendingRelationDao.getNextKey());
-                pendingRelationDao.saveNewObject(relation);
-                List<PendingMetaRelDetail> relDetails = new ArrayList(relation.getRelationDetails());
-                if (relDetails != null && relDetails.size()>0) {
-                    for (PendingMetaRelDetail relDetail:relDetails) {
-                        relDetail.setRelationId(relation.getRelationId());
-                        pendingMetaRelDetialDao.saveNewObject(relDetail);
-                    }
-                }
-            } else {
-                pendingRelationDao.mergeObject(relation);
 
+            relation.setRelationId(pendingRelationDao.getNextKey());
+            pendingRelationDao.saveNewObject(relation);
+
+            if(relation.getRelationId()!=null) {
                 Map<String, Object> detailFilter = new HashMap<>();
                 detailFilter.put("relationId", relation.getRelationId());
                 pendingMetaRelDetialDao.deleteObjectsForceByProperties(detailFilter);
-                List<PendingMetaRelDetail> relDetails = new ArrayList(relation.getRelationDetails());
-                if (relDetails != null && relDetails.size()>0) {
-                    for (PendingMetaRelDetail relDetail:relDetails) {
-                        relDetail.setRelationId(relation.getRelationId());
-                        pendingMetaRelDetialDao.saveNewObject(relDetail);
-                    }
+            }
+            List<PendingMetaRelDetail> relDetails = new ArrayList(relation.getRelationDetails());
+            if (relDetails != null && relDetails.size()>0) {
+                for (PendingMetaRelDetail relDetail:relDetails) {
+                    relDetail.setRelationId(relation.getRelationId());
+                    pendingMetaRelDetialDao.saveNewObject(relDetail);
                 }
             }
         }
