@@ -423,11 +423,35 @@ public class TableModelFormServiceImpl implements ModelFormService {
         return mff;
     }
 
+    /**
+     * 将模块字段根据[显示顺序]排序
+     * @param fieldList
+     */
     public void sortFieldListByDisplayOrder(List<ModelDataField> fieldList) {
         Collections.sort(fieldList, new Comparator<ModelDataField>() {
-
             @Override
             public int compare(ModelDataField o1, ModelDataField o2) {
+                Long order1 = (o1.getDisplayOrder()==null)?0:o1.getDisplayOrder();
+                Long order2 = (o2.getDisplayOrder()==null)?0:o2.getDisplayOrder();
+                if (order1 > order2) {
+                    return 1;
+                } else if (order1 == order2) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+        });
+    }
+
+    /**
+     * 将模块操作根据[显示顺序]排序
+     * @param modelOperations
+     */
+    public void sortModelOperationByDisplayOrder(List<ModelOperation> modelOperations) {
+        Collections.sort(modelOperations, new Comparator<ModelOperation>() {
+            @Override
+            public int compare(ModelOperation o1, ModelOperation o2) {
                 Long order1 = (o1.getDisplayOrder()==null)?0:o1.getDisplayOrder();
                 Long order2 = (o2.getDisplayOrder()==null)?0:o2.getDisplayOrder();
                 if (order1 > order2) {
@@ -542,7 +566,11 @@ public class TableModelFormServiceImpl implements ModelFormService {
                     mff.addField(ff);
             }
         }
-        for(ModelOperation mo :mfm.getModelOperations())
+
+        List<ModelOperation> modelOperations = new ArrayList<>(mfm.getModelOperations());
+        sortModelOperationByDisplayOrder(modelOperations);
+
+        for(ModelOperation mo :modelOperations)
             mff.addOperation(mo);
 
         return mff;
