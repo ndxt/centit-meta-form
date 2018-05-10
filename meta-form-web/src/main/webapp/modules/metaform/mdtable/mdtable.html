@@ -16,8 +16,18 @@
     <tr>
         <th data-options="field:'databaseCode', width:100" hidden="true">所属数据库ID</th>
         <th data-options="field:'databaseName', width:100">所属数据库</th>
-        <th data-options="field:'tableType', width:100">类别</th>
-        <th data-options="field:'tableState', width:100">状态</th>
+        <th data-options="field:'tableType', width:100,
+						formatter:function(value, rowData, rowIndex){
+						  	if(value=='T')return '表';else
+						  	if(value=='V')return '视图';else
+						  	if(value=='C')return '大字段';
+						  }">类别</th>
+        <th data-options="field:'tableState', width:100,
+						formatter:function(value, rowData, rowIndex){
+						  	if(value=='S')return '系统';else
+						  	if(value=='R')return '查询(只读)';else
+						  	if(value=='N')return '新建(读写)';
+						  }">状态</th>
         <th data-options="field:'tableComment', width:100">描述</th>
         <th data-options="field:'workFlowOptType', width:100,
 						formatter:function(value, rowData, rowIndex){

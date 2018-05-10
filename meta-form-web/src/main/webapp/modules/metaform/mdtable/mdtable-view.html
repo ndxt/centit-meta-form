@@ -18,7 +18,7 @@
 				<div class="field required">
 		       		<label>类别</label>
 		       		<input type="text" class="easyui-combobox" readonly="readonly" 
-		       		data-options="valueField:'value',textField:'text',data:[{value:'0',text:'类别0'},{value:'1',text:'类别1'},{value:'2',text:'类别2'}]"
+		       		data-options="valueField:'value',textField:'text',data:[{value:'T',text:'表'},{value:'V',text:'视图'},{value:'C',text:'大字段'}]"
 		       		name="tableType" required/>
 				</div>
 		    </div>
@@ -26,7 +26,8 @@
 		    	
 		   		<div class="field required">
 		       		<label>状态</label>
-		       		<input type="text" class="easyui-textbox" readonly="readonly" 
+		       		<input type="text" class="easyui-combobox" readonly="readonly"
+					data-options="valueField:'value',textField:'text',data:[{value:'S',text:'系统'},{value:'R',text:'查询(只读)'},{value:'N',text:'新建(读写)'}]"
 		       		name="tableState" required/>
 				</div>
 				<div class="field ">

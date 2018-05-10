@@ -137,6 +137,24 @@
 								{value:'Y',label:'年份'},
 								{value:'M',label:'月份'}]}}">引用类型</th>
 						<th data-options="field:'referenceData',editor:{type:'textbox',options:{}}">引用数据</th>
+						<th data-options="field:'inputType',
+						formatter:function(value, rowData, rowIndex){
+						  	if(value=='input')return 'input';else
+						  	if(value=='datepicker')return 'date';else
+						  	if(value=='number')return 'number';else
+						  	if(value=='select')return 'select';else
+						  	if(value=='file')return 'file';else
+						  	if(value=='hidden')return 'hidden';
+						  },
+						  editor:{ type:'combobox',
+						  options:{valueField:'value',textField:'label',
+							data:[
+								{value:'input',label:'input'},
+								{value:'datepicker',label:'date'},
+								{value:'number',label:'number'},
+								{value:'select',label:'select'},
+								{value:'file',label:'file'},
+								{value:'hidden',label:'hidden'}]}}">输入框类型</th>
 						<th data-options="field:'validateRegex',editor:{type:'textbox',options:{}}">约束表达式</th>
 			       		<th data-options="field:'validateInfo',editor:{type:'textbox',options:{}}">约束提示</th>
 			       		<th data-options="field:'defaultValue',editor:{type:'textbox',options:{}}">默认值</th>
