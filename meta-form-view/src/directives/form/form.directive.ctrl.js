@@ -99,9 +99,9 @@
         primaryData: primaryData
       }).then(function(res) {
         // 映射到数据接口，供其他模块调用
-        for(var index in res.fields){
-          res.fields[index]
-        }
+      /*  for(var index in res.fields){
+          res.fields[index].templateOptions.type='file';// hidden,email,number,date可以修改input输入框的类型
+        }*/
         $scope.data = res.data;
         $scope.subModelCode = res.subModelCode;
         $scope.fields = res.fields;
