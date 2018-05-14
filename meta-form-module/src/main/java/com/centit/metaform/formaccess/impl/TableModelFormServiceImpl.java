@@ -60,7 +60,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
     @Resource
     protected IntegrationEnvironment integrationEnvironment;
 
-    @Value("${metaform.dataaccess.embedded}")
+    @Value("${metaform.dataaccess.embedded:false}")
     private boolean useLocalDatabase;
    
     private Map<String,List<OptionItem>> propertyOptionCache;
@@ -73,10 +73,12 @@ public class TableModelFormServiceImpl implements ModelFormService {
                 ModelRuntimeContextPool.getRuntimeContextPool(modelCode);
         if(runtimeContext!=null)
             return runtimeContext;
+
         if(useLocalDatabase)
-            runtimeContext = createHibernateRuntimeContext(modelCode);
+            runtimeContext = createHostModelRuntimeContext(modelCode);
         else
             runtimeContext = createJdbcRuntimeContext(modelCode);
+
         ModelRuntimeContextPool.registerRuntimeContextPool(runtimeContext);
         return runtimeContext;
     }
@@ -120,7 +122,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
     }
 
     @Transactional(readOnly=true)
-    public HostModelRuntimeContext createHibernateRuntimeContext(String modelCode) {
+    public HostModelRuntimeContext createHostModelRuntimeContext(String modelCode) {
 
         HostModelRuntimeContext rc = new HostModelRuntimeContext(modelCode);
 
