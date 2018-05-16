@@ -372,11 +372,11 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     }
 
     public Integer getMaxLengthM() {
-        return maxLengthM;
+        return this.maxLengthM;
     }
 
     public Integer getScaleM() {
-        return scaleM;
+        return this.scaleM;
     }
 
 //    public PendingMetaColumnId getCid() {
@@ -426,9 +426,9 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
             this.columnOrder= other.getColumnOrder();
         if( other.getColumnType() != null)
             this.columnFieldType= other.getColumnFieldType();
-        if( other.getMaxLength() != 0)
+        if( other.getMaxLengthM() != null)
             this.maxLengthM= other.getMaxLengthM();
-        if( other.getScale() != 0)
+        if( other.getScaleM() != null)
             this.scaleM= other.getScaleM();
         if( other.getAccessType() != null)
             this.accessType= other.getAccessType();
