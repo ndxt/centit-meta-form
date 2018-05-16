@@ -40,8 +40,8 @@ public class PdmTableInfo{
             mdColumn.setColumnName(field.getColumnName());
             mdColumn.setColumnFieldType(field.getColumnType());
             mdColumn.setColumnComment(field.getColumnComment());
-            mdColumn.setMaxLength(field.getMaxLength());
-            mdColumn.setScale(field.getScale());
+            mdColumn.setMaxLengthM(field.getMaxLength());
+            mdColumn.setScaleM(field.getScale());
             if(StringUtils.isNotBlank(field.getDefaultValue())){
                 mdColumn.setAutoCreateRule("C");
                 mdColumn.setAutoCreateParam(field.getDefaultValue());
