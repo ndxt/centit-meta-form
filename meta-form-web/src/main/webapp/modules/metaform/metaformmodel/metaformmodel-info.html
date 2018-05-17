@@ -140,7 +140,7 @@
 						<th data-options="field:'inputType',
 						formatter:function(value, rowData, rowIndex){
 						  	if(value=='input')return 'input';else
-						  	if(value=='datepicker')return 'date';else
+						  	if(value=='date')return 'date';else
 						  	if(value=='number')return 'number';else
 						  	if(value=='select')return 'select';else
 						  	if(value=='file')return 'file';else
@@ -150,7 +150,8 @@
 						  options:{valueField:'value',textField:'label',
 							data:[
 								{value:'input',label:'input'},
-								{value:'datepicker',label:'date'},
+								{value:'date',label:'date'},
+								{value:'datetime-local',label:'datetime'},
 								{value:'number',label:'number'},
 								{value:'select',label:'select'},
 								{value:'file',label:'file'},
