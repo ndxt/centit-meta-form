@@ -3,11 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
             http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <artifactId>framework-snapshot-dependencies</artifactId>
+    <dependency>
         <groupId>com.centit.framework</groupId>
-        <version>1.1.1805</version>
-    </parent>
+        <artifactId>framework-snapshot-dependencies</artifactId>
+        <version>1.1-SNAPSHOT</version>
+        <type>pom</type>
+    </dependency>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.centit.product</groupId>
 	<version>0.0.1-SNAPSHOT</version>
