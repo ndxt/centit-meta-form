@@ -7,7 +7,6 @@
         <artifactId>framework-snapshot-dependencies</artifactId>
         <groupId>com.centit.framework</groupId>
         <version>1.1.1805</version>
-        <relativePath>../../../centit-framework-dependencies/1.1.1805/centit-framework-dependencies-1.1.1805.pom</relativePath>
     </parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.centit.product</groupId>
