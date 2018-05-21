@@ -479,7 +479,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     }
     @Override
     public String getJavaType() {
-        return MetaColumn.mapToFieldType(this.columnFieldType,this.scaleM);
+        return MetaColumn.mapToFieldType(this.columnFieldType, this.scaleM==null?0:this.scaleM);
     }
     @Override
     public boolean isMandatory() {
