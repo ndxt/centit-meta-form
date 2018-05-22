@@ -48,9 +48,7 @@ define(function(require) {
 				        					valueField:'columnName',textField:'fieldLabelName',
 											data:list
 											}},
-				          },
-				          {field:'',title:'childColumnName'}
-				          
+				          }
 				          
 				         ]],
 		         

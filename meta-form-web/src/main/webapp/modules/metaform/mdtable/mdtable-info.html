@@ -24,7 +24,7 @@
                                            name="tableLabelName" required/>
                                 </div>
                                 <div class="field required">
-                                    <label>所属数据库ID</label>
+                                    <label>所属数据库名称</label>
                                     <input class="easyui-combobox" name="databaseCode" required panelHeight="auto"
                                            editable="false"
                                            url="system/ipenvironment/databaseinfos" method="get"
@@ -162,7 +162,7 @@
                                 </th>
                                 <th data-options="field:'referenceType', width:100,
 					formatter:function(value, rowData, rowIndex){
-					    if(value=='0')return '无';else
+					    if(value=='0')return '';else
 						  	if(value=='1')return '数据字典（列表）';else
 						  	if(value=='2')return '数据字典（树）';else
 						  	if(value=='3')return 'JSON表达式';else

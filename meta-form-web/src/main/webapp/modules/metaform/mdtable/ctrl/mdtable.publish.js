@@ -34,7 +34,7 @@ define(function(require) {
                     _method: 'POST'
                 }
 			}).then(function() {
-				table.datagrid('reload');
+				$('#mdtable').datagrid('reload');
             });
 		};
 	});
