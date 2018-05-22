@@ -5,13 +5,14 @@
                 <div class="easyui-layout" fit="true">
                     <div region="north" border="false">
                         <form class="centit form" novalidate="true">
-                            <div class="fields ">
+                            <div class="fields three">
 
                                 <div class="field required">
                                     <label>表Id</label>
                                     <input type="text" class="easyui-textbox" readonly="readonly"
                                            name="tableId" required/>
                                 </div>
+
                                 <div class="field required">
                                     <label>表代码</label>
                                     <input type="text" class="easyui-textbox"
@@ -23,6 +24,23 @@
                                     <input type="text" class="easyui-textbox"
                                            name="tableLabelName" required/>
                                 </div>
+                            </div>
+                            <div class="fields three">
+
+                                <div class="field required">
+                                    <label>类别</label>
+                                    <input type="text" class="easyui-combobox"
+                                           data-options="valueField:'value',textField:'text',data:[{value:'T',text:'表'},{value:'V',text:'视图'},{value:'C',text:'大字段'}]"
+                                           name="tableType" required/>
+                                </div>
+
+                                <div class="field required">
+                                    <label>状态</label>
+                                    <input type="text" class="easyui-combobox"
+                                           data-options="valueField:'value',textField:'text',data:[{value:'S',text:'系统'},{value:'R',text:'查询(只读)'},{value:'N',text:'新建(读写)'}]"
+                                           name="tableState" required/>
+                                </div>
+
                                 <div class="field required">
                                     <label>所属数据库名称</label>
                                     <input class="easyui-combobox" name="databaseCode" required panelHeight="auto"
@@ -30,6 +48,8 @@
                                            url="system/ipenvironment/databaseinfos" method="get"
                                            data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
                                 </div>
+                            </div>
+                            <div class="fields three">
                                 <div class="field required">
                                     <label>与流程中业务关联关系</label>
                                     <input type="text" class="easyui-combobox"
