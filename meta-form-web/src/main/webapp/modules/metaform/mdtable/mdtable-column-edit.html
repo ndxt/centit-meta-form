@@ -40,8 +40,14 @@
 				name="scaleM" />
 		</div>
 		<div class="field required">
-			<label>字段类别</label> <input type="text" class="easyui-textbox"
-				name="accessType" required/>
+			<label>字段类别</label> <input type="text" class="easyui-combobox" panelHeight="auto"
+				name="accessType" required data-options="valueField:'value',textField:'label',
+								data:[
+							{value:'H',label:'隐藏'},
+							{value:'R',label:'只读'},
+							{value:'C',label:'只能创建不可修改'},
+							{value:'N',label:'可读写'}
+							]"/>
 		</div>
 		<div class="field ">
 			<label>是否必填</label> <input type="text" class="easyui-combobox" panelHeight="auto"
