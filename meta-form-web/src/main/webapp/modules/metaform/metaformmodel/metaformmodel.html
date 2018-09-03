@@ -7,7 +7,6 @@
         <tr>
         	<th data-options="field:'modelCode'">模块代码</th> 
        		<th data-options="field:'tableLabelName'">表</th>
-       		<th data-options="field:'modelComment'">模快描述</th>
        		<th data-options="field:'modelName'">模块名称</th>
        		<th data-options="field:'accessType'">存储类别</th>
        		<th data-options="field:'relationType'">与父模块关系</th>
@@ -29,6 +28,7 @@
                                return time;
                         }">最后更新时间</th>
        		<th data-options="field:'recorder'">最后修改人</th>
+			<th data-options="field:'modelComment'">模快描述</th>
        		
         </tr>
     </thead>
@@ -40,11 +40,11 @@
 	<hr>
 
 	<a iconCls="icon-edit" href="/centit-meta-form/modules/metaform/metaformmodel/metaformmodel-info.html" trigger="single"
-		target="tab" rel="metaformmodel_edit" title="编辑 {{modelName}}" width="640" height="480" btnValue="更新">编辑</a>
+		target="tab" rel="metaformmodel_edit" title="编辑 【{{modelName}}】 通用模块" width="640" height="480" btnValue="更新">编辑</a>
 	<hr>
 
 	<a iconCls="icon-edit" href="modules/metaform/metaformmodel/metaformmodel-view.html" trigger="single"
-		target="dialog" rel="metaformmodel_view" title="查看 {{modelName}}" width="640" height="480" btnValue="查看">查看</a>
+		target="dialog" rel="metaformmodel_view" title="查看 【{{modelName}}】 通用模块" width="640" height="480" btnValue="查看">查看</a>
 	<hr>
 		
 	<a iconCls="icon-base icon-base-ban" trigger="single"

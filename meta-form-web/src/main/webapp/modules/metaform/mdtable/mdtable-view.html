@@ -31,7 +31,7 @@
 		       		name="tableState" required/>
 				</div>
 				<div class="field ">
-		       		<label>所属数据库ID</label>
+		       		<label>所属数据库名称</label>
 		       		<input class="easyui-combobox" name="databaseCode" required readonly="readonly" 
 						url="system/ipenvironment/databaseinfos" method="get"
 						data-options="valueField:'databaseCode',textField:'databaseName',loadFilter:function(data){return data.objList;}">
@@ -51,12 +51,12 @@
 		       		data-options="valueField:'value',textField:'text',data:[{value:'Y',text:'是'},{value:'N',text:'否'}]"
 		       		name="updateCheckTimeStamp" required/>
 				</div>
-		    	<div class="field ">
-		       		<label>描述</label>
-		       		<input type="text" class="easyui-textbox" readonly="readonly" 
-		       		name="tableComment" />
+		    </div>
+			<div class="field ">
+				 <label>描述</label>
+				 <input type="text" class="easyui-textbox" multiline="true" readonly style="height: 50px;"
+						name="tableComment"/>
 			</div>
-		    </div>	
 		    
 		</form>
 
@@ -70,8 +70,8 @@
 		       		<th data-options="field:'fieldLabelName',editor:{type:'textbox',options:{required: true}}">字段名称</th>
 		       		<th data-options="field:'columnOrder',editor:{type:'textbox',options:{}}">显示次序</th>
 		       		<th data-options="field:'columnFieldType',editor:{type:'textbox',options:{required: true}}">字段类型</th>
-		       		<th data-options="field:'maxLength',editor:{type:'textbox',options:{}}">字段长度</th>
-		       		<th data-options="field:'scale',editor:{type:'textbox',options:{}}">字段精度</th>
+		       		<th data-options="field:'maxLengthM',editor:{type:'textbox',options:{}}">字段长度</th>
+		       		<th data-options="field:'scaleM',editor:{type:'textbox',options:{}}">字段精度</th>
 		       		<th data-options="field:'accessType',editor:{type:'textbox',options:{required: true}}">字段类别</th>
 		       		<th data-options="field:'mandatory',
 						formatter:function(value, rowData, rowIndex){
@@ -100,13 +100,14 @@
 							{value:'F',label:'否'}]}}">是否为主键</th>
 		       		<th data-options="field:'referenceType',
 					formatter:function(value, rowData, rowIndex){
-					  	if(value==undefined)return '无';else
-					  	if(value=='0')return '无';else
-					  	if(value=='1')return '数据字典';else
-					  	if(value=='2')return 'JSON表达式';else
-					  	if(value=='3')return 'sql语句';else
-					  	if(value=='Y')return '年份';else
-					  	if(value=='M')return '月份';
+					  		if(value=='0')return '无';else
+						  	if(value=='1')return '数据字典（列表）';else
+						  	if(value=='2')return '数据字典（树）';else
+						  	if(value=='3')return 'JSON表达式';else
+						  	if(value=='4')return 'sql语句（列表）';else
+						  	if(value=='5')return 'sql语句（树）';else
+						  	if(value=='Y')return '年份';else
+						  	if(value=='M')return '月份';
 					  }
 					,editor:{ type:'combobox',
 					  options:{valueField:'value',textField:'label',
@@ -170,8 +171,6 @@
 			        	}}">子表名称</th>
 			       		<th data-options="field:'relationName',editor:{type:'textbox',options:{required: true}}">关系名称</th>
 			       		<th data-options="field:'relationComment',editor:{type:'textbox',options:{}}">关系说明</th>
-			       		<th data-options="field:'recorder',editor:{type:'textbox',options:{}}">更改人</th>
-			       		<th data-options="field:'lastModifyDate',editor:{type:'textbox',options:{}}">更改时间</th>
 			        </tr>
 			    </thead>
 			</table>

@@ -12,6 +12,7 @@ import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.support.database.utils.PageDesc;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -213,7 +214,25 @@ public class MetaFormController  extends BaseController{
             rc.close();
             if(! noMeta){
                 metaData.updateReadOnlyRefrenceField();
-                resData.addResponseData("formModel",metaData);
+
+                JSONObject metaJson = JSONObject.parseObject(JSONObject.toJSONString(metaData));
+                JSONArray metaFieldsJson = metaJson.getJSONArray("fields");
+                if (metaFieldsJson != null && metaFieldsJson.size()>0) {
+                    for (int i=0; i<metaFieldsJson.size(); i++) {
+                        JSONObject metaObjJson = metaFieldsJson.getJSONObject(i);
+                        JSONObject templateOptions = metaObjJson.getJSONObject("templateOptions");
+
+                        String inputType = metaObjJson.getString("type");
+                        if (StringUtils.isNotBlank(inputType) && inputType.equals("select")) {
+                            templateOptions.put("type", "select");
+                        } else {
+                            templateOptions.put("type", inputType);
+                            metaObjJson.put("type", "input");
+                        }
+                    }
+                }
+
+                resData.addResponseData("formModel",metaJson);
             }
             JsonResultUtils.writeResponseDataAsJson(resData, response);
         } catch (SQLException e) {
