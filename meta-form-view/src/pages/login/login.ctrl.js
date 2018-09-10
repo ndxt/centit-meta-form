@@ -42,7 +42,7 @@
             return $state.go($state.prev.state, $state.prev.params);
           }
           toastr.success('登录成功！');
-          $state.go('form.dashboard');
+          $state.go('form.material');
         });
     }
   }

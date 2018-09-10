@@ -1,0 +1,17 @@
+<div class="btn-group" uib-dropdown>
+  <button type="button" class="btn btn-default">
+    <!--材料: {{vm.currentSortName}}-->
+    请选择材料
+  </button>
+  <button type="button" class="btn btn-default" uib-dropdown-toggle>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" uib-dropdown-menu>
+    <li ng-repeat="item in items" ng-click="vm.select(item)"
+        ng-class="{active: item.isActive, divider: item.isDivider}">
+      <a ng-if="!item.isDivider" href="javascript:void(0);">{{::item.name}}</a>
+    </li>
+  </ul>
+</div>
+
+

@@ -5,7 +5,7 @@
     .controller('MetaFormController', MetaFormInfoController);
 
   /* @ngInject */
-  function MetaFormInfoController($window, $scope, $q, $timeout, MetaFormService) {
+  function MetaFormInfoController($window, $scope, $q, $timeout, MetaFormService,$filter) {
 
     var modelCode = $scope.modelCode,  // 模块编码
 
@@ -99,9 +99,17 @@
         primaryData: primaryData
       }).then(function(res) {
         // 映射到数据接口，供其他模块调用
-      /*  for(var index in res.fields){
-          res.fields[index].templateOptions.type='file';// hidden,email,number,date可以修改input输入框的类型
-        }*/
+        /*  时间戳转化成年-月-日的形式
+        var _date = res.data['signTime'];
+        res.data['signTime']=$filter("date")(_date, "yyyy-MM-dd");
+        */
+
+        /*   这段代码的作用是更改input输入框的类型
+        for(var index in res.fields){
+          //res.fields[index].templateOptions.type='date';//datepickerPopup  hidden,email,number,date可以修改input输入框的类型2018-05-23T16:00:00.000Z
+          //res.fields[index].templateOptions.datepickerPopup='yyyy-MM-dd'
+        }
+        */
         $scope.data = res.data;
         $scope.subModelCode = res.subModelCode;
         $scope.fields = res.fields;
