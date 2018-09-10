@@ -108,6 +108,16 @@
         primaryValue = primaryKey.map(function(key) {
           return item[key]
         });
+      $uibModal.open({
+        templateUrl : 'pages/access/access.infoDialog.html',
+        controller : 'test',
+        resolve : {
+          primaryKey :function(){return primaryKey[0]},
+          primaryValue:function () {return primaryValue[0]},
+          modelCode:function () {return operation.optModelCode},
+          operation:function () {return operation.method}
+        }
+      });
 
 
     }
@@ -169,4 +179,5 @@
     }
 
   }
+
 })();
