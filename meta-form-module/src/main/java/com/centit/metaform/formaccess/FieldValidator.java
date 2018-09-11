@@ -3,7 +3,7 @@ package com.centit.metaform.formaccess;
 public class FieldValidator {
     private String message;
 
-    public FieldValidator(){
+    public FieldValidator() {
 
     }
 

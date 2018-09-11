@@ -13,6 +13,8 @@ import com.centit.metaform.formaccess.ModelRuntimeContext;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,31 +31,31 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/metaform/formaccess")
-public class MetaFormController  extends BaseController{
-    //private static final Log log = LogFactory.getLog(MetaFormController.class);
+public class MetaFormController extends BaseController {
+    protected static final Logger logger = LoggerFactory.getLogger(MetaFormController.class);
 
-    @Resource(name="modelFormService")
-    private ModelFormService formService;
+    @Resource(name = "modelFormService")
+    private ModelFormService modelFormService;
 
     /**
      * 作为主表的查看列表
      */
-    @RequestMapping(value = "/{modelCode}/list",method = RequestMethod.GET)
-    public void list(@PathVariable String modelCode,boolean noMeta, PageDesc pageDesc ,HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/{modelCode}/list", method = RequestMethod.GET)
+    public void list(@PathVariable String modelCode, boolean noMeta, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = collectRequestParameters(request);//convertSearchColumn(request);
 
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
         rc.setCurrentUserDetails(this.getLoginUser(request));
 
         ResponseMapData resData = new ResponseMapData();
-        //ListViewDefine metaData = formService.createListViewModel(rc);
-        MetaFormDefine metaData = formService.createFormDefine(rc,"view");
-        JSONArray objs = formService.listObjectsByFilter(rc, searchColumn, pageDesc);
+        //ListViewDefine metaData = modelFormService.createListViewModel(rc);
+        MetaFormDefine metaData = modelFormService.createFormDefine(rc, "view");
+        JSONArray objs = modelFormService.listObjectsByFilter(rc, searchColumn, pageDesc);
         resData.addResponseData(OBJLIST, metaData.transObjectsRefranceData(objs));
         resData.addResponseData(PAGE_DESC, pageDesc);
         rc.close();
-        if(! noMeta){
-            resData.addResponseData("formModel", formService.createListViewModel(rc));
+        if (!noMeta) {
+            resData.addResponseData("formModel", modelFormService.createListViewModel(rc));
         }
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
@@ -61,49 +63,49 @@ public class MetaFormController  extends BaseController{
     /**
      * 查看模块主表的详细信息
      */
-    @RequestMapping(value = "/{modelCode}/view",method = RequestMethod.GET)
+    @RequestMapping(value = "/{modelCode}/view", method = RequestMethod.GET)
     public void view(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-        Map<String,Object> jo = rc.fetchPkFromRequest(request);
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
+        Map<String, Object> jo = rc.fetchPkFromRequest(request);
         ResponseMapData resData = new ResponseMapData();
 
-        JSONObject obj = formService.getObjectByProperties(rc, jo);
+        JSONObject obj = modelFormService.getObjectByProperties(rc, jo);
         try {
-            if(obj!=null){
-                Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
+            if (obj != null) {
+                Map<String, Object> refField = modelFormService.getModelReferenceFields(rc, obj);
                 obj.putAll(refField);
             }
         } catch (SQLException e) {
         }
 
-        MetaFormDefine metaData = formService.createFormDefine(rc,"view");
+        MetaFormDefine metaData = modelFormService.createFormDefine(rc, "view");
         resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
         rc.close();
-        if(!noMeta){
+        if (!noMeta) {
             metaData.updateReadOnlyRefrenceField();
             resData.addResponseData("formModel", metaData);
         }
 
-        JSONArray subModels = formService.listSubModelCode(modelCode);
+        JSONArray subModels = modelFormService.listSubModelCode(modelCode);
         resData.addResponseData("subModelCode", subModels);
 
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
-    @RequestMapping(value = "/{modelCode}/viewList",method = RequestMethod.GET)
+    @RequestMapping(value = "/{modelCode}/viewList", method = RequestMethod.GET)
     public void viewList(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
 
-        ModelRuntimeContext subRc = formService.createRuntimeContext(modelCode);
+        ModelRuntimeContext subRc = modelFormService.createRuntimeContext(modelCode);
         JSONArray subObjs = null;
         try {
-            subObjs = formService.listSubModelObjectsByFilter(subRc, searchColumn);
+            subObjs = modelFormService.listSubModelObjectsByFilter(subRc, searchColumn);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        MetaFormDefine subMetaData = formService.createFormDefine(subRc,"list");
-        MetaFormDefine metaData = formService.createListViewModel(subRc);
+        MetaFormDefine subMetaData = modelFormService.createFormDefine(subRc, "list");
+        MetaFormDefine metaData = modelFormService.createListViewModel(subRc);
 
         metaData.setFields(subMetaData.getFields());
 
@@ -117,9 +119,9 @@ public class MetaFormController  extends BaseController{
     /**
      * 根据父模块code查询所有子模块code
      */
-    @RequestMapping(value = "/{modelCode}/listSubModel",method = RequestMethod.GET)
+    @RequestMapping(value = "/{modelCode}/listSubModel", method = RequestMethod.GET)
     public void listSubModelCode(@PathVariable String modelCode, HttpServletRequest request, HttpServletResponse response) {
-        JSONArray subModels = formService.listSubModelCode(modelCode);
+        JSONArray subModels = modelFormService.listSubModelCode(modelCode);
         ResponseMapData resData = new ResponseMapData();
 
         resData.addResponseData("subModelCode", subModels);
@@ -130,49 +132,49 @@ public class MetaFormController  extends BaseController{
     /**
      * 获取主模块和所有子模块的数据
      */
-    @RequestMapping(value = "/{modelCode}/viewAll",method = RequestMethod.GET)
+    @RequestMapping(value = "/{modelCode}/viewAll", method = RequestMethod.GET)
     public void viewAll(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
 
         Map<String, Object> searchColumn = convertSearchColumn(request);
 
-        Map<String,Object> jo = new HashMap<>();
-        jo.put(((String[])searchColumn.get("primaryKey"))[0] , ((String[])(searchColumn.get("primaryValue")))[0]);
+        Map<String, Object> jo = new HashMap<>();
+        jo.put(((String[]) searchColumn.get("primaryKey"))[0], ((String[]) (searchColumn.get("primaryValue")))[0]);
 
         ResponseMapData resData = new ResponseMapData();
 
-        JSONObject obj = formService.getObjectByProperties(rc, jo);
+        JSONObject obj = modelFormService.getObjectByProperties(rc, jo);
         try {
-            if(obj!=null){
-                Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
+            if (obj != null) {
+                Map<String, Object> refField = modelFormService.getModelReferenceFields(rc, obj);
                 obj.putAll(refField);
             }
         } catch (SQLException e) {
         }
 
-        MetaFormDefine metaData = formService.createFormDefine(rc,"view");
+        MetaFormDefine metaData = modelFormService.createFormDefine(rc, "view");
         resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
         rc.close();
-        if(!noMeta){
+        if (!noMeta) {
             metaData.updateReadOnlyRefrenceField();
             resData.addResponseData("formModel", metaData);
         }
 
-        List<MetaFormModel> subModel = formService.listSubModel(modelCode);
-        if (subModel != null && subModel.size()>0) {
+        List<MetaFormModel> subModel = modelFormService.listSubModel(modelCode);
+        if (subModel != null && subModel.size() > 0) {
             JSONArray allSubObjs = new JSONArray();
             JSONArray allSubFields = new JSONArray();
-            for(int i=0; i<subModel.size(); i++) {
-                ModelRuntimeContext subRc = formService.createRuntimeContext(subModel.get(i).getModelCode());
+            for (int i = 0; i < subModel.size(); i++) {
+                ModelRuntimeContext subRc = modelFormService.createRuntimeContext(subModel.get(i).getModelCode());
                 JSONArray subObjs = null;
                 try {
-                    subObjs = formService.listSubModelObjectsByFilter(subRc, obj);
+                    subObjs = modelFormService.listSubModelObjectsByFilter(subRc, obj);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 allSubObjs.add(subObjs);
 
-                MetaFormDefine subMetaData = formService.createFormDefine(subRc,"list");
+                MetaFormDefine subMetaData = modelFormService.createFormDefine(subRc, "list");
                 allSubFields.add(subMetaData);
             }
             resData.addResponseData("subObjs", allSubObjs);
@@ -182,43 +184,51 @@ public class MetaFormController  extends BaseController{
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
-    @RequestMapping(value = "/{modelCode}/meta/{metaType}",method = RequestMethod.GET)
-    public void meta(@PathVariable String modelCode,  @PathVariable String metaType,
-            HttpServletRequest request, HttpServletResponse response) {
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-        if("list".equals(metaType)){
-            JsonResultUtils.writeSingleDataJson(formService.createListViewModel(rc), response);
-        }else{
-            MetaFormDefine metaData = formService.createFormDefine(rc,metaType);
+    @RequestMapping(value = "/{modelCode}/meta/{metaType}", method = RequestMethod.GET)
+    public void meta(@PathVariable String modelCode, @PathVariable String metaType,
+                     HttpServletRequest request, HttpServletResponse response) {
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
+        if ("list".equals(metaType)) {
+            JsonResultUtils.writeSingleDataJson(modelFormService.createListViewModel(rc), response);
+        } else {
+            MetaFormDefine metaData = modelFormService.createFormDefine(rc, metaType);
             metaData.updateReadOnlyRefrenceField();
             JsonResultUtils.writeSingleDataJson(metaData, response);
         }
         rc.close();
     }
 
-    @RequestMapping(value = "/{modelCode}/create",method = RequestMethod.GET)
+    /**
+     * 创建表单
+     *
+     * @param modelCode 模块代码
+     * @param noMeta
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "/{modelCode}/create", method = RequestMethod.GET)
     public void create(@PathVariable String modelCode,
-            boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+                       boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
         try {
             ResponseMapData resData = new ResponseMapData();
-            JSONObject obj = formService.createInitialObject(rc);
-            if(obj!=null){
-                Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
+            JSONObject obj = modelFormService.createInitialObject(rc);
+            if (obj != null) {
+                Map<String, Object> refField = modelFormService.getModelReferenceFields(rc, obj);
                 obj.putAll(refField);
             }
 
-            MetaFormDefine metaData = formService.createFormDefine(rc,"create");
+            MetaFormDefine metaData = modelFormService.createFormDefine(rc, "create");
             resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
 
             rc.close();
-            if(! noMeta){
+            if (!noMeta) {
                 metaData.updateReadOnlyRefrenceField();
 
                 JSONObject metaJson = JSONObject.parseObject(JSONObject.toJSONString(metaData));
                 JSONArray metaFieldsJson = metaJson.getJSONArray("fields");
-                if (metaFieldsJson != null && metaFieldsJson.size()>0) {
-                    for (int i=0; i<metaFieldsJson.size(); i++) {
+                if (metaFieldsJson != null && metaFieldsJson.size() > 0) {
+                    for (int i = 0; i < metaFieldsJson.size(); i++) {
                         JSONObject metaObjJson = metaFieldsJson.getJSONObject(i);
                         JSONObject templateOptions = metaObjJson.getJSONObject("templateOptions");
 
@@ -232,7 +242,7 @@ public class MetaFormController  extends BaseController{
                     }
                 }
 
-                resData.addResponseData("formModel",metaJson);
+                resData.addResponseData("formModel", metaJson);
             }
             JsonResultUtils.writeResponseDataAsJson(resData, response);
         } catch (SQLException e) {
@@ -242,13 +252,13 @@ public class MetaFormController  extends BaseController{
         }
     }
 
-    @RequestMapping(value = "/{modelCode}/createpk",method = RequestMethod.GET)
+    @RequestMapping(value = "/{modelCode}/createpk", method = RequestMethod.GET)
     public void createPk(@PathVariable String modelCode,
-            HttpServletRequest request, HttpServletResponse response) {
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+                         HttpServletRequest request, HttpServletResponse response) {
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
         try {
             ResponseMapData resData = new ResponseMapData();
-            resData.addResponseData("pk", formService.createNewPk(rc));
+            resData.addResponseData("pk", modelFormService.createNewPk(rc));
             rc.close();
             JsonResultUtils.writeSuccessJson(response);
         } catch (SQLException e) {
@@ -257,42 +267,44 @@ public class MetaFormController  extends BaseController{
             e.printStackTrace();
         }
     }
+
     /**
      * 如果表结构和工作流关联，这里应该会新建工作流相关的信息，
-     *     和工作流相关的信息 需要在事件bean中实现，所有和工作流相关的工程需要有一个事件bean的实现
+     * 和工作流相关的信息 需要在事件bean中实现，所有和工作流相关的工程需要有一个事件bean的实现
+     *
      * @param modelCode
      * @param jsonStr
      * @param request
      * @param response
      */
-    @RequestMapping(value = "/{modelCode}/save",method = RequestMethod.POST)
+    @RequestMapping(value = "/{modelCode}/save", method = RequestMethod.POST)
     public void saveNew(@PathVariable String modelCode, @RequestBody String jsonStr,
-            HttpServletRequest request, HttpServletResponse response) {
+                        HttpServletRequest request, HttpServletResponse response) {
 
-        if(jsonStr==null || jsonStr.length()<2){
+        if (jsonStr == null || jsonStr.length() < 2) {
             JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
             return;
         }
-        if('['!=jsonStr.charAt(0) && '{'!=jsonStr.charAt(0)){
+        if ('[' != jsonStr.charAt(0) && '{' != jsonStr.charAt(0)) {
             JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
             return;
         }
-        
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
         try {
-            if('['==jsonStr.charAt(0)){
+            if ('[' == jsonStr.charAt(0)) {
                 JSONArray jo = JSON.parseArray(jsonStr);
-                for(Object ja:jo)
-                    formService.mergeObject(rc, (JSONObject)ja,response);
+                for (Object ja : jo)
+                    modelFormService.mergeObject(rc, (JSONObject) ja, response);
 
                 JsonResultUtils.writeSuccessJson(response);
-            }else{
+            } else {
                 JSONObject jo = JSON.parseObject(jsonStr);
-                int n = formService.saveNewObject(rc, jo,response);
-                if(n<=1)//>1 说明在 service 方法中已经在response中写入了返回信息
+                int n = modelFormService.saveNewObject(rc, jo, response);
+                if (n <= 1)//>1 说明在 service 方法中已经在response中写入了返回信息
                     JsonResultUtils.writeSuccessJson(response);
             }
-             rc.commitAndClose();
+            rc.commitAndClose();
         } catch (Exception e) {
             JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
             rc.rollbackAndClose();
@@ -300,26 +312,26 @@ public class MetaFormController  extends BaseController{
         }
     }
 
-    @RequestMapping(value = "/{modelCode}/edit",method = RequestMethod.GET)
-    public void edit(@PathVariable String modelCode,boolean noMeta,
-            HttpServletRequest request, HttpServletResponse response) {
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-        Map<String,Object> jo = rc.fetchPkFromRequest(request);
+    @RequestMapping(value = "/{modelCode}/edit", method = RequestMethod.GET)
+    public void edit(@PathVariable String modelCode, boolean noMeta,
+                     HttpServletRequest request, HttpServletResponse response) {
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
+        Map<String, Object> jo = rc.fetchPkFromRequest(request);
         ResponseMapData resData = new ResponseMapData();
-        JSONObject obj = formService.getObjectByProperties(rc, jo);
-        if(obj!=null){
+        JSONObject obj = modelFormService.getObjectByProperties(rc, jo);
+        if (obj != null) {
             try {
-                Map<String,Object> refField = formService.getModelReferenceFields(rc,obj);
+                Map<String, Object> refField = modelFormService.getModelReferenceFields(rc, obj);
                 obj.putAll(refField);
             } catch (SQLException e) {
             }
         }
 
-        MetaFormDefine metaData = formService.createFormDefine(rc,"edit");
+        MetaFormDefine metaData = modelFormService.createFormDefine(rc, "edit");
         resData.addResponseData("obj", metaData.transObjectRefranceData(obj));
 
         rc.close();
-        if(!noMeta){
+        if (!noMeta) {
             metaData.updateReadOnlyRefrenceField();
             resData.addResponseData("formModel", metaData);
         }
@@ -328,29 +340,29 @@ public class MetaFormController  extends BaseController{
     }
 
 
-    @RequestMapping(value = "/{modelCode}/update",method = RequestMethod.PUT)
-    public void update(@PathVariable String modelCode, @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
-        if(jsonStr==null || jsonStr.length()<2){
+    @RequestMapping(value = "/{modelCode}/update", method = RequestMethod.PUT)
+    public void update(@PathVariable String modelCode, @RequestBody String jsonStr, HttpServletRequest request, HttpServletResponse response) {
+        if (jsonStr == null || jsonStr.length() < 2) {
             JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
             return;
         }
-        if('['!=jsonStr.charAt(0) && '{'!=jsonStr.charAt(0)){
+        if ('[' != jsonStr.charAt(0) && '{' != jsonStr.charAt(0)) {
             JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
             return;
         }
 
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
         try {
-            if('['==jsonStr.charAt(0)){
+            if ('[' == jsonStr.charAt(0)) {
                 JSONArray jo = JSON.parseArray(jsonStr);
-                for(Object ja:jo)
-                    formService.mergeObject(rc, (JSONObject)ja,response);
+                for (Object ja : jo)
+                    modelFormService.mergeObject(rc, (JSONObject) ja, response);
 
                 JsonResultUtils.writeSuccessJson(response);
-            }else{
+            } else {
                 JSONObject jo = JSON.parseObject(jsonStr);
-                int n = formService.updateObject(rc, jo,response);
-                if(n<=1)//>1 说明在 service 方法中已经在response中写入了返回信息
+                int n = modelFormService.updateObject(rc, jo, response);
+                if (n <= 1)//>1 说明在 service 方法中已经在response中写入了返回信息
                     JsonResultUtils.writeSuccessJson(response);
             }
             rc.commitAndClose();
@@ -361,17 +373,17 @@ public class MetaFormController  extends BaseController{
         }
     }
 
-    @RequestMapping(value = "/{modelCode}/delete",method = RequestMethod.POST)
-    public void delete(@PathVariable String modelCode,  @RequestBody String jsonStr,
-            HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/{modelCode}/delete", method = RequestMethod.POST)
+    public void delete(@PathVariable String modelCode, @RequestBody String jsonStr,
+                       HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> joOri = convertSearchColumn(request);
         JSONObject jo = new JSONObject();
-        jo.put(((String[])joOri.get("primaryKey"))[0] , ((String[])(joOri.get("primaryValue")))[0]);
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+        jo.put(((String[]) joOri.get("primaryKey"))[0], ((String[]) (joOri.get("primaryValue")))[0]);
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
         try {
-            int n = formService.deleteObjectById(rc, jo,response);
+            int n = modelFormService.deleteObjectById(rc, jo, response);
             rc.commitAndClose();
-            if(n<=1)//>1 说明在 service 方法中已经在response中写入了返回信息
+            if (n <= 1)//>1 说明在 service 方法中已经在response中写入了返回信息
                 JsonResultUtils.writeSuccessJson(response);
         } catch (Exception e) {
             JsonResultUtils.writeErrorMessageJson(e.getMessage(), response);
@@ -382,24 +394,25 @@ public class MetaFormController  extends BaseController{
 
     /**
      * 判断模块是否和工作流程关联，返回失败
-     *         如果有关联，先调用update
+     * 如果有关联，先调用update
+     *
      * @param modelCode
      * @param jsonStr
      * @param request
      * @param response
      */
-    @RequestMapping(value = "/{modelCode}/submit",method = RequestMethod.POST)
-    public void submit(@PathVariable String modelCode,  @RequestBody String jsonStr,  HttpServletRequest request, HttpServletResponse response) {
-        if(jsonStr==null || jsonStr.length()<2){
+    @RequestMapping(value = "/{modelCode}/submit", method = RequestMethod.POST)
+    public void submit(@PathVariable String modelCode, @RequestBody String jsonStr, HttpServletRequest request, HttpServletResponse response) {
+        if (jsonStr == null || jsonStr.length() < 2) {
             JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
             return;
-        }       
+        }
 
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
         try {
             JSONObject jo = JSON.parseObject(jsonStr);
-            int n = formService.submitObject(rc, jo,response);
-            if(n<=1)//>1 说明在 service 方法中已经在response中写入了返回信息
+            int n = modelFormService.submitObject(rc, jo, response);
+            if (n <= 1)//>1 说明在 service 方法中已经在response中写入了返回信息
                 JsonResultUtils.writeSuccessJson(response);
             rc.commitAndClose();
         } catch (Exception e) {
@@ -411,24 +424,25 @@ public class MetaFormController  extends BaseController{
 
     /**
      * 一个页面上多个表单同时提交，并且在一个事务中完成，这个暂未实现
+     *
      * @param jsonStr
      * @param request
      * @param response
      */
-    @RequestMapping(value = "/multimodelopt",method = RequestMethod.POST)
+    @RequestMapping(value = "/multimodelopt", method = RequestMethod.POST)
     public void multiModelOpt(@RequestBody String jsonStr,
-            HttpServletRequest request, HttpServletResponse response) {
+                              HttpServletRequest request, HttpServletResponse response) {
 
     }
 
-    @RequestMapping(value = "/{modelCode}/{propertyName}",method = RequestMethod.GET)
+    @RequestMapping(value = "/{modelCode}/{propertyName}", method = RequestMethod.GET)
     public void asyncReferenceData(@PathVariable String modelCode,
-            @PathVariable String propertyName,String startGroup,
-            HttpServletRequest request, HttpServletResponse response) {
-        
-        ModelRuntimeContext rc = formService.createRuntimeContext(modelCode);
-        List<OptionItem> options = formService.getAsyncReferenceData(
-                rc, propertyName, startGroup);
+                                   @PathVariable String propertyName, String startGroup,
+                                   HttpServletRequest request, HttpServletResponse response) {
+
+        ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
+        List<OptionItem> options = modelFormService.getAsyncReferenceData(
+            rc, propertyName, startGroup);
         JsonResultUtils.writeSingleDataJson(options, response);
     }
 }
