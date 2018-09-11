@@ -93,10 +93,9 @@ public class MetaFormModelController extends BaseController{
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.GET})
     public void getMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
 
-        MetaFormModel metaFormModel =
-                metaFormModelMag.getObjectById( modelCode);
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById( modelCode);
         Set<ModelDataField> modelDataFields =
-                new HashSet<>(modelDataFieldDao.listObjectsByProperty("modelCode", modelCode));
+                new HashSet<>(metaFormModelMag.listModelDataFields(modelCode));
         Set<ModelOperation> modelOperations =
                 new HashSet<>(modelOperationDao.listObjectsByProperty("modelCode", modelCode));
 

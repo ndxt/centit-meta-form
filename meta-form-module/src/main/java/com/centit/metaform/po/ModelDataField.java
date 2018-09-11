@@ -1,9 +1,6 @@
 package com.centit.metaform.po;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -32,11 +29,17 @@ public class ModelDataField implements java.io.Serializable {
     private String  modelCode;
 
     /**
-     *
+     * 字段名称
      */
     @Column(name = "COLUMN_NAME")
     @Length(max = 32, message = "字段长度不能大于{max}")
     private String  columnName;
+
+    /**
+     * 列名称
+     */
+    @Transient
+    private String columnLabel;
 
     /**
      * 字段类别 ，关联只读字段（reference_Data 中为关联SQL语句）
@@ -504,4 +507,11 @@ public class ModelDataField implements java.io.Serializable {
         return this;
     }
 
+    public String getColumnLabel() {
+        return columnLabel;
+    }
+
+    public void setColumnLabel(String columnLabel) {
+        this.columnLabel = columnLabel;
+    }
 }

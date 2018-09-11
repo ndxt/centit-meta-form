@@ -3,10 +3,14 @@ package com.centit.metaform.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
+import com.centit.metaform.dao.MetaColumnDao;
 import com.centit.metaform.dao.MetaFormModelDao;
+import com.centit.metaform.dao.ModelDataFieldDao;
 import com.centit.metaform.formaccess.ModelRuntimeContextPool;
+import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaTable;
+import com.centit.metaform.po.ModelDataField;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.metaform.service.MetaTableManager;
 import com.centit.support.database.utils.PageDesc;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +39,11 @@ public class MetaFormModelManagerImpl
 
     public static final Log log = LogFactory.getLog(MetaFormModelManager.class);
 
+    @Resource
+    private ModelDataFieldDao modelDataFieldDao;
+
+    @Resource
+    private MetaColumnDao metaColumnDao;
 
     private MetaFormModelDao metaFormModelDao ;
 
@@ -91,6 +101,19 @@ public class MetaFormModelManagerImpl
             }
         }
         return listObjects;
+    }
+
+    public List<ModelDataField> listModelDataFields(String modelCode){
+        List<ModelDataField> fields = modelDataFieldDao.listObjectsByProperty("modelCode", modelCode);
+        List<MetaColumn> columns = metaColumnDao.listObjectsByProperty("modelCode", modelCode);
+        Map<String, String> columnMap = new HashMap<>();
+        for(MetaColumn column : columns){
+            columnMap.put(column.getColumnName(), column.getFieldLabelName());
+        }
+        for(ModelDataField field : fields){
+            field.setColumnLabel(columnMap.get(field.getColumnName()));
+        }
+        return fields;
     }
 
 }
