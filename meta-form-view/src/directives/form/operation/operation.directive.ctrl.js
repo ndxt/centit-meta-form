@@ -159,7 +159,7 @@
             return item[key]
           });
 
-      var url = '/api/service/metaform/formaccess/'+operation.optModelCode+'/delete';
+      var url = '/api/service/metaform/formaccess/'+operation.modelCode+'/delete';
 
       $http.post(url,{},{params:{primaryKey: primaryKey, primaryValue: primaryValue}}).
       then(function success(data){
