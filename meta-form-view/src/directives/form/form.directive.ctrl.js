@@ -110,6 +110,38 @@
           //res.fields[index].templateOptions.datepickerPopup='yyyy-MM-dd'
         }
         */
+
+       /*   这段代码的作用是设置验证规则
+        $scope.fields = [
+          {
+            type: 'input',
+            key: 'bar',
+            templateOptions: {required: true, label: 'IP Address'},
+            expressionProperties: {
+              'templateOptions.foo': '$modelValue', // set to the $modelValue of the control
+              'templateOptions.required': 'model.foo === "foobar"'
+            },
+            hideExpression: function($viewValue, $modelValue, scope) {
+              return scope.model.baz === 'foobar';
+            },
+            validators: {
+              ipAddress: {
+                expression: function($viewValue, $modelValue, scope) {
+                  var value = $modelValue || $viewValue;
+                  return /(\d{1,3}\.){3}\d{1,3}/.test(value);
+                },
+                message: '$viewValue + " is not a valid IP Address"'
+              },
+              notLocalHost: '$viewValue !== "127.0.0.1"'
+            },
+            validation: {
+              messages: {
+                required: 'to.label + " is required"'
+              }
+            }
+          }
+        ];*/
+
         $scope.data = res.data;
         $scope.subModelCode = res.subModelCode;
         $scope.fields = res.fields;
