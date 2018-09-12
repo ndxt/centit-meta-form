@@ -139,7 +139,7 @@
       $state.go('form.access.' + operation.method, {
         primaryKey: primaryKey,
         primaryValue: primaryValue,
-        modelCode: operation.optModelCode
+        modelCode: operation.modelCode
       });
     }
 
