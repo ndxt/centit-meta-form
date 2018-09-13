@@ -10,40 +10,10 @@
   ],
   "optInfos": [
     {
-      "optId": "LOGINCAS",
-      "optName": "CAS登录入口",
-      "preOptId": "0",
-      "optRoute": "/system/mainframe/logincas",
-      "optUrl": "/system/mainframe",
-      "optType": "O",
-      "isInToolbar": "N",
-      "pageType": "D"
-    },
-    {
-      "optId": "OPTNMANU",
-      "optName": "业务菜单",
-      "preOptId": "0",
-      "optRoute": "...",
-      "optUrl": "...",
-      "optType": "O",
-      "isInToolbar": "Y",
-      "pageType": "D"
-    },
-    {
       "optId": "MDFORMMGR",
       "optName": "表单管理",
       "preOptId": "0",
       "optRoute": "...",
-      "optUrl": "...",
-      "optType": "O",
-      "isInToolbar": "Y",
-      "pageType": "D"
-    },
-    {
-      "optId": "FIRSTPAGE",
-      "optName": "前期事务",
-      "preOptId": "OPTNMANU",
-      "optRoute": "form.access.list({modelCode: 'NEW_OPPORTUNITIE'})",
       "optUrl": "...",
       "optType": "O",
       "isInToolbar": "Y",
@@ -82,23 +52,7 @@
   ],
   "optMethods": [
     {
-      "optCode": "1000080",
-      "optId": "LOGINCAS",
-      "optName": "CAS登录入口",
-      "optUrl": "/logincas",
-      "optMethod": "logincas",
-      "optReq": "RCU"
-    },
-    {
-      "optCode": "1000079",
-      "optId": "FIRSTPAGE",
-      "optName": "业务首页",
-      "optUrl": "/firstpage",
-      "optMethod": "firstpage",
-      "optReq": "R"
-    },
-    {
-      "optCode": "1000082",
+      "optCode": "100001",
       "optId": "MDTABLE",
       "optName": "表单元数据",
       "optUrl": "/",
@@ -106,7 +60,7 @@
       "optReq": "R"
     },
     {
-      "optCode": "1000084",
+      "optCode": "100002",
       "optId": "METAFORMMODEL",
       "optName": "通用模块管理",
       "optUrl": "/",
@@ -114,7 +68,7 @@
       "optReq": "R"
     },
     {
-      "optCode": "1000083",
+      "optCode": "100003",
       "optId": "FORMCHANGELOG",
       "optName": "元数据更改记录",
       "optUrl": "/",
@@ -134,37 +88,17 @@
   "rolePowers": [
     {
       "roleCode": "G-SYSADMIN",
-      "optCode": "1000080",
+      "optCode": "100003",
       "optScopeCodes": ""
     },
     {
       "roleCode": "G-SYSADMIN",
-      "optCode": "1000079",
+      "optCode": "100002",
       "optScopeCodes": ""
     },
     {
       "roleCode": "G-SYSADMIN",
-      "optCode": "1000078",
-      "optScopeCodes": ""
-    },
-    {
-      "roleCode": "G-SYSADMIN",
-      "optCode": "1000076",
-      "optScopeCodes": ""
-    },
-    {
-      "roleCode": "G-SYSADMIN",
-      "optCode": "1000082",
-      "optScopeCodes": ""
-    },
-    {
-      "roleCode": "G-SYSADMIN",
-      "optCode": "1000084",
-      "optScopeCodes": ""
-    },
-    {
-      "roleCode": "G-SYSADMIN",
-      "optCode": "1000083",
+      "optCode": "100001",
       "optScopeCodes": ""
     }
   ],

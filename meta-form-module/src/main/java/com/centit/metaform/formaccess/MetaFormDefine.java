@@ -23,94 +23,94 @@ public class MetaFormDefine {
     private List<ModelOperation> operations;
 
 
-    public MetaFormDefine(){
+    public MetaFormDefine() {
         fields = new FormFieldGroup();
     }
 
-    public MetaFormDefine(String modelName,String formType){
+    public MetaFormDefine(String modelName, String formType) {
         this.modelName = modelName;
         this.formType = formType;
         fields = new FormFieldGroup();
     }
 
-    public MetaFormDefine(List<FormField> fields){
+    public MetaFormDefine(List<FormField> fields) {
         this.fields.setFieldGroup(fields);
     }
 
-    public MetaFormDefine(List<FormField> filters,List<ModelOperation> operations){
+    public MetaFormDefine(List<FormField> filters, List<ModelOperation> operations) {
         this.fields.setFieldGroup(filters);
         this.operations = operations;
     }
 
-    public void updateReadOnlyRefrenceField(){
-        if("list".equals(formType))
+    public void updateReadOnlyRefrenceField() {
+        if ("list".equals(formType))
             return;
-        for(FormField ff:fields.getFieldGroup()){
-            if(ff.getTemplateOptions()!=null &&
-                    (ff.getTemplateOptions().isDisabled()
-                            || "view".equals(formType))){
+        for (FormField ff : fields.getFieldGroup()) {
+            if (ff.getTemplateOptions() != null &&
+                (ff.getTemplateOptions().isDisabled()
+                    || "view".equals(formType))) {
                 List<OptionItem> ops = ff.getTemplateOptions().getOptions();
                 //ff.getTemplateOptions().setDisabled(true);
                 ff.setType("text");
-                if(ops!=null){
-                    ff.setKey(ff.getKey()+"Value");
+                if (ops != null) {
+                    ff.setKey(ff.getKey() + "Value");
                     //ff.setType("input");
                 }
             }
         }
     }
 
-    public JSONObject transObjectRefranceData(JSONObject obj){
-        if(fields==null)
+    public JSONObject transObjectRefranceData(JSONObject obj) {
+        if (fields == null)
             return obj;
-        for(FormField ff:fields.getFieldGroup()){
+        for (FormField ff : fields.getFieldGroup()) {
             Object v = obj.get(ff.getKey());
-            if(v==null)
+            if (v == null)
                 continue;
-            String readonlyKey = ff.getKey()+"Value";
+            String readonlyKey = ff.getKey() + "Value";
 
-            if("multiCheckbox".equals(ff.getType())){//inputType
+            if ("multiCheckbox".equals(ff.getType())) {//inputType
                 String[] sa = StringUtils.split(
-                        StringBaseOpt.objectToString(v),',');
-                obj.put(ff.getKey(),sa);
+                    StringBaseOpt.objectToString(v), ',');
+                obj.put(ff.getKey(), sa);
                 v = sa;
             }
 
-            if(StringUtils.isNotBlank(ff.getTemplateOptions().getFormat())
-                    && ("view".equals(formType) || "text".equals(ff.getType()))){
-                if(v instanceof Date){
-                    obj.put(ff.getKey(),DatetimeOpt.convertDateToString(
-                            (Date) v, ff.getTemplateOptions().getFormat()));
+            if (StringUtils.isNotBlank(ff.getTemplateOptions().getFormat())
+                && ("view".equals(formType) || "text".equals(ff.getType()))) {
+                if (v instanceof Date) {
+                    obj.put(ff.getKey(), DatetimeOpt.convertDateToString(
+                        (Date) v, ff.getTemplateOptions().getFormat()));
                 }
             }
 
-            if(ff.getTemplateOptions()!=null &&
-                    (ff.getTemplateOptions().isDisabled()
-                            || "view".equals(formType)
-                            || "list".equals(formType))){
+            if (ff.getTemplateOptions() != null &&
+                (ff.getTemplateOptions().isDisabled()
+                    || "view".equals(formType)
+                    || "list".equals(formType))) {
 
                 List<OptionItem> ops = ff.getTemplateOptions().getOptions();
-                if(ops!=null){
-                    if(v instanceof String[] ){
-                        String[] sa  = (String[] ) v;
+                if (ops != null) {
+                    if (v instanceof String[]) {
+                        String[] sa = (String[]) v;
                         int n = sa.length;
-                        if(n>0){
+                        if (n > 0) {
                             String[] sv = new String[n];
-                            for(int i=0;i<n;i++){
+                            for (int i = 0; i < n; i++) {
                                 int p = ops.indexOf(new OptionItem(sa[i]));
-                                if(p>=0)
+                                if (p >= 0)
                                     sv[i] = ops.get(p).getName();
                                 else
                                     sv[i] = sa[i];
                             }
-                            obj.put(readonlyKey,StringBaseOpt.objectToString(sv));
+                            obj.put(readonlyKey, StringBaseOpt.objectToString(sv));
                         }
-                    }else{
+                    } else {
                         int p = ops.indexOf(new OptionItem(StringBaseOpt.objectToString(v)));
-                        if(p>=0)
-                            obj.put(readonlyKey,ops.get(p).getName());
+                        if (p >= 0)
+                            obj.put(readonlyKey, ops.get(p).getName());
                         else
-                            obj.put(readonlyKey,v);
+                            obj.put(readonlyKey, v);
                     }
                 }
             }
@@ -118,11 +118,11 @@ public class MetaFormDefine {
         return obj;
     }
 
-    public JSONArray transObjectsRefranceData(JSONArray objs){
-        if(objs==null)
+    public JSONArray transObjectsRefranceData(JSONArray objs) {
+        if (objs == null)
             return null;
-        for(Object obj:objs){
-            transObjectRefranceData((JSONObject)obj);
+        for (Object obj : objs) {
+            transObjectRefranceData((JSONObject) obj);
         }
         return objs;
     }
@@ -168,7 +168,7 @@ public class MetaFormDefine {
     }
 
     public void addOperation(ModelOperation operation) {
-        if(this.operations == null)
+        if (this.operations == null)
             this.operations = new ArrayList<>();
         this.operations.add(operation);
     }
@@ -178,7 +178,8 @@ public class MetaFormDefine {
     }
 
     public void setFields(List<FormField> fields) {
-        this.fields.setFieldGroup(fields);;
+        this.fields.setFieldGroup(fields);
+        ;
     }
 
     public void addField(FormField field) {

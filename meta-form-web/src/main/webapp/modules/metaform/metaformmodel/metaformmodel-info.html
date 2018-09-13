@@ -1,13 +1,10 @@
 <div class="easyui-tabs" id="tt" style="width:100%;height:90%;">
   <div title="1.模块详细信息">
-
     <form class="centit form" novalidate="true" style="height:600px;width:98%;">
       <div class="fields three">
         <div class="field required">
           <label>模块代码</label>
-          <input type="text" class="easyui-textbox" name="modelCode"
-                 required
-          />
+          <input type="text" class="easyui-textbox" name="modelCode" required />
         </div>
 
         <div class="field required">
@@ -18,27 +15,23 @@
         </div>
         <div class="field ">
           <label>模块描述</label>
-          <input type="text" class="easyui-textbox"
-                 name="modelComment"/>
+          <input type="text" class="easyui-textbox" name="modelComment"/>
         </div>
       </div>
       <div class="fields three">
         <div class="field required">
           <label>模块名称</label>
-          <input type="text" class="easyui-textbox"
-                 name="modelName" required/>
+          <input type="text" class="easyui-textbox" name="modelName" required/>
         </div>
 
         <div class="field ">
           <label>存储类别</label>
-          <input type="text" class="easyui-textbox"
-                 name="accessType"/>
+          <input type="text" class="easyui-textbox" name="accessType"/>
         </div>
 
         <div class="field ">
           <label>与父模块关系</label>
-          <input type="text" class="easyui-textbox"
-                 name="relationType"/>
+          <input type="text" class="easyui-textbox" name="relationType"/>
         </div>
       </div>
       <div class="fields three">
@@ -47,7 +40,6 @@
           <input class="easyui-combobox" name="parentModelCode"
                  url="service/metaform/metaformmodel?pageNo=1&pageSize=100" method="get"
                  data-options="valueField:'modelCode',textField:'modelCode',loadFilter:function(data){return data.objList;}">
-
         </div>
       </div>
     </form>
@@ -226,7 +218,7 @@
 								{value:'LE',label:'小于等于'},
 								{value:'GE',label:'大于等于'}]}}">查询类型
         </th>
-        <th data-options="field:'url',editor:{type:'textbox',options:{}}">url</th>
+        <!--<th data-options="field:'url',editor:{type:'textbox',options:{}}">url</th>-->
         <th data-options="field:'extendOptions',editor:{type:'textbox',options:{}}">其他扩展属性</th>
         <th data-options="field:'fieldHeight',editor:{type:'textbox',options:{}}">网格布局高度</th>
         <th data-options="field:'fieldWidth',editor:{type:'textbox',options:{}}">网格布局宽度</th>

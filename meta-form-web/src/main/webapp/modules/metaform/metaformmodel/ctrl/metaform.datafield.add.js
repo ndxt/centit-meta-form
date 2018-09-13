@@ -46,6 +46,7 @@ define(function(require) {
 			items.forEach(function(d){
 				d.columnType='T';
 				d.displayOrder=d.columnOrder;
+				d.columnLabel = d.fieldLabelName;
 				parentTable.datagrid('appendRow', $.extend({tableId:tableId}, d));
 			});
 		};

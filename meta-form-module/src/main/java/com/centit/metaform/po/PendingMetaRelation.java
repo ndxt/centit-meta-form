@@ -26,25 +26,23 @@ import com.centit.framework.core.po.EntityWithTimestamp;
 
 
 /**
- * create by scaffold 2016-06-01 
- 
- 
-  未落实表关联关系表null   
-*/
+ * create by scaffold 2016-06-01
+ * <p>
+ * <p>
+ * 未落实表关联关系表null
+ */
 @Entity
 @Table(name = "F_PENDING_META_RELATION")
-public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializable {
-    private static final long serialVersionUID =  1L;
-
-
+public class PendingMetaRelation implements EntityWithTimestamp, java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 关联代码 关联关系，类似与外键，但不创建外键
      */
     @Id
     @Column(name = "RELATION_ID")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seqgen")
-    @SequenceGenerator(sequenceName="SEQ_PENDINGRELATIONID",name="seqgen",allocationSize=1,initialValue=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqgen")
+    @SequenceGenerator(sequenceName = "SEQ_PENDINGRELATIONID", name = "seqgen", allocationSize = 1, initialValue = 1)
     private Long relationId;
 
 //    /**
@@ -76,60 +74,67 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
     @Column(name = "RELATION_NAME")
     @NotBlank(message = "字段不能为空")
     @Length(max = 64, message = "字段长度不能大于{max}")
-    private String  relationName;
+    private String relationName;
     /**
      * 状态 null
      */
     @Column(name = "RELATION_STATE")
-    @Length(  message = "字段长度不能大于{max}")
-    private String  relationState;
+    @Length(message = "字段长度不能大于{max}")
+    private String relationState;
     /**
      * 关联说明 null
      */
     @Column(name = "RELATION_COMMENT")
     @Length(max = 256, message = "字段长度不能大于{max}")
-    private String  relationComment;
+    private String relationComment;
     /**
      * 更改时间 null
      */
     @Column(name = "LAST_MODIFY_DATE")
-    private Date  lastModifyDate;
+    private Date lastModifyDate;
     /**
      * 更改人员 null
      */
     @Column(name = "RECORDER")
     @Length(max = 8, message = "字段长度不能大于{max}")
-    private String  recorder;
+    private String recorder;
 
 
-
-//    @OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //    @OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<PendingMetaRelDetail> relationDetails;
 
     // Constructors
-    /** default constructor */
+
+    /**
+     * default constructor
+     */
     public PendingMetaRelation() {
     }
-    /** minimal constructor */
-    public PendingMetaRelation(Long relationId,String  relationName,String  relationState) {
+
+    /**
+     * minimal constructor
+     */
+    public PendingMetaRelation(Long relationId, String relationName, String relationState) {
         this.relationId = relationId;
-        this.relationName= relationName;
-        this.relationState= relationState;
+        this.relationName = relationName;
+        this.relationState = relationState;
     }
 
-    /** full constructor */
-    public PendingMetaRelation(Long relationId,PendingMetaTable  parentTable,PendingMetaTable  childTable,String  relationName,String  relationState,String  relationComment,Date  lastModifyDate,String  recorder) {
+    /**
+     * full constructor
+     */
+    public PendingMetaRelation(Long relationId, PendingMetaTable parentTable, PendingMetaTable childTable, String relationName, String relationState, String relationComment, Date lastModifyDate, String recorder) {
 //        this.parentTable=parentTable;
 //        this.childTable=childTable;
         this.relationId = relationId;
-        this.relationName= relationName;
-        this.relationState= relationState;
-        this.relationComment= relationComment;
-        this.lastModifyDate= lastModifyDate;
-        this.recorder= recorder;
+        this.relationName = relationName;
+        this.relationState = relationState;
+        this.relationComment = relationComment;
+        this.lastModifyDate = lastModifyDate;
+        this.recorder = recorder;
     }
 
-    public Long getChildTableId(){
+    public Long getChildTableId() {
 //        if(null!=this.getChildTable())
 //            return this.getChildTable().getTableId();
 //        return null;
@@ -145,20 +150,20 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
 //            return this.getChildTable().getTableLabelName();
 //        return null;
 //    }
-    
+
     public Set<PendingMetaRelDetail> getRelationDetails() {
-        if(null==this.relationDetails)
-            this.relationDetails=new HashSet<PendingMetaRelDetail>();
+        if (null == this.relationDetails)
+            this.relationDetails = new HashSet<PendingMetaRelDetail>();
         return relationDetails;
     }
 
     public void setRelationDetails(Set<PendingMetaRelDetail> relationDetails) {
-        if(null==relationDetails){
-            this.relationDetails=null;
-        }else{
+        if (null == relationDetails) {
+            this.relationDetails = null;
+        } else {
             this.getRelationDetails().clear();
-            Iterator<PendingMetaRelDetail> itr=relationDetails.iterator();
-            while(itr.hasNext()){
+            Iterator<PendingMetaRelDetail> itr = relationDetails.iterator();
+            while (itr.hasNext()) {
                 itr.next().setRelationId(this.relationId);
             }
             this.getRelationDetails().addAll(relationDetails);
@@ -191,19 +196,19 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
         this.relationId = relationId;
     }
     // Property accessors
-  
+
     public String getRelationName() {
         return this.relationName;
     }
 
-    public void setChildTableId(Long childTableId){
+    public void setChildTableId(Long childTableId) {
 //        if(null==this.childTable)
 //            this.childTable=new PendingMetaTable();
 //        this.childTable.setTableId(childTableId);
         this.childTableId = childTableId;
     }
 
-    public void setParentTableId(Long parentTableId){
+    public void setParentTableId(Long parentTableId) {
 //        if(null==this.parentTable)
 //            this.parentTable=new PendingMetaTable();
 //        this.parentTable.setTableId(parentTableId);
@@ -213,7 +218,7 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
     public void setRelationName(String relationName) {
         this.relationName = relationName;
     }
-  
+
     public String getRelationState() {
         return this.relationState;
     }
@@ -221,7 +226,7 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
     public void setRelationState(String relationState) {
         this.relationState = relationState;
     }
-  
+
     public String getRelationComment() {
         return this.relationComment;
     }
@@ -229,7 +234,7 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
     public void setRelationComment(String relationComment) {
         this.relationComment = relationComment;
     }
-  
+
     public Date getLastModifyDate() {
         return this.lastModifyDate;
     }
@@ -237,7 +242,7 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
     public void setLastModifyDate(Date lastModifyDate) {
         this.lastModifyDate = lastModifyDate;
     }
-  
+
     public String getRecorder() {
         return this.recorder;
     }
@@ -247,53 +252,52 @@ public class PendingMetaRelation implements EntityWithTimestamp,java.io.Serializ
     }
 
 
+    public PendingMetaRelation copy(PendingMetaRelation other) {
 
-    public PendingMetaRelation copy(PendingMetaRelation other){
-  
         this.setRelationId(other.getRelationId());
-  
+
 //        this.childTable=other.getChildTable();
 //        this.parentTable=other.getParentTable();
-        this.relationName= other.getRelationName();
-        this.relationState= other.getRelationState();
-        this.relationComment= other.getRelationComment();
-        this.lastModifyDate= other.getLastModifyDate();
-        this.recorder= other.getRecorder();
+        this.relationName = other.getRelationName();
+        this.relationState = other.getRelationState();
+        this.relationComment = other.getRelationComment();
+        this.lastModifyDate = other.getLastModifyDate();
+        this.recorder = other.getRecorder();
 
         return this;
     }
 
-    public PendingMetaRelation copyNotNullProperty(PendingMetaRelation other){
-  
-        if( other.getRelationId() != null)
+    public PendingMetaRelation copyNotNullProperty(PendingMetaRelation other) {
+
+        if (other.getRelationId() != null)
             this.setRelationId(other.getRelationId());
-        if(other.getRelationDetails()!=null)
+        if (other.getRelationDetails() != null)
             this.setRelationDetails(other.getRelationDetails());
 //        if( other.getParentTable() != null)
 //            this.parentTable= other.getParentTable();
 //        if( other.getChildTable() != null)
 //            this.childTable= other.getChildTable();
-        if( other.getRelationName() != null)
-            this.relationName= other.getRelationName();
-        if( other.getRelationState() != null)
-            this.relationState= other.getRelationState();
-        if( other.getRelationComment() != null)
-            this.relationComment= other.getRelationComment();
-        if( other.getLastModifyDate() != null)
-            this.lastModifyDate= other.getLastModifyDate();
-        if( other.getRecorder() != null)
-            this.recorder= other.getRecorder();
+        if (other.getRelationName() != null)
+            this.relationName = other.getRelationName();
+        if (other.getRelationState() != null)
+            this.relationState = other.getRelationState();
+        if (other.getRelationComment() != null)
+            this.relationComment = other.getRelationComment();
+        if (other.getLastModifyDate() != null)
+            this.lastModifyDate = other.getLastModifyDate();
+        if (other.getRecorder() != null)
+            this.recorder = other.getRecorder();
         return this;
     }
 
-    public PendingMetaRelation clearProperties(){
+    public PendingMetaRelation clearProperties() {
 //        this.parentTable= null;
 //        this.childTable= null;
-        this.relationName= null;
-        this.relationState= null;
-        this.relationComment= null;
-        this.lastModifyDate= null;
-        this.recorder= null;
+        this.relationName = null;
+        this.relationState = null;
+        this.relationComment = null;
+        this.lastModifyDate = null;
+        this.recorder = null;
         return this;
     }
 

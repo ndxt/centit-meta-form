@@ -23,7 +23,7 @@
       "databaseCode": "0000000001",
       "osId": "CONTRACT",
       "databaseName": "物料管理测试库",
-      "databaseUrl": "jdbc:mysql://192.168.128.32/bim",
+      "databaseUrl": "jdbc:mysql://192.168.128.32/bim?useUnicode=true&characterEncoding=utf-8",
       "username": "framework",
       "password": "FxV/BjjWFkrKFar10wIU6Q==",
       "databaseDesc": "MySQL测试库",
