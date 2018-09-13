@@ -33,8 +33,12 @@ define(function(require) {
 			operationTable.cdatagrid({
 				controller:_self
 			}).datagrid('loadData',[]);
-			
-			
+
+			panel.find('#tt').tabs({
+				onSelect: function(title){
+					alert(title)
+				}
+			});
 			
 			
 			

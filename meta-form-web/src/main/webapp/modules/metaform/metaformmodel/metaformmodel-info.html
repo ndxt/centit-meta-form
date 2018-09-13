@@ -1,4 +1,4 @@
-<div class="easyui-tabs" style="width:100%;height:90%;">
+<div class="easyui-tabs" id="tt" style="width:100%;height:90%;">
   <div title="1.模块详细信息">
 
     <form class="centit form" novalidate="true" style="height:600px;width:98%;">
@@ -12,7 +12,7 @@
 
         <div class="field required">
           <label>表ID</label>
-          <input class="easyui-combobox" name="tableId" required
+          <input id="tableId" class="easyui-combobox" name="tableId" required
                  url="service/metaform/mdtable?pageNo=1&pageSize=100" method="get"
                  data-options="valueField:'tableId',textField:'tableLabelName',loadFilter:function(data){return data.objList;}">
         </div>

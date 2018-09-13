@@ -17,16 +17,25 @@ define(function(require) {
 			table.cdatagrid({
 				controller:_self
 			});
-			Core.ajax(Config.ContextPath+'service/metaform/mdtable/'+this.parent.data.tableId+'/getField', {
-				type: 'json',
-				method: 'get' 
-			}).then(function(data) {
-				data = data.filter(function(o) {
-					return selectedData.indexOf(o.columnName) == -1;
+
+			var _tableId = $('#tableId').combobox('getValue');
+			var tableId = this.parent.data.tableId || _tableId;
+
+			if(!tableId){
+				return false
+			}else {
+				Core.ajax(Config.ContextPath+'service/metaform/mdtable/'+tableId+'/getField', {
+					type: 'json',
+					method: 'get'
+				}).then(function(data) {
+					data = data.filter(function(o) {
+						return selectedData.indexOf(o.columnName) == -1;
+					});
+					_self.data = data;
+					table.datagrid('loadData',data);
 				});
-				_self.data = data;
-				table.datagrid('loadData',data);
-			});
+			}
+
 		};
 		
 		this.submit = function(panel, data) {
