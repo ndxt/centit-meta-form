@@ -82,7 +82,7 @@
           }
         };
 
-        console.log($scope.form);
+       /* console.log($scope.form);*/
       });
     }
 
@@ -161,6 +161,9 @@
         modelCode: modelCode,
         operation: operation,
         data: angular.extend({}, $scope.data, extraData)
+      }).then(function(){
+        //返回列表
+        $window.history.back();
       });
     }
   }

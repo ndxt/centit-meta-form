@@ -9,6 +9,7 @@
 
 <div class="main-panel flex-item flex-row">
     <div class="operator-panel">
+        <!--vm.options与centitFormTable指令中的options双向绑定，指令中定义了create方法-->
       <button class="btn btn-primary" ng-click="vm.options.create()">创建</button>
       <button class="btn btn-default pull-right"
               ng-class="{active: vm.visible}"
