@@ -8,7 +8,7 @@ exports.api = {
   middleware: middleware({
     route: '/api',
 
-    target: 'http://localhost:8081/centit-meta-form',
+    target: 'http://localhost:8088/centit-meta-form',
 
     cookie: {
       path: '/',
