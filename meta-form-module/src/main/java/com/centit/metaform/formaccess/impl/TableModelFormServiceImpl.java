@@ -223,6 +223,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
                 default:
                     break;
             }
+            if(StringUtils.isNotBlank(field.getDefaultValue())){
+                object.put(field.getPropertyName(), field.getDefaultValue());
+            }
         }
         return object;
     }
@@ -415,6 +418,8 @@ public class TableModelFormServiceImpl implements ModelFormService {
                 //ff.setNoFormControl(true);
                 //ff.setTemplate("<p>Some text here</p>");
             }
+
+            ff.setDefaultValue(field.getDefaultValue());
 
             referenceDataToOption(rc,
                 field, mc.getPropertyName(), templateOptions);

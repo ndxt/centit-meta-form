@@ -7,10 +7,14 @@ import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.OptionItem;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.formaccess.MetaFormDefine;
 import com.centit.metaform.formaccess.ModelFormService;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
 import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.ModelDataField;
+import com.centit.metaform.service.MetaFormModelManager;
+import com.centit.metaform.service.ModelDataFieldManager;
 import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,6 +32,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/metaform/formaccess")
@@ -36,6 +41,12 @@ public class MetaFormController extends BaseController {
 
     @Resource(name = "modelFormService")
     private ModelFormService modelFormService;
+
+    @Resource
+    private MetaFormModelManager modelManager;
+
+    @Resource
+    private ModelDataFieldManager modelDataFieldManager;
 
     /**
      * 作为主表的查看列表
@@ -46,6 +57,14 @@ public class MetaFormController extends BaseController {
 
         ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
         rc.setCurrentUserDetails(this.getLoginUser(request));
+
+        //默认值作为默认搜索条件
+        Set<ModelDataField> fields = rc.getMetaFormModel().getModelDataFields();
+        for(ModelDataField field : fields){
+            if(StringUtils.isNotBlank(field.getDefaultValue())){
+                searchColumn.put(field.getPropertyName(), field.getDefaultValue());
+            }
+        }
 
         ResponseMapData resData = new ResponseMapData();
         //ListViewDefine metaData = modelFormService.createListViewModel(rc);
@@ -223,7 +242,7 @@ public class MetaFormController extends BaseController {
 
             rc.close();
             if (!noMeta) {
-                metaData.updateReadOnlyRefrenceField();
+//                metaData.updateReadOnlyRefrenceField(); //fixme 暂不知道为什么调这个方法
 
                 JSONObject metaJson = JSONObject.parseObject(JSONObject.toJSONString(metaData));
                 JSONArray metaFieldsJson = metaJson.getJSONArray("fields");
@@ -289,17 +308,36 @@ public class MetaFormController extends BaseController {
             JsonResultUtils.writeErrorMessageJson("数据格式不正确。", response);
             return;
         }
+//        List<ModelDataField> fields = modelDataFieldManager.listObjectsByProperty("modelCode", modelCode);
+//        Map<String, String> defaultMap = new HashMap<>();
+//        for(ModelDataField field : fields){
+//            if(StringUtils.isNotBlank(field.getDefaultValue())){
+//                defaultMap.put(field.getColumnName(), field.getDefaultValue());
+//            }
+//        }
 
         ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
         try {
             if ('[' == jsonStr.charAt(0)) {
                 JSONArray jo = JSON.parseArray(jsonStr);
-                for (Object ja : jo)
-                    modelFormService.mergeObject(rc, (JSONObject) ja, response);
+                for (Object ja : jo) {
+                    JSONObject jsonObj = (JSONObject)ja;
+//                    for(String s : defaultMap.keySet()){
+//                        if(StringUtils.isBlank(jsonObj.getString(s))){
+//                            jsonObj.put(s, defaultMap.get(s));
+//                        }
+//                    }
+                    modelFormService.mergeObject(rc, jsonObj, response);
+                }
 
                 JsonResultUtils.writeSuccessJson(response);
             } else {
                 JSONObject jo = JSON.parseObject(jsonStr);
+//                for(String s : defaultMap.keySet()){
+//                    if(StringUtils.isBlank(jo.getString(s))){
+//                        jo.put(s, defaultMap.get(s));
+//                    }
+//                }
                 int n = modelFormService.saveNewObject(rc, jo, response);
                 if (n <= 1)//>1 说明在 service 方法中已经在response中写入了返回信息
                     JsonResultUtils.writeSuccessJson(response);
