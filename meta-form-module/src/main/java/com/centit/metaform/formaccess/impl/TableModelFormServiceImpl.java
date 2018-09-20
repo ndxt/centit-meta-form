@@ -1002,6 +1002,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
         if( n<=0 ){
             JsonObjectDao dao = rc.getJsonObjectDao();
             dao.saveNewObject(rc.castObjectToTableObject(object));
+            //FIXME  添加创建流程的代码
+            //判断式否式流程业务，如果是 调用工作流客户端创建流程， 并将 flowInstId 保存到  object
+
             n = runOperationEvent(rc, object, "afterSave", response);
         }
         //rc.commitAndClose();

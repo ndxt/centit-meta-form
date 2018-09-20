@@ -132,6 +132,7 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 
     @Override
     public Map<String,Object> fetchPkFromRequest(HttpServletRequest request){
+        //FIXME 如果pk没有找到， 再找 flowinstid、nodeInstId 字段
         Map<String,Object> jo = new HashMap<>();
         for(String pk: getTableInfo().getPkColumns()){
             TableField pkp = getTableInfo().findFieldByColumn(pk);
