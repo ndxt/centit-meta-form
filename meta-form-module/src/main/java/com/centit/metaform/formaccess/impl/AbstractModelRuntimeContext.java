@@ -132,7 +132,7 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 
     @Override
     public Map<String,Object> fetchPkFromRequest(HttpServletRequest request){
-        //FIXME 如果pk没有找到， 再找 flowinstid、nodeInstId 字段
+
         Map<String,Object> jo = new HashMap<>();
         for(String pk: getTableInfo().getPkColumns()){
             TableField pkp = getTableInfo().findFieldByColumn(pk);
@@ -142,6 +142,20 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
             pv = castValueToFieldType(pkp,pv);
             jo.put(pkp.getPropertyName(),pv);
         }
+
+        //flowinstid、nodeInstId 字段
+        String [] flowFields = {"FLOW_INST_ID","NODE_INST_ID"};
+        for(String ff: flowFields){
+            TableField flowField = getTableInfo().findFieldByColumn(ff);
+            if(flowField!=null) {
+                Object pv = request.getParameter(flowField.getPropertyName());
+                if (pv == null)
+                    continue;
+                pv = castValueToFieldType(flowField, pv);
+                jo.put(flowField.getPropertyName(), pv);
+            }
+        }
+
         return jo;
     }
 

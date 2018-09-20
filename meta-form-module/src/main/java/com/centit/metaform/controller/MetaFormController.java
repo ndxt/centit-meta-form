@@ -221,9 +221,9 @@ public class MetaFormController extends BaseController {
      * 创建表单
      *
      * @param modelCode 模块代码
-     * @param noMeta
-     * @param request
-     * @param response
+     * @param noMeta 不需要表单元数据 开关
+     * @param request 请求信息
+     * @param response 返回信息
      */
     @RequestMapping(value = "/{modelCode}/create", method = RequestMethod.GET)
     public void create(@PathVariable String modelCode,
@@ -242,7 +242,8 @@ public class MetaFormController extends BaseController {
 
             rc.close();
             if (!noMeta) {
-//                metaData.updateReadOnlyRefrenceField(); //fixme 暂不知道为什么调这个方法
+                //这个是判断是否为只读表单，如果是只读表单初始化表单内容 //fixme 暂不知道为什么调这个方法
+                metaData.updateReadOnlyRefrenceField();
 
                 JSONObject metaJson = JSONObject.parseObject(JSONObject.toJSONString(metaData));
                 JSONArray metaFieldsJson = metaJson.getJSONArray("fields");
@@ -291,10 +292,10 @@ public class MetaFormController extends BaseController {
      * 如果表结构和工作流关联，这里应该会新建工作流相关的信息，
      * 和工作流相关的信息 需要在事件bean中实现，所有和工作流相关的工程需要有一个事件bean的实现
      *
-     * @param modelCode
-     * @param jsonStr
-     * @param request
-     * @param response
+     * @param modelCode 模块代码
+     * @param jsonStr 表单数据
+     * @param request 请求信息
+     * @param response 返回信息
      */
     @RequestMapping(value = "/{modelCode}/save", method = RequestMethod.POST)
     public void saveNew(@PathVariable String modelCode, @RequestBody String jsonStr,

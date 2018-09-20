@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ContextLoaderListener;
+import com.centit.workflow.client.service.FlowEngineClient;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -59,6 +60,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
     @Resource
     protected IntegrationEnvironment integrationEnvironment;
+
+    @Resource
+    protected FlowEngineClient flowEngineClient;
 
     @Value("${metaform.dataaccess.embedded:false}")
     private boolean useLocalDatabase;
@@ -993,6 +997,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
             dao.saveNewObject(rc.castObjectToTableObject(object));
             //FIXME  添加创建流程的代码
             //判断式否式流程业务，如果是 调用工作流客户端创建流程， 并将 flowInstId 保存到  object
+            //flowEngineClient.createInstance()
 
             n = runOperationEvent(rc, object, "afterSave", response);
         }

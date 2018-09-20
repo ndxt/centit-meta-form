@@ -367,9 +367,9 @@ public class MetaTableManagerImpl
         }
 
         if ("1".equals(ptable.getWorkFlowOptType())) {
-            PendingMetaColumn col = ptable.findFieldByName("wfInstId");
+            PendingMetaColumn col = ptable.findFieldByName("flowInstId");
             if (col == null) {
-                col = new PendingMetaColumn(ptable, "WF_INST_ID");
+                col = new PendingMetaColumn(ptable, "FLOW_INST_ID");
                 col.setFieldLabelName("流程实例ID");
                 col.setColumnComment("业务对应的工作流程实例ID");
                 col.setColumnFieldType(FieldType.INTEGER);
