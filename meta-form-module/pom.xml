@@ -12,6 +12,13 @@
     <artifactId>meta-form-module</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.centit.product</groupId>
+            <artifactId>centit-workflow-client</artifactId>
+            <version>${workflow.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
