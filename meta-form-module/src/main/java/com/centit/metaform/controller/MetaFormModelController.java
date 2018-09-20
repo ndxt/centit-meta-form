@@ -93,10 +93,9 @@ public class MetaFormModelController extends BaseController{
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.GET})
     public void getMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
 
-        MetaFormModel metaFormModel =
-                metaFormModelMag.getObjectById( modelCode);
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById( modelCode);
         Set<ModelDataField> modelDataFields =
-                new HashSet<>(modelDataFieldDao.listObjectsByProperty("modelCode", modelCode));
+                new HashSet<>(metaFormModelMag.listModelDataFields(modelCode));
         Set<ModelOperation> modelOperations =
                 new HashSet<>(modelOperationDao.listObjectsByProperty("modelCode", modelCode));
 
@@ -154,12 +153,10 @@ public class MetaFormModelController extends BaseController{
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.DELETE})
     public void deleteMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
 
-        //metaFormModelMag.deleteObjectById( modelCode);
+        metaFormModelMag.deleteObjectById( modelCode);
         
-//        JsonResultUtils.writeAjaxErrorMessage(ResponseData.ERROR_METHOD_DISABLED,
-//                "系统已经禁用删除模块功能！", response);
-        JsonResultUtils.writeErrorMessageJson("系统已经禁用删除模块功能！", response);
-    } 
+        JsonResultUtils.writeSuccessJson(response);
+    }
     
     /**
      * 新增或保存 通用模块管理 

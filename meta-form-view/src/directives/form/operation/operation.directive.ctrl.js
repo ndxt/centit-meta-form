@@ -108,6 +108,16 @@
         primaryValue = primaryKey.map(function(key) {
           return item[key]
         });
+      $uibModal.open({
+        templateUrl : 'pages/access/access.infoDialog.html',
+        controller : 'test',
+        resolve : {
+          primaryKey :function(){return primaryKey[0]},
+          primaryValue:function () {return primaryValue[0]},
+          modelCode:function () {return operation.optModelCode},
+          operation:function () {return operation.method}
+        }
+      });
 
 
     }
@@ -129,7 +139,7 @@
       $state.go('form.access.' + operation.method, {
         primaryKey: primaryKey,
         primaryValue: primaryValue,
-        modelCode: operation.optModelCode
+        modelCode: operation.modelCode
       });
     }
 
@@ -149,7 +159,7 @@
             return item[key]
           });
 
-      var url = '/api/service/metaform/formaccess/'+operation.optModelCode+'/delete';
+      var url = '/api/service/metaform/formaccess/'+operation.modelCode+'/delete';
 
       $http.post(url,{},{params:{primaryKey: primaryKey, primaryValue: primaryValue}}).
       then(function success(data){
@@ -169,4 +179,5 @@
     }
 
   }
+
 })();

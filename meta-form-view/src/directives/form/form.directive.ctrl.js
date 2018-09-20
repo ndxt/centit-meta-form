@@ -5,7 +5,7 @@
     .controller('MetaFormController', MetaFormInfoController);
 
   /* @ngInject */
-  function MetaFormInfoController($window, $scope, $q, $timeout, MetaFormService) {
+  function MetaFormInfoController($window, $scope, $q, $timeout, MetaFormService,$filter) {
 
     var modelCode = $scope.modelCode,  // 模块编码
 
@@ -82,7 +82,7 @@
           }
         };
 
-        console.log($scope.form);
+       /* console.log($scope.form);*/
       });
     }
 
@@ -99,9 +99,49 @@
         primaryData: primaryData
       }).then(function(res) {
         // 映射到数据接口，供其他模块调用
-      /*  for(var index in res.fields){
-          res.fields[index].templateOptions.type='file';// hidden,email,number,date可以修改input输入框的类型
-        }*/
+        /*  时间戳转化成年-月-日的形式
+        var _date = res.data['signTime'];
+        res.data['signTime']=$filter("date")(_date, "yyyy-MM-dd");
+        */
+
+        /*   这段代码的作用是更改input输入框的类型
+        for(var index in res.fields){
+          //res.fields[index].templateOptions.type='date';//datepickerPopup  hidden,email,number,date可以修改input输入框的类型2018-05-23T16:00:00.000Z
+          //res.fields[index].templateOptions.datepickerPopup='yyyy-MM-dd'
+        }
+        */
+
+       /*   这段代码的作用是设置验证规则
+        $scope.fields = [
+          {
+            type: 'input',
+            key: 'bar',
+            templateOptions: {required: true, label: 'IP Address'},
+            expressionProperties: {
+              'templateOptions.foo': '$modelValue', // set to the $modelValue of the control
+              'templateOptions.required': 'model.foo === "foobar"'
+            },
+            hideExpression: function($viewValue, $modelValue, scope) {
+              return scope.model.baz === 'foobar';
+            },
+            validators: {
+              ipAddress: {
+                expression: function($viewValue, $modelValue, scope) {
+                  var value = $modelValue || $viewValue;
+                  return /(\d{1,3}\.){3}\d{1,3}/.test(value);
+                },
+                message: '$viewValue + " is not a valid IP Address"'
+              },
+              notLocalHost: '$viewValue !== "127.0.0.1"'
+            },
+            validation: {
+              messages: {
+                required: 'to.label + " is required"'
+              }
+            }
+          }
+        ];*/
+
         $scope.data = res.data;
         $scope.subModelCode = res.subModelCode;
         $scope.fields = res.fields;
@@ -121,6 +161,9 @@
         modelCode: modelCode,
         operation: operation,
         data: angular.extend({}, $scope.data, extraData)
+      }).then(function(){
+        //返回列表
+        $window.history.back();
       });
     }
   }

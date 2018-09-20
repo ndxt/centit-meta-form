@@ -11,16 +11,16 @@ public class FormField {
     private String defaultValue;
     private FieldTemplateOptions templateOptions;
     private String hideExpression;
-    private Map<String,String> expressionProperties;
-    private Map<String,Object> modelOptions;
+    private Map<String, String> expressionProperties;
+    private Map<String, Object> modelOptions;
     private Boolean noFormControl;
     private String template;
     private String templateUrl;
     private Long rows;
 
-    private Map<String,FieldValidator> validators;
+    private Map<String, FieldValidator> validators;
 
-    public FormField(){
+    public FormField() {
 
     }
 
@@ -112,14 +112,14 @@ public class FormField {
         this.validators = validators;
     }
 
-    public void addValidator(String key, FieldValidator  validator) {
-        if(this.validators ==null)
+    public void addValidator(String key, FieldValidator validator) {
+        if (this.validators == null)
             this.validators = new HashMap<>();
         this.validators.put(key, validator);
     }
 
     public void setValidatorHint(String setValidatorHint) {
-        if(this.validators ==null)
+        if (this.validators == null)
             this.validators = new HashMap<>();
         this.validators.put(key, new FieldValidator(setValidatorHint));
     }
@@ -139,10 +139,11 @@ public class FormField {
     public void setClassName(String className) {
         this.className = className;
     }
+
     /**
      * private String className;// 'col-xs-12',
      */
     public void setFieldWidth(int width) {
-        this.className = "col-xs-"+width;
+        this.className = "col-xs-" + width;
     }
 }

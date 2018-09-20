@@ -1,20 +1,14 @@
 package com.centit.metaform.po;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Length;
 
 import com.centit.support.database.metadata.SimpleTableField;
 
-
 /**
- * create by scaffold 2016-06-02 
- 
- 
-  数据模板字段null   
+ * create by scaffold 2016-06-02
+ * 数据模板字段
 */
 @Entity
 @Table(name = "M_MODEL_DATA_FIELD")
@@ -25,26 +19,31 @@ public class ModelDataField implements java.io.Serializable {
 //    private com.centit.metaform.po.ModelDataFieldId cid;
 
     /**
-     *
+     * 模块代码
      */
     @Column(name = "MODEL_CODE")
     @Length(max = 16, message = "字段长度不能大于{max}")
     private String  modelCode;
 
     /**
-     *
+     * 字段名称
      */
     @Column(name = "COLUMN_NAME")
     @Length(max = 32, message = "字段长度不能大于{max}")
     private String  columnName;
 
     /**
-     * 字段类别 ，关联只读字段（reference_Data 中为关联SQL语句）
+     * 列名称
+     */
+    @Transient
+    private String columnLabel;
+
+    /**
+     * 字段类别 ，关联只读字段（reference_Data 中为关联SQL语句）     R 为引用 T 为表字段
      */
     @Column(name = "COLUMN_TYPE")
     @Length(  message = "字段长度不能大于{max}")
     private String  columnType;
-
 
     /**
      * H 隐藏  R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑
@@ -52,11 +51,13 @@ public class ModelDataField implements java.io.Serializable {
     @Column(name = "ACCESS_TYPE")
     @Length(  message = "字段长度不能大于{max}")
     private String  accessType;
+
     /**
      * 显示顺序 null
      */
     @Column(name = "Display_Order")
     private Long  displayOrder;
+
     /**
      * 输入说明 与系统关联，比如自动与登录用户代码关联，选择系统用户，选择系统机构，等等
      */
@@ -64,15 +65,17 @@ public class ModelDataField implements java.io.Serializable {
     @Length(max = 256, message = "字段长度不能大于{max}")
     private String  inputHint;
 
+    /**
+     * 输入框类型
+     */
     @Column(name = "INPUT_TYPE")
     @Length(max = 32, message = "字段长度不能大于{max}")
     private String  inputType;
 
-
     /**
      * 引用类型
      * 0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
-       9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））
+     * 9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））
      */
     @Column(name = "REFERENCE_TYPE")
     @Length(message = "字段长度不能大于{max}")
@@ -114,19 +117,19 @@ public class ModelDataField implements java.io.Serializable {
 
 
     /**
-     * 过滤类别
+     * 查询条件类别：HI 查询时隐藏，NO 没有，MC match，LT 小于，GT 大于，EQ 等于，BT 介于，LE 小于等于，GE 大于等于
      */
     @Column(name = "FILTER_TYPE")
     private String filterType;
 
     /**
-     * 过滤类别
+     * 是否必填 T/F
      */
     @Column(name = "MANDATORY")
     private String mandatory;
 
     /**
-     * 是否是焦点
+     * 是否是焦点 T/F
      */
     @Column(name = "FOCUS")
     private String focus;
@@ -148,15 +151,14 @@ public class ModelDataField implements java.io.Serializable {
     @Length(max = 50, message = "字段长度不能大于{max}")
     private String viewFormat;
 
-
     /**
-     * 字段高度 null
+     * 字段高度
      */
     @Column(name = "FIELD_HEIGHT")
     private Long  fieldHeight;
 
     /**
-     * 字段长度 null
+     * 字段长度
      */
     @Column(name = "FIELD_WIDTH")
     private Long  fieldWidth;
@@ -308,7 +310,6 @@ public class ModelDataField implements java.io.Serializable {
   
     /**
      * R 为引用 T 为表字段
-     * @return
      */
     public String getColumnType() {
         return columnType;
@@ -504,4 +505,11 @@ public class ModelDataField implements java.io.Serializable {
         return this;
     }
 
+    public String getColumnLabel() {
+        return columnLabel;
+    }
+
+    public void setColumnLabel(String columnLabel) {
+        this.columnLabel = columnLabel;
+    }
 }

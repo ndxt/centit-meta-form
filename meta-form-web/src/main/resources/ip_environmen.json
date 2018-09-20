@@ -19,6 +19,15 @@
       "password": "BA7ZNX7J1WB4Q1jsM4o8Cg==",
       "databaseDesc": "公司经营数据管理数据库",
       "created": "u0000000"
+    },{
+      "databaseCode": "0000000001",
+      "osId": "CONTRACT",
+      "databaseName": "物料管理测试库",
+      "databaseUrl": "jdbc:mysql://192.168.128.32/bim?useUnicode=true&characterEncoding=utf-8",
+      "username": "framework",
+      "password": "FxV/BjjWFkrKFar10wIU6Q==",
+      "databaseDesc": "MySQL测试库",
+      "created": "u0000000"
     }
   ],
   "userAccessTokens": [

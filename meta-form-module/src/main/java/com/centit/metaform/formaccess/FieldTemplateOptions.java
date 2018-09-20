@@ -25,7 +25,7 @@ public class FieldTemplateOptions {
      */
     private String url;
 
-    public FieldTemplateOptions(){
+    public FieldTemplateOptions() {
         disabled = false;
     }
 
@@ -54,7 +54,7 @@ public class FieldTemplateOptions {
     }
 
     public void addOption(OptionItem option) {
-        if(this.options == null)
+        if (this.options == null)
             this.options = new ArrayList<>();
         this.options.add(option);
     }

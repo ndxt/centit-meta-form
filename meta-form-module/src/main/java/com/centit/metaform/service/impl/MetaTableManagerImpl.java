@@ -31,28 +31,26 @@ import java.util.*;
 
 /**
  * MdTable  Service.
- * create by scaffold 2016-06-02 
- 
+ * create by scaffold 2016-06-02
+ * <p>
  * 表元数据表状态分为 系统/查询/更新
-系统，不可以做任何操作
-查询，仅用于通用查询模块，不可以更新
-更新，可以更新
-   
-*/
+ * 系统，不可以做任何操作
+ * 查询，仅用于通用查询模块，不可以更新
+ * 更新，可以更新
+ */
 @Service
-public class MetaTableManagerImpl 
-        extends BaseEntityManagerImpl<MetaTable,Long,MetaTableDao>
-    implements MetaTableManager{
+public class MetaTableManagerImpl
+    extends BaseEntityManagerImpl<MetaTable, Long, MetaTableDao>
+    implements MetaTableManager {
 
     public static final Log log = LogFactory.getLog(MetaTableManager.class);
 
 
-    private MetaTableDao metaTableDao ;
+    private MetaTableDao metaTableDao;
 
     @Resource(name = "metaTableDao")
     @NotNull
-    public void setMetaTableDao(MetaTableDao baseDao)
-    {
+    public void setMetaTableDao(MetaTableDao baseDao) {
         this.metaTableDao = baseDao;
         setBaseDao(this.metaTableDao);
     }
@@ -83,18 +81,19 @@ public class MetaTableManagerImpl
 
     @Resource
     protected IntegrationEnvironment integrationEnvironment;
-/*
-     @PostConstruct
-    public void init() {
-        
-    }
 
- */
+    /*
+         @PostConstruct
+        public void init() {
+
+        }
+
+     */
     @Override
-    @Transactional(propagation=Propagation.REQUIRED) 
+    @Transactional(propagation = Propagation.REQUIRED)
     public JSONArray listMdTablesAsJson(
-            String[] fields,
-            Map<String, Object> filterMap, PageDesc pageDesc){
+        String[] fields,
+        Map<String, Object> filterMap, PageDesc pageDesc) {
 
         return baseDao.listObjectsAsJson(filterMap, pageDesc);
     }
@@ -117,8 +116,8 @@ public class MetaTableManagerImpl
         }
         if (pmt != null) {
             List<PendingMetaColumn> pdMetaColumn = new ArrayList<>(pmt.getMdColumns());
-            if (pdMetaColumn != null && pdMetaColumn.size()>0) {
-                for (int i=0; i<pdMetaColumn.size(); i++) {
+            if (pdMetaColumn != null && pdMetaColumn.size() > 0) {
+                for (int i = 0; i < pdMetaColumn.size(); i++) {
                     PendingMetaColumn tempColumn = pdMetaColumn.get(i);
                     tempColumn.setTableId(pmt.getTableId());
                     if (null == tempColumn.getColumnOrder()) {
@@ -129,16 +128,16 @@ public class MetaTableManagerImpl
             }
 
             List<PendingMetaRelation> pdMetaRelation = new ArrayList<>(pmt.getMdRelations());
-            if (pdMetaRelation != null && pdMetaRelation.size()>0) {
-                for (int j=0; j<pdMetaRelation.size(); j++) {
+            if (pdMetaRelation != null && pdMetaRelation.size() > 0) {
+                for (int j = 0; j < pdMetaRelation.size(); j++) {
                     PendingMetaRelation tempRelation = pdMetaRelation.get(j);
                     tempRelation.setParentTableId(pmt.getTableId());
                     tempRelation.setRelationId(pendingRelationDao.getNextKey());
                     pendingRelationDao.saveNewObject(tempRelation);
 
                     List<PendingMetaRelDetail> relDetails = new ArrayList(tempRelation.getRelationDetails());
-                    if (relDetails != null && relDetails.size()>0) {
-                        for (PendingMetaRelDetail relDetail:relDetails) {
+                    if (relDetails != null && relDetails.size() > 0) {
+                        for (PendingMetaRelDetail relDetail : relDetails) {
                             relDetail.setRelationId(tempRelation.getRelationId());
                             pendingMetaRelDetialDao.saveNewObject(relDetail);
                         }
@@ -169,7 +168,7 @@ public class MetaTableManagerImpl
     @Override
     @Transactional
     public PendingMetaTable getPendingMetaTable(long tableId) {
-        PendingMetaTable resultPdMetaTable =  pendingMdTableDao.getObjectById(tableId);
+        PendingMetaTable resultPdMetaTable = pendingMdTableDao.getObjectById(tableId);
 
         Map<String, Object> tempFilter = new HashMap<>();
         tempFilter.put("tableId", tableId);
@@ -180,11 +179,11 @@ public class MetaTableManagerImpl
         tempFilter2.put("parentTableId", tableId);
         Set<PendingMetaRelation> tempRelation = new HashSet<>(pendingRelationDao.listObjectsByProperties(tempFilter2));
 
-        Iterator<PendingMetaRelation> itr= tempRelation.iterator();
-        while(itr.hasNext()){
-            PendingMetaRelation relation=itr.next();
+        Iterator<PendingMetaRelation> itr = tempRelation.iterator();
+        while (itr.hasNext()) {
+            PendingMetaRelation relation = itr.next();
             Set<PendingMetaRelDetail> relDetails = new HashSet<>(
-                    pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
+                pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
             relation.setRelationDetails(relDetails);
         }
 
@@ -200,11 +199,11 @@ public class MetaTableManagerImpl
         tempFilter.put("tableId", pmt.getTableId());
         pendingMetaColumnDao.deleteObjectsForceByProperties(tempFilter);
 
-        Set<PendingMetaColumn> columns =pmt.getMdColumns();
-        Iterator<PendingMetaColumn> itrC=columns.iterator();
+        Set<PendingMetaColumn> columns = pmt.getMdColumns();
+        Iterator<PendingMetaColumn> itrC = columns.iterator();
 
-        while(itrC.hasNext()){
-            PendingMetaColumn column =itrC.next();
+        while (itrC.hasNext()) {
+            PendingMetaColumn column = itrC.next();
             column.setTableId(pmt.getTableId());
             if (null == column.getColumnOrder()) {
                 column.setColumnOrder(new Long(0));
@@ -212,28 +211,28 @@ public class MetaTableManagerImpl
             pendingMetaColumnDao.saveNewObject(column);
         }
 
-        Set<PendingMetaRelation> relations =pmt.getMdRelations();
+        Set<PendingMetaRelation> relations = pmt.getMdRelations();
 
         Map<String, Object> relationFilter = new HashMap<>();
         relationFilter.put("parentTableId", pmt.getTableId());
         pendingRelationDao.deleteObjectsForceByProperties(relationFilter);
 
-        Iterator<PendingMetaRelation> itr=relations.iterator();
-        while(itr.hasNext()){
-            PendingMetaRelation relation =itr.next();
+        Iterator<PendingMetaRelation> itr = relations.iterator();
+        while (itr.hasNext()) {
+            PendingMetaRelation relation = itr.next();
             relation.setParentTableId(pmt.getTableId());
 
             relation.setRelationId(pendingRelationDao.getNextKey());
             pendingRelationDao.saveNewObject(relation);
 
-            if(relation.getRelationId()!=null) {
+            if (relation.getRelationId() != null) {
                 Map<String, Object> detailFilter = new HashMap<>();
                 detailFilter.put("relationId", relation.getRelationId());
                 pendingMetaRelDetialDao.deleteObjectsForceByProperties(detailFilter);
             }
             List<PendingMetaRelDetail> relDetails = new ArrayList(relation.getRelationDetails());
-            if (relDetails != null && relDetails.size()>0) {
-                for (PendingMetaRelDetail relDetail:relDetails) {
+            if (relDetails != null && relDetails.size() > 0) {
+                for (PendingMetaRelDetail relDetail : relDetails) {
                     relDetail.setRelationId(relation.getRelationId());
                     pendingMetaRelDetialDao.saveNewObject(relDetail);
                 }
@@ -250,25 +249,25 @@ public class MetaTableManagerImpl
     @Override
     @Transactional
     public List<String> makeAlterTableSqls(Long tableId) {
-        PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
+        PendingMetaTable ptable = pendingMdTableDao.getObjectById(tableId);
 
         Set<PendingMetaColumn> pColumn =
-                new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
+            new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
         Set<PendingMetaRelation> pRelation =
-                new HashSet<>(pendingRelationDao.listObjectsByProperty("parentTableId", tableId));
+            new HashSet<>(pendingRelationDao.listObjectsByProperty("parentTableId", tableId));
 
-        Iterator<PendingMetaRelation> itr= pRelation.iterator();
-        while(itr.hasNext()){
-            PendingMetaRelation relation=itr.next();
+        Iterator<PendingMetaRelation> itr = pRelation.iterator();
+        while (itr.hasNext()) {
+            PendingMetaRelation relation = itr.next();
             Set<PendingMetaRelDetail> relDetails = new HashSet<>(
-                    pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
+                pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
             relation.setRelationDetails(relDetails);
         }
 
         ptable.setMdColumns(pColumn);
         ptable.setMdRelations(pRelation);
 
-        return  makeAlterTableSqls(ptable);
+        return makeAlterTableSqls(ptable);
     }
 
     @Transactional
@@ -277,15 +276,15 @@ public class MetaTableManagerImpl
 
         if (stable != null) {
             Set<MetaColumn> mtColumn =
-                    new HashSet<>(metaColumnDao.listObjectsByProperty("tableId", ptable.getTableId()));
+                new HashSet<>(metaColumnDao.listObjectsByProperty("tableId", ptable.getTableId()));
             Set<MetaRelation> mtRelation =
-                    new HashSet<>(metaRelationDao.listObjectsByProperty("parentTableId", ptable.getTableId()));
+                new HashSet<>(metaRelationDao.listObjectsByProperty("parentTableId", ptable.getTableId()));
 
             Iterator<MetaRelation> itr = mtRelation.iterator();
             while (itr.hasNext()) {
                 MetaRelation relation = itr.next();
                 Set<MetaRelDetail> relDetails = new HashSet<>(
-                        metaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
+                    metaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
                 relation.setRelationDetails(relDetails);
             }
 
@@ -294,57 +293,57 @@ public class MetaTableManagerImpl
         }
 
         DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
-                //databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
+        //databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
 
         DBType dbType = DBType.mapDBType(mdb.getDatabaseUrl());
         ptable.setDatabaseType(dbType);
         DDLOperations ddlOpt = null;
-        switch(dbType){
-        case Oracle:
-            ddlOpt = new OracleDDLOperations();
-            break;
-          case DB2:
-              ddlOpt = new DB2DDLOperations();
-              break;
-          case SqlServer:
-              ddlOpt = new SqlSvrDDLOperations();
-              break;
-          case MySql:
-              ddlOpt = new MySqlDDLOperations();
-              break;
-          default:
-              ddlOpt = new OracleDDLOperations();
-              break;
+        switch (dbType) {
+            case Oracle:
+                ddlOpt = new OracleDDLOperations();
+                break;
+            case DB2:
+                ddlOpt = new DB2DDLOperations();
+                break;
+            case SqlServer:
+                ddlOpt = new SqlSvrDDLOperations();
+                break;
+            case MySql:
+                ddlOpt = new MySqlDDLOperations();
+                break;
+            default:
+                ddlOpt = new OracleDDLOperations();
+                break;
         }
 
         List<String> sqls = new ArrayList<>();
-        if(stable==null){
+        if (stable == null) {
             sqls.add(ddlOpt.makeCreateTableSql(ptable));
-        }else{
+        } else {
             stable.setDatabaseType(dbType);
-            for(PendingMetaColumn pcol : ptable.getMdColumns()){
+            for (PendingMetaColumn pcol : ptable.getMdColumns()) {
                 MetaColumn ocol = stable.findFieldByColumn(pcol.getColumnName());
-                if(ocol==null){
+                if (ocol == null) {
                     sqls.add(ddlOpt.makeAddColumnSql(
-                            ptable.getTableName(), pcol) );
-                }else{
-                    if(pcol.getColumnType().equals(ocol.getColumnType())){
-                        if( pcol.getMaxLength() != ocol.getMaxLength() ||
-                                pcol.getScale() != ocol.getScale()){
+                        ptable.getTableName(), pcol));
+                } else {
+                    if (pcol.getColumnType().equals(ocol.getColumnType())) {
+                        if (pcol.getMaxLength() != ocol.getMaxLength() ||
+                            pcol.getScale() != ocol.getScale()) {
                             sqls.add(ddlOpt.makeModifyColumnSql(
-                                    ptable.getTableName(),ocol, pcol) );
+                                ptable.getTableName(), ocol, pcol));
                         }
-                    }else{
+                    } else {
                         sqls.addAll(ddlOpt.makeReconfigurationColumnSqls(
-                                ptable.getTableName(),ocol.getColumnName(), pcol));
+                            ptable.getTableName(), ocol.getColumnName(), pcol));
                     }
                 }
             }
 
-            for(MetaColumn ocol : stable.getMdColumns()){
+            for (MetaColumn ocol : stable.getMdColumns()) {
                 PendingMetaColumn pcol = ptable.findFieldByColumn(ocol.getColumnName());
-                if(pcol==null){
-                    sqls.add(ddlOpt.makeDropColumnSql(stable.getTableName(),ocol.getColumnName()));
+                if (pcol == null) {
+                    sqls.add(ddlOpt.makeDropColumnSql(stable.getTableName(), ocol.getColumnName()));
                 }
             }
         }
@@ -352,10 +351,10 @@ public class MetaTableManagerImpl
         return sqls;
     }
 
-    public void checkPendingMetaTable(PendingMetaTable ptable,String currentUser){
-        if("Y".equals(ptable.getUpdateCheckTimeStamp())){
+    public void checkPendingMetaTable(PendingMetaTable ptable, String currentUser) {
+        if ("Y".equals(ptable.getUpdateCheckTimeStamp())) {
             PendingMetaColumn col = ptable.findFieldByName("lastModifyDate");
-            if(col==null){
+            if (col == null) {
                 col = new PendingMetaColumn(ptable, "LAST_MODIFY_DATE");
                 col.setFieldLabelName("最新更新时间");
                 col.setColumnComment("最新更新时间");
@@ -363,12 +362,13 @@ public class MetaTableManagerImpl
                 col.setLastModifyDate(DatetimeOpt.currentUtilDate());
                 col.setRecorder(currentUser);
                 ptable.getColumns().add(col);
-            };
+            }
+            ;
         }
 
-        if("1".equals(ptable.getWorkFlowOptType())){
+        if ("1".equals(ptable.getWorkFlowOptType())) {
             PendingMetaColumn col = ptable.findFieldByName("wfInstId");
-            if(col==null){
+            if (col == null) {
                 col = new PendingMetaColumn(ptable, "WF_INST_ID");
                 col.setFieldLabelName("流程实例ID");
                 col.setColumnComment("业务对应的工作流程实例ID");
@@ -377,10 +377,11 @@ public class MetaTableManagerImpl
                 col.setLastModifyDate(DatetimeOpt.currentUtilDate());
                 col.setRecorder(currentUser);
                 ptable.getColumns().add(col);
-            };
-        }else if("2".equals(ptable.getWorkFlowOptType())){
+            }
+            ;
+        } else if ("2".equals(ptable.getWorkFlowOptType())) {
             PendingMetaColumn col = ptable.findFieldByName("nodeInstId");
-            if(col==null){
+            if (col == null) {
                 col = new PendingMetaColumn(ptable, "NODE_INST_ID");
                 col.setFieldLabelName("流程实例ID");
                 col.setColumnComment("业务对应的工作流程实例ID");
@@ -389,41 +390,44 @@ public class MetaTableManagerImpl
                 col.setLastModifyDate(DatetimeOpt.currentUtilDate());
                 col.setRecorder(currentUser);
                 ptable.getColumns().add(col);
-            };
+            }
+            ;
         }
     }
+
     /**
      * 对比pendingMetaTable和MetaTable中的字段信息，并对数据库中的表进行重构，
      * 重构成功后将对应的表结构信息同步到 MetaTable中，并在MetaChangeLog中记录信息
+     *
      * @return 返回错误编号 和 错误说明， 编号为0表示成功
      */
     @Override
     @Transactional
-    public Pair<Integer, String> publishMetaTable(Long tableId,String currentUser) {
+    public Pair<Integer, String> publishMetaTable(Long tableId, String currentUser) {
         //TODO 根据不同的表类别 做不同的重构
-        try{
-            PendingMetaTable ptable=pendingMdTableDao.getObjectById(tableId);
+        try {
+            PendingMetaTable ptable = pendingMdTableDao.getObjectById(tableId);
 
             Set<PendingMetaColumn> pColumn =
-                    new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
+                new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
             Set<PendingMetaRelation> pRelation =
-                    new HashSet<>(pendingRelationDao.listObjectsByProperty("parentTableId", tableId));
-            Iterator<PendingMetaRelation> itr= pRelation.iterator();
-            while(itr.hasNext()){
-                PendingMetaRelation relation=itr.next();
+                new HashSet<>(pendingRelationDao.listObjectsByProperty("parentTableId", tableId));
+            Iterator<PendingMetaRelation> itr = pRelation.iterator();
+            while (itr.hasNext()) {
+                PendingMetaRelation relation = itr.next();
                 Set<PendingMetaRelDetail> relDetails = new HashSet<>(
-                        pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
+                    pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
                 relation.setRelationDetails(relDetails);
             }
             ptable.setMdColumns(pColumn);
             ptable.setMdRelations(pRelation);
 
             Pair<Integer, String> ret = GeneralDDLOperations.checkTableWellDefined(ptable);
-            if(ret.getLeft().intValue() != 0)
+            if (ret.getLeft().intValue() != 0)
                 return ret;
             MetaChangLog chgLog = new MetaChangLog();
             List<String> errors = new ArrayList<>();
-            if("T".equals(ptable.getTableType())) {
+            if ("T".equals(ptable.getTableType())) {
                 DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
                 //databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
 
@@ -471,12 +475,12 @@ public class MetaTableManagerImpl
             chgLog.setTableID(ptable.getTableId());
             chgLog.setChanger(currentUser);
             metaChangLogDao.saveNewObject(chgLog);
-            if(errors.size()==0){
+            if (errors.size() == 0) {
                 ptable.setRecorder(currentUser);
                 ptable.setLastModifyDate(new Date());
                 pendingMdTableDao.mergeObject(ptable);
 
-                MetaTable table= new MetaTable(ptable);
+                MetaTable table = new MetaTable(ptable);
                 metaTableDao.mergeObject(table);
 
                 List<MetaColumn> metaColumns = table.getColumns();
@@ -494,7 +498,7 @@ public class MetaTableManagerImpl
                 rFilter.put("parentTableId", table.getTableId());
                 metaRelationDao.deleteObjectsByProperties(rFilter);
                 if (metaRelations != null && metaRelations.size() > 0) {
-                    for (int j=0; j<metaRelations.size(); j++) {
+                    for (int j = 0; j < metaRelations.size(); j++) {
                         MetaRelation tempRelation = metaRelations.get(j);
                         if (tempRelation.getRelationState() == null) {
                             tempRelation.setRelationState("N");
@@ -503,8 +507,8 @@ public class MetaTableManagerImpl
 
                         List<MetaRelDetail> relDetails = new ArrayList(metaRelations.get(j).getRelationDetails());
 
-                        if (relDetails != null && relDetails.size()>0) {
-                            for (MetaRelDetail relDetail:relDetails) {
+                        if (relDetails != null && relDetails.size() > 0) {
+                            for (MetaRelDetail relDetail : relDetails) {
                                 Map<String, Object> relFilter = new HashMap<>();
                                 relFilter.put("relationId", relDetail.getRelationId());
                                 metaRelDetialDao.deleteObjectsByProperties(relFilter);
@@ -516,29 +520,29 @@ public class MetaTableManagerImpl
                     }
                 }
 
-                return new ImmutablePair<>(0,"发布成功！");
-            }else
-                return new ImmutablePair<>(-10,JSON.toJSONString(errors));
-        }catch(Exception e){
-            return new ImmutablePair<>(0,"发布失败!" +  e.getMessage());
+                return new ImmutablePair<>(0, "发布成功！");
+            } else
+                return new ImmutablePair<>(-10, JSON.toJSONString(errors));
+        } catch (Exception e) {
+            return new ImmutablePair<>(0, "发布失败!" + e.getMessage());
         }
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public JSONArray listDrafts(String[] fields, Map<String, Object> searchColumn,
-            PageDesc pageDesc) {
+                                PageDesc pageDesc) {
 
         JSONArray listTables =
-                pendingMdTableDao.listObjectsAsJson(searchColumn, pageDesc);
+            pendingMdTableDao.listObjectsAsJson(searchColumn, pageDesc);
 
         List<DatabaseInfo> databases = integrationEnvironment.listDatabaseInfo();
-        for(Object obj:listTables){
-            JSONObject table = (JSONObject)obj;
+        for (Object obj : listTables) {
+            JSONObject table = (JSONObject) obj;
             String databaseCode = table.getString("databaseCode");
-            if(databaseCode!=null){
-                for(DatabaseInfo di:databases){
-                    if(databaseCode.equals(di.getDatabaseCode())){
+            if (databaseCode != null) {
+                for (DatabaseInfo di : databases) {
+                    if (databaseCode.equals(di.getDatabaseCode())) {
                         table.put("databaseName", di.getDatabaseName());
                         break;
                     }
@@ -557,7 +561,7 @@ public class MetaTableManagerImpl
     @Transactional
     public boolean importTableFromPdm(String pdmFilePath, String tableCode, String databaseCode) {
         PendingMetaTable metaTable = PdmTableInfo.importTableFromPdm(pdmFilePath, tableCode, databaseCode);
-        if(metaTable==null)
+        if (metaTable == null)
             return false;
         pendingMdTableDao.saveNewObject(metaTable);
         return true;
@@ -568,16 +572,16 @@ public class MetaTableManagerImpl
     @Transactional
     public List<MetaColumn> getNotInFormFields(Long tableId) {
         String sql = "select * from F_META_COLUMN  t where t.table_id= :tableId " +
-                "and t.column_name not in " +
-                "(select f.column_name from m_model_data_field f join m_meta_form_model m" +
-                " on f.model_code=m.model_code and m.table_id=:tableId  )";
-        return metaColumnDao.listObjectsBySql( sql,
-                QueryUtils.createSqlParamsMap("tableId",tableId));
+            "and t.column_name not in " +
+            "(select f.column_name from m_model_data_field f join m_meta_form_model m" +
+            " on f.model_code=m.model_code and m.table_id=:tableId  )";
+        return metaColumnDao.listObjectsBySql(sql,
+            QueryUtils.createSqlParamsMap("tableId", tableId));
     }
 
     @Override
     public List<MetaColumn> listFields(Long tableId) {
-        Map<String,Object> filterMap = new HashMap<String,Object>();
+        Map<String, Object> filterMap = new HashMap<String, Object>();
         filterMap.put("tableId", tableId);
 
         return metaColumnDao.listObjects(filterMap);

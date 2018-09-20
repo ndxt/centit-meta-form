@@ -10,15 +10,15 @@ import org.hibernate.validator.constraints.NotBlank;
 
 
 /**
- * create by scaffold 2016-06-01 
- 
- 
-  未落实表关联细节表null   
-*/
+ * create by scaffold 2016-06-01
+ * <p>
+ * <p>
+ * 未落实表关联细节表null
+ */
 @Entity
 @Table(name = "F_PENDING_META_REL_DETIAL")
 public class PendingMetaRelDetail implements java.io.Serializable {
-    private static final long serialVersionUID =  1L;
+    private static final long serialVersionUID = 1L;
 
 //    @EmbeddedId
 //    private PendingMetaRelDetailId cid;
@@ -36,13 +36,19 @@ public class PendingMetaRelDetail implements java.io.Serializable {
     @Column(name = "CHILD_COLUMN_NAME")
     @NotBlank(message = "字段不能为空")
     @Length(max = 32, message = "字段长度不能大于{max}")
-    private String  childColumnName;
+    private String childColumnName;
 
     // Constructors
-    /** default constructor */
+
+    /**
+     * default constructor
+     */
     public PendingMetaRelDetail() {
     }
-    /** minimal constructor */
+
+    /**
+     * minimal constructor
+     */
 //    public PendingMetaRelDetail(PendingMetaRelDetailId id
 //
 //        ,String  childColumnName) {
@@ -65,7 +71,6 @@ public class PendingMetaRelDetail implements java.io.Serializable {
 //        else
 //            this.cid = id;
 //    }
-  
     public Long getRelationId() {
 //        if(this.cid==null)
 //            return null;
@@ -79,7 +84,7 @@ public class PendingMetaRelDetail implements java.io.Serializable {
 //        this.cid.setRelationId(relationId);
         this.relationId = relationId;
     }
-  
+
     public String getParentColumnName() {
 //        if(this.cid==null)
 //            return null;
@@ -95,9 +100,8 @@ public class PendingMetaRelDetail implements java.io.Serializable {
     }
 
 
-
     // Property accessors
-  
+
     public String getChildColumnName() {
         return this.childColumnName;
     }
@@ -107,33 +111,32 @@ public class PendingMetaRelDetail implements java.io.Serializable {
     }
 
 
+    public PendingMetaRelDetail copy(PendingMetaRelDetail other) {
 
-    public PendingMetaRelDetail copy(PendingMetaRelDetail other){
-  
         this.setRelationId(other.getRelationId());
         this.setParentColumnName(other.getParentColumnName());
-  
-        this.childColumnName= other.getChildColumnName();
+
+        this.childColumnName = other.getChildColumnName();
 
         return this;
     }
 
-    public PendingMetaRelDetail copyNotNullProperty(PendingMetaRelDetail other){
-  
-    if( other.getRelationId() != null)
-        this.setRelationId(other.getRelationId());
-    if( other.getParentColumnName() != null)
-        this.setParentColumnName(other.getParentColumnName());
-  
-        if( other.getChildColumnName() != null)
-            this.childColumnName= other.getChildColumnName();
+    public PendingMetaRelDetail copyNotNullProperty(PendingMetaRelDetail other) {
+
+        if (other.getRelationId() != null)
+            this.setRelationId(other.getRelationId());
+        if (other.getParentColumnName() != null)
+            this.setParentColumnName(other.getParentColumnName());
+
+        if (other.getChildColumnName() != null)
+            this.childColumnName = other.getChildColumnName();
 
         return this;
     }
 
-    public PendingMetaRelDetail clearProperties(){
-  
-        this.childColumnName= null;
+    public PendingMetaRelDetail clearProperties() {
+
+        this.childColumnName = null;
 
         return this;
     }
