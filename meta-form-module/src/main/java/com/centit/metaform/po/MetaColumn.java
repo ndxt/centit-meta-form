@@ -2,10 +2,7 @@ package com.centit.metaform.po;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -31,6 +28,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
     /**
      * 表名称 null
      */
+    @Id
     @Column(name = "TABLE_ID")
     @NotBlank(message = "字段不能为空")
     private Long tableId;
@@ -38,6 +36,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
     /**
      * 字段名称 null
      */
+    @Id
     @Column(name = "COLUMN_NAME")
     @NotBlank(message = "字段不能为空")
     private String  columnName;
@@ -182,8 +181,7 @@ public class MetaColumn implements TableField,java.io.Serializable {
 //    }
 
 /** full constructor */
-    public MetaColumn(com.centit.metaform.po.MetaColumnId id
-    ,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,
+    public MetaColumn(String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,
     Integer  maxLength,Integer  scale,String  accessType,String  mandatory,
     String  primarykey,String  columnState,String  referenceType,String  referenceData,
     String  validateRegex,String  validateInfo,String  autoCreateRule,String  autoCreateParam,

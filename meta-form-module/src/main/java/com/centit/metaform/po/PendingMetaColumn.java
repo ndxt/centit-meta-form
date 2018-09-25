@@ -9,10 +9,7 @@ import com.centit.support.database.utils.DBType;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 
 
@@ -33,6 +30,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     /**
      * 字段名称 null
      */
+    @Id
     @Column(name = "TABLE_ID")
     @NotBlank(message = "字段不能为空")
     private Long  tableId;
@@ -40,6 +38,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     /**
      * 字段名称 null
      */
+    @Id
     @Column(name = "COLUMN_NAME")
     @NotBlank(message = "字段不能为空")
     private String  columnName;
@@ -186,8 +185,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
 //    }
 
 /** full constructor */
-    public PendingMetaColumn(
-            PendingMetaColumnId cid,String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,
+    public PendingMetaColumn(String  fieldLabelName,String  columnComment,Long  columnOrder,String  columnType,
             Integer  maxLength,Integer  scale,String  accessType,String  mandatory,String  primarykey,String  columnState,String  referenceType,String  referenceData,String  validateRegex,String  validateInfo,String  defaultValue,Date  lastModifyDate,String  recorder) {
 
 //        this.cid=cid;

@@ -101,50 +101,8 @@ public class MetaTableManagerImpl
     @Override
     @Transactional
     public void saveNewPendingMetaTable(PendingMetaTable pmt) {
-        PendingMetaTable oriPmt = pendingMdTableDao.getObjectById(pmt.getTableId());
-        if (oriPmt != null) {
-            pendingMdTableDao.mergeObject(pmt);
-            Map<String, Object> tempFilter = new HashMap<>();
-            tempFilter.put("tableId", pmt.getTableId());
-            pendingMetaColumnDao.deleteObjectsForceByProperties(tempFilter);
-
-            Map<String, Object> tempFilter2 = new HashMap<>();
-            tempFilter2.put("parentTableId", pmt.getTableId());
-            pendingRelationDao.deleteObjectsForceByProperties(tempFilter2);
-        } else {
-            pendingMdTableDao.saveNewObject(pmt);
-        }
-        if (pmt != null) {
-            List<PendingMetaColumn> pdMetaColumn = new ArrayList<>(pmt.getMdColumns());
-            if (pdMetaColumn != null && pdMetaColumn.size() > 0) {
-                for (int i = 0; i < pdMetaColumn.size(); i++) {
-                    PendingMetaColumn tempColumn = pdMetaColumn.get(i);
-                    tempColumn.setTableId(pmt.getTableId());
-                    if (null == tempColumn.getColumnOrder()) {
-                        tempColumn.setColumnOrder(new Long(0));
-                    }
-                    pendingMetaColumnDao.saveNewObject(tempColumn);
-                }
-            }
-
-            List<PendingMetaRelation> pdMetaRelation = new ArrayList<>(pmt.getMdRelations());
-            if (pdMetaRelation != null && pdMetaRelation.size() > 0) {
-                for (int j = 0; j < pdMetaRelation.size(); j++) {
-                    PendingMetaRelation tempRelation = pdMetaRelation.get(j);
-                    tempRelation.setParentTableId(pmt.getTableId());
-                    tempRelation.setRelationId(pendingRelationDao.getNextKey());
-                    pendingRelationDao.saveNewObject(tempRelation);
-
-                    List<PendingMetaRelDetail> relDetails = new ArrayList(tempRelation.getRelationDetails());
-                    if (relDetails != null && relDetails.size() > 0) {
-                        for (PendingMetaRelDetail relDetail : relDetails) {
-                            relDetail.setRelationId(tempRelation.getRelationId());
-                            pendingMetaRelDetialDao.saveNewObject(relDetail);
-                        }
-                    }
-                }
-            }
-        }
+        pendingMdTableDao.saveNewObject(pmt);
+        pendingMdTableDao.saveObjectReferences(pmt);
     }
 
     @Override
@@ -168,77 +126,16 @@ public class MetaTableManagerImpl
     @Override
     @Transactional
     public PendingMetaTable getPendingMetaTable(long tableId) {
+
         PendingMetaTable resultPdMetaTable = pendingMdTableDao.getObjectById(tableId);
-
-        Map<String, Object> tempFilter = new HashMap<>();
-        tempFilter.put("tableId", tableId);
-        Set<PendingMetaColumn> tempColumn = new HashSet<>(pendingMetaColumnDao.listObjectsByProperties(tempFilter));
-        resultPdMetaTable.setMdColumns(tempColumn);
-
-        Map<String, Object> tempFilter2 = new HashMap<>();
-        tempFilter2.put("parentTableId", tableId);
-        Set<PendingMetaRelation> tempRelation = new HashSet<>(pendingRelationDao.listObjectsByProperties(tempFilter2));
-
-        Iterator<PendingMetaRelation> itr = tempRelation.iterator();
-        while (itr.hasNext()) {
-            PendingMetaRelation relation = itr.next();
-            Set<PendingMetaRelDetail> relDetails = new HashSet<>(
-                pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
-            relation.setRelationDetails(relDetails);
-        }
-
-        resultPdMetaTable.setMdRelations(tempRelation);
-
-        return resultPdMetaTable;
+        return pendingMdTableDao.fetchObjectReferences(resultPdMetaTable);
     }
 
     @Override
     @Transactional
     public void savePendingMetaTable(PendingMetaTable pmt) {
-        Map<String, Object> tempFilter = new HashMap<>();
-        tempFilter.put("tableId", pmt.getTableId());
-        pendingMetaColumnDao.deleteObjectsForceByProperties(tempFilter);
-
-        Set<PendingMetaColumn> columns = pmt.getMdColumns();
-        Iterator<PendingMetaColumn> itrC = columns.iterator();
-
-        while (itrC.hasNext()) {
-            PendingMetaColumn column = itrC.next();
-            column.setTableId(pmt.getTableId());
-            if (null == column.getColumnOrder()) {
-                column.setColumnOrder(new Long(0));
-            }
-            pendingMetaColumnDao.saveNewObject(column);
-        }
-
-        Set<PendingMetaRelation> relations = pmt.getMdRelations();
-
-        Map<String, Object> relationFilter = new HashMap<>();
-        relationFilter.put("parentTableId", pmt.getTableId());
-        pendingRelationDao.deleteObjectsForceByProperties(relationFilter);
-
-        Iterator<PendingMetaRelation> itr = relations.iterator();
-        while (itr.hasNext()) {
-            PendingMetaRelation relation = itr.next();
-            relation.setParentTableId(pmt.getTableId());
-
-            relation.setRelationId(pendingRelationDao.getNextKey());
-            pendingRelationDao.saveNewObject(relation);
-
-            if (relation.getRelationId() != null) {
-                Map<String, Object> detailFilter = new HashMap<>();
-                detailFilter.put("relationId", relation.getRelationId());
-                pendingMetaRelDetialDao.deleteObjectsForceByProperties(detailFilter);
-            }
-            List<PendingMetaRelDetail> relDetails = new ArrayList(relation.getRelationDetails());
-            if (relDetails != null && relDetails.size() > 0) {
-                for (PendingMetaRelDetail relDetail : relDetails) {
-                    relDetail.setRelationId(relation.getRelationId());
-                    pendingMetaRelDetialDao.saveNewObject(relDetail);
-                }
-            }
-        }
-        pendingMdTableDao.mergeObject(pmt);
+        pendingMdTableDao.updateObject(pmt);
+        pendingMdTableDao.saveObjectReferences(pmt);
     }
 
 

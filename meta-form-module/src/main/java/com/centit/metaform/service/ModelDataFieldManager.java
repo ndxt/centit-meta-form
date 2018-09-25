@@ -3,9 +3,9 @@ package com.centit.metaform.service;
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.jdbc.service.BaseEntityManager;
 import com.centit.metaform.po.ModelDataField;
-import com.centit.metaform.po.ModelDataFieldId;
 import com.centit.support.database.utils.PageDesc;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -15,7 +15,7 @@ import java.util.Map;
  * 数据模板字段null   
 */
 
-public interface ModelDataFieldManager extends BaseEntityManager<ModelDataField,ModelDataFieldId>
+public interface ModelDataFieldManager extends BaseEntityManager<ModelDataField, Serializable>
 {
 
     public JSONArray listModelDataFieldsAsJson(

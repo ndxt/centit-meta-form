@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -24,7 +25,7 @@ import java.util.Map;
 */
 @Service
 public class ModelDataFieldManagerImpl 
-        extends BaseEntityManagerImpl<ModelDataField,com.centit.metaform.po.ModelDataFieldId,ModelDataFieldDao>
+        extends BaseEntityManagerImpl<ModelDataField, Serializable, ModelDataFieldDao>
     implements ModelDataFieldManager{
 
     public static final Log log = LogFactory.getLog(ModelDataFieldManager.class);

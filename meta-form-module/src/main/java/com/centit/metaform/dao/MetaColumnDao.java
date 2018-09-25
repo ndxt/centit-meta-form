@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 */
 
 @Repository
-public class MetaColumnDao extends BaseDaoImpl<MetaColumn,com.centit.metaform.po.MetaColumnId>
+public class MetaColumnDao extends BaseDaoImpl<MetaColumn, Serializable>
     {
 
     public static final Log log = LogFactory.getLog(MetaColumnDao.class);
