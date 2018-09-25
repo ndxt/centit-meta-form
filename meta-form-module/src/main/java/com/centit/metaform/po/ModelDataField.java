@@ -21,6 +21,7 @@ public class ModelDataField implements java.io.Serializable {
     /**
      * 模块代码
      */
+    @Id
     @Column(name = "MODEL_CODE")
     @Length(max = 16, message = "字段长度不能大于{max}")
     private String  modelCode;
@@ -28,6 +29,7 @@ public class ModelDataField implements java.io.Serializable {
     /**
      * 字段名称
      */
+    @Id
     @Column(name = "COLUMN_NAME")
     @Length(max = 32, message = "字段长度不能大于{max}")
     private String  columnName;

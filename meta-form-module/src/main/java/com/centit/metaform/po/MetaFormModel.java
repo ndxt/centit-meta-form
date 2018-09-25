@@ -144,18 +144,19 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     @Length(max = 800, message = "字段长度不能大于{max}")
     private String  dataFilterSql;
 
-//    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "MODEL_CODE", referencedColumnName = "MODEL_CODE")
 //    @OrderBy(value="displayOrder asc")
     private Set<ModelDataField> modelDataFields;
 
-//    @OneToMany(mappedBy="parentModel",fetch = FetchType.EAGER)
+//    @OneToMany(mappedBy="parentModelCode",fetch = FetchType.EAGER)
+//    @JoinColumn(name = "MODEL_CODE", referencedColumnName = "PARENT_MODEL_CODE")
 //    @OrderBy(value="displayOrder asc")
     private Set<MetaFormModel> childFormModels;
 
-//    @OneToMany(mappedBy="cid.metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @OneToMany(mappedBy="modelCode",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    @OrderBy(value="displayOrder asc")
-//    @JoinColumn(name="modelCode", referencedColumnName="modelCode")
+    @JoinColumn(name="MODEL_CODE", referencedColumnName="MODEL_CODE")
     private Set<ModelOperation> modelOperations;
 
     // Constructors

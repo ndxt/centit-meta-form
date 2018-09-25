@@ -81,6 +81,7 @@ public class MetaFormModelManagerImpl
     public void updateMetaFormModel(MetaFormModel mtaFormModel) {
         ModelRuntimeContextPool.invalidRuntimeContextPool(mtaFormModel.getModelCode());
         metaFormModelDao.updateObject(mtaFormModel);
+        metaFormModelDao.saveObjectReferences(mtaFormModel);
     }
 
     @Override

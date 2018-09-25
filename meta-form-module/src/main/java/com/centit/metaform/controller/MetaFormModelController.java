@@ -169,37 +169,9 @@ public class MetaFormModelController extends BaseController{
     public void updateMetaFormModel(@PathVariable String modelCode,
             @RequestBody @Valid MetaFormModel metaFormModel, HttpServletResponse response) {
         MetaFormModel dbMetaFormModel = metaFormModelMag.getObjectById( modelCode);
-        if (null != metaFormModel) {
-            dbMetaFormModel.copyNotNullProperty(metaFormModel);
-            dbMetaFormModel.setLastModifyDate(new Date());
-            metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
-
-            Map<String, Object> tempFilter = new HashMap<>();
-            tempFilter.put("modelCode", modelCode);
-            modelDataFieldDao.deleteObjectsByProperties(tempFilter);
-            modelOperationDao.deleteObjectsByProperties(tempFilter);
-
-            Set<ModelDataField> modelDataFields = metaFormModel.getModelDataFields();
-            if (modelDataFields != null && modelDataFields.size()>0) {
-                Iterator<ModelDataField> itr= modelDataFields.iterator();
-                while(itr.hasNext()){
-                    ModelDataField tempDataField = itr.next();
-                    modelDataFieldDao.saveNewObject(tempDataField);
-                }
-            }
-
-            Set<ModelOperation> modelOperations = metaFormModel.getModelOperations();
-            if (modelOperations != null && modelOperations.size()>0) {
-                Iterator<ModelOperation> itr= modelOperations.iterator();
-                while(itr.hasNext()){
-                    ModelOperation tempOperation = itr.next();
-                    modelOperationDao.saveNewObject(tempOperation);
-                }
-            }
-        } else {
-            JsonResultUtils.writeErrorMessageJson("当前对象不存在", response);
-            return;
-        }
+        dbMetaFormModel.copyNotNullProperty(metaFormModel);
+        dbMetaFormModel.setLastModifyDate(new Date());
+        metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
 
         JsonResultUtils.writeBlankJson(response);
     }

@@ -42,6 +42,9 @@ public class MetaFormDefine {
         this.operations = operations;
     }
 
+    /**
+     * 将只读字段的下拉框改为输入框
+     */
     public void updateReadOnlyRefrenceField() {
         if ("list".equals(formType))
             return;

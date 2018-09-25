@@ -1,9 +1,6 @@
 package com.centit.metaform.po;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -25,6 +22,7 @@ public class ModelOperation implements java.io.Serializable {
     /**
      *
      */
+    @Id
     @Column(name = "MODEL_CODE")
     @Length(max = 16, message = "字段长度不能大于{max}")
     private String  modelCode;
@@ -32,6 +30,7 @@ public class ModelOperation implements java.io.Serializable {
     /**
      *
      */
+    @Id
     @Column(name = "OPERATION")
     @Length(max = 32, message = "字段长度不能大于{max}")
     private String  operation;
