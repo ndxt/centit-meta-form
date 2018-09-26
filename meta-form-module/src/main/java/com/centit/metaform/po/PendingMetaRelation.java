@@ -99,8 +99,8 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
     @Length(max = 8, message = "字段长度不能大于{max}")
     private String recorder;
 
-
-    //    @OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "RELATION_ID", referencedColumnName = "RELATION_ID")
     private Set<PendingMetaRelDetail> relationDetails;
 
     // Constructors

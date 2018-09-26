@@ -242,7 +242,7 @@ public class MetaFormController extends BaseController {
 
             rc.close();
             if (!noMeta) {
-                //这个是判断是否为只读表单，如果是只读表单初始化表单内容 //fixme 暂不知道为什么调这个方法
+                //这个是判断是否为只读表单，如果是只读表单初始化表单内容
                 metaData.updateReadOnlyRefrenceField();
 
                 JSONObject metaJson = JSONObject.parseObject(JSONObject.toJSONString(metaData));

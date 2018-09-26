@@ -124,10 +124,12 @@ public class MetaTable implements TableInfo, java.io.Serializable {
     @Length(max = 64, message = "字段长度不能大于{max}")
     private String recorder;
 
-    //    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="cid.mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "TABLE_ID", referencedColumnName = "TABLE_ID")
     private Set<MetaColumn> mdColumns;
 
-    //    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "TABLE_ID", referencedColumnName = "TABLE_ID")
     private Set<MetaRelation> mdRelations;
 
 

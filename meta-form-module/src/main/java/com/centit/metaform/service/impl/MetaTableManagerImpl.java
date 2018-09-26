@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
@@ -146,7 +147,9 @@ public class MetaTableManagerImpl
     @Override
     @Transactional
     public List<String> makeAlterTableSqls(Long tableId) {
-        PendingMetaTable ptable = pendingMdTableDao.getObjectById(tableId);
+        PendingMetaTable ptable = getPendingMetaTable(tableId);
+
+        /*PendingMetaTable ptable = pendingMdTableDao.getObjectById(tableId);
 
         Set<PendingMetaColumn> pColumn =
             new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
@@ -162,7 +165,7 @@ public class MetaTableManagerImpl
         }
 
         ptable.setMdColumns(pColumn);
-        ptable.setMdRelations(pRelation);
+        ptable.setMdRelations(pRelation);*/
 
         return makeAlterTableSqls(ptable);
     }
@@ -170,24 +173,7 @@ public class MetaTableManagerImpl
     @Transactional
     public List<String> makeAlterTableSqls(PendingMetaTable ptable) {
         MetaTable stable = metaTableDao.getObjectById(ptable.getTableId());
-
-        if (stable != null) {
-            Set<MetaColumn> mtColumn =
-                new HashSet<>(metaColumnDao.listObjectsByProperty("tableId", ptable.getTableId()));
-            Set<MetaRelation> mtRelation =
-                new HashSet<>(metaRelationDao.listObjectsByProperty("parentTableId", ptable.getTableId()));
-
-            Iterator<MetaRelation> itr = mtRelation.iterator();
-            while (itr.hasNext()) {
-                MetaRelation relation = itr.next();
-                Set<MetaRelDetail> relDetails = new HashSet<>(
-                    metaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
-                relation.setRelationDetails(relDetails);
-            }
-
-            stable.setMdColumns(mtColumn);
-            stable.setMdRelations(mtRelation);
-        }
+        stable = metaTableDao.fetchObjectReferences(stable);
 
         DatabaseInfo mdb = integrationEnvironment.getDatabaseInfo(ptable.getDatabaseCode());
         //databaseInfoDao.getDatabaseInfoById(ptable.getDatabaseCode());
@@ -258,9 +244,9 @@ public class MetaTableManagerImpl
                 col.setColumnFieldType(FieldType.DATETIME);
                 col.setLastModifyDate(DatetimeOpt.currentUtilDate());
                 col.setRecorder(currentUser);
-                ptable.getColumns().add(col);
+                col.setAccessType("N");//可读写
+                ptable.addMdColumn(col);
             }
-            ;
         }
 
         if ("1".equals(ptable.getWorkFlowOptType())) {
@@ -273,9 +259,9 @@ public class MetaTableManagerImpl
                 col.setMaxLengthM(12);
                 col.setLastModifyDate(DatetimeOpt.currentUtilDate());
                 col.setRecorder(currentUser);
-                ptable.getColumns().add(col);
+                col.setAccessType("N");//可读写
+                ptable.addMdColumn(col);
             }
-            ;
         } else if ("2".equals(ptable.getWorkFlowOptType())) {
             PendingMetaColumn col = ptable.findFieldByName("nodeInstId");
             if (col == null) {
@@ -286,9 +272,9 @@ public class MetaTableManagerImpl
                 col.setMaxLengthM(12);
                 col.setLastModifyDate(DatetimeOpt.currentUtilDate());
                 col.setRecorder(currentUser);
-                ptable.getColumns().add(col);
+                col.setAccessType("N");//可读写
+                ptable.addMdColumn(col);
             }
-            ;
         }
     }
 
@@ -304,23 +290,10 @@ public class MetaTableManagerImpl
         //TODO 根据不同的表类别 做不同的重构
         try {
             PendingMetaTable ptable = pendingMdTableDao.getObjectById(tableId);
-
-            Set<PendingMetaColumn> pColumn =
-                new HashSet<>(pendingMetaColumnDao.listObjectsByProperty("tableId", tableId));
-            Set<PendingMetaRelation> pRelation =
-                new HashSet<>(pendingRelationDao.listObjectsByProperty("parentTableId", tableId));
-            Iterator<PendingMetaRelation> itr = pRelation.iterator();
-            while (itr.hasNext()) {
-                PendingMetaRelation relation = itr.next();
-                Set<PendingMetaRelDetail> relDetails = new HashSet<>(
-                    pendingMetaRelDetialDao.listObjectsByProperty("relationId", relation.getRelationId()));
-                relation.setRelationDetails(relDetails);
-            }
-            ptable.setMdColumns(pColumn);
-            ptable.setMdRelations(pRelation);
+            ptable = pendingMdTableDao.fetchObjectReferences(ptable);
 
             Pair<Integer, String> ret = GeneralDDLOperations.checkTableWellDefined(ptable);
-            if (ret.getLeft().intValue() != 0)
+            if (ret.getLeft() != 0)
                 return ret;
             MetaChangLog chgLog = new MetaChangLog();
             List<String> errors = new ArrayList<>();
@@ -363,6 +336,7 @@ public class MetaTableManagerImpl
                         jsonDao.doExecuteSql(sql);
                     } catch (SQLException se) {
                         errors.add(se.getMessage());
+                        throw new RuntimeException("执行sql失败:"+sql, se);
                     }
                 }
                 chgLog.setChangeScript(JSON.toJSONString(sqls));
@@ -421,6 +395,7 @@ public class MetaTableManagerImpl
             } else
                 return new ImmutablePair<>(-10, JSON.toJSONString(errors));
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return new ImmutablePair<>(0, "发布失败!" + e.getMessage());
         }
     }

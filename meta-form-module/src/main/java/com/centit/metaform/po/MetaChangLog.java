@@ -2,11 +2,7 @@ package com.centit.metaform.po;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -42,6 +38,7 @@ public class MetaChangLog implements java.io.Serializable {
      * 提交日期 null
      */
     @Column(name = "CHANGE_DATE")
+    @OrderBy(value = "DESC")
     private Date  changeDate;
     /**
      * 提交人 null

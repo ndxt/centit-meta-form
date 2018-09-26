@@ -200,8 +200,8 @@ public class PendingMetaTable implements
 
 
     public Set<PendingMetaColumn> getMdColumns() {
-//        if(null==this.mdColumns)
-//            this.mdColumns=new HashSet<PendingMetaColumn>();
+        if(null==this.mdColumns)
+            this.mdColumns=new HashSet<>();
         return this.mdColumns;
     }
 

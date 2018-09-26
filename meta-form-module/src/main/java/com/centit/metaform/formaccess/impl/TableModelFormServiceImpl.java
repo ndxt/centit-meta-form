@@ -998,6 +998,13 @@ public class TableModelFormServiceImpl implements ModelFormService {
             //FIXME  添加创建流程的代码
             //判断式否式流程业务，如果是 调用工作流客户端创建流程， 并将 flowInstId 保存到  object
             //flowEngineClient.createInstance()
+            if("1".equals(rc.getTableInfo().getWorkFlowOptType())){//流程业务关联
+
+            } else if("2".equals(rc.getTableInfo().getWorkFlowOptType())){//流程过程关联
+                Map<String, Object> map = rc.castObjectToTableObject(object);
+                String flowInstId = String.valueOf(map.get("flowInstId"));
+//                flowEngineClient.createInstance();
+            }
 
             n = runOperationEvent(rc, object, "afterSave", response);
         }

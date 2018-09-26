@@ -1,9 +1,6 @@
 package com.centit.metaform.po;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -20,12 +17,11 @@ import org.hibernate.validator.constraints.NotBlank;
 public class PendingMetaRelDetail implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
-//    @EmbeddedId
-//    private PendingMetaRelDetailId cid;
-
+    @Id
     @Column(name = "RELATION_ID")
     private Long relationId;
 
+    @Id
     @Column(name = "PARENT_COLUMN_NAME")
     @NotBlank(message = "字段不能为空")
     private String parentColumnName;
@@ -49,53 +45,30 @@ public class PendingMetaRelDetail implements java.io.Serializable {
     /**
      * minimal constructor
      */
-//    public PendingMetaRelDetail(PendingMetaRelDetailId id
-//
-//        ,String  childColumnName) {
-//        this.cid = id;
-//
-//
-//        this.childColumnName= childColumnName;
-//    }
+    public PendingMetaRelDetail(Long relationId, String parentColumnName) {
+        this.relationId = relationId;
+        this.parentColumnName = parentColumnName;
+    }
 
+    public PendingMetaRelDetail(Long relationId, String parentColumnName, String childColumnName) {
+        this.relationId = relationId;
+        this.parentColumnName = parentColumnName;
+        this.childColumnName = childColumnName;
+    }
 
-//    public PendingMetaRelDetailId getCid() {
-//        if(null==this.cid)
-//            this.cid=new PendingMetaRelDetailId();
-//        return this.cid;
-//    }
-
-//    public void setCid(PendingMetaRelDetailId id) {
-//        if(null==id.getRelationId())
-//            this.cid=null;
-//        else
-//            this.cid = id;
-//    }
     public Long getRelationId() {
-//        if(this.cid==null)
-//            return null;
-//        return this.cid.getRelationId();
         return this.relationId;
     }
 
     public void setRelationId(Long relationId) {
-//        if(this.cid==null)
-//            this.cid = new PendingMetaRelDetailId();
-//        this.cid.setRelationId(relationId);
         this.relationId = relationId;
     }
 
     public String getParentColumnName() {
-//        if(this.cid==null)
-//            return null;
-//        return this.cid.getParentColumnName();
         return this.parentColumnName;
     }
 
     public void setParentColumnName(String parentColumnName) {
-//        if(this.cid==null)
-//            this.cid = new PendingMetaRelDetailId();
-//        this.cid.setParentColumnName(parentColumnName);
         this.parentColumnName = parentColumnName;
     }
 
