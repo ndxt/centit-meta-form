@@ -5,7 +5,7 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -15,6 +15,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.centit.product:centit-workflow-client:4.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.product:centit-workflow-core:4.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.centit.product:centit-workflow-client:4.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.centit.product:centit-workflow-core:4.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.centit.framework:framework-core:4.2.1808" level="project" />
@@ -52,7 +54,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:rt:1.8">
         <CLASSES>
-          <root url="jar:///opt/develop/jvm/jdk1.8.0_102/jre/lib/rt.jar!/" />
+          <root url="jar://C:/develop/jvm/jdk1.8.0_121/jre/lib/rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -61,7 +63,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:jce:1.8">
         <CLASSES>
-          <root url="jar:///opt/develop/jvm/jdk1.8.0_102/jre/lib/jce.jar!/" />
+          <root url="jar://C:/develop/jvm/jdk1.8.0_121/jre/lib/jce.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -96,7 +98,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.8">
         <CLASSES>
-          <root url="jar:///opt/develop/jvm/jdk1.8.0_102/lib/tools.jar!/" />
+          <root url="jar://C:/develop/jvm/jdk1.8.0_121/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
