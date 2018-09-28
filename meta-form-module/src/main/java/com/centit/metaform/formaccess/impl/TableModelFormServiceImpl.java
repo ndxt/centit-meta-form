@@ -4,19 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.OptionItem;
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
 import com.centit.metaform.dao.*;
 import com.centit.metaform.formaccess.*;
 import com.centit.metaform.po.*;
-import com.centit.support.algorithm.DatetimeOpt;
-import com.centit.support.algorithm.NumberBaseOpt;
-import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.algorithm.UuidOpt;
+import com.centit.support.algorithm.*;
 import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.metadata.SimpleTableField;
+import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -994,17 +993,44 @@ public class TableModelFormServiceImpl implements ModelFormService {
         int n = runOperationEvent(rc, object, "beforeSave", response);
         if (n <= 0) {
             JsonObjectDao dao = rc.getJsonObjectDao();
-            dao.saveNewObject(rc.castObjectToTableObject(object));
+//            dao.saveNewObject(rc.castObjectToTableObject(object));
             //FIXME  添加创建流程的代码
             //判断式否式流程业务，如果是 调用工作流客户端创建流程， 并将 flowInstId 保存到  object
             //flowEngineClient.createInstance()
-            if("1".equals(rc.getTableInfo().getWorkFlowOptType())){//流程业务关联
 
-            } else if("2".equals(rc.getTableInfo().getWorkFlowOptType())){//流程过程关联
-                Map<String, Object> map = rc.castObjectToTableObject(object);
-                String flowInstId = String.valueOf(map.get("flowInstId"));
-//                flowEngineClient.createInstance();
+            //获取主键 pk1=v1&pk2=v2
+            String flowOptTag = "";
+            List<String> pkColumns = rc.getTableInfo().getPkColumns();
+            int i = 0;
+            for(String c : pkColumns){
+                TableField field = rc.getTableInfo().findFieldByColumn(c);
+                if(i > 0){
+                    flowOptTag += "&";
+                }
+                flowOptTag += field.getPropertyName() + "=" + object.get(field.getPropertyName());
+                i++;
             }
+            String currentUserCode = WebOptUtils.getLoginUser().getUserCode();
+            String currentUnitCode = WebOptUtils.getLoginUser().getCurrentUnitCode();
+            if("1".equals(rc.getTableInfo().getWorkFlowOptType())){//流程业务关联
+                String flowCode = rc.getMetaFormModel().getRelFlowCode();
+                String jsonData = flowEngineClient.createInstance(
+                        flowCode, "提交自定义表单", flowOptTag, currentUserCode, currentUnitCode);
+                long flowInstId = 0L;
+                if (StringUtils.isNotBlank(jsonData)) {
+                    JSONObject obj = JSON.parseObject(jsonData);
+                    if ("0".equals(obj.get("code").toString())) {// 创建实例成功
+                        JSONObject objData = JSON.parseObject(obj.get("data").toString());
+                        flowInstId = NumberBaseOpt.castObjectToLong(objData.get("flowInstId"));
+
+                    }
+                }
+                object.put("flowInstId", flowInstId);
+                //保存流程实例ID
+            } else if("2".equals(rc.getTableInfo().getWorkFlowOptType())){//流程过程关联
+//                object.put("nodeInstId", nodeInstId);
+            }
+            dao.saveNewObject(rc.castObjectToTableObject(object));
 
             n = runOperationEvent(rc, object, "afterSave", response);
         }

@@ -90,7 +90,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
      * 关联的流程代码
      */
     @Column(name = "REL_WFCODE")
-    @Length(max = 1, message = "字段长度不能大于{max}")
+    @Length(max = 32, message = "字段长度不能大于{max}")
     private String  relFlowCode;
 
     public String getRelFlowCode() {
