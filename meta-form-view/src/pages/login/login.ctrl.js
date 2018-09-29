@@ -18,15 +18,14 @@
      * 初始化
      */
     function init() {
-      $state.go('form.material');
-/*
+
       Authenticate.logout();
 
       vm.params = {
         ajax: true,
         username: 'admin',
         password: '000000'
-      }*/
+      }
     }
 
     /**
@@ -35,7 +34,7 @@
      */
     function login(params) {
 
- /*     return LoginAPI.post(null, params)
+      return LoginAPI.post(null, params)
         // 跳转
         .then(function() {
           if ($state.prev && $state.prev.state) {
@@ -44,10 +43,7 @@
           }
           toastr.success('登录成功！');
           $state.go('form.material');
-        });*/
-
-     // $state.go('form.material');
-
+        });
     }
   }
 })();
