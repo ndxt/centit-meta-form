@@ -40,7 +40,7 @@
         {
           state: 'form.access.view',
           config: {
-            url: '/:modelCode/view?primaryKey&primaryValue',
+            url: '/:modelCode/view?primaryKey&primaryValue&flowInstId',
             views: {
               'main@': {
                 templateUrl: 'pages/access/access.info.html',

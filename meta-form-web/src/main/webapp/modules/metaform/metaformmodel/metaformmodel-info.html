@@ -13,9 +13,13 @@
                  url="service/metaform/mdtable?pageNo=1&pageSize=100" method="get"
                  data-options="valueField:'tableId',textField:'tableLabelName',loadFilter:function(data){return data.objList;}">
         </div>
-        <div class="field ">
+        <!--<div class="field ">
           <label>模块描述</label>
           <input type="text" class="easyui-textbox" name="modelComment"/>
+        </div>-->
+        <div class="field ">
+          <label>工作流程</label>
+          <input type="text" class="easyui-combobox" name="relFlowCode" target="dictionary" key="WORKFLOW"/>
         </div>
       </div>
       <div class="fields three">
@@ -40,6 +44,10 @@
           <input class="easyui-combobox" name="parentModelCode"
                  url="service/metaform/metaformmodel?pageNo=1&pageSize=100" method="get"
                  data-options="valueField:'modelCode',textField:'modelCode',loadFilter:function(data){return data.objList;}">
+        </div>
+        <div class="field ">
+          <label>模块描述</label>
+          <input type="text" class="easyui-textbox" name="modelComment"/>
         </div>
       </div>
     </form>
