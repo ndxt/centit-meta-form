@@ -284,7 +284,7 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
         userEvniData.put("currentUser", userDetails);
         //当前用户主机构信息
         userEvniData.put("primaryUnit", CodeRepositoryUtil
-                .getUnitInfoByCode(userDetails.getUserInfo().getPrimaryUnit()));
+                .getUnitInfoByCode(userDetails.getUserInfo().getString("primaryUnit")));
         //当前用户所有机构关联关系信息
         userEvniData.put("userUnits",
                 CodeRepositoryUtil.getUserUnits(userDetails.getUserCode()));
