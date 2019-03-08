@@ -6,8 +6,6 @@ import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.metaform.dao.PendingMetaTableDao;
-import com.centit.metaform.po.MetaColumn;
-import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.metaform.service.MetaChangLogManager;
 import com.centit.metaform.service.MetaTableManager;

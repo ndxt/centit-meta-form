@@ -17,6 +17,13 @@ import com.centit.support.database.jsonmaptable.JsonObjectDao;
 import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.*;
+import com.centit.support.metadata.dao.MetaColumnDao;
+import com.centit.support.metadata.dao.MetaRelationDao;
+import com.centit.support.metadata.dao.MetaTableDao;
+import com.centit.support.metadata.po.MetaColumn;
+import com.centit.support.metadata.po.MetaRelDetail;
+import com.centit.support.metadata.po.MetaRelation;
+import com.centit.support.metadata.po.MetaTable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
@@ -47,9 +54,6 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
     @Resource
     private MetaRelationDao metaRelationDao;
-
-    @Resource
-    private MetaRelDetialDao metaRelDetialDao;
 
     @Resource
     private ModelDataFieldDao modelDataFieldDao;
@@ -98,7 +102,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
 
         Map<String, Object> tempFilter = new HashMap<>();
         tempFilter.put("tableId", tableId);
-        Set<MetaColumn> tempColumn = new HashSet<>(metaColumnDao.listObjectsByProperties(tempFilter));
+        List<MetaColumn> tempColumn = new ArrayList<>(metaColumnDao.listObjectsByProperties(tempFilter));
         mtab.setMdColumns(tempColumn);
 
         Set<ModelDataField> modelDataFields =
@@ -508,7 +512,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
             MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
             if (!"H".equals(field.getAccessType()) && !"HI".equals(field.getFilterType())) {
 
-                char rt = StringUtils.isNotBlank(mc.getReferenceType()) ?
+                char rt = StringUtils.isNotBlank(mc.getRefDataCatalog().getReferenceType()) ?
                     mc.getReferenceType().charAt(0) : '0';
                 String fieldName;
                 if (rt > '0' && rt <= '9') {
@@ -811,7 +815,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
         //构造的过滤器
         Map<String, Object> filters = new HashMap<>();
 
-        Long tTableId = rc.getTableInfo().getTableId();
+        String tTableId = rc.getTableInfo().getTableId();
         MetaFormModel parentModel = formModelDao.getObjectById(rc.getMetaFormModel().getParentModelCode());
 
         Map<String, Object> relSearchColumn = new HashMap<>();

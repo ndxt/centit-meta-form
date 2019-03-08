@@ -19,7 +19,8 @@
 
     <properties>
         <jaxen.version>1.1.6</jaxen.version>
-        <workflow.version>4.0.1-SNAPSHOT</workflow.version>
+        <workflow.version>4.1-SNAPSHOT</workflow.version>
+        <common.module.version>1.0-SNAPSHOT</common.module.version>
     </properties>
 
     <licenses>

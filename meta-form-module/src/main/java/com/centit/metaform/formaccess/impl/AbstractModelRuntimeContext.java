@@ -7,9 +7,7 @@ import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.metaform.formaccess.FieldType;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
-import com.centit.metaform.po.MetaColumn;
 import com.centit.metaform.po.MetaFormModel;
-import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.ModelDataField;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -22,6 +20,8 @@ import com.centit.support.database.metadata.TableInfo;
 import com.centit.support.database.utils.QueryAndNamedParams;
 import com.centit.support.database.utils.QueryUtils;
 import com.centit.support.database.utils.QueryUtils.SimpleFilterTranslater;
+import com.centit.support.metadata.po.MetaColumn;
+import com.centit.support.metadata.po.MetaTable;
 import com.centit.support.xml.XMLObject;
 import org.apache.commons.lang3.StringUtils;
 
@@ -97,11 +97,11 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
             }
             SimpleTableField pc = new SimpleTableField();
             pc.setPropertyName( SimpleTableField.mapPropName(
-                                tableInfo.getExtColumnName()));
+                    MetaTable.OBJECT_AS_CLOB_FIELD));
             pc.setFieldLabelName("object");
             pc.setJavaType(FieldType.TEXT);
             pc.setColumnType("CLOB");
-            pc.setColumnName( tableInfo.getExtColumnName());
+            pc.setColumnName(MetaTable.OBJECT_AS_CLOB_FIELD);
             pc.setColumnComment("存储对象的大字段");
 
             columns.add(pc);
@@ -217,17 +217,17 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
 
         }
         if("C".equals(tableInfo.getTableType())) {
-            if("XML".equalsIgnoreCase(getTableInfo().getExtColumnFormat())){
+            /*if("XML".equalsIgnoreCase(getTableInfo().getExtColumnFormat())){
                 jpo.put(SimpleTableField.mapPropName(
-                        tableInfo.getExtColumnName()),
+                        MetaTable.OBJECT_AS_CLOB_FIELD),
                         XMLObject.jsonObjectToXMLString(jo)
                 );
-            }else {
+            }else {*/
                 jpo.put(SimpleTableField.mapPropName(
-                        tableInfo.getExtColumnName()),
+                        MetaTable.OBJECT_AS_CLOB_FIELD),
                         JSON.toJSONString(jo)
                 );
-            }
+            //}
             return jpo;
         }
 
@@ -241,20 +241,20 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
      */
     @Override
     public JSONObject castTableObjectToObject(JSONObject object){
-        if(object==null || tableInfo.getExtColumnName() == null)
+        if(object==null /*|| tableInfo.getExtColumnName() == null*/)
             return object;
         String lobFieldColumn = SimpleTableField.mapPropName(
-                tableInfo.getExtColumnName());
+                MetaTable.OBJECT_AS_CLOB_FIELD);
         if("C".equals(tableInfo.getTableType())) {
             String objStr = String.valueOf(object.get(lobFieldColumn));
             object.remove(lobFieldColumn);
-            if("XML".equalsIgnoreCase(getTableInfo().getExtColumnFormat())){
+            /*if("XML".equalsIgnoreCase(getTableInfo().getExtColumnFormat())){
                 Map<String, Object> jo = XMLObject.xmlStringToJSONObject(objStr);
                 object.putAll(jo);
-            }else {
+            }else {*/
                 JSONObject jo = JSON.parseObject(objStr);
                 object.putAll(jo);
-            }
+            //}
         }
         return object;
     }

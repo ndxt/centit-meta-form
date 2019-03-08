@@ -9,12 +9,21 @@ import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.*;
 import com.centit.metaform.formaccess.FieldType;
 import com.centit.metaform.formaccess.PdmTableInfo;
-import com.centit.metaform.po.*;
+import com.centit.metaform.po.MetaChangLog;
+import com.centit.metaform.po.PendingMetaColumn;
+import com.centit.metaform.po.PendingMetaTable;
 import com.centit.metaform.service.MetaTableManager;
 import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.database.ddl.*;
 import com.centit.support.database.jsonmaptable.*;
 import com.centit.support.database.utils.*;
+import com.centit.support.metadata.dao.MetaColumnDao;
+import com.centit.support.metadata.dao.MetaRelationDao;
+import com.centit.support.metadata.dao.MetaTableDao;
+import com.centit.support.metadata.po.MetaColumn;
+import com.centit.support.metadata.po.MetaRelDetail;
+import com.centit.support.metadata.po.MetaRelation;
+import com.centit.support.metadata.po.MetaTable;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -41,7 +50,7 @@ import java.util.*;
  */
 @Service
 public class MetaTableManagerImpl
-    extends BaseEntityManagerImpl<MetaTable, Long, MetaTableDao>
+    extends BaseEntityManagerImpl<MetaTable, String, MetaTableDao>
     implements MetaTableManager {
 
     public static final Log log = LogFactory.getLog(MetaTableManager.class);
@@ -61,9 +70,6 @@ public class MetaTableManagerImpl
 
     @Resource
     private MetaRelationDao metaRelationDao;
-
-    @Resource
-    private MetaRelDetialDao metaRelDetialDao;
 
     @Resource
     private MetaChangLogDao metaChangLogDao;

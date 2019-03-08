@@ -2,10 +2,10 @@ package com.centit.metaform.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.jdbc.service.BaseEntityManager;
-import com.centit.metaform.po.MetaColumn;
-import com.centit.metaform.po.MetaTable;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.support.database.utils.PageDesc;
+import com.centit.support.metadata.po.MetaColumn;
+import com.centit.support.metadata.po.MetaTable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Map;
  * 更新，可以更新
  */
 
-public interface MetaTableManager extends BaseEntityManager<MetaTable, java.lang.Long> {
+public interface MetaTableManager extends BaseEntityManager<MetaTable, String> {
     JSONArray listMdTablesAsJson(
         String[] fields,
         Map<String, Object> filterMap, PageDesc pageDesc);
