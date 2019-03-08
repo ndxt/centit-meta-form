@@ -7,7 +7,6 @@ import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
 import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.*;
-import com.centit.metaform.formaccess.FieldType;
 import com.centit.metaform.formaccess.PdmTableInfo;
 import com.centit.metaform.po.MetaChangLog;
 import com.centit.metaform.po.PendingMetaColumn;
@@ -24,6 +23,7 @@ import com.centit.support.metadata.po.MetaColumn;
 import com.centit.support.metadata.po.MetaRelDetail;
 import com.centit.support.metadata.po.MetaRelation;
 import com.centit.support.metadata.po.MetaTable;
+import com.centit.support.metadata.utils.FieldType;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -357,7 +357,7 @@ public class MetaTableManagerImpl
                 ptable.setLastModifyDate(new Date());
                 pendingMdTableDao.mergeObject(ptable);
 
-                MetaTable table = new MetaTable(ptable);
+                MetaTable table = ptable.mapToMetaTable(); //new MetaTable(ptable)
                 metaTableDao.mergeObject(table);
 
                 List<MetaColumn> metaColumns = table.getColumns();
@@ -381,10 +381,9 @@ public class MetaTableManagerImpl
                             tempRelation.setRelationState("N");
                         }
                         metaRelationDao.saveNewObject(metaRelations.get(j));
-
-                        List<MetaRelDetail> relDetails = new ArrayList(metaRelations.get(j).getRelationDetails());
-
-                        if (relDetails != null && relDetails.size() > 0) {
+                        //List<MetaRelDetail> relDetails = new ArrayList(metaRelations.get(j).getRelationDetails());
+                        metaRelationDao.saveObjectReferences(metaRelations.get(j));
+                        /*if (relDetails != null && relDetails.size() > 0) {
                             for (MetaRelDetail relDetail : relDetails) {
                                 Map<String, Object> relFilter = new HashMap<>();
                                 relFilter.put("relationId", relDetail.getRelationId());
@@ -393,7 +392,7 @@ public class MetaTableManagerImpl
                                 relDetail.setRelationId(metaRelations.get(j).getRelationId());
                                 metaRelDetialDao.saveNewObject(relDetail);
                             }
-                        }
+                        }*/
                     }
                 }
 

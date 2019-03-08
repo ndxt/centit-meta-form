@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.centit.support.metadata.po.MetaRelation;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -43,7 +44,7 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
     @Column(name = "RELATION_ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqgen")
     @SequenceGenerator(sequenceName = "SEQ_PENDINGRELATIONID", name = "seqgen", allocationSize = 1, initialValue = 1)
-    private Long relationId;
+    private String relationId;
 
 //    /**
 //     * 主表表ID 表单主键
@@ -63,10 +64,10 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
 //    private PendingMetaTable  childTable;
 
     @Column(name = "PARENT_TABLE_ID")
-    private Long parentTableId;
+    private String parentTableId;
 
     @Column(name = "CHILD_TABLE_ID")
-    private Long childTableId;
+    private String childTableId;
 
     /**
      * 关联名称 null
@@ -114,7 +115,7 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
     /**
      * minimal constructor
      */
-    public PendingMetaRelation(Long relationId, String relationName, String relationState) {
+    public PendingMetaRelation(String relationId, String relationName, String relationState) {
         this.relationId = relationId;
         this.relationName = relationName;
         this.relationState = relationState;
@@ -123,7 +124,7 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
     /**
      * full constructor
      */
-    public PendingMetaRelation(Long relationId, PendingMetaTable parentTable, PendingMetaTable childTable, String relationName, String relationState, String relationComment, Date lastModifyDate, String recorder) {
+    public PendingMetaRelation(String relationId, PendingMetaTable parentTable, PendingMetaTable childTable, String relationName, String relationState, String relationComment, Date lastModifyDate, String recorder) {
 //        this.parentTable=parentTable;
 //        this.childTable=childTable;
         this.relationId = relationId;
@@ -134,14 +135,14 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
         this.recorder = recorder;
     }
 
-    public Long getChildTableId() {
+    public String getChildTableId() {
 //        if(null!=this.getChildTable())
 //            return this.getChildTable().getTableId();
 //        return null;
         return this.childTableId;
     }
 
-    public Long getParentTableId() {
+    public String getParentTableId() {
         return this.parentTableId;
     }
 
@@ -188,7 +189,7 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
 //        this.childTable = childTable;
 //    }
 
-    public Long getRelationId() {
+    public String getRelationId() {
         return this.relationId;
     }
 
@@ -201,14 +202,14 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
         return this.relationName;
     }
 
-    public void setChildTableId(Long childTableId) {
+    public void setChildTableId(String childTableId) {
 //        if(null==this.childTable)
 //            this.childTable=new PendingMetaTable();
 //        this.childTable.setTableId(childTableId);
         this.childTableId = childTableId;
     }
 
-    public void setParentTableId(Long parentTableId) {
+    public void setParentTableId(String parentTableId) {
 //        if(null==this.parentTable)
 //            this.parentTable=new PendingMetaTable();
 //        this.parentTable.setTableId(parentTableId);
@@ -301,4 +302,26 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
         return this;
     }
 
+    public MetaRelation mapToMetaRelation(){
+        MetaRelation mr = new MetaRelation();
+        mr.setRelationId(this.getRelationId());
+        mr.relationName= this.getRelationName();
+        mr.relationState= this.getRelationState();
+        mr.relationComment= this.getRelationComment();
+        mr.lastModifyDate= this.getLastModifyDate();
+        mr.recorder= this.getRecorder();
+        mr.parentTableId= this.getParentTableId();
+        mr.childTableId= this.getChildTableId();
+
+        Set<PendingMetaRelDetail> pRelationDetails=this.getRelationDetails();
+        mr.relationDetails=new HashSet<MetaRelDetail>();
+        Iterator<PendingMetaRelDetail> itr=pRelationDetails.iterator();
+        while(itr.hasNext()){
+            PendingMetaRelDetail pdetail=itr.next();
+            MetaRelDetail  detail=new MetaRelDetail(this.relationId, pdetail.getParentColumnName(), pdetail.getChildColumnName());
+            this.relationDetails.add(detail);
+        }
+        return mr;
+
+    }
 }

@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.security.model.CentitUserDetails;
-import com.centit.metaform.formaccess.FieldType;
 import com.centit.metaform.formaccess.ModelRuntimeContext;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.ModelDataField;
@@ -22,7 +21,7 @@ import com.centit.support.database.utils.QueryUtils;
 import com.centit.support.database.utils.QueryUtils.SimpleFilterTranslater;
 import com.centit.support.metadata.po.MetaColumn;
 import com.centit.support.metadata.po.MetaTable;
-import com.centit.support.xml.XMLObject;
+import com.centit.support.metadata.utils.FieldType;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;

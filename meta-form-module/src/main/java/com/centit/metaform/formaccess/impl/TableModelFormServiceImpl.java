@@ -512,7 +512,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
             MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
             if (!"H".equals(field.getAccessType()) && !"HI".equals(field.getFilterType())) {
 
-                char rt = StringUtils.isNotBlank(mc.getRefDataCatalog().getReferenceType()) ?
+                char rt = StringUtils.isNotBlank(mc.getReferenceType()) ?
                     mc.getReferenceType().charAt(0) : '0';
                 String fieldName;
                 if (rt > '0' && rt <= '9') {
@@ -825,7 +825,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
         if (tRelations == null || tRelations.getRelationId() == null) {
             return null;
         }
-        List<MetaRelDetail> tRelationDetails = metaRelDetialDao.listObjectsByProperty("relationId", tRelations.getRelationId());
+        metaRelationDao.fetchObjectReferences(tRelations);
+
+        List<MetaRelDetail> tRelationDetails = tRelations.getRelationDetails();// metaRelationDao.ge.listObjectsByProperty("relationId", tRelations.getRelationId());
         if (tRelationDetails == null || tRelationDetails.size() == 0
             || pModelParam == null || pModelParam.size() == 0) {
             return null;

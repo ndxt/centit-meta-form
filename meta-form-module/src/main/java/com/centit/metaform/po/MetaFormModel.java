@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.centit.support.metadata.po.MetaTable;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -16,10 +17,10 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.core.po.EntityWithTimestamp;
 
 /**
- * create by scaffold 2016-06-02 
- 
- 
-  通用模块管理null   
+ * create by scaffold 2016-06-02
+
+
+  通用模块管理null
 */
 @Entity
 @Table(name = "M_META_FORM_MODEL")
@@ -235,7 +236,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     public void setModelCode(String modelCode) {
         this.modelCode = modelCode;
     }
-  
+
 //    public MetaTable getMdTable() {
 //        if(null==this.mdTable)
 //            this.mdTable=new MetaTable();
@@ -259,7 +260,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     public void setModelComment(String modelComment) {
         this.modelComment = modelComment;
     }
-  
+
     public String getModelName() {
         return this.modelName;
     }
@@ -267,7 +268,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     public void setModelName(String modelName) {
         this.modelName = modelName;
     }
-  
+
     public String getAccessType() {
         return this.accessType;
     }
@@ -275,7 +276,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     public void setAccessType(String accessType) {
         this.accessType = accessType;
     }
-  
+
     public String getRelationType() {
         return this.relationType;
     }
@@ -283,7 +284,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     public void setRelationType(String relationType) {
         this.relationType = relationType;
     }
-  
+
     public String getFormTemplate() {
         return formTemplate;
     }
@@ -308,7 +309,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 //        this.parentModel.setModelCode(parentModelCode);
         this.parentModelCode = parentModelCode;
     }
-  
+
     public Long getDisplayOrder() {
         return this.displayOrder;
     }
@@ -316,7 +317,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     public void setDisplayOrder(Long displayOrder) {
         this.displayOrder = displayOrder;
     }
-  
+
     public Date getLastModifyDate() {
         return this.lastModifyDate;
     }
@@ -324,7 +325,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     public void setLastModifyDate(Date lastModifyDate) {
         this.lastModifyDate = lastModifyDate;
     }
-  
+
     public String getRecorder() {
         return this.recorder;
     }
@@ -393,7 +394,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 
     public ModelDataField newModelDataField(){
         ModelDataField res = new ModelDataField();
-  
+
         res.setModelCode(this.getModelCode());
 
         return res;
@@ -474,7 +475,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 
     public MetaFormModel newMetaFormModel(){
         MetaFormModel res = new MetaFormModel();
-  
+
         res.setParentModelCode(this.getModelCode());
 
         return res;
@@ -637,9 +638,9 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     }
 
     public MetaFormModel copy(MetaFormModel other){
-  
+
         this.setModelCode(other.getModelCode());
-  
+
 //        this.setMdTable(other.getMdTable());
         this.modelComment= other.getModelComment();
         this.modelName= other.getModelName();
@@ -665,7 +666,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
 
 
     public MetaFormModel copyNotNullProperty(MetaFormModel other){
-  
+
     if( other.getModelCode() != null)
         this.setModelCode(other.getModelCode());
 //
@@ -712,7 +713,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
     }
 
     public MetaFormModel clearProperties(){
-  
+
 //        this.setMdTable(null);
         this.modelComment= null;
         this.modelName= null;

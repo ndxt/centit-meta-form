@@ -9,6 +9,8 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.centit.support.metadata.po.MetaColumn;
+import com.centit.support.metadata.po.MetaTable;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -41,7 +43,7 @@ public class PendingMetaTable implements
     //2.用序列
 //    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seqgen")
 //    @SequenceGenerator(sequenceName="SEQ_PENDINGTABLEID",name="seqgen",allocationSize=1,initialValue=1)
-    private Long tableId;
+    private String tableId;
 
     /**
      * 所属数据库ID null
@@ -158,7 +160,7 @@ public class PendingMetaTable implements
      * @param updateCheckTimeStamp
      */
     public PendingMetaTable(
-        Long tableId
+        String tableId
         , String tableName, String tableLabelName, String tableType, String tableState, String isInWorkflow, String workFlowOptType, String updateCheckTimeStamp) {
 
 
@@ -180,7 +182,7 @@ public class PendingMetaTable implements
      * @param workFlowOptType
      */
     public PendingMetaTable(
-        Long tableId
+            String tableId
         , String databaseCode, String tableName, String tableLabelName, String tableType, String tableState, String tableComment, String isInWorkflow, Date lastModifyDate, String recorder, String updateCheckTimeStamp, String workFlowOptType) {
 
 
@@ -247,11 +249,11 @@ public class PendingMetaTable implements
     }
 
 
-    public Long getTableId() {
+    public String getTableId() {
         return this.tableId;
     }
 
-    public void setTableId(Long tableId) {
+    public void setTableId(String tableId) {
         this.tableId = tableId;
     }
     // Property accessors
@@ -507,5 +509,40 @@ public class PendingMetaTable implements
     public List<? extends TableReference> getReferences() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public MetaTable mapToMetaTable(){
+        MetaTable mt = new MetaTable();
+        mt.setTableId(this.getTableId());
+        mt.setDatabaseCode(this.getDatabaseCode());
+        mt.setTableCode(this.getTableName());
+        mt.setTableName(this.getTableLabelName());
+        mt.setTableType(this.getTableType());
+        mt.setTableState(this.getTableState());
+        mt.setTableComment(this.getTableComment());
+        mt.setRecordDate(this.getLastModifyDate());
+        mt.setWorkFlowOptType(this.getWorkFlowOptType());
+        mt.setRecorder(this.getRecorder());
+        mt.setUpdateCheckTimeStamp(this.getUpdateCheckTimeStamp());
+        List<MetaColumn> columns = new ArrayList<>();
+        if(this.getMdRelations()!=null) {
+            for (PendingMetaRelation i : this.getMdRelations()) {
+                MetaColumn column = new MetaColumn();
+                column.setTableId(this.tableId);
+                columns.add(column);
+            }
+        }
+        mt.setMdColumns(columns);
+
+        mt.setRelationsFromPending(this.getMdRelations());
+        public void setRelationsFromPending(Set<PendingMetaRelation> prelations) {
+            Iterator<PendingMetaRelation> itr = prelations.iterator();
+            while (itr.hasNext()) {
+                MetaRelation relation = new MetaRelation(itr.next());
+                this.mdRelations.add(relation);
+            }
+        }
+
+        return mt;
     }
 }

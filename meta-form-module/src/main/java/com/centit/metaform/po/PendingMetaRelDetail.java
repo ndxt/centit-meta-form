@@ -19,7 +19,7 @@ public class PendingMetaRelDetail implements java.io.Serializable {
 
     @Id
     @Column(name = "RELATION_ID")
-    private Long relationId;
+    private String relationId;
 
     @Id
     @Column(name = "PARENT_COLUMN_NAME")
@@ -45,22 +45,22 @@ public class PendingMetaRelDetail implements java.io.Serializable {
     /**
      * minimal constructor
      */
-    public PendingMetaRelDetail(Long relationId, String parentColumnName) {
+    public PendingMetaRelDetail(String relationId, String parentColumnName) {
         this.relationId = relationId;
         this.parentColumnName = parentColumnName;
     }
 
-    public PendingMetaRelDetail(Long relationId, String parentColumnName, String childColumnName) {
+    public PendingMetaRelDetail(String relationId, String parentColumnName, String childColumnName) {
         this.relationId = relationId;
         this.parentColumnName = parentColumnName;
         this.childColumnName = childColumnName;
     }
 
-    public Long getRelationId() {
+    public String getRelationId() {
         return this.relationId;
     }
 
-    public void setRelationId(Long relationId) {
+    public void setRelationId(String relationId) {
         this.relationId = relationId;
     }
 
