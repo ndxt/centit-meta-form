@@ -2,7 +2,6 @@ package com.centit.metaform.po;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.core.po.EntityWithTimestamp;
-import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.DBType;
 import com.centit.support.metadata.po.MetaColumn;
@@ -470,7 +469,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     }
     @Override
     public String getPropertyName() {
-        return SimpleTableField.mapPropName(getColumnName());
+        return FieldType.mapPropName(getColumnName());
     }
     @Override
     public String getJavaType() {
