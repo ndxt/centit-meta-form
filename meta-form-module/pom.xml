@@ -15,7 +15,7 @@
 
         <dependency>
             <groupId>com.centit.support</groupId>
-            <artifactId>data-source-define</artifactId>
+            <artifactId>data-business-operation</artifactId>
             <version>${common.module.version}</version>
         </dependency>
 
