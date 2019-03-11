@@ -10,6 +10,8 @@ import com.centit.metaform.po.PendingMetaTable;
 import com.centit.metaform.service.MetaChangLogManager;
 import com.centit.metaform.service.MetaTableManager;
 import com.centit.support.database.utils.PageDesc;
+import com.centit.support.metadata.po.MetaColumn;
+import com.centit.support.metadata.po.MetaTable;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -165,7 +167,7 @@ public class MetaTableController extends BaseController {
         PendingMetaTable table = new PendingMetaTable();
         table.copyNotNullProperty(mdTable);
         if (null == table.getTableId()) {
-            table.setTableId(pendingMetaTableDao.getNextKey());
+            table.setTableId(String.valueOf(pendingMetaTableDao.getNextKey()));
         }
         table.setLastModifyDate(new Date());
 //      mdTable.setTableType("T");// T 是数据表，后期会添加 V（视图）的选择

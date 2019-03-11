@@ -4,8 +4,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.core.po.EntityWithTimestamp;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.DBType;
+import com.centit.support.database.utils.FieldType;
 import com.centit.support.metadata.po.MetaColumn;
-import com.centit.support.metadata.utils.FieldType;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -473,7 +473,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     }
     @Override
     public String getJavaType() {
-        return FieldType.mapToFieldType(this.columnFieldType, this.scaleM==null?0:this.scaleM);
+        return com.centit.support.metadata.utils.FieldType.mapToFieldType(this.columnFieldType, this.scaleM==null?0:this.scaleM);
     }
     @Override
     public boolean isMandatory() {
@@ -514,31 +514,31 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     @Override
     @JSONField(serialize=false)
     public String getColumnType() {
-        return FieldType.mapToDBColumnType(this.databaseType, this.columnFieldType);
+        return com.centit.support.metadata.utils.FieldType.mapToDBColumnType(this.databaseType, this.columnFieldType);
     }
 
     public MetaColumn mapToMetaColumn(){
         MetaColumn mc = new MetaColumn();
         mc.setTableId(this.getTableId());
-        mc.setColumnCode(this.getColumnName());
+        mc.setColumnName(this.getColumnName());
         mc.setColumnName(this.getFieldLabelName());
         mc.setColumnComment(this.getColumnComment());
         mc.setColumnOrder(this.getColumnOrder());
-        mc.columnFieldType= this.getColumnFieldType();
-        mc.maxLengthM= this.getMaxLength();
-        mc.scaleM= this.getScale();
-        mc.accessType= this.getAccessType();
-        mc.mandatory= this.isMandatory()?"T":"F";
-        mc.primarykey= this.getPrimarykey();
-        mc.columnState= this.getColumnState();
-        mc.referenceType= this.getReferenceType();
-        mc.referenceData= this.getReferenceData();
-        mc.validateRegex= this.getValidateRegex();
-        mc.validateInfo= this.getValidateInfo();
-        mc.autoCreateRule= this.getAutoCreateRule();
-        mc.autoCreateParam= this.getAutoCreateParam();
-        mc.lastModifyDate= this.getLastModifyDate();
-        mc.recorder= this.getRecorder();
+        mc.setColumnType(getColumnFieldType());
+        mc.setColumnLength(this.getMaxLength());
+        mc.setColumnPrecision(this.getScale());
+        mc.setAccessType(this.getAccessType());
+        mc.setMandatory(this.isMandatory()?"T":"F");
+        mc.setPrimaryKey(this.getPrimarykey());
+        mc.setColumnState(this.getColumnState());
+        mc.setReferenceType(this.getReferenceType());
+        mc.setReferenceData(this.getReferenceData());
+        mc.setValidateRegex(this.getValidateRegex());
+        mc.setValidateInfo(this.getValidateInfo());
+        mc.setAutoCreateRule(this.getAutoCreateRule());
+        mc.setAutoCreateParam(this.getAutoCreateParam());
+        mc.setLastModifyDate(this.getLastModifyDate());
+        mc.setRecorder(this.getRecorder());
         return mc;
     }
 }

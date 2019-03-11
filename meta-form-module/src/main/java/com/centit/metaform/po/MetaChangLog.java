@@ -33,7 +33,7 @@ public class MetaChangLog implements java.io.Serializable {
      * 版本号 null
      */
     @Column(name = "TABLE_ID")
-    private Long tableID;
+    private String tableID;
     /**
      * 提交日期 null
      */
@@ -68,7 +68,7 @@ public class MetaChangLog implements java.io.Serializable {
     }
     /** minimal constructor */
     public MetaChangLog(
-        Long tableID
+        String tableID
         ,Date  changeDate,String  changer) {
 
         this.tableID = tableID;
@@ -79,7 +79,7 @@ public class MetaChangLog implements java.io.Serializable {
 
 /** full constructor */
     public MetaChangLog(
-     Long tableID
+     String tableID
     ,Long  changeId,Date  changeDate,String  changer,String  changeScript,String  changeComment) {
 
 
@@ -94,11 +94,11 @@ public class MetaChangLog implements java.io.Serializable {
 
 
   
-    public Long getTableID() {
+    public String getTableID() {
         return this.tableID;
     }
 
-    public void setTableID(Long tableID) {
+    public void setTableID(String tableID) {
         this.tableID = tableID;
     }
     // Property accessors

@@ -1,9 +1,6 @@
 package com.centit.metaform.po;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.centit.support.metadata.po.MetaRelDetail;
 import com.centit.support.metadata.po.MetaRelation;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -193,7 +191,7 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
         return this.relationId;
     }
 
-    public void setRelationId(Long relationId) {
+    public void setRelationId(String relationId) {
         this.relationId = relationId;
     }
     // Property accessors
@@ -305,21 +303,22 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
     public MetaRelation mapToMetaRelation(){
         MetaRelation mr = new MetaRelation();
         mr.setRelationId(this.getRelationId());
-        mr.relationName= this.getRelationName();
-        mr.relationState= this.getRelationState();
-        mr.relationComment= this.getRelationComment();
-        mr.lastModifyDate= this.getLastModifyDate();
-        mr.recorder= this.getRecorder();
-        mr.parentTableId= this.getParentTableId();
-        mr.childTableId= this.getChildTableId();
+        mr.setRelationName(this.getRelationName());
+        mr.setRelationState(this.getRelationState());
+        mr.setRelationComment(this.getRelationComment());
+        mr.setParentTableId(this.getParentTableId());
+        mr.setChildTableId(this.getChildTableId());
 
         Set<PendingMetaRelDetail> pRelationDetails=this.getRelationDetails();
-        mr.relationDetails=new HashSet<MetaRelDetail>();
+        mr.setRelationDetails(new ArrayList<>());
         Iterator<PendingMetaRelDetail> itr=pRelationDetails.iterator();
         while(itr.hasNext()){
             PendingMetaRelDetail pdetail=itr.next();
-            MetaRelDetail  detail=new MetaRelDetail(this.relationId, pdetail.getParentColumnName(), pdetail.getChildColumnName());
-            this.relationDetails.add(detail);
+            MetaRelDetail  detail=new MetaRelDetail();
+            detail.setRelationId(relationId);
+            detail.setParentColumnName(pdetail.getParentColumnName());
+            detail.setChildColumnName(pdetail.getChildColumnName());
+            mr.getRelationDetails().add(detail);
         }
         return mr;
 

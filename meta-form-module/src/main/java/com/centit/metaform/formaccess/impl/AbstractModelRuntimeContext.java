@@ -95,7 +95,7 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
                 }
             }
             SimpleTableField pc = new SimpleTableField();
-            pc.setPropertyName( SimpleTableField.mapPropName(
+            pc.setPropertyName( com.centit.support.database.utils.FieldType.mapPropName(
                     MetaTable.OBJECT_AS_CLOB_FIELD));
             pc.setFieldLabelName("object");
             pc.setJavaType(FieldType.TEXT);
@@ -222,7 +222,7 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
                         XMLObject.jsonObjectToXMLString(jo)
                 );
             }else {*/
-                jpo.put(SimpleTableField.mapPropName(
+                jpo.put(com.centit.support.database.utils.FieldType.mapPropName(
                         MetaTable.OBJECT_AS_CLOB_FIELD),
                         JSON.toJSONString(jo)
                 );
@@ -242,7 +242,7 @@ public abstract class AbstractModelRuntimeContext implements ModelRuntimeContext
     public JSONObject castTableObjectToObject(JSONObject object){
         if(object==null /*|| tableInfo.getExtColumnName() == null*/)
             return object;
-        String lobFieldColumn = SimpleTableField.mapPropName(
+        String lobFieldColumn = com.centit.support.database.utils.FieldType.mapPropName(
                 MetaTable.OBJECT_AS_CLOB_FIELD);
         if("C".equals(tableInfo.getTableType())) {
             String objStr = String.valueOf(object.get(lobFieldColumn));

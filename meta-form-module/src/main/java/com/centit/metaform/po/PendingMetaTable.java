@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.centit.support.metadata.po.MetaColumn;
+import com.centit.support.metadata.po.MetaRelation;
 import com.centit.support.metadata.po.MetaTable;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -131,7 +132,7 @@ public class PendingMetaTable implements
 
     @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "TABLE_ID", referencedColumnName = "TABLE_ID")
-    private Set<PendingMetaRelation> mdRelations;
+    private List<PendingMetaRelation> mdRelations;
 
 
     @Transient
@@ -229,13 +230,13 @@ public class PendingMetaTable implements
         this.getMdColumns().add(mdColumn);
     }
 
-    public Set<PendingMetaRelation> getMdRelations() {
+    public List<PendingMetaRelation> getMdRelations() {
         if (null == this.mdRelations)
-            this.mdRelations = new HashSet<PendingMetaRelation>();
+            this.mdRelations = new ArrayList<PendingMetaRelation>();
         return mdRelations;
     }
 
-    public void setMdRelations(Set<PendingMetaRelation> mdRelations) {
+    public void setMdRelations(List<PendingMetaRelation> mdRelations) {
         if (null != mdRelations) {
             this.getMdRelations().clear();
             Iterator<PendingMetaRelation> itr = mdRelations.iterator();
@@ -515,7 +516,7 @@ public class PendingMetaTable implements
         MetaTable mt = new MetaTable();
         mt.setTableId(this.getTableId());
         mt.setDatabaseCode(this.getDatabaseCode());
-        mt.setTableCode(this.getTableName());
+        mt.setTableName(this.getTableName());
         mt.setTableName(this.getTableLabelName());
         mt.setTableType(this.getTableType());
         mt.setTableState(this.getTableState());
@@ -523,26 +524,16 @@ public class PendingMetaTable implements
         mt.setRecordDate(this.getLastModifyDate());
         mt.setWorkFlowOptType(this.getWorkFlowOptType());
         mt.setRecorder(this.getRecorder());
-        mt.setUpdateCheckTimeStamp(this.getUpdateCheckTimeStamp());
         List<MetaColumn> columns = new ArrayList<>();
-        if(this.getMdRelations()!=null) {
-            for (PendingMetaRelation i : this.getMdRelations()) {
-                MetaColumn column = new MetaColumn();
-                column.setTableId(this.tableId);
-                columns.add(column);
-            }
+        for(PendingMetaColumn pc : this.getColumns()){
+            columns.add(pc.mapToMetaColumn());
         }
         mt.setMdColumns(columns);
-
-        mt.setRelationsFromPending(this.getMdRelations());
-        public void setRelationsFromPending(Set<PendingMetaRelation> prelations) {
-            Iterator<PendingMetaRelation> itr = prelations.iterator();
-            while (itr.hasNext()) {
-                MetaRelation relation = new MetaRelation(itr.next());
-                this.mdRelations.add(relation);
-            }
+        List<MetaRelation> relations = new ArrayList<>();
+        for(PendingMetaRelation pr : this.getMdRelations()) {
+            relations.add(pr.mapToMetaRelation());
         }
-
+        mt.setMdRelations(relations);
         return mt;
     }
 }

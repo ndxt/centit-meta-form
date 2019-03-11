@@ -8,13 +8,19 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
-import com.centit.metaform.dao.*;
+import com.centit.metaform.dao.MetaFormModelDao;
+import com.centit.metaform.dao.ModelDataFieldDao;
+import com.centit.metaform.dao.ModelOperationDao;
 import com.centit.metaform.formaccess.*;
-import com.centit.metaform.po.*;
-import com.centit.support.algorithm.*;
+import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.ModelDataField;
+import com.centit.metaform.po.ModelOperation;
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.algorithm.UuidOpt;
 import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
 import com.centit.support.database.jsonmaptable.JsonObjectDao;
-import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.*;
 import com.centit.support.metadata.dao.MetaColumnDao;
@@ -24,6 +30,7 @@ import com.centit.support.metadata.po.MetaColumn;
 import com.centit.support.metadata.po.MetaRelDetail;
 import com.centit.support.metadata.po.MetaRelation;
 import com.centit.support.metadata.po.MetaTable;
+import com.centit.workflow.client.service.FlowEngineClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +38,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ContextLoaderListener;
-import com.centit.workflow.client.service.FlowEngineClient;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -182,7 +188,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
         for (ModelDataField field : rc.getMetaFormModel().getModelDataFields()) {
             if ("R".equals(field.getColumnType())) {
                 if ("3".equals(field.getReferenceType())) {
-                    refData.put(SimpleTableField.mapPropName(field.getColumnName()),
+                    refData.put(FieldType.mapPropName(field.getColumnName()),
                         field.getReferenceData());
                 } else {
                     String sql = field.getReferenceData();
@@ -197,7 +203,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
                         e.printStackTrace();
                     }
 
-                    refData.put(SimpleTableField.mapPropName(field.getColumnName()),
+                    refData.put(FieldType.mapPropName(field.getColumnName()),
                         value);
                 }
             }
@@ -399,7 +405,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
                 continue;
             FormField ff = new FormField();
             MetaColumn mc = tableInfo.findFieldByColumn(field.getColumnName());
-            ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
+            ff.setKey(FieldType.mapPropName(field.getColumnName()));
 
             ff.setType(StringUtils.isBlank(field.getInputType()) ? "input" : field.getInputType());
             FieldTemplateOptions templateOptions = new FieldTemplateOptions();
@@ -516,9 +522,9 @@ public class TableModelFormServiceImpl implements ModelFormService {
                     mc.getReferenceType().charAt(0) : '0';
                 String fieldName;
                 if (rt > '0' && rt <= '9') {
-                    fieldName = SimpleTableField.mapPropName(field.getColumnName()) + "Value";
+                    fieldName = FieldType.mapPropName(field.getColumnName()) + "Value";
                 } else {
-                    fieldName = SimpleTableField.mapPropName(field.getColumnName());
+                    fieldName = FieldType.mapPropName(field.getColumnName());
                 }
 
                 ListColumn col = new ListColumn(
@@ -536,7 +542,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
                     continue;
                 FormField ff = new FormField();
 
-                ff.setKey(SimpleTableField.mapPropName(field.getColumnName()));
+                ff.setKey(FieldType.mapPropName(field.getColumnName()));
                 ff.setType(StringUtils.isBlank(field.getInputType()) ? "input" : field.getInputType());
                 FieldTemplateOptions templateOptions = new FieldTemplateOptions();
                 templateOptions.setLabel(mc.getFieldLabelName());
@@ -558,7 +564,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
                     FormField ffu = new FormField();
                     BeanUtils.copyProperties(ff, ffu);
                     ffu.getTemplateOptions().setLabel("到");
-                    ffu.setKey(SimpleTableField.mapPropName("top_" + field.getColumnName()));
+                    ffu.setKey(FieldType.mapPropName("top_" + field.getColumnName()));
                     mff.addField(ffu);
                 } else
                     mff.addField(ff);
@@ -645,7 +651,7 @@ public class TableModelFormServiceImpl implements ModelFormService {
                 i++;
             }
             if ("BT".equals(field.getFilterType())) {
-                String skey = SimpleTableField.mapPropName("top_" + field.getColumnName());
+                String skey = FieldType.mapPropName("top_" + field.getColumnName());
                 if (filters.get(skey) != null) {
                     if (i > 0)
                         sBuilder.append(" and ");

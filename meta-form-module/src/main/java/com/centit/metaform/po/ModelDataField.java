@@ -1,6 +1,7 @@
 package com.centit.metaform.po;
 
 import com.centit.support.database.metadata.SimpleTableField;
+import com.centit.support.database.utils.FieldType;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -249,7 +250,7 @@ public class ModelDataField implements java.io.Serializable {
 //            return null;
 //        return SimpleTableField.mapPropName(
 //                 this.cid.getColumnName());
-        return SimpleTableField.mapPropName(this.columnName);
+        return FieldType.mapPropName(this.columnName);
     }
 
     public void setColumnName(String columnName) {

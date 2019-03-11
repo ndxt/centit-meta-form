@@ -41,7 +41,7 @@ public class PendingMetaRelDetailId implements java.io.Serializable {
     public PendingMetaRelDetailId() {
     }
     /** full constructor */
-    public PendingMetaRelDetailId(Long relationId, String parentColumnName) {
+    public PendingMetaRelDetailId(String relationId, String parentColumnName) {
 
         this.setRelationId(relationId);
         this.parentColumnName = parentColumnName;
@@ -56,13 +56,13 @@ public class PendingMetaRelDetailId implements java.io.Serializable {
     public void setRelation(PendingMetaRelation relation) {
         this.relation = relation;
     }
-    public Long getRelationId() {
+    public String getRelationId() {
         if(null==this.relation)
             return null;
         return this.relation.getRelationId();
     }
 
-    public void setRelationId(Long relationId) {
+    public void setRelationId(String relationId) {
             this.relation=new PendingMetaRelation();
             this.relation.setRelationId(relationId);
     }

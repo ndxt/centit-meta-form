@@ -7,7 +7,7 @@ import com.centit.framework.jdbc.dao.BaseDaoImpl;
 import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.support.algorithm.StringBaseOpt;
-import com.centit.support.database.metadata.SimpleTableField;
+import com.centit.support.database.utils.FieldType;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -76,8 +76,8 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String
         List<Pair<String,String>> columnList = new ArrayList<>();
         for(Object columnPair:columnsMap){
             columnList.add(new ImmutablePair<>(
-                    SimpleTableField.mapPropName(StringBaseOpt.objectToString(((JSONObject)columnPair).get("parent"))),
-                    SimpleTableField.mapPropName(StringBaseOpt.objectToString(((JSONObject)columnPair).get("child")))));
+                    FieldType.mapPropName(StringBaseOpt.objectToString(((JSONObject)columnPair).get("parent"))),
+                    FieldType.mapPropName(StringBaseOpt.objectToString(((JSONObject)columnPair).get("child")))));
         }
         return columnList;
     }
