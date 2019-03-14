@@ -15,8 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.centit.support.metadata.po.MetaRelDetail;
-import com.centit.support.metadata.po.MetaRelation;
+import com.centit.product.metadata.po.MetaRelDetail;
+import com.centit.product.metadata.po.MetaRelation;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 

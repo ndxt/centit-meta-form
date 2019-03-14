@@ -1,6 +1,6 @@
 package com.centit.metaform.formaccess;
 
-import com.centit.support.metadata.po.MetaColumn;
+import com.centit.product.metadata.po.MetaColumn;
 
 public class ListColumn {
     private String name;

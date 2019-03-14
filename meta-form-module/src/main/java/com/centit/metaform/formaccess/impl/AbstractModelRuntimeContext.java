@@ -16,12 +16,12 @@ import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.SimpleTableInfo;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.metadata.TableInfo;
+import com.centit.support.database.utils.FieldType;
 import com.centit.support.database.utils.QueryAndNamedParams;
 import com.centit.support.database.utils.QueryUtils;
 import com.centit.support.database.utils.QueryUtils.SimpleFilterTranslater;
-import com.centit.support.metadata.po.MetaColumn;
-import com.centit.support.metadata.po.MetaTable;
-import com.centit.support.metadata.utils.FieldType;
+import com.centit.product.metadata.po.MetaColumn;
+import com.centit.product.metadata.po.MetaTable;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;

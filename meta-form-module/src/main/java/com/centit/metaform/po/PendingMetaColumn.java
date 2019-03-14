@@ -5,7 +5,7 @@ import com.centit.framework.core.po.EntityWithTimestamp;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.DBType;
 import com.centit.support.database.utils.FieldType;
-import com.centit.support.metadata.po.MetaColumn;
+import com.centit.product.metadata.po.MetaColumn;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -473,7 +473,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     }
     @Override
     public String getJavaType() {
-        return com.centit.support.metadata.utils.FieldType.mapToFieldType(this.columnFieldType, this.scaleM==null?0:this.scaleM);
+        return FieldType.mapToJavaType(this.columnFieldType, this.scaleM==null?0:this.scaleM);
     }
     @Override
     public boolean isMandatory() {
@@ -514,7 +514,7 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     @Override
     @JSONField(serialize=false)
     public String getColumnType() {
-        return com.centit.support.metadata.utils.FieldType.mapToDBColumnType(this.databaseType, this.columnFieldType);
+        return FieldType.mapToDatabaseType(this.columnFieldType, this.databaseType);
     }
 
     public MetaColumn mapToMetaColumn(){

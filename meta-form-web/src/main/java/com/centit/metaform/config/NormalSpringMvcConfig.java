@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(WebConfig.class)
-@ComponentScan(basePackages = {"com.centit.metaform.controller", "com.centit.support.metadata.controller"},
+@ComponentScan(basePackages = {"com.centit.metaform.controller", "com.centit.product.metadata.controller"},
         includeFilters = {@ComponentScan.Filter(type= FilterType.ANNOTATION,value= org.springframework.stereotype.Controller.class)},
         useDefaultFilters = false)
 public class NormalSpringMvcConfig extends BaseSpringMvcConfig {

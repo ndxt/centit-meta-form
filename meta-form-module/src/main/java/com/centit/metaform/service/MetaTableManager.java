@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.jdbc.service.BaseEntityManager;
 import com.centit.metaform.po.PendingMetaTable;
 import com.centit.support.database.utils.PageDesc;
-import com.centit.support.metadata.po.MetaColumn;
-import com.centit.support.metadata.po.MetaTable;
+import com.centit.product.metadata.po.MetaColumn;
+import com.centit.product.metadata.po.MetaTable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;

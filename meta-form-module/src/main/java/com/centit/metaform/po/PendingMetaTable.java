@@ -9,9 +9,9 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import com.centit.support.metadata.po.MetaColumn;
-import com.centit.support.metadata.po.MetaRelation;
-import com.centit.support.metadata.po.MetaTable;
+import com.centit.product.metadata.po.MetaColumn;
+import com.centit.product.metadata.po.MetaRelation;
+import com.centit.product.metadata.po.MetaTable;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
