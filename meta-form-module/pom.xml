@@ -14,15 +14,15 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.centit.support</groupId>
+            <groupId>com.centit.product</groupId>
             <artifactId>data-business-operation</artifactId>
-            <version>${common.module.version}</version>
+            <version>${metadata.commons.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.centit.support</groupId>
+            <groupId>com.centit.product</groupId>
             <artifactId>database-metadata</artifactId>
-            <version>${common.module.version}</version>
+            <version>${metadata.commons.version}</version>
         </dependency>
 
         <dependency>
