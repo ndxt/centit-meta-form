@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.centit.metaform.po.PendingMetaColumn;
-import com.centit.metaform.po.PendingMetaTable;
+import com.centit.product.dbdesign.po.PendingMetaColumn;
+import com.centit.product.dbdesign.po.PendingMetaTable;
 import com.centit.support.database.metadata.PdmReader;
 import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.metadata.SimpleTableInfo;

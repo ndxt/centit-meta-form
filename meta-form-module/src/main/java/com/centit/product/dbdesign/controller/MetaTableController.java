@@ -1,14 +1,14 @@
-package com.centit.metaform.controller;
+package com.centit.product.dbdesign.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
-import com.centit.metaform.dao.PendingMetaTableDao;
-import com.centit.metaform.po.PendingMetaTable;
-import com.centit.metaform.service.MetaChangLogManager;
-import com.centit.metaform.service.MetaTableManager;
+import com.centit.product.dbdesign.dao.PendingMetaTableDao;
+import com.centit.product.dbdesign.po.PendingMetaTable;
+import com.centit.product.dbdesign.service.MetaChangLogManager;
+import com.centit.product.dbdesign.service.MetaTableManager;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.product.metadata.po.MetaColumn;
 import com.centit.product.metadata.po.MetaTable;

@@ -26,6 +26,8 @@ public class WebInitializer implements WebApplicationInitializer {
         initializeSpringConfig(servletContext);
         initializeSystemSpringMvcConfig(servletContext);
         initializeNormalSpringMvcConfig(servletContext);
+        initializeDBDesignSpringMvcConfig(servletContext);
+
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);
 //        WebConfig.registerResponseCorsFilter(servletContext);
@@ -74,10 +76,19 @@ public class WebInitializer implements WebApplicationInitializer {
     private void initializeNormalSpringMvcConfig(ServletContext servletContext) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(NormalSpringMvcConfig.class, SwaggerConfig.class);
-        ServletRegistration.Dynamic system  = servletContext.addServlet("service", new DispatcherServlet(context));
-        system.addMapping("/service/*");
-        system.setLoadOnStartup(1);
-        system.setAsyncSupported(true);
+        ServletRegistration.Dynamic metaform  = servletContext.addServlet("metaform", new DispatcherServlet(context));
+        metaform.addMapping("/metaform/*");
+        metaform.setLoadOnStartup(1);
+        metaform.setAsyncSupported(true);
+    }
+
+    private void initializeDBDesignSpringMvcConfig(ServletContext servletContext) {
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.register(DBDesignSpringMvcConfig.class, SwaggerConfig.class);
+        ServletRegistration.Dynamic dbdesign  = servletContext.addServlet("dbdesign", new DispatcherServlet(context));
+        dbdesign.addMapping("/dbdesign/*");
+        dbdesign.setLoadOnStartup(1);
+        dbdesign.setAsyncSupported(true);
     }
 
     /*public void registerOpenSessionInViewFilter(ServletContext servletContext) {

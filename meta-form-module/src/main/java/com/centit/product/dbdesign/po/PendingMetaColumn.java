@@ -1,4 +1,4 @@
-package com.centit.metaform.po;
+package com.centit.product.dbdesign.po;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.product.metadata.po.MetaColumn;

@@ -1,8 +1,8 @@
-package com.centit.metaform.dao;
+package com.centit.product.dbdesign.dao;
 
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.jdbc.dao.BaseDaoImpl;
-import com.centit.metaform.po.PendingMetaColumn;
+import com.centit.product.dbdesign.po.PendingMetaColumn;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
@@ -14,9 +14,9 @@ import java.util.Map;
 
 /**
  * PendingMdColumnDao  Repository.
- * create by scaffold 2016-06-01 
- 
- * 未落实字段元数据表null   
+ * create by scaffold 2016-06-01
+
+ * 未落实字段元数据表null
 */
 
 @Repository

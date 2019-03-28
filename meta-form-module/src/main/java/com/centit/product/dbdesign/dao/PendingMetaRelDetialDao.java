@@ -1,8 +1,8 @@
-package com.centit.metaform.dao;
+package com.centit.product.dbdesign.dao;
 
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.jdbc.dao.BaseDaoImpl;
-import com.centit.metaform.po.PendingMetaRelDetail;
+import com.centit.product.dbdesign.po.PendingMetaRelDetail;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;

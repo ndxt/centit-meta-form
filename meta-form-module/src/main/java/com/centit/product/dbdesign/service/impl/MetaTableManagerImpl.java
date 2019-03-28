@@ -1,4 +1,4 @@
-package com.centit.metaform.service.impl;
+package com.centit.product.dbdesign.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -6,12 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
 import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
-import com.centit.metaform.dao.*;
 import com.centit.metaform.formaccess.PdmTableInfo;
-import com.centit.metaform.po.MetaChangLog;
-import com.centit.metaform.po.PendingMetaColumn;
-import com.centit.metaform.po.PendingMetaTable;
-import com.centit.metaform.service.MetaTableManager;
+import com.centit.product.dbdesign.po.MetaChangLog;
+import com.centit.product.dbdesign.po.PendingMetaColumn;
+import com.centit.product.dbdesign.po.PendingMetaTable;
+import com.centit.product.dbdesign.service.MetaTableManager;
+import com.centit.product.dbdesign.dao.*;
 import com.centit.product.metadata.dao.MetaColumnDao;
 import com.centit.product.metadata.dao.MetaRelationDao;
 import com.centit.product.metadata.dao.MetaTableDao;

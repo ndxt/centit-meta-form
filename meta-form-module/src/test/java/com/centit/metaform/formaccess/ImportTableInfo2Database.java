@@ -1,7 +1,7 @@
 package com.centit.metaform.formaccess;
 
-import com.centit.metaform.po.PendingMetaColumn;
-import com.centit.metaform.po.PendingMetaTable;
+import com.centit.product.dbdesign.po.PendingMetaColumn;
+import com.centit.product.dbdesign.po.PendingMetaTable;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.database.utils.DataSourceDescription;
 import com.centit.support.database.utils.DatabaseAccess;

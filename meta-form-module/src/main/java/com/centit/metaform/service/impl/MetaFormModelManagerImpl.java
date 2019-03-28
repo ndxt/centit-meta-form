@@ -9,7 +9,7 @@ import com.centit.metaform.formaccess.ModelRuntimeContextPool;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.ModelDataField;
 import com.centit.metaform.service.MetaFormModelManager;
-import com.centit.metaform.service.MetaTableManager;
+import com.centit.product.dbdesign.service.MetaTableManager;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.product.metadata.dao.MetaColumnDao;
 import com.centit.product.metadata.po.MetaColumn;
