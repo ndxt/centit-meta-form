@@ -13,17 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * ModelOperation  Service.
- * create by scaffold 2016-06-21 
- 
- * 模块操作定义null   
+ * create by scaffold 2016-06-21
+
+ * 模块操作定义null
 */
 @Service
-public class ModelOperationManagerImpl 
-        extends BaseEntityManagerImpl<ModelOperation,com.centit.metaform.po.ModelOperationId,ModelOperationDao>
+public class ModelOperationManagerImpl
+        extends BaseEntityManagerImpl<ModelOperation, HashMap<String,Object>, ModelOperationDao>
     {
 
     public static final Log log = LogFactory.getLog(ModelOperationManagerImpl.class);
@@ -41,7 +42,7 @@ public class ModelOperationManagerImpl
 
 /*     @PostConstruct
     public void init() {
-        
+
     }
  */
     @Transactional(propagation=Propagation.REQUIRED)

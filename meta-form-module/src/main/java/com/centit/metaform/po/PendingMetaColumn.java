@@ -1,11 +1,11 @@
 package com.centit.metaform.po;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.centit.framework.core.po.EntityWithTimestamp;
+import com.centit.product.metadata.po.MetaColumn;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.DBType;
 import com.centit.support.database.utils.FieldType;
-import com.centit.product.metadata.po.MetaColumn;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -19,9 +19,10 @@ import java.util.Date;
 
   未落实字段元数据表null
 */
+@Data
 @Entity
 @Table(name = "F_PENDING_META_COLUMN")
-public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.io.Serializable {
+public class PendingMetaColumn implements TableField, java.io.Serializable {
     private static final long serialVersionUID =  1L;
 
 //    @EmbeddedId
@@ -158,9 +159,6 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
     @Transient
     private DBType databaseType;
 
-    public void setDatabaseType(DBType databaseType) {
-        this.databaseType = databaseType;
-    }
     // Constructors
     /** default constructor */
     public PendingMetaColumn() {
@@ -207,183 +205,6 @@ public class PendingMetaColumn implements TableField,EntityWithTimestamp, java.i
         this.recorder= recorder;
     }
 
-    public String getTableId() {
-//        return this.cid.getTableId();
-        return this.tableId;
-    }
-
-    public void setTableId(String tableId) {
-//        if(null==this.cid)
-//            this.cid=new PendingMetaColumnId();
-//        this.cid.setTableId(tableId);
-        this.tableId = tableId;
-    }
-    // Property accessors
-
-    public String getColumnName() {
-//        return this.getCid().getColumnName();
-        return this.columnName;
-    }
-
-    public void setColumnName(String columnName) {
-//        this.getCid().setColumnName(columnName);
-        this.columnName = columnName;
-    }
-
-    public String getFieldLabelName() {
-        return this.fieldLabelName;
-    }
-
-    public void setFieldLabelName(String fieldLabelName) {
-        this.fieldLabelName = fieldLabelName;
-    }
-
-    public String getColumnComment() {
-        return this.columnComment;
-    }
-
-    public void setColumnComment(String columnComment) {
-        this.columnComment = columnComment;
-    }
-
-    public Long getColumnOrder() {
-        return this.columnOrder;
-    }
-
-    public void setColumnOrder(Long columnOrder) {
-        this.columnOrder = columnOrder;
-    }
-
-    public String getColumnFieldType() {
-        return this.columnFieldType;
-    }
-
-    public void setColumnFieldType(String columnType) {
-        this.columnFieldType = columnType;
-    }
-
-    public String getAccessType() {
-        return this.accessType;
-    }
-
-    public void setAccessType(String accessType) {
-        this.accessType = accessType;
-    }
-
-    public String getMandatory() {
-        return this.mandatory;
-    }
-
-    public void setMandatory(String mandatory) {
-        this.mandatory = mandatory;
-    }
-
-    public String getPrimarykey() {
-        return this.primarykey;
-    }
-
-    public void setPrimarykey(String primarykey) {
-        this.primarykey = primarykey;
-    }
-
-    public String getColumnState() {
-        return this.columnState;
-    }
-
-    public void setColumnState(String columnState) {
-        this.columnState = columnState;
-    }
-
-    public String getReferenceType() {
-        return this.referenceType;
-    }
-
-    public void setReferenceType(String referenceType) {
-        this.referenceType = referenceType;
-    }
-
-    public String getReferenceData() {
-        return this.referenceData;
-    }
-
-    public void setReferenceData(String referenceData) {
-        this.referenceData = referenceData;
-    }
-
-    public String getValidateRegex() {
-        return this.validateRegex;
-    }
-
-    public void setValidateRegex(String validateRegex) {
-        this.validateRegex = validateRegex;
-    }
-
-    public String getValidateInfo() {
-        return this.validateInfo;
-    }
-
-    public void setValidateInfo(String validateInfo) {
-        this.validateInfo = validateInfo;
-    }
-
-
-    public Date getLastModifyDate() {
-        return this.lastModifyDate;
-    }
-
-    public void setLastModifyDate(Date lastModifyDate) {
-        this.lastModifyDate = lastModifyDate;
-    }
-
-    public String getRecorder() {
-        return this.recorder;
-    }
-
-    public void setRecorder(String recorder) {
-        this.recorder = recorder;
-    }
-
-    public String getAutoCreateRule() {
-        return autoCreateRule;
-    }
-
-    public void setAutoCreateRule(String autoCreateRule) {
-        this.autoCreateRule = autoCreateRule;
-    }
-
-    public String getAutoCreateParam() {
-        return autoCreateParam;
-    }
-
-    public void setAutoCreateParam(String autoCreateParam) {
-        this.autoCreateParam = autoCreateParam;
-    }
-    public void setMaxLengthM(Integer maxLength) {
-        this.maxLengthM = maxLength;
-    }
-    public void setScaleM(Integer scale) {
-        this.scaleM = scale;
-    }
-
-    public Integer getMaxLengthM() {
-        return this.maxLengthM;
-    }
-
-    public Integer getScaleM() {
-        return this.scaleM;
-    }
-
-//    public PendingMetaColumnId getCid() {
-//        if(null==this.cid)
-//            this.cid=new PendingMetaColumnId();
-//        return cid;
-//    }
-//    public void setCid(PendingMetaColumnId cid1) {
-//        if(null==cid1.getTableId())
-//            this.cid=null;
-//        else
-//            this.cid = cid1;
-//    }
     public PendingMetaColumn copy(PendingMetaColumn other){
 
 //        this.setCid(other.getCid());

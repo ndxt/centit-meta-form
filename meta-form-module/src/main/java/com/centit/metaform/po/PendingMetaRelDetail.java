@@ -1,9 +1,13 @@
 package com.centit.metaform.po;
 
-import javax.persistence.*;
-
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 /**
@@ -12,6 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * <p>
  * 未落实表关联细节表null
  */
+@Data
 @Entity
 @Table(name = "F_PENDING_META_REL_DETIAL")
 public class PendingMetaRelDetail implements java.io.Serializable {
@@ -53,33 +58,6 @@ public class PendingMetaRelDetail implements java.io.Serializable {
     public PendingMetaRelDetail(String relationId, String parentColumnName, String childColumnName) {
         this.relationId = relationId;
         this.parentColumnName = parentColumnName;
-        this.childColumnName = childColumnName;
-    }
-
-    public String getRelationId() {
-        return this.relationId;
-    }
-
-    public void setRelationId(String relationId) {
-        this.relationId = relationId;
-    }
-
-    public String getParentColumnName() {
-        return this.parentColumnName;
-    }
-
-    public void setParentColumnName(String parentColumnName) {
-        this.parentColumnName = parentColumnName;
-    }
-
-
-    // Property accessors
-
-    public String getChildColumnName() {
-        return this.childColumnName;
-    }
-
-    public void setChildColumnName(String childColumnName) {
         this.childColumnName = childColumnName;
     }
 

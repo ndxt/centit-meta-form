@@ -1,24 +1,20 @@
 package com.centit.metaform.po;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.*;
-
 import com.centit.product.metadata.po.MetaColumn;
 import com.centit.product.metadata.po.MetaRelation;
 import com.centit.product.metadata.po.MetaTable;
+import com.centit.support.database.metadata.TableInfo;
+import com.centit.support.database.metadata.TableReference;
+import com.centit.support.database.utils.DBType;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.centit.framework.core.po.EntityWithTimestamp;
-import com.centit.support.database.utils.DBType;
-import com.centit.support.database.metadata.TableInfo;
-import com.centit.support.database.metadata.TableReference;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -27,10 +23,11 @@ import com.centit.support.database.metadata.TableReference;
  * <p>
  * 未落实表元数据表null
  */
+@Data
 @Entity
 @Table(name = "F_PENDING_META_TABLE")
 public class PendingMetaTable implements
-    TableInfo, EntityWithTimestamp, java.io.Serializable {
+    TableInfo, java.io.Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * 表ID 表单主键
@@ -74,18 +71,15 @@ public class PendingMetaTable implements
     private String tableType;
 
     /**
-     * 字段名称
+     * D:部门；U:用户; S 系統；M 模型
      */
-    @Column(name = "EXT_COLUMN_NAME")
-    @Length(max = 64, message = "字段长度不能大于{max}")
-    private String extColumnName;
+    @Column(name = "OWNER_TYPE")
+    @ApiModelProperty(value = "属主类别（D:部门；U:用户; S 系統；M 模型）")
+    private String ownerType;
 
-    /**
-     * 字段格式
-     */
-    @Column(name = "EXT_COLUMN_FORMAT")
-    @Length(max = 10, message = "字段长度不能大于{max}")
-    private String extColumnFormat;
+    @Column(name = "OWNER_CODE")
+    @ApiModelProperty(value = "属主代码")
+    private String ownerCode;
     /**
      * 状态 系统 S / R 查询(只读)/ N 新建(读写)
      */
@@ -128,7 +122,7 @@ public class PendingMetaTable implements
 
     @OneToMany(mappedBy="mdTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "TABLE_ID", referencedColumnName = "TABLE_ID")
-    private Set<PendingMetaColumn> mdColumns;
+    private List<PendingMetaColumn> mdColumns;
 
     @OneToMany(mappedBy="parentTable",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "TABLE_ID", referencedColumnName = "TABLE_ID")
@@ -163,10 +157,7 @@ public class PendingMetaTable implements
     public PendingMetaTable(
         String tableId
         , String tableName, String tableLabelName, String tableType, String tableState, String isInWorkflow, String workFlowOptType, String updateCheckTimeStamp) {
-
-
         this.tableId = tableId;
-
         this.tableName = tableName;
         this.tableLabelName = tableLabelName;
         this.tableType = tableType;
@@ -202,164 +193,24 @@ public class PendingMetaTable implements
     }
 
 
-    public Set<PendingMetaColumn> getMdColumns() {
-        if(null==this.mdColumns)
-            this.mdColumns=new HashSet<>();
-        return this.mdColumns;
-    }
-
-    public void setMdColumns(Set<PendingMetaColumn> mdColumns1) {
-//        if(mdColumns1==null)
-//        {
-//            this.mdColumns=null;
-//        }else{
-//            this.getMdColumns().clear();
-//            Iterator<PendingMetaColumn> itr=mdColumns1.iterator();
-//            while(itr.hasNext()){
-//                itr.next().getCid().setMdTable(this);
-//            }
-//            this.getMdColumns().addAll(mdColumns1);
-//        }
-        this.mdColumns = mdColumns1;
-    }
-
     public void addMdColumn(PendingMetaColumn mdColumn) {
         if (mdColumn == null)
             return;
         mdColumn.setTableId(this.tableId);
-        this.getMdColumns().add(mdColumn);
+        if(this.mdColumns ==null){
+            this.mdColumns = new ArrayList<>(20);
+        }
+        this.mdColumns.add(mdColumn);
     }
 
-    public List<PendingMetaRelation> getMdRelations() {
-        if (null == this.mdRelations)
-            this.mdRelations = new ArrayList<PendingMetaRelation>();
-        return mdRelations;
-    }
 
     public void setMdRelations(List<PendingMetaRelation> mdRelations) {
         if (null != mdRelations) {
-            this.getMdRelations().clear();
-            Iterator<PendingMetaRelation> itr = mdRelations.iterator();
-            while (itr.hasNext()) {
-                itr.next().setParentTableId(this.tableId);
-            }
-            this.getMdRelations().addAll(mdRelations);
-        } else {
-            this.mdRelations = null;
+            mdRelations.stream().forEach(md -> md.setParentTableId(this.tableId));
         }
+        this.mdRelations = mdRelations;
     }
 
-
-    public String getTableId() {
-        return this.tableId;
-    }
-
-    public void setTableId(String tableId) {
-        this.tableId = tableId;
-    }
-    // Property accessors
-
-    public String getDatabaseCode() {
-        return this.databaseCode;
-    }
-
-    public void setDatabaseCode(String databaseCode) {
-        this.databaseCode = databaseCode;
-    }
-
-    public String getTableName() {
-        return this.tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getTableLabelName() {
-        return this.tableLabelName;
-    }
-
-    public void setTableLabelName(String tableLabelName) {
-        this.tableLabelName = tableLabelName;
-    }
-
-    public String getWorkFlowOptType() {
-        return workFlowOptType;
-    }
-
-    public void setWorkFlowOptType(String workFlowOptType) {
-        this.workFlowOptType = workFlowOptType;
-    }
-
-    public String getUpdateCheckTimeStamp() {
-        return updateCheckTimeStamp;
-    }
-
-    public void setUpdateCheckTimeStamp(String updateCheckTimeStamp) {
-        this.updateCheckTimeStamp = updateCheckTimeStamp;
-    }
-
-    /**
-     * 类别 表 T table /视图 V view /大字段 C LOB/CLOB  目前只能是表
-     *
-     * @return
-     */
-    public String getTableType() {
-        return this.tableType;
-    }
-
-    public void setTableType(String tableType) {
-        this.tableType = tableType;
-    }
-
-    public String getTableState() {
-        return this.tableState;
-    }
-
-    public void setTableState(String tableState) {
-        this.tableState = tableState;
-    }
-
-    public String getTableComment() {
-        return this.tableComment;
-    }
-
-    public void setTableComment(String tableComment) {
-        this.tableComment = tableComment;
-    }
-
-
-    public Date getLastModifyDate() {
-        return this.lastModifyDate;
-    }
-
-    public void setLastModifyDate(Date lastModifyDate) {
-        this.lastModifyDate = lastModifyDate;
-    }
-
-    public String getRecorder() {
-        return this.recorder;
-    }
-
-    public void setRecorder(String recorder) {
-        this.recorder = recorder;
-    }
-
-    public String getExtColumnName() {
-        return extColumnName;
-    }
-
-    public void setExtColumnName(String extColumnName) {
-        this.extColumnName = extColumnName;
-    }
-
-    public String getExtColumnFormat() {
-        return extColumnFormat;
-    }
-
-    public void setExtColumnFormat(String extColumnFormat) {
-        this.extColumnFormat = extColumnFormat;
-    }
 
     public PendingMetaTable copy(PendingMetaTable other) {
         this.setMdColumns(other.getMdColumns());
@@ -375,8 +226,8 @@ public class PendingMetaTable implements
         this.updateCheckTimeStamp = other.getUpdateCheckTimeStamp();
         this.lastModifyDate = other.getLastModifyDate();
         this.recorder = other.getRecorder();
-        this.extColumnFormat = other.getExtColumnFormat();
-        this.extColumnName = other.getExtColumnName();
+        this.ownerType = other.getOwnerType();
+        this.ownerCode = other.getOwnerCode();
         return this;
     }
 
@@ -409,11 +260,10 @@ public class PendingMetaTable implements
         if (other.getRecorder() != null)
             this.recorder = other.getRecorder();
 
-        if (other.getExtColumnFormat() != null)
-            this.extColumnFormat = other.getExtColumnFormat();
-        if (other.getExtColumnName() != null)
-            this.extColumnName = other.getExtColumnName();
-
+        if (other.getOwnerType() != null)
+            this.ownerType = other.getOwnerType();
+        if (other.getOwnerCode() != null)
+            this.ownerCode = other.getOwnerCode();
         return this;
     }
 
@@ -430,8 +280,8 @@ public class PendingMetaTable implements
         this.updateCheckTimeStamp = null;
         this.lastModifyDate = null;
         this.recorder = null;
-        this.extColumnFormat = null;
-        this.extColumnName = null;
+        this.ownerType = null;
+        this.ownerCode = null;
         return this;
     }
 
@@ -489,7 +339,7 @@ public class PendingMetaTable implements
 
     @Override
     public List<PendingMetaColumn> getColumns() {
-        return new ArrayList<PendingMetaColumn>(mdColumns);
+        return mdColumns;
     }
 
     @Override
@@ -508,8 +358,7 @@ public class PendingMetaTable implements
 
     @Override
     public List<? extends TableReference> getReferences() {
-        // TODO Auto-generated method stub
-        return null;
+        return mdRelations;
     }
 
     public MetaTable mapToMetaTable(){

@@ -1,7 +1,7 @@
 package com.centit.metaform.po;
 
-import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.utils.FieldType;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -10,6 +10,7 @@ import javax.persistence.*;
  * create by scaffold 2016-06-02
  * 数据模板字段
  */
+@Data
 @Entity
 @Table(name = "M_MODEL_DATA_FIELD")
 public class ModelDataField implements java.io.Serializable {
@@ -211,237 +212,9 @@ public class ModelDataField implements java.io.Serializable {
         this.fieldWidth = fieldWidth;
     }
 
-    /**
-     * full constructor
-     */
-
-
-//    public ModelDataFieldId getCid() {
-//        return this.cid;
-//    }
-
-//    public void setCid(ModelDataFieldId id) {
-//        this.cid = id;
-//    }
-    public String getModelCode() {
-//        if(this.cid==null)
-//            return null;
-//        return this.cid.getModelCode();
-        return this.modelCode;
-    }
-
-    public void setModelCode(String modelCode) {
-//        if(this.cid==null)
-//            this.cid = new ModelDataFieldId();
-//        this.cid.setModelCode(modelCode);
-        this.modelCode = modelCode;
-    }
-
-    public String getColumnName() {
-//        if(this.cid==null)
-//            return null;//this.cid = new ModelDataFieldId();
-//        return this.cid.getColumnName();
-        return this.columnName;
-    }
-
 
     public String getPropertyName() {
-//        if(this.cid==null)
-//            return null;
-//        return SimpleTableField.mapPropName(
-//                 this.cid.getColumnName());
         return FieldType.mapPropName(this.columnName);
-    }
-
-    public void setColumnName(String columnName) {
-//        if(this.cid==null)
-//            this.cid = new ModelDataFieldId();
-//        this.cid.setColumnName(columnName);
-        this.columnName = columnName;
-    }
-
-
-    // Property accessors
-
-    public String getInputType() {
-        return inputType;
-    }
-
-    public void setInputType(String inputType) {
-        this.inputType = inputType;
-    }
-
-    /**
-     * H 隐藏  R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑
-     */
-    public String getAccessType() {
-        return this.accessType;
-    }
-
-    /**
-     * H 隐藏  R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑
-     */
-    public void setAccessType(String accessType) {
-        this.accessType = accessType;
-    }
-
-    public Long getDisplayOrder() {
-        return this.displayOrder;
-    }
-
-    public void setDisplayOrder(Long displayOrder) {
-        this.displayOrder = displayOrder;
-    }
-
-    public String getInputHint() {
-        return this.inputHint;
-    }
-
-    public void setInputHint(String inputHint) {
-        this.inputHint = inputHint;
-    }
-
-    public String getValidateHint() {
-        return this.validateHint;
-    }
-
-    public void setValidateHint(String validateHint) {
-        this.validateHint = validateHint;
-    }
-
-    public Long getFieldHeight() {
-        return this.fieldHeight;
-    }
-
-    public void setFieldHeight(Long fieldHeight) {
-        this.fieldHeight = fieldHeight;
-    }
-
-    /**
-     * R 为引用 T 为表字段
-     */
-    public String getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(String columnType) {
-        this.columnType = columnType;
-    }
-
-    /**
-     * 0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：SQL（列表）5：SQL（树）
-     * 9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））
-     *
-     * @return
-     */
-    public String getReferenceType() {
-        return referenceType;
-    }
-
-    /**
-     * 0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：SQL（列表）5：SQL（树）
-     * 9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））
-     *
-     * @param referenceType
-     */
-    public void setReferenceType(String referenceType) {
-        this.referenceType = referenceType;
-    }
-
-    public String getReferenceData() {
-        return referenceData;
-    }
-
-    public void setReferenceData(String referenceData) {
-        this.referenceData = referenceData;
-    }
-
-    public String getValidateInfo() {
-        return validateInfo;
-    }
-
-    public void setValidateInfo(String validateInfo) {
-        this.validateInfo = validateInfo;
-    }
-
-    public String getValidateRegex() {
-        return validateRegex;
-    }
-
-    public void setValidateRegex(String validateRegex) {
-        this.validateRegex = validateRegex;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public String getFilterType() {
-        return filterType;
-    }
-
-    public void setFilterType(String filterType) {
-        this.filterType = filterType;
-    }
-
-    public String getMandatory() {
-        return mandatory;
-    }
-
-//    public boolean isMandatory() {
-//        return "T".equals(mandatory) ||  "Y".equals(mandatory) || "1".equals(mandatory);
-//    }
-
-    public void setMandatory(String mandatory) {
-        this.mandatory = mandatory;
-    }
-
-    public String getFocus() {
-        return focus;
-    }
-//    public boolean isFocus() {
-//        return "T".equals(focus) ||  "Y".equals(focus) || "1".equals(focus);
-//    }
-
-    public void setFocus(String focus) {
-        this.focus = focus;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getExtendOptions() {
-        return extendOptions;
-    }
-
-    public void setExtendOptions(String extendOptions) {
-        this.extendOptions = extendOptions;
-    }
-
-    public Long getFieldWidth() {
-        return fieldWidth;
-    }
-
-    public void setFieldWidth(Long fieldWidth) {
-        this.fieldWidth = fieldWidth;
-    }
-
-
-    public String getViewFormat() {
-        return viewFormat;
-    }
-
-    public void setViewFormat(String viewFormat) {
-        this.viewFormat = viewFormat;
     }
 
     public ModelDataField copy(ModelDataField other) {
@@ -535,13 +308,5 @@ public class ModelDataField implements java.io.Serializable {
         this.viewFormat = null;
         this.validateRegex = null;
         return this;
-    }
-
-    public String getColumnLabel() {
-        return columnLabel;
-    }
-
-    public void setColumnLabel(String columnLabel) {
-        this.columnLabel = columnLabel;
     }
 }

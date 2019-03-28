@@ -14,13 +14,13 @@ import java.util.Map;
 
 /**
  * PendingMdRelDetialDao  Repository.
- * create by scaffold 2016-06-01 
- 
- * 未落实表关联细节表null   
+ * create by scaffold 2016-06-01
+
+ * 未落实表关联细节表null
 */
 
 @Repository
-public class PendingMetaRelDetialDao extends BaseDaoImpl<PendingMetaRelDetail,com.centit.metaform.po.PendingMetaRelDetailId>
+public class PendingMetaRelDetialDao extends BaseDaoImpl<PendingMetaRelDetail, HashMap<String,Object>>
     {
 
     public static final Log log = LogFactory.getLog(PendingMetaRelDetialDao.class);
@@ -28,7 +28,7 @@ public class PendingMetaRelDetialDao extends BaseDaoImpl<PendingMetaRelDetail,co
     @Override
     public Map<String, String> getFilterField() {
         if( filterField == null){
-            filterField = new HashMap<String, String>();
+            filterField = new HashMap<>();
 
             filterField.put("relationId" , CodeBook.EQUAL_HQL_ID);
 

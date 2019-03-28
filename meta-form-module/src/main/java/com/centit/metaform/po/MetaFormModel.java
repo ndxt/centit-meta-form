@@ -1,20 +1,12 @@
 package com.centit.metaform.po;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.*;
-
 import com.centit.product.metadata.po.MetaTable;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.centit.framework.core.po.EntityWithTimestamp;
+import javax.persistence.*;
+import java.util.*;
 
 /**
  * create by scaffold 2016-06-02
@@ -22,9 +14,10 @@ import com.centit.framework.core.po.EntityWithTimestamp;
 
   通用模块管理null
 */
+@Data
 @Entity
 @Table(name = "M_META_FORM_MODEL")
-public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
+public class MetaFormModel implements java.io.Serializable {
     private static final long serialVersionUID =  1L;
     /**
      * 模块代码 null
@@ -200,152 +193,6 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         this.extendOptBeanParam = extendOptBeanParam;
         this.modelDataFields = new HashSet<ModelDataField>();
         this.childFormModels = new HashSet<MetaFormModel>();
-    }
-
-
-//    public String getTableLabelName(){
-//            if(null==this.mdTable)
-//                return null;
-//            return this.mdTable.getTableLabelName();
-//    }
-
-    public Long getTableId(){
-//        if(null==this.mdTable)
-//            return null;
-//        return this.mdTable.getTableId();
-        return this.tableId;
-    }
-
-    //    public MetaFormModel getParentModel() {
-//        return parentModel;
-//    }
-//    public void setParentModel(MetaFormModel parentModel) {
-//        this.parentModel = parentModel;
-//    }
-    public Set<MetaFormModel> getChildFormModels() {
-        return childFormModels;
-    }
-    public void setChildFormModels(Set<MetaFormModel> childFormModels) {
-        this.childFormModels = childFormModels;
-    }
-    public String getModelCode() {
-        return this.modelCode;
-    }
-
-
-    public void setModelCode(String modelCode) {
-        this.modelCode = modelCode;
-    }
-
-//    public MetaTable getMdTable() {
-//        if(null==this.mdTable)
-//            this.mdTable=new MetaTable();
-//        return this.mdTable;
-//    }
-//    public void setMdTable(MetaTable mdTable) {
-//        this.mdTable = mdTable;
-//    }
-    public void setTableId(Long tableId) {
-//        MetaTable tb=new MetaTable();
-//        tb.setTableId(tableId);
-//        this.setMdTable(tb);
-        this.tableId = tableId;
-    }
-
-
-    public String getModelComment() {
-        return this.modelComment;
-    }
-
-    public void setModelComment(String modelComment) {
-        this.modelComment = modelComment;
-    }
-
-    public String getModelName() {
-        return this.modelName;
-    }
-
-    public void setModelName(String modelName) {
-        this.modelName = modelName;
-    }
-
-    public String getAccessType() {
-        return this.accessType;
-    }
-
-    public void setAccessType(String accessType) {
-        this.accessType = accessType;
-    }
-
-    public String getRelationType() {
-        return this.relationType;
-    }
-
-    public void setRelationType(String relationType) {
-        this.relationType = relationType;
-    }
-
-    public String getFormTemplate() {
-        return formTemplate;
-    }
-    public void setFormTemplate(String formTemplate) {
-        this.formTemplate = formTemplate;
-    }
-    public String getListAsTree() {
-        return listAsTree;
-    }
-    public void setListAsTree(String listAsTree) {
-        this.listAsTree = listAsTree;
-    }
-    public String getParentModelCode() {
-//        if(null==this.parentModel)
-//            return null;
-//        return this.parentModel.getModelCode();
-        return this.parentModelCode;
-    }
-
-    public void setParentModelCode(String parentModelCode) {
-//        this.parentModel=new MetaFormModel();
-//        this.parentModel.setModelCode(parentModelCode);
-        this.parentModelCode = parentModelCode;
-    }
-
-    public Long getDisplayOrder() {
-        return this.displayOrder;
-    }
-
-    public void setDisplayOrder(Long displayOrder) {
-        this.displayOrder = displayOrder;
-    }
-
-    public Date getLastModifyDate() {
-        return this.lastModifyDate;
-    }
-
-    public void setLastModifyDate(Date lastModifyDate) {
-        this.lastModifyDate = lastModifyDate;
-    }
-
-    public String getRecorder() {
-        return this.recorder;
-    }
-
-    public void setRecorder(String recorder) {
-        this.recorder = recorder;
-    }
-
-    public String getDataFilterSql() {
-        return dataFilterSql;
-    }
-
-    public void setDataFilterSql(String dataFilterSql) {
-        this.dataFilterSql = dataFilterSql;
-    }
-
-    public Set<ModelDataField> getModelDataFields(){
-        if(this.modelDataFields==null)
-            this.modelDataFields = new HashSet<ModelDataField>();
-        return this.modelDataFields;
     }
 
     public void setModelDataFields(Set<ModelDataField> modelDataFields) {
@@ -528,24 +375,6 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         }
     }
 
-    public Set<ModelOperation> getModelOperations() {
-        if(this.modelOperations==null)
-            this.modelOperations = new HashSet<ModelOperation>();
-        return modelOperations;
-    }
-
-    public void setModelOperations(Set<ModelOperation> modelOperations) {
-        this.getModelOperations().clear();
-        Iterator<ModelOperation> it=modelOperations.iterator();
-        while(it.hasNext())
-        {
-//            it.next().getCid().setMetaFormModel(this);
-            it.next().setModelCode(this.modelCode);
-
-        }
-        this.getModelOperations().addAll(modelOperations);
-    }
-
     public void addModelOperation(ModelOperation modelOperation ){
         if(this.modelOperations==null)
             this.modelOperations = new HashSet<ModelOperation>();
@@ -615,29 +444,7 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         }
     }
 
-    public String getExtendOptions() {
-        return extendOptions;
-    }
-    public void setExtendOptions(String extendOptions) {
-        this.extendOptions = extendOptions;
-    }
-
-    public String getExtendOptBean() {
-        return extendOptBean;
-    }
-    public void setExtendOptBean(String extendOptBean) {
-        this.extendOptBean = extendOptBean;
-    }
-
-    public String getExtendOptBeanParam() {
-        return extendOptBeanParam;
-    }
-
-    public void setExtendOptBeanParam(String extendOptBeanParam) {
-        this.extendOptBeanParam = extendOptBeanParam;
-    }
-
-    public MetaFormModel copy(MetaFormModel other){
+      public MetaFormModel copy(MetaFormModel other){
 
         this.setModelCode(other.getModelCode());
 
@@ -725,8 +532,8 @@ public class MetaFormModel implements EntityWithTimestamp,java.io.Serializable {
         this.recorder= null;
         this.relFlowCode = null;
 
-        this.modelDataFields = new HashSet<ModelDataField>();
-        this.childFormModels = new HashSet<MetaFormModel>();
+        this.modelDataFields = new HashSet<>();
+        this.childFormModels = new HashSet<>();
         return this;
     }
 }

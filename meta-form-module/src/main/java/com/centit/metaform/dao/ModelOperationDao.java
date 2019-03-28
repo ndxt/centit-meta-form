@@ -14,13 +14,13 @@ import java.util.Map;
 
 /**
  * ModelOperationDao  Repository.
- * create by scaffold 2016-06-21 
- 
- * 模块操作定义null   
+ * create by scaffold 2016-06-21
+
+ * 模块操作定义null
 */
 
 @Repository
-public class ModelOperationDao extends BaseDaoImpl<ModelOperation,com.centit.metaform.po.ModelOperationId>
+public class ModelOperationDao extends BaseDaoImpl<ModelOperation, HashMap<String,Object>>
     {
 
     public static final Log log = LogFactory.getLog(ModelOperationDao.class);

@@ -1,21 +1,21 @@
 package com.centit.metaform.po;
 
-import java.util.Date;
-
-import javax.persistence.*;
-
+import com.centit.support.algorithm.DatetimeOpt;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.centit.support.algorithm.DatetimeOpt;
+import javax.persistence.*;
+import java.util.Date;
 
 
 /**
- * create by scaffold 2016-06-01 
- 
- 
-  元数据更改记录null   
+ * create by scaffold 2016-06-01
+
+
+  元数据更改记录null
 */
+@Data
 @Entity
 @Table(name = "F_META_CHANG_LOG")
 public class MetaChangLog implements java.io.Serializable {
@@ -92,66 +92,10 @@ public class MetaChangLog implements java.io.Serializable {
         this.changeComment= changeComment;
     }
 
-
-  
-    public String getTableID() {
-        return this.tableID;
-    }
-
-    public void setTableID(String tableID) {
-        this.tableID = tableID;
-    }
-    // Property accessors
-  
-    public Long getChangeId() {
-        return this.changeId;
-    }
-
-    public void setChangeId(Long changeId) {
-        this.changeId = changeId;
-    }
-  
-    public Date getChangeDate() {
-        return this.changeDate;
-    }
-
-    public void setChangeDate(Date changeDate) {
-        this.changeDate = changeDate;
-    }
-  
-    public String getChanger() {
-        return this.changer;
-    }
-
-    public void setChanger(String changer) {
-        this.changer = changer;
-    }
-  
-
-    public String getChangeScript() {
-        return this.changeScript;
-    }
-
-    public void setChangeScript(String changeScript) {
-        this.changeScript = changeScript;
-    }
-  
-    public String getChangeComment() {
-        return this.changeComment;
-    }
-
-    public void setChangeComment(String changeComment) {
-        this.changeComment = changeComment;
-    }
-  
-
-
-
-
     public MetaChangLog copy(MetaChangLog other){
-  
+
         this.setTableID(other.getTableID());
-  
+
         this.changeId= other.getChangeId();
         this.changeDate= other.getChangeDate();
         this.changer= other.getChanger();
@@ -161,10 +105,10 @@ public class MetaChangLog implements java.io.Serializable {
     }
 
     public MetaChangLog copyNotNullProperty(MetaChangLog other){
-  
+
     if( other.getTableID() != null)
         this.setTableID(other.getTableID());
-  
+
         if( other.getChangeId() != null)
             this.changeId= other.getChangeId();
         if( other.getChangeDate() != null)
@@ -181,7 +125,7 @@ public class MetaChangLog implements java.io.Serializable {
     }
 
     public MetaChangLog clearProperties(){
-  
+
         this.changeId= null;
         this.changeDate= null;
         this.changer= null;

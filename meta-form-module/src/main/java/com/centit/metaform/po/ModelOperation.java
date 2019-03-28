@@ -1,16 +1,21 @@
 package com.centit.metaform.po;
 
-import javax.persistence.*;
-
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 /**
- * create by scaffold 2016-06-21 
- 
- 
-  模块操作定义null   
+ * create by scaffold 2016-06-21
+
+
+  模块操作定义null
 */
+@Data
 @Entity
 @Table(name = "M_MODEL_OPERATION")
 public class ModelOperation implements java.io.Serializable {
@@ -126,12 +131,10 @@ public class ModelOperation implements java.io.Serializable {
     public ModelOperation() {
     }
     /** minimal constructor */
-    public ModelOperation(ModelOperationId id
-
-        ) {
+    public ModelOperation(String modelCode, String operation) {
 //        this.cid = id;
-        this.modelCode = id.getModelCode();
-        this.operation = id.getOperation();
+        this.modelCode = modelCode;
+        this.operation = operation;
     }
 
     public ModelOperation(String modelCode, String operation, String method,String label){
@@ -144,12 +147,12 @@ public class ModelOperation implements java.io.Serializable {
     }
 
 /** full constructor */
-    public ModelOperation(com.centit.metaform.po.ModelOperationId id
+    public ModelOperation(String modelCode, String operation
         ,String  optModelCode,String  method,String  label,String  dataRelationType,
         Long  displayOrder,String  openType,String  returnOperation,String  optMessage,String  optHintInfo,String  extendOptions) {
 //        this.cid = id;
-        this.modelCode = id.getModelCode();
-        this.operation = id.getOperation();
+        this.modelCode = modelCode;
+        this.operation = operation;
         this.optModelCode= optModelCode;
         this.method= method;
         this.label= label;
@@ -162,149 +165,9 @@ public class ModelOperation implements java.io.Serializable {
         this.returnOperation = returnOperation;
     }
 
-//    public com.centit.metaform.po.ModelOperationId getCid() {
-//        return this.cid;
-//    }
-
-//    public void setCid(com.centit.metaform.po.ModelOperationId id) {
-//        this.cid = id;
-//    }
-  
-    public String getModelCode() {
-//        if(this.cid==null)
-//            this.cid = new com.centit.metaform.po.ModelOperationId();
-//        return this.cid.getModelCode();
-        return this.modelCode;
-    }
-
-    public void setModelCode(String modelCode) {
-//        if(this.cid==null)
-//            this.cid = new com.centit.metaform.po.ModelOperationId();
-//        this.cid.setModelCode(modelCode);
-        this.modelCode = modelCode;
-    }
-  
-    public String getOperation() {
-//        if(this.cid==null)
-//            this.cid = new com.centit.metaform.po.ModelOperationId();
-//        return this.cid.getOperation();
-        return this.operation;
-    }
-
-    public void setOperation(String operation) {
-//        if(this.cid==null)
-//            this.cid = new com.centit.metaform.po.ModelOperationId();
-//        this.cid.setOperation(operation);
-        this.operation = operation;
-    }
-
-
-
-    // Property accessors
-  
-    public String getOptModelCode() {
-        return this.optModelCode;
-    }
-
-    public void setOptModelCode(String optModelCode) {
-        this.optModelCode = optModelCode;
-    }
-  
-    public String getMethod() {
-        return this.method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-  
-    public String getLabel() {
-        return this.label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-  
-    public Long getDisplayOrder() {
-        return this.displayOrder;
-    }
-
-    public void setDisplayOrder(Long displayOrder) {
-        this.displayOrder = displayOrder;
-    }
-  
-    public String getOpenType() {
-        return this.openType;
-    }
-
-    public void setOpenType(String openType) {
-        this.openType = openType;
-    }
-  
-    public String getDataRelationType() {
-        return this.dataRelationType;
-    }
-
-    public void setDataRelationType(String dataRelationType) {
-        this.dataRelationType = dataRelationType;
-    }
-  
-    public String getOptHintInfo() {
-        return this.optHintInfo;
-    }
-
-    public void setOptHintInfo(String optHintInfo) {
-        this.optHintInfo = optHintInfo;
-    }
-  
-    public String getExtendOptions() {
-        return this.extendOptions;
-    }
-
-    public void setExtendOptions(String extendOptions) {
-        this.extendOptions = extendOptions;
-    }
-
-
-
-    public String getOptModelType() {
-        return optModelType;
-    }
-    public void setOptModelType(String optModelType) {
-        this.optModelType = optModelType;
-    }
-    public String getOptMessage() {
-        return optMessage;
-    }
-    public void setOptMessage(String optMessage) {
-        this.optMessage = optMessage;
-    }
-    public String getOptHintTitle() {
-        return optHintTitle;
-    }
-    public void setOptHintTitle(String optHintTitle) {
-        this.optHintTitle = optHintTitle;
-    }
-
-    public String getReturnOperation() {
-        return returnOperation;
-    }
-
-    public void setReturnOperation(String returnOperation) {
-        this.returnOperation = returnOperation;
-    }
-
-    public String getOptHintType() {
-        return optHintType;
-    }
-
-    public void setOptHintType(String optHintType) {
-        this.optHintType = optHintType;
-    }
 
     public ModelOperation copy(ModelOperation other){
-  
+
         this.setModelCode(other.getModelCode());
         this.setOperation(other.getOperation());
         this.optModelCode= other.getOptModelCode();
@@ -324,12 +187,12 @@ public class ModelOperation implements java.io.Serializable {
     }
 
     public ModelOperation copyNotNullProperty(ModelOperation other){
-  
+
     if( other.getModelCode() != null)
         this.setModelCode(other.getModelCode());
     if( other.getOperation() != null)
         this.setOperation(other.getOperation());
-  
+
         if( other.getOptModelCode() != null)
             this.optModelCode= other.getOptModelCode();
         if( other.getMethod() != null)
@@ -361,7 +224,7 @@ public class ModelOperation implements java.io.Serializable {
 
 
     public ModelOperation clearProperties(){
-  
+
         this.optModelCode= null;
         this.method= null;
         this.label= null;

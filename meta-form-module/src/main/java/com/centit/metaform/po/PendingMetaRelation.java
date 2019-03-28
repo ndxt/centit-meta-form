@@ -1,28 +1,17 @@
 package com.centit.metaform.po;
 
-import java.util.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
+import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.product.metadata.po.MetaRelDetail;
 import com.centit.product.metadata.po.MetaRelation;
+import com.centit.support.database.metadata.TableReference;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.centit.framework.core.po.EntityWithTimestamp;
-
+import javax.persistence.*;
+import java.util.*;
 
 /**
  * create by scaffold 2016-06-01
@@ -30,9 +19,10 @@ import com.centit.framework.core.po.EntityWithTimestamp;
  * <p>
  * 未落实表关联关系表null
  */
+@Data
 @Entity
 @Table(name = "F_PENDING_META_RELATION")
-public class PendingMetaRelation implements EntityWithTimestamp, java.io.Serializable {
+public class PendingMetaRelation implements TableReference, java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -98,9 +88,19 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
     @Length(max = 8, message = "字段长度不能大于{max}")
     private String recorder;
 
-    @OneToMany(mappedBy="cid.relation",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="relationId",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "RELATION_ID", referencedColumnName = "RELATION_ID")
     private Set<PendingMetaRelDetail> relationDetails;
+
+    @ApiModelProperty(value = "主表信息")
+    @OneToMany(targetEntity = PendingMetaTable.class)
+    @JoinColumn(name = "parentTableId", referencedColumnName = "tableId")
+    private PendingMetaTable parentTable;
+
+    @ApiModelProperty(value = "从表信息")
+    @OneToMany(targetEntity = PendingMetaTable.class)
+    @JoinColumn(name = "childTableId", referencedColumnName = "tableId")
+    private PendingMetaTable childTable;
 
     // Constructors
 
@@ -130,123 +130,6 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
         this.relationState = relationState;
         this.relationComment = relationComment;
         this.lastModifyDate = lastModifyDate;
-        this.recorder = recorder;
-    }
-
-    public String getChildTableId() {
-//        if(null!=this.getChildTable())
-//            return this.getChildTable().getTableId();
-//        return null;
-        return this.childTableId;
-    }
-
-    public String getParentTableId() {
-        return this.parentTableId;
-    }
-
-    //    public String getChildTableName(){
-//        if(null!=this.getChildTable())
-//            return this.getChildTable().getTableLabelName();
-//        return null;
-//    }
-
-    public Set<PendingMetaRelDetail> getRelationDetails() {
-        if (null == this.relationDetails)
-            this.relationDetails = new HashSet<PendingMetaRelDetail>();
-        return relationDetails;
-    }
-
-    public void setRelationDetails(Set<PendingMetaRelDetail> relationDetails) {
-        if (null == relationDetails) {
-            this.relationDetails = null;
-        } else {
-            this.getRelationDetails().clear();
-            Iterator<PendingMetaRelDetail> itr = relationDetails.iterator();
-            while (itr.hasNext()) {
-                itr.next().setRelationId(this.relationId);
-            }
-            this.getRelationDetails().addAll(relationDetails);
-        }
-    }
-
-//    public PendingMetaTable getParentTable() {
-//        return parentTable;
-//    }
-
-//    public void setParentTable(PendingMetaTable parentTable) {
-//        this.parentTable = parentTable;
-//    }
-
-//    public PendingMetaTable getChildTable() {
-//        return childTable;
-//    }
-
-//    public void setChildTable(PendingMetaTable childTable) {
-//        if(null==this.childTable)
-//            this.childTable=new PendingMetaTable();
-//        this.childTable = childTable;
-//    }
-
-    public String getRelationId() {
-        return this.relationId;
-    }
-
-    public void setRelationId(String relationId) {
-        this.relationId = relationId;
-    }
-    // Property accessors
-
-    public String getRelationName() {
-        return this.relationName;
-    }
-
-    public void setChildTableId(String childTableId) {
-//        if(null==this.childTable)
-//            this.childTable=new PendingMetaTable();
-//        this.childTable.setTableId(childTableId);
-        this.childTableId = childTableId;
-    }
-
-    public void setParentTableId(String parentTableId) {
-//        if(null==this.parentTable)
-//            this.parentTable=new PendingMetaTable();
-//        this.parentTable.setTableId(parentTableId);
-        this.parentTableId = parentTableId;
-    }
-
-    public void setRelationName(String relationName) {
-        this.relationName = relationName;
-    }
-
-    public String getRelationState() {
-        return this.relationState;
-    }
-
-    public void setRelationState(String relationState) {
-        this.relationState = relationState;
-    }
-
-    public String getRelationComment() {
-        return this.relationComment;
-    }
-
-    public void setRelationComment(String relationComment) {
-        this.relationComment = relationComment;
-    }
-
-    public Date getLastModifyDate() {
-        return this.lastModifyDate;
-    }
-
-    public void setLastModifyDate(Date lastModifyDate) {
-        this.lastModifyDate = lastModifyDate;
-    }
-
-    public String getRecorder() {
-        return this.recorder;
-    }
-
-    public void setRecorder(String recorder) {
         this.recorder = recorder;
     }
 
@@ -322,5 +205,59 @@ public class PendingMetaRelation implements EntityWithTimestamp, java.io.Seriali
         }
         return mr;
 
+    }
+
+    @Override
+    @ApiModelProperty(hidden = true)
+    @JSONField(serialize = false)
+    public String getReferenceCode() {
+        return String.valueOf(this.relationId);
+    }
+
+    @Override
+    @ApiModelProperty(hidden = true)
+    @JSONField(serialize = false)
+    public String getReferenceName() {
+        return this.relationName;
+    }
+
+    @Override
+    @ApiModelProperty(value = "子表名称")
+    public String getTableName() {
+        return this.childTable==null?null:this.childTable.getTableName();
+    }
+
+    @Override
+    @ApiModelProperty(value = "父表名称")
+    public String getParentTableName() {
+        return this.parentTable==null?null:this.parentTable.getTableName();
+    }
+
+    @Override
+    @ApiModelProperty(hidden = true)
+    public Map<String, String> getReferenceColumns() {
+        if(relationDetails == null || relationDetails.size()<1) {
+            return null;
+        }
+        Map<String, String> colMap = new HashMap<>(relationDetails.size()+1);
+        for(PendingMetaRelDetail mrd : relationDetails){
+            colMap.put(mrd.getParentColumnName(), mrd.getChildColumnName());
+        }
+        return colMap;
+    }
+
+    @Override
+    @ApiModelProperty(hidden = true)
+    public boolean containColumn(String sCol) {
+        if(relationDetails == null || relationDetails.size()<1) {
+            return false;
+        }
+
+        for(PendingMetaRelDetail mrd : relationDetails){
+            if(StringUtils.equals(sCol, mrd.getChildColumnName())){
+                return true;
+            }
+        }
+        return false;
     }
 }
