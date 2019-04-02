@@ -16,6 +16,8 @@ import com.centit.metaform.po.ModelDataField;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.metaform.service.ModelDataFieldManager;
 import com.centit.support.database.utils.PageDesc;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,8 @@ import java.util.Map;
 import java.util.Set;
 
 @Controller
-@RequestMapping("/metaform/formaccess")
+@RequestMapping("/formaccess")
+@Api(value = "自定义表单", tags = "自定义表单")
 public class MetaFormController extends BaseController {
     protected static final Logger logger = LoggerFactory.getLogger(MetaFormController.class);
 
@@ -51,6 +54,7 @@ public class MetaFormController extends BaseController {
     /**
      * 作为主表的查看列表
      */
+    @ApiOperation(value = "查询主表列表")
     @RequestMapping(value = "/{modelCode}/list", method = RequestMethod.GET)
     public void list(@PathVariable String modelCode, boolean noMeta, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = collectRequestParameters(request);//convertSearchColumn(request);
@@ -82,6 +86,7 @@ public class MetaFormController extends BaseController {
     /**
      * 查看模块主表的详细信息
      */
+    @ApiOperation(value = "查看模块主表的详细信息")
     @RequestMapping(value = "/{modelCode}/view", method = RequestMethod.GET)
     public void view(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
         ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
@@ -111,6 +116,7 @@ public class MetaFormController extends BaseController {
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
+    @ApiOperation(value = "查看信息列表")
     @RequestMapping(value = "/{modelCode}/viewList", method = RequestMethod.GET)
     public void viewList(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
@@ -138,6 +144,7 @@ public class MetaFormController extends BaseController {
     /**
      * 根据父模块code查询所有子模块code
      */
+    @ApiOperation(value = "根据父模块code查询所有子模块code")
     @RequestMapping(value = "/{modelCode}/listSubModel", method = RequestMethod.GET)
     public void listSubModelCode(@PathVariable String modelCode, HttpServletRequest request, HttpServletResponse response) {
         JSONArray subModels = modelFormService.listSubModelCode(modelCode);
@@ -151,6 +158,7 @@ public class MetaFormController extends BaseController {
     /**
      * 获取主模块和所有子模块的数据
      */
+    @ApiOperation(value = "获取主模块和所有子模块的数据")
     @RequestMapping(value = "/{modelCode}/viewAll", method = RequestMethod.GET)
     public void viewAll(@PathVariable String modelCode, boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
         ModelRuntimeContext rc = modelFormService.createRuntimeContext(modelCode);
@@ -203,6 +211,7 @@ public class MetaFormController extends BaseController {
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
+    @ApiOperation(value = "meta")
     @RequestMapping(value = "/{modelCode}/meta/{metaType}", method = RequestMethod.GET)
     public void meta(@PathVariable String modelCode, @PathVariable String metaType,
                      HttpServletRequest request, HttpServletResponse response) {
@@ -225,6 +234,7 @@ public class MetaFormController extends BaseController {
      * @param request 请求信息
      * @param response 返回信息
      */
+    @ApiOperation(value = "创建表单")
     @RequestMapping(value = "/{modelCode}/create", method = RequestMethod.GET)
     public void create(@PathVariable String modelCode,
                        boolean noMeta, HttpServletRequest request, HttpServletResponse response) {
@@ -272,6 +282,7 @@ public class MetaFormController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "createPk")
     @RequestMapping(value = "/{modelCode}/createpk", method = RequestMethod.GET)
     public void createPk(@PathVariable String modelCode,
                          HttpServletRequest request, HttpServletResponse response) {
@@ -297,6 +308,7 @@ public class MetaFormController extends BaseController {
      * @param request 请求信息
      * @param response 返回信息
      */
+    @ApiOperation(value = "工作流关联保存")
     @RequestMapping(value = "/{modelCode}/save", method = RequestMethod.POST)
     public void saveNew(@PathVariable String modelCode, @RequestBody String jsonStr,
                         HttpServletRequest request, HttpServletResponse response) {
@@ -351,6 +363,7 @@ public class MetaFormController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "编辑")
     @RequestMapping(value = "/{modelCode}/edit", method = RequestMethod.GET)
     public void edit(@PathVariable String modelCode, boolean noMeta,
                      HttpServletRequest request, HttpServletResponse response) {
@@ -378,7 +391,7 @@ public class MetaFormController extends BaseController {
         JsonResultUtils.writeResponseDataAsJson(resData, response);
     }
 
-
+    @ApiOperation(value = "编辑")
     @RequestMapping(value = "/{modelCode}/update", method = RequestMethod.PUT)
     public void update(@PathVariable String modelCode, @RequestBody String jsonStr, HttpServletRequest request, HttpServletResponse response) {
         if (jsonStr == null || jsonStr.length() < 2) {
@@ -412,6 +425,7 @@ public class MetaFormController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "删除")
     @RequestMapping(value = "/{modelCode}/delete", method = RequestMethod.POST)
     public void delete(@PathVariable String modelCode, @RequestBody String jsonStr,
                        HttpServletRequest request, HttpServletResponse response) {
@@ -440,6 +454,7 @@ public class MetaFormController extends BaseController {
      * @param request
      * @param response
      */
+    @ApiOperation(value = "表单提交")
     @RequestMapping(value = "/{modelCode}/submit", method = RequestMethod.POST)
     public void submit(@PathVariable String modelCode, @RequestBody String jsonStr, HttpServletRequest request, HttpServletResponse response) {
         if (jsonStr == null || jsonStr.length() < 2) {
@@ -468,6 +483,7 @@ public class MetaFormController extends BaseController {
      * @param request
      * @param response
      */
+    @ApiOperation(value = "多个表单提交")
     @RequestMapping(value = "/multimodelopt", method = RequestMethod.POST)
     public void multiModelOpt(@RequestBody String jsonStr,
                               HttpServletRequest request, HttpServletResponse response) {

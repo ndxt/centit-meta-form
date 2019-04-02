@@ -13,6 +13,8 @@ import com.centit.metaform.po.ModelDataField;
 import com.centit.metaform.po.ModelOperation;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.support.database.utils.PageDesc;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +38,8 @@ import java.util.*;
 
 
 @Controller
-@RequestMapping("/metaform/metaformmodel")
+@RequestMapping("/metaformmodel")
+@Api(value = "通用模块管理", tags = "通用模块管理")
 public class MetaFormModelController extends BaseController{
     //private static final Log log = LogFactory.getLog(MetaFormModelController.class);
 
@@ -61,6 +64,7 @@ public class MetaFormModelController extends BaseController{
      * @param response {@link HttpServletResponse}
      * @return {data:[]}
      */
+    @ApiOperation(value = "查询所有通用模块")
     @RequestMapping(method = RequestMethod.GET)
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
@@ -90,6 +94,7 @@ public class MetaFormModelController extends BaseController{
      * @param response    {@link HttpServletResponse}
      * @return {data:{}}
      */
+    @ApiOperation(value = "查询单个通用模块")
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.GET})
     public void getMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
 
@@ -114,6 +119,7 @@ public class MetaFormModelController extends BaseController{
      * @param metaFormModel  {@link MetaFormModel}
      * @return
      */
+    @ApiOperation(value = "新增通用模块")
     @RequestMapping(method = {RequestMethod.POST})
     public void createMetaFormModel(@RequestBody @Valid MetaFormModel metaFormModel,
              HttpServletRequest request, HttpServletResponse response) {
@@ -150,6 +156,7 @@ public class MetaFormModelController extends BaseController{
 
      * @param modelCode  Model_Code
      */
+    @ApiOperation(value = "删除单个通用模块")
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.DELETE})
     public void deleteMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
 
@@ -165,6 +172,7 @@ public class MetaFormModelController extends BaseController{
      * @param metaFormModel  {@link MetaFormModel}
      * @param response    {@link HttpServletResponse}
      */
+    @ApiOperation(value = "新增或保存通用模块")
     @RequestMapping(value = "/{modelCode}", method = {RequestMethod.PUT})
     public void updateMetaFormModel(@PathVariable String modelCode,
             @RequestBody @Valid MetaFormModel metaFormModel, HttpServletResponse response) {

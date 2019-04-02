@@ -5,6 +5,7 @@ import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.product.dbdesign.dao.PendingMetaTableDao;
 import com.centit.product.dbdesign.po.PendingMetaTable;
 import com.centit.product.dbdesign.service.MetaChangLogManager;
@@ -12,6 +13,10 @@ import com.centit.product.dbdesign.service.MetaTableManager;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.product.metadata.po.MetaColumn;
 import com.centit.product.metadata.po.MetaTable;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,7 +44,8 @@ import java.util.Map;
  * 更新，可以更新
  */
 @Controller
-@RequestMapping("/metaform/mdtable")
+@RequestMapping("/mdtable")
+@Api(value = "表元数据", tags = "表元数据")
 public class MetaTableController extends BaseController {
     //private static final Log log = LogFactory.getLog(MetaTableController.class);
 
@@ -60,6 +66,7 @@ public class MetaTableController extends BaseController {
      * @param response {@link HttpServletResponse}
      * @return {data:[]}
      */
+    @ApiOperation(value = "查询所有元数据")
     @RequestMapping(value = "/log", method = RequestMethod.GET)
     public void loglist(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
@@ -86,6 +93,7 @@ public class MetaTableController extends BaseController {
      * @param response {@link HttpServletResponse}
      * @return {data:[]}
      */
+    @ApiOperation(value = "查询表元数据")
     @RequestMapping(method = RequestMethod.GET)
     public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
@@ -111,7 +119,8 @@ public class MetaTableController extends BaseController {
      * @param request
      * @param response
      */
-    @RequestMapping(value = "/draft", method = RequestMethod.GET)
+    @ApiOperation(value = "获取表元数据")
+    @RequestMapping(value="/listdraft",method = RequestMethod.GET)
     public void listdraft(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
         JSONArray listObjects = mdTableMag.listDrafts(field, searchColumn, pageDesc);
@@ -136,6 +145,7 @@ public class MetaTableController extends BaseController {
      * @param response {@link HttpServletResponse}
      * @return {data:{}}
      */
+    @ApiOperation(value = "查询单个表元数据表")
     @RequestMapping(value = "/{tableId}", method = {RequestMethod.GET})
     public void getMdTable(@PathVariable Long tableId, HttpServletResponse response) {
 
@@ -152,6 +162,7 @@ public class MetaTableController extends BaseController {
      * @param response {@link HttpServletResponse}
      * @return {data:{}}
      */
+    @ApiOperation(value = "查询单个表元数据表")
     @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.GET})
     public void getMdTableDraft(@PathVariable Long tableId, HttpServletResponse response) {
 
@@ -162,7 +173,8 @@ public class MetaTableController extends BaseController {
     /*
      * 新增 表元数据表 草稿
      */
-    @RequestMapping(value = "/draft", method = {RequestMethod.POST})
+    @ApiOperation(value = "新增表元数据表")
+    @RequestMapping(method = {RequestMethod.POST})
     public void createMdTable(@RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
         PendingMetaTable table = new PendingMetaTable();
         table.copyNotNullProperty(mdTable);
@@ -180,6 +192,7 @@ public class MetaTableController extends BaseController {
     /*
      * 发布 表元数据表
      */
+    @ApiOperation(value = "发布表元数据表")
     @RequestMapping(value = "/beforePublish/{ptableId}", method = {RequestMethod.POST})
     public void alertSqlBeforePublish(@PathVariable Long ptableId,
                                       HttpServletRequest request, HttpServletResponse response) {
@@ -192,6 +205,7 @@ public class MetaTableController extends BaseController {
     /*
      * 发布 表元数据表
      */
+    @ApiOperation(value = "发布表元数据表")
     @RequestMapping(value = "/publish/{ptableId}", method = {RequestMethod.POST})
     public void publishMdTable(@PathVariable Long ptableId,
                                HttpServletRequest request, HttpServletResponse response) {
@@ -210,6 +224,7 @@ public class MetaTableController extends BaseController {
      *
      * @param tableId Table_ID
      */
+    @ApiOperation(value = "删除单个表元数据表")
     @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.DELETE})
     public void deleteMdTable(@PathVariable Long tableId, HttpServletResponse response) {
 
@@ -225,6 +240,7 @@ public class MetaTableController extends BaseController {
      * @param mdTable  {@link MetaTable}
      * @param response {@link HttpServletResponse}
      */
+    @ApiOperation(value = "新增或保存表元数据表")
     @RequestMapping(value = "/draft/{tableId}", method = {RequestMethod.PUT})
     public void updateMdTable(@PathVariable Long tableId,
                               @RequestBody @Valid PendingMetaTable mdTable, HttpServletResponse response) {
@@ -252,6 +268,7 @@ public class MetaTableController extends BaseController {
      * @param response
      * @param pageDesc
      */
+    @ApiOperation(value = "列出未加入表单的field")
     @RequestMapping(value = "/{tableId}/getField", method = RequestMethod.GET)
     public void listfield(@PathVariable Long tableId, HttpServletResponse response, PageDesc pageDesc) {
 
@@ -270,6 +287,7 @@ public class MetaTableController extends BaseController {
      * @param response
      * @param pageDesc
      */
+    @ApiOperation(value = "获取草稿序列中的tableId")
     @RequestMapping(value = "/draft/getNextKey", method = RequestMethod.GET)
     public void getPdNextKey(HttpServletResponse response, PageDesc pageDesc) {
 

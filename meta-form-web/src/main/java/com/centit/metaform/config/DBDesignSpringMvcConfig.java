@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Import;
 /**
  * Created by zou_wy on 2017/3/29.
  */
-@Configuration
-@Import(WebConfig.class)
 @ComponentScan(basePackages = {"com.centit.product.dbdesign.controller"},
         includeFilters = {@ComponentScan.Filter(type= FilterType.ANNOTATION,value= org.springframework.stereotype.Controller.class)},
         useDefaultFilters = false)
