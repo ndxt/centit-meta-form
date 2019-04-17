@@ -112,7 +112,7 @@ public class MetaFormModelController extends BaseController{
         metaFormModelMag.saveNewObject(model);
 
 
-        JsonResultUtils.writeSingleDataJson(model.getModelCode(),response);
+        JsonResultUtils.writeSingleDataJson(model.getModeId(),response);
     }
 
     /**
