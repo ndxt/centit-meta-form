@@ -63,7 +63,7 @@ public class MetaFormModel implements java.io.Serializable {
      * 表单模板
      */
     @Column(name = "FORM_TEMPLATE")
-    @Length(max = 1, message = "字段长度不能大于{max}")
+    @Length(max = 100, message = "字段长度不能大于{max}")
     private String  formTemplate;
 
     /**
@@ -140,18 +140,11 @@ public class MetaFormModel implements java.io.Serializable {
 
     @OneToMany(mappedBy="metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "MODEL_CODE", referencedColumnName = "MODEL_CODE")
-//    @OrderBy(value="displayOrder asc")
-    private Set<ModelDataField> modelDataFields;
-
 //    @OneToMany(mappedBy="parentModelCode",fetch = FetchType.EAGER)
 //    @JoinColumn(name = "MODEL_CODE", referencedColumnName = "PARENT_MODEL_CODE")
 //    @OrderBy(value="displayOrder asc")
     private Set<MetaFormModel> childFormModels;
 
-    @OneToMany(mappedBy="metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @OrderBy(value="displayOrder asc")
-    @JoinColumn(name="MODEL_CODE", referencedColumnName="MODEL_CODE")
-    private Set<ModelOperation> modelOperations;
 
     // Constructors
     /** default constructor */
@@ -191,112 +184,10 @@ public class MetaFormModel implements java.io.Serializable {
         this.extendOptions = extendOptions;
         this.extendOptBean = extendOptBean;
         this.extendOptBeanParam = extendOptBeanParam;
-        this.modelDataFields = new HashSet<ModelDataField>();
         this.childFormModels = new HashSet<MetaFormModel>();
     }
 
-    public void setModelDataFields(Set<ModelDataField> modelDataFields) {
-        this.getModelDataFields().clear();
-        Iterator<ModelDataField> it=modelDataFields.iterator();
-        while(it.hasNext())
-        {
-            it.next().setModelCode(this.modelCode);
-        }
-        this.getModelDataFields().addAll(modelDataFields);
-    }
 
-    public void addModelDataField(ModelDataField modelDataField ){
-        if (this.modelDataFields==null)
-            this.modelDataFields = new HashSet<ModelDataField>();
-        this.modelDataFields.add(modelDataField);
-    }
-
-    public void removeModelDataField(ModelDataField modelDataField ){
-        if (this.modelDataFields==null)
-            return;
-        this.modelDataFields.remove(modelDataField);
-    }
-
-
-    public ModelDataField findFieldByName(String name) {
-        if(modelDataFields==null)
-            return null;
-        for(ModelDataField c: modelDataFields){
-            if(c.getPropertyName().equals(name))
-                return c;
-        }
-        return null;
-    }
-
-    public ModelDataField findFieldByColumn(String name) {
-        if(modelDataFields==null)
-            return null;
-        for(ModelDataField c: modelDataFields){
-            if(c.getColumnName().equals(name))
-                return c;
-        }
-        return null;
-    }
-
-
-    public ModelDataField newModelDataField(){
-        ModelDataField res = new ModelDataField();
-
-        res.setModelCode(this.getModelCode());
-
-        return res;
-    }
-    /**
-     * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
-     *
-     */
-    public void replaceModelDataFields(Set<ModelDataField> set) {
-        List<ModelDataField> newObjs = new ArrayList<ModelDataField>();
-        for(ModelDataField p :set){
-            if(p==null)
-                continue;
-            ModelDataField newdt = newModelDataField();
-            newdt.copyNotNullProperty(p);
-            newObjs.add(newdt);
-        }
-        //delete
-        boolean found = false;
-        Set<ModelDataField> oldObjs = new HashSet<ModelDataField>();
-        oldObjs.addAll(getModelDataFields());
-
-        for(Iterator<ModelDataField> it=oldObjs.iterator(); it.hasNext();){
-            ModelDataField odt = it.next();
-            found = false;
-            for(ModelDataField newdt :newObjs){
-//                if(odt.getCid().equals( newdt.getCid())){
-                if(odt.getModelCode().equals( newdt.getModelCode())
-                        && odt.getColumnName().equals( newdt.getColumnName())){
-                    found = true;
-                    break;
-                }
-            }
-            if(! found)
-                removeModelDataField(odt);
-        }
-        oldObjs.clear();
-        //insert or update
-        for(ModelDataField newdt :newObjs){
-            found = false;
-            for(Iterator<ModelDataField> it=getModelDataFields().iterator();
-             it.hasNext();){
-                ModelDataField odt = it.next();
-//                if(odt.getCid().equals( newdt.getCid())){
-                if(odt.getModelCode().equals( newdt.getModelCode())
-                        && odt.getColumnName().equals( newdt.getColumnName())){
-                    odt.copy(newdt);
-                    found = true;
-                    break;
-                }
-            }
-            if(! found)
-                addModelDataField(newdt);
-        }
-    }
 
     public Set<MetaFormModel> getMetaFormModels(){
         if(this.childFormModels==null)
@@ -375,75 +266,6 @@ public class MetaFormModel implements java.io.Serializable {
         }
     }
 
-    public void addModelOperation(ModelOperation modelOperation ){
-        if(this.modelOperations==null)
-            this.modelOperations = new HashSet<ModelOperation>();
-        this.modelOperations.add(modelOperation);
-    }
-
-    public void removeModelOperation(ModelOperation modelOperation ){
-        if (this.modelOperations==null)
-            return;
-        this.modelOperations.remove(modelOperation);
-    }
-
-    public ModelOperation newModelOperation(){
-        ModelOperation res = new ModelOperation();
-        res.setModelCode(this.getModelCode());
-        return res;
-    }
-    /**
-     * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
-     *
-     */
-    public void replaceModelOperations(Set<ModelOperation> set) {
-        List<ModelOperation> newObjs = new ArrayList<ModelOperation>();
-        for(ModelOperation p :set){
-            if(p==null)
-                continue;
-            ModelOperation newdt = newModelOperation();
-            newdt.copyNotNullProperty(p);
-            newObjs.add(newdt);
-        }
-        //delete
-        boolean found = false;
-        Set<ModelOperation> oldObjs = new HashSet<ModelOperation>();
-        oldObjs.addAll(getModelOperations());
-
-        for(Iterator<ModelOperation> it=oldObjs.iterator(); it.hasNext();){
-            ModelOperation odt = it.next();
-            found = false;
-            for(ModelOperation newdt :newObjs){
-//                if(odt.getCid().equals( newdt.getCid())){
-                if(odt.getModelCode().equals( newdt.getModelCode())
-                        && odt.getOperation().equals( newdt.getOperation())){
-                    found = true;
-                    break;
-                }
-            }
-            if(! found)
-                removeModelOperation(odt);
-        }
-        oldObjs.clear();
-        //insert or update
-        for(ModelOperation newdt :newObjs){
-            found = false;
-            for(Iterator<ModelOperation> it=getModelOperations().iterator();
-             it.hasNext();){
-                ModelOperation odt = it.next();
-//                if(odt.getCid().equals( newdt.getCid())){
-                if(odt.getModelCode().equals( newdt.getModelCode())
-                        && odt.getOperation().equals( newdt.getOperation())){
-                    odt.copy(newdt);
-                    found = true;
-                    break;
-                }
-            }
-            if(! found)
-                addModelOperation(newdt);
-        }
-    }
-
       public MetaFormModel copy(MetaFormModel other){
 
         this.setModelCode(other.getModelCode());
@@ -460,14 +282,11 @@ public class MetaFormModel implements java.io.Serializable {
         this.listAsTree=other.getListAsTree();
         this.lastModifyDate= other.getLastModifyDate();
         this.recorder= other.getRecorder();
-        this.modelDataFields = other.getModelDataFields();
         this.childFormModels = other.getMetaFormModels();
         this.extendOptBean = other.getExtendOptBean();
         this.extendOptBeanParam = other.getExtendOptBeanParam();
         this.dataFilterSql = other.getDataFilterSql();
         this.relFlowCode = other.getRelFlowCode();
-        this.setModelOperations(other.getModelOperations());
-        this.setModelDataFields(other.getModelDataFields());
         return this;
     }
 
@@ -509,10 +328,6 @@ public class MetaFormModel implements java.io.Serializable {
             this.extendOptBeanParam = other.getExtendOptBeanParam();
         if( other.getRelFlowCode() != null)
             this.relFlowCode = other.getRelFlowCode();
-        if(null!=other.getModelDataFields())
-            this.setModelDataFields(other.getModelDataFields());
-        if(null!=other.getModelOperations())
-            this.setModelOperations(other.getModelOperations());
 
         if(null!=other.getDataFilterSql())
             this.dataFilterSql = other.getDataFilterSql();
@@ -531,8 +346,6 @@ public class MetaFormModel implements java.io.Serializable {
         this.lastModifyDate= null;
         this.recorder= null;
         this.relFlowCode = null;
-
-        this.modelDataFields = new HashSet<>();
         this.childFormModels = new HashSet<>();
         return this;
     }

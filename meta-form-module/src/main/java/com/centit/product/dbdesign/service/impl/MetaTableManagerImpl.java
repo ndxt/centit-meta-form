@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.ip.po.DatabaseInfo;
 import com.centit.framework.ip.service.IntegrationEnvironment;
 import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
-import com.centit.metaform.formaccess.PdmTableInfo;
+import com.centit.product.dbdesign.pdmutils.PdmTableInfo;
 import com.centit.product.dbdesign.po.MetaChangLog;
 import com.centit.product.dbdesign.po.PendingMetaColumn;
 import com.centit.product.dbdesign.po.PendingMetaTable;

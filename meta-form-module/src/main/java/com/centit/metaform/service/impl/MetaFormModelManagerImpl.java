@@ -4,16 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaFormModelDao;
-import com.centit.metaform.dao.ModelDataFieldDao;
-import com.centit.metaform.formaccess.ModelRuntimeContextPool;
 import com.centit.metaform.po.MetaFormModel;
-import com.centit.metaform.po.ModelDataField;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.dbdesign.service.MetaTableManager;
-import com.centit.support.database.utils.PageDesc;
 import com.centit.product.metadata.dao.MetaColumnDao;
-import com.centit.product.metadata.po.MetaColumn;
 import com.centit.product.metadata.po.MetaTable;
+import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -22,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,13 +29,11 @@ import java.util.Map;
 */
 @Service
 public class MetaFormModelManagerImpl
-        extends BaseEntityManagerImpl<MetaFormModel,java.lang.String,MetaFormModelDao>
+        extends BaseEntityManagerImpl<MetaFormModel,java.lang.String, MetaFormModelDao>
     implements MetaFormModelManager{
 
     public static final Log log = LogFactory.getLog(MetaFormModelManager.class);
 
-    @Resource
-    private ModelDataFieldDao modelDataFieldDao;
 
     @Resource
     private MetaColumnDao metaColumnDao;
@@ -79,8 +72,7 @@ public class MetaFormModelManagerImpl
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
     public void updateMetaFormModel(MetaFormModel mtaFormModel) {
-        ModelRuntimeContextPool.invalidRuntimeContextPool(mtaFormModel.getModelCode());
-        metaFormModelDao.updateObject(mtaFormModel);
+           metaFormModelDao.updateObject(mtaFormModel);
         metaFormModelDao.saveObjectReferences(mtaFormModel);
     }
 
@@ -102,19 +94,6 @@ public class MetaFormModelManagerImpl
             }
         }
         return listObjects;
-    }
-
-    public List<ModelDataField> listModelDataFields(String modelCode){
-        List<ModelDataField> fields = modelDataFieldDao.listObjectsByProperty("modelCode", modelCode);
-        List<MetaColumn> columns = metaColumnDao.listObjectsByProperty("modelCode", modelCode);
-        Map<String, String> columnMap = new HashMap<>();
-        for(MetaColumn column : columns){
-            columnMap.put(column.getColumnName(), column.getFieldLabelName());
-        }
-        for(ModelDataField field : fields){
-            field.setColumnLabel(columnMap.get(field.getColumnName()));
-        }
-        return fields;
     }
 
 }

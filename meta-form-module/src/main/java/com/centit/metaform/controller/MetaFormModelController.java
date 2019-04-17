@@ -6,11 +6,7 @@ import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
-import com.centit.metaform.dao.ModelDataFieldDao;
-import com.centit.metaform.dao.ModelOperationDao;
 import com.centit.metaform.po.MetaFormModel;
-import com.centit.metaform.po.ModelDataField;
-import com.centit.metaform.po.ModelOperation;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
@@ -31,9 +27,9 @@ import java.util.*;
 
 /**
  * MetaFormModel  Controller.
- * create by scaffold 2016-06-02 
- 
- * 通用模块管理null   
+ * create by scaffold 2016-06-02
+
+ * 通用模块管理null
 */
 
 
@@ -45,16 +41,7 @@ public class MetaFormModelController extends BaseController{
 
     @Resource
     private MetaFormModelManager metaFormModelMag;
-    /*public void setMetaFormModelMag(MetaFormModelManager basemgr)
-    {
-        metaFormModelMag = basemgr;
-        //this.setBaseEntityManager(metaFormModelMag);
-    }*/
-    @Resource
-    private ModelDataFieldDao modelDataFieldDao;
 
-    @Resource
-    private ModelOperationDao modelOperationDao;
 
     /**
      * 查询所有   通用模块管理  列表
@@ -71,7 +58,7 @@ public class MetaFormModelController extends BaseController{
         JSONArray listObjects = metaFormModelMag.listObjectsAsJson(searchColumn, pageDesc);
         JSONArray jsonObjects = metaFormModelMag.addTableNameToList(listObjects);
         SimplePropertyPreFilter simplePropertyPreFilter = null;
-        
+
         if (null == pageDesc) {
             JsonResultUtils.writeSingleDataJson(jsonObjects, response);
             return;
@@ -88,7 +75,7 @@ public class MetaFormModelController extends BaseController{
         }
     }
     /**
-     * 查询单个  通用模块管理 
+     * 查询单个  通用模块管理
 
      * @param modelCode  Model_Code
      * @param response    {@link HttpServletResponse}
@@ -99,20 +86,14 @@ public class MetaFormModelController extends BaseController{
     public void getMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
 
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById( modelCode);
-        Set<ModelDataField> modelDataFields =
-                new HashSet<>(metaFormModelMag.listModelDataFields(modelCode));
-        Set<ModelOperation> modelOperations =
-                new HashSet<>(modelOperationDao.listObjectsByProperty("modelCode", modelCode));
 
-        metaFormModel.setModelDataFields(modelDataFields);
-        metaFormModel.setModelOperations(modelOperations);
 
         JSONObject modelResult = JSONObject.parseObject(JSONObject.toJSONString(metaFormModel));
         modelResult.put("lastModifyDate",metaFormModel.getLastModifyDate().toString());
 
         JsonResultUtils.writeSingleDataJson(modelResult, response);
     }
-    
+
     /**
      * 新增 通用模块管理
      *
@@ -130,29 +111,12 @@ public class MetaFormModelController extends BaseController{
         model.setLastModifyDate(new Date());
         metaFormModelMag.saveNewObject(model);
 
-        Set<ModelDataField> modelDataFields = model.getModelDataFields();
-        if (modelDataFields != null && modelDataFields.size()>0) {
-            Iterator<ModelDataField> itr= modelDataFields.iterator();
-            while(itr.hasNext()){
-                ModelDataField tempDataField = itr.next();
-                modelDataFieldDao.saveNewObject(tempDataField);
-            }
-        }
-
-        Set<ModelOperation> modelOperations = model.getModelOperations();
-        if (modelOperations != null && modelOperations.size()>0) {
-            Iterator<ModelOperation> itr= modelOperations.iterator();
-            while(itr.hasNext()){
-                ModelOperation tempOperation = itr.next();
-                modelOperationDao.saveNewObject(tempOperation);
-            }
-        }
 
         JsonResultUtils.writeSingleDataJson(model.getModelCode(),response);
     }
 
     /**
-     * 删除单个  通用模块管理 
+     * 删除单个  通用模块管理
 
      * @param modelCode  Model_Code
      */
@@ -161,13 +125,13 @@ public class MetaFormModelController extends BaseController{
     public void deleteMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
 
         metaFormModelMag.deleteObjectById( modelCode);
-        
+
         JsonResultUtils.writeSuccessJson(response);
     }
-    
+
     /**
-     * 新增或保存 通用模块管理 
-    
+     * 新增或保存 通用模块管理
+
      * @param modelCode  Model_Code
      * @param metaFormModel  {@link MetaFormModel}
      * @param response    {@link HttpServletResponse}

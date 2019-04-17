@@ -1,4 +1,4 @@
-package com.centit.metaform.formaccess;
+package com.centit.product.dbdesign.pdmutils;
 
 import java.util.List;
 
