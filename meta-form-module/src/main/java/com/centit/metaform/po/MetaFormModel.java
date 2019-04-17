@@ -29,7 +29,7 @@ public class MetaFormModel implements java.io.Serializable {
     private String modelCode;
 
     @Column(name = "TABLE_ID")
-    private Long tableId;
+    private String tableId;
 
     /**
      * 表ID 表单主表

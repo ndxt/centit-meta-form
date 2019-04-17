@@ -7,16 +7,15 @@ import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.dbdesign.service.MetaTableManager;
-import com.centit.product.metadata.dao.MetaColumnDao;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
@@ -35,29 +34,19 @@ public class MetaFormModelManagerImpl
     public static final Log log = LogFactory.getLog(MetaFormModelManager.class);
 
 
-    @Resource
-    private MetaColumnDao metaColumnDao;
-
+    @Autowired
     private MetaFormModelDao metaFormModelDao ;
 
-    @Resource(name = "metaFormModelDao")
-    @NotNull
+    @Autowired
     public void setMetaFormModelDao(MetaFormModelDao baseDao)
     {
         this.metaFormModelDao = baseDao;
-        setBaseDao(this.metaFormModelDao);
+        super.setBaseDao(this.metaFormModelDao);
     }
 
-    @Resource
-    MetaTableManager metaTableManager;
+    @Autowired
+    private MetaTableManager metaTableManager;
 
-/*
-     @PostConstruct
-    public void init() {
-
-    }
-
- */
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
     public JSONArray listMetaFormModelsAsJson(
