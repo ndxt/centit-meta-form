@@ -11,6 +11,7 @@ import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.dataopt.service.MetaObjectService;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/formaccess")
-@Api(value = "自定义表单", tags = "自定义表单")
+@Api(value = "自定义表单数据处理", tags = "自定义表单数据处理")
 public class MetaFormController extends BaseController {
     protected static final Logger logger = LoggerFactory.getLogger(MetaFormController.class);
 
@@ -36,6 +37,7 @@ public class MetaFormController extends BaseController {
     @Autowired
     private MetaObjectService metaObjectService;
 
+    @ApiOperation(value = "分页查询表单数据列表")
     @RequestMapping(value = "/{modelCode}/list", method = RequestMethod.GET)
     @WrapUpResponseBody
     public PageQueryResult<Object> listObjects(@PathVariable String modelCode, PageDesc pageDesc,
@@ -54,6 +56,7 @@ public class MetaFormController extends BaseController {
         return PageQueryResult.createJSONArrayResult(ja, pageDesc);
     }
 
+    @ApiOperation(value = "获取一个数据，主键作为参数以key-value形式提交")
     @RequestMapping(value = "/{modelCode}/get", method = RequestMethod.GET)
     @WrapUpResponseBody
     public Map<String, Object> getObject(@PathVariable String modelCode,
@@ -63,6 +66,7 @@ public class MetaFormController extends BaseController {
         return metaObjectService.getObjectById(model.getTableId(), parameters);
     }
 
+    @ApiOperation(value = "修改表单数据")
     @RequestMapping(value = "/{modelCode}", method = RequestMethod.PUT)
     @WrapUpResponseBody
     public ResponseData updateObject(@PathVariable String modelCode,
@@ -72,6 +76,7 @@ public class MetaFormController extends BaseController {
         return ResponseData.makeSuccessResponse();
     }
 
+    @ApiOperation(value = "新增表单数据")
     @RequestMapping(value = "/{modelCode}", method = RequestMethod.POST)
     @WrapUpResponseBody
     public ResponseData saveObject(@PathVariable String modelCode,
