@@ -39,7 +39,11 @@ public class MetaFormController extends BaseController {
     private MetaObjectService metaObjectService;
 
     private int runJSEvent(String js, Map<String, Object> object, String event){
-        return 1;
+        if(StringUtils.isBlank(js)){
+            return 0;
+        }
+        JSMateObjectEvent jsMateObjectEvent = new JSMateObjectEvent(metaObjectService, js);
+        return jsMateObjectEvent.runEvent(event,object);
     }
 
 
@@ -79,8 +83,9 @@ public class MetaFormController extends BaseController {
                                             @RequestBody String jsonString) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
         JSONObject object = JSON.parseObject(jsonString);
-        //runJSEvent(model.getExtendOptBean(), object, "update");
-        metaObjectService.updateObject(model.getTableId(), JSON.parseObject(jsonString));
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate")==0) {
+            metaObjectService.updateObject(model.getTableId(), object);
+        }
         return ResponseData.makeSuccessResponse();
     }
 
@@ -90,7 +95,10 @@ public class MetaFormController extends BaseController {
     public ResponseData saveObject(@PathVariable String modelCode,
                                           @RequestBody String jsonString) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
-        metaObjectService.saveObject(model.getTableId(), JSON.parseObject(jsonString));
+        JSONObject object = JSON.parseObject(jsonString);
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeSave")==0) {
+            metaObjectService.saveObject(model.getTableId(), object);
+        }
         return ResponseData.makeSuccessResponse();
     }
 
@@ -101,7 +109,9 @@ public class MetaFormController extends BaseController {
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
-        metaObjectService.deleteObject(model.getTableId(), parameters);
+        if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete")==0) {
+            metaObjectService.deleteObject(model.getTableId(), parameters);
+        }
         return ResponseData.makeSuccessResponse();
     }
 
@@ -121,7 +131,10 @@ public class MetaFormController extends BaseController {
     public ResponseData updateObjectWithChildren(@PathVariable String modelCode,
                                      @RequestBody String jsonString) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
-        metaObjectService.mergeObjectWithChildren(model.getTableId(), JSON.parseObject(jsonString));
+        JSONObject object = JSON.parseObject(jsonString);
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate")==0) {
+            metaObjectService.mergeObjectWithChildren(model.getTableId(), object);
+        }
         return ResponseData.makeSuccessResponse();
     }
 
@@ -131,7 +144,10 @@ public class MetaFormController extends BaseController {
     public ResponseData saveObjectWithChildren(@PathVariable String modelCode,
                                    @RequestBody String jsonString) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
-        metaObjectService.saveObjectWithChildren(model.getTableId(), JSON.parseObject(jsonString));
+        JSONObject object = JSON.parseObject(jsonString);
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeSave")==0) {
+            metaObjectService.saveObjectWithChildren(model.getTableId(), object);
+        }
         return ResponseData.makeSuccessResponse();
     }
 
@@ -142,7 +158,9 @@ public class MetaFormController extends BaseController {
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
-        metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters);
+        if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete")==0) {
+            metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters);
+        }
         return ResponseData.makeSuccessResponse();
     }
 
