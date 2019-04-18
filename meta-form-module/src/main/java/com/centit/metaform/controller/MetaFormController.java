@@ -51,19 +51,20 @@ public class MetaFormController extends BaseController {
     @RequestMapping(value = "/{modeId}/list", method = RequestMethod.GET)
     @WrapUpResponseBody
     public PageQueryResult<Object> listObjects(@PathVariable String modeId, PageDesc pageDesc,
-                          HttpServletRequest request) {
+                                               String [] fields, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         String sql = model.getDataFilterSql();
-        JSONArray ja;
+
         if(StringUtils.isBlank(sql)) {
-            ja = metaObjectService.pageQueryObjects(
+            JSONArray ja = metaObjectService.pageQueryObjects(
                     model.getTableId(), params, pageDesc);
+            return PageQueryResult.createJSONArrayResult(ja, pageDesc, fields);
         }else{
-            ja = metaObjectService.pageQueryObjects(
+            JSONArray ja = metaObjectService.pageQueryObjects(
                     model.getTableId(), sql, params, pageDesc);
+            return PageQueryResult.createJSONArrayResult(ja, pageDesc);
         }
-        return PageQueryResult.createJSONArrayResult(ja, pageDesc);
     }
 
     @ApiOperation(value = "获取一个数据，主键作为参数以key-value形式提交")
