@@ -48,12 +48,12 @@ public class MetaFormController extends BaseController {
 
 
     @ApiOperation(value = "分页查询表单数据列表")
-    @RequestMapping(value = "/{modelCode}/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/{modeId}/list", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public PageQueryResult<Object> listObjects(@PathVariable String modelCode, PageDesc pageDesc,
+    public PageQueryResult<Object> listObjects(@PathVariable String modeId, PageDesc pageDesc,
                           HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
+        MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         String sql = model.getDataFilterSql();
         JSONArray ja;
         if(StringUtils.isBlank(sql)) {
@@ -67,21 +67,21 @@ public class MetaFormController extends BaseController {
     }
 
     @ApiOperation(value = "获取一个数据，主键作为参数以key-value形式提交")
-    @RequestMapping(value = "/{modelCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{modeId}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public Map<String, Object> getObject(@PathVariable String modelCode,
+    public Map<String, Object> getObject(@PathVariable String modeId,
                                                HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
+        MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         return metaObjectService.getObjectById(model.getTableId(), parameters);
     }
 
     @ApiOperation(value = "修改表单数据")
-    @RequestMapping(value = "/{modelCode}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{modeId}", method = RequestMethod.PUT)
     @WrapUpResponseBody
-    public ResponseData updateObject(@PathVariable String modelCode,
+    public ResponseData updateObject(@PathVariable String modeId,
                                             @RequestBody String jsonString) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
+        MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         JSONObject object = JSON.parseObject(jsonString);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate")==0) {
             metaObjectService.updateObject(model.getTableId(), object);
@@ -90,11 +90,11 @@ public class MetaFormController extends BaseController {
     }
 
     @ApiOperation(value = "新增表单数据")
-    @RequestMapping(value = "/{modelCode}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{modeId}", method = RequestMethod.POST)
     @WrapUpResponseBody
-    public ResponseData saveObject(@PathVariable String modelCode,
+    public ResponseData saveObject(@PathVariable String modeId,
                                           @RequestBody String jsonString) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
+        MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         JSONObject object = JSON.parseObject(jsonString);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSave")==0) {
             metaObjectService.saveObject(model.getTableId(), object);
@@ -103,12 +103,12 @@ public class MetaFormController extends BaseController {
     }
 
     @ApiOperation(value = "删除表单数据")
-    @RequestMapping(value = "/{modelCode}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{modeId}", method = RequestMethod.DELETE)
     @WrapUpResponseBody
-    public ResponseData deleteObject(@PathVariable String modelCode,
+    public ResponseData deleteObject(@PathVariable String modeId,
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
+        MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete")==0) {
             metaObjectService.deleteObject(model.getTableId(), parameters);
         }
@@ -116,21 +116,21 @@ public class MetaFormController extends BaseController {
     }
 
     @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
-    @RequestMapping(value = "/{modelCode}/withChildren", method = RequestMethod.GET)
+    @RequestMapping(value = "/{modeId}/withChildren", method = RequestMethod.GET)
     @WrapUpResponseBody
-    public Map<String, Object> getObjectWithChildren(@PathVariable String modelCode,
+    public Map<String, Object> getObjectWithChildren(@PathVariable String modeId,
                                          HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
+        MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         return metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
     }
 
     @ApiOperation(value = "修改表单数据带子表")
-    @RequestMapping(value = "/{modelCode}/withChildren", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{modeId}/withChildren", method = RequestMethod.PUT)
     @WrapUpResponseBody
-    public ResponseData updateObjectWithChildren(@PathVariable String modelCode,
+    public ResponseData updateObjectWithChildren(@PathVariable String modeId,
                                      @RequestBody String jsonString) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
+        MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         JSONObject object = JSON.parseObject(jsonString);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate")==0) {
             metaObjectService.mergeObjectWithChildren(model.getTableId(), object);
@@ -139,11 +139,11 @@ public class MetaFormController extends BaseController {
     }
 
     @ApiOperation(value = "新增表单数据带子表")
-    @RequestMapping(value = "/{modelCode}/withChildren", method = RequestMethod.POST)
+    @RequestMapping(value = "/{modeId}/withChildren", method = RequestMethod.POST)
     @WrapUpResponseBody
-    public ResponseData saveObjectWithChildren(@PathVariable String modelCode,
+    public ResponseData saveObjectWithChildren(@PathVariable String modeId,
                                    @RequestBody String jsonString) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
+        MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         JSONObject object = JSON.parseObject(jsonString);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSave")==0) {
             metaObjectService.saveObjectWithChildren(model.getTableId(), object);
@@ -152,12 +152,12 @@ public class MetaFormController extends BaseController {
     }
 
     @ApiOperation(value = "删除表单数据带子表")
-    @RequestMapping(value = "/{modelCode}/withChildren", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{modeId}/withChildren", method = RequestMethod.DELETE)
     @WrapUpResponseBody
-    public ResponseData deleteObjectWithChildren(@PathVariable String modelCode,
+    public ResponseData deleteObjectWithChildren(@PathVariable String modeId,
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(modelCode);
+        MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete")==0) {
             metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters);
         }

@@ -77,15 +77,15 @@ public class MetaFormModelController extends BaseController{
     /**
      * 查询单个  通用模块管理
 
-     * @param modelCode  Model_Code
+     * @param modeId  Model_Id
      * @param response    {@link HttpServletResponse}
      * @return {data:{}}
      */
     @ApiOperation(value = "查询单个通用模块")
-    @RequestMapping(value = "/{modelCode}", method = {RequestMethod.GET})
-    public void getMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
+    @RequestMapping(value = "/{modeId}", method = {RequestMethod.GET})
+    public void getMetaFormModel(@PathVariable String modeId, HttpServletResponse response) {
 
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById( modelCode);
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modeId);
 
 
         JSONObject modelResult = JSONObject.parseObject(JSONObject.toJSONString(metaFormModel));
@@ -118,13 +118,13 @@ public class MetaFormModelController extends BaseController{
     /**
      * 删除单个  通用模块管理
 
-     * @param modelCode  Model_Code
+     * @param modeId  Model_Id
      */
     @ApiOperation(value = "删除单个通用模块")
-    @RequestMapping(value = "/{modelCode}", method = {RequestMethod.DELETE})
-    public void deleteMetaFormModel(@PathVariable String modelCode, HttpServletResponse response) {
+    @RequestMapping(value = "/{modeId}", method = {RequestMethod.DELETE})
+    public void deleteMetaFormModel(@PathVariable String modeId, HttpServletResponse response) {
 
-        metaFormModelMag.deleteObjectById( modelCode);
+        metaFormModelMag.deleteObjectById(modeId);
 
         JsonResultUtils.writeSuccessJson(response);
     }
@@ -132,15 +132,15 @@ public class MetaFormModelController extends BaseController{
     /**
      * 新增或保存 通用模块管理
 
-     * @param modelCode  Model_Code
+     * @param modeId  Model_Id
      * @param metaFormModel  {@link MetaFormModel}
      * @param response    {@link HttpServletResponse}
      */
     @ApiOperation(value = "新增或保存通用模块")
-    @RequestMapping(value = "/{modelCode}", method = {RequestMethod.PUT})
-    public void updateMetaFormModel(@PathVariable String modelCode,
+    @RequestMapping(value = "/{modeId}", method = {RequestMethod.PUT})
+    public void updateMetaFormModel(@PathVariable String modeId,
             @RequestBody @Valid MetaFormModel metaFormModel, HttpServletResponse response) {
-        MetaFormModel dbMetaFormModel = metaFormModelMag.getObjectById( modelCode);
+        MetaFormModel dbMetaFormModel = metaFormModelMag.getObjectById(modeId);
         dbMetaFormModel.copyNotNullProperty(metaFormModel);
         dbMetaFormModel.setLastModifyDate(new Date());
         metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
