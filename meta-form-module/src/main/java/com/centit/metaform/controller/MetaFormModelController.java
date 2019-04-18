@@ -12,6 +12,7 @@ import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -108,6 +109,8 @@ public class MetaFormModelController extends BaseController{
         String usercode = getLoginUserCode(request);
         model.copyNotNullProperty(metaFormModel);
         model.setRecorder(usercode);
+        model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));
+        model.setExtendOptJs(StringEscapeUtils.unescapeHtml4(model.getExtendOptJs()));
         model.setLastModifyDate(new Date());
         metaFormModelMag.saveNewObject(model);
 
@@ -142,6 +145,8 @@ public class MetaFormModelController extends BaseController{
             @RequestBody MetaFormModel metaFormModel, HttpServletResponse response) {
         MetaFormModel dbMetaFormModel = metaFormModelMag.getObjectById(modeId);
         dbMetaFormModel.copyNotNullProperty(metaFormModel);
+        dbMetaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(dbMetaFormModel.getFormTemplate()));
+        dbMetaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(dbMetaFormModel.getExtendOptJs()));
         dbMetaFormModel.setLastModifyDate(new Date());
         metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
 
