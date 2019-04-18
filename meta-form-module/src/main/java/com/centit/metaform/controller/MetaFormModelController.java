@@ -102,7 +102,7 @@ public class MetaFormModelController extends BaseController{
      */
     @ApiOperation(value = "新增通用模块")
     @RequestMapping(method = {RequestMethod.POST})
-    public void createMetaFormModel(@RequestBody @Valid MetaFormModel metaFormModel,
+    public void createMetaFormModel(MetaFormModel metaFormModel,
              HttpServletRequest request, HttpServletResponse response) {
         MetaFormModel model=new MetaFormModel();
         String usercode = getLoginUserCode(request);
@@ -139,7 +139,7 @@ public class MetaFormModelController extends BaseController{
     @ApiOperation(value = "新增或保存通用模块")
     @RequestMapping(value = "/{modeId}", method = {RequestMethod.PUT})
     public void updateMetaFormModel(@PathVariable String modeId,
-            @RequestBody @Valid MetaFormModel metaFormModel, HttpServletResponse response) {
+            @RequestBody MetaFormModel metaFormModel, HttpServletResponse response) {
         MetaFormModel dbMetaFormModel = metaFormModelMag.getObjectById(modeId);
         dbMetaFormModel.copyNotNullProperty(metaFormModel);
         dbMetaFormModel.setLastModifyDate(new Date());
