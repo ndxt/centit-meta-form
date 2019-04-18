@@ -30,7 +30,8 @@ public class MetaFormModel implements java.io.Serializable {
     @ApiModelProperty(value = "模块代码", hidden = true)
     @Id
     @Column(name = "MODE_ID")
-    @GeneratedValue(generator = "paymentableGenerator")
+    //@GeneratedValue(generator = "paymentableGenerator")
+    @ValueGenerator(strategy = GeneratorType.UUID)
     //@GenericGenerator(name = "paymentableGenerator", strategy = "assigned")
     private String modeId;
 
