@@ -3,7 +3,6 @@ function beforeUpdate(metaObjectService, entity){
 }
 
 function beforeSave(metaObjectService, entity){
-
     entity.user = 'hi';
     return 0;
 }
