@@ -6,6 +6,7 @@ import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.support.database.utils.PageDesc;
@@ -151,5 +152,22 @@ public class MetaFormModelController extends BaseController{
         metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
 
         JsonResultUtils.writeBlankJson(response);
+    }
+
+    //TODO 请完善下面两个接口
+    @ApiOperation(value = "修改模板内容")
+    @RequestMapping(value = "/{modeId}/template", method = {RequestMethod.PUT})
+    @WrapUpResponseBody
+    public void updateFormTemplate(@PathVariable String modeId,
+                                    @RequestBody String formTemplate) {
+
+    }
+
+    @ApiOperation(value = "修改模板事件操作")
+    @RequestMapping(value = "/{modeId}/optjs", method = {RequestMethod.PUT})
+    @WrapUpResponseBody
+    public void updateFormOptJs(@PathVariable String modeId,
+                                   @RequestBody String formOptjs) {
+
     }
 }
