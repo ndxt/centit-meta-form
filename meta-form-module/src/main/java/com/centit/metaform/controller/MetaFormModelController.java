@@ -1,12 +1,9 @@
 package com.centit.metaform.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
-import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ResponseMapData;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
+import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.support.database.utils.PageDesc;
@@ -22,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.*;
+import java.util.Map;
 
 
 /**
@@ -50,50 +45,33 @@ public class MetaFormModelController extends BaseController{
      *
      * @param field    json中只保存需要的属性名
      * @param request  {@link HttpServletRequest}
-     * @param response {@link HttpServletResponse}
      * @return {data:[]}
      */
     @ApiOperation(value = "查询所有通用模块")
     @RequestMapping(method = RequestMethod.GET)
-    public void list(String[] field, PageDesc pageDesc, HttpServletRequest request, HttpServletResponse response) {
+    @WrapUpResponseBody
+    public PageQueryResult list(String[] field, PageDesc pageDesc, HttpServletRequest request) {
         Map<String, Object> searchColumn = convertSearchColumn(request);
         JSONArray listObjects = metaFormModelMag.listObjectsAsJson(searchColumn, pageDesc);
-        JSONArray jsonObjects = metaFormModelMag.addTableNameToList(listObjects);
-        SimplePropertyPreFilter simplePropertyPreFilter = null;
-
-        if (null == pageDesc) {
-            JsonResultUtils.writeSingleDataJson(jsonObjects, response);
-            return;
-        }
-        ResponseMapData resData = new ResponseMapData();
-        resData.addResponseData(OBJLIST, jsonObjects);
-        resData.addResponseData(PAGE_DESC, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
-            simplePropertyPreFilter = new SimplePropertyPreFilter(MetaFormModel.class, field);
-            JsonResultUtils.writeResponseDataAsJson(resData, response,simplePropertyPreFilter);
+           return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
         }
         else{
-            JsonResultUtils.writeResponseDataAsJson(resData, response);
+            return PageQueryResult.createJSONArrayResult(listObjects,pageDesc,MetaFormModel.class);
         }
     }
     /**
      * 查询单个  通用模块管理
 
      * @param modeId  Model_Id
-     * @param response    {@link HttpServletResponse}
      * @return {data:{}}
      */
     @ApiOperation(value = "查询单个通用模块")
     @RequestMapping(value = "/{modeId}", method = {RequestMethod.GET})
-    public void getMetaFormModel(@PathVariable String modeId, HttpServletResponse response) {
-
+    @WrapUpResponseBody
+    public MetaFormModel getMetaFormModel(@PathVariable String modeId) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modeId);
-
-
-        JSONObject modelResult = JSONObject.parseObject(JSONObject.toJSONString(metaFormModel));
-        modelResult.put("lastModifyDate",metaFormModel.getLastModifyDate().toString());
-
-        JsonResultUtils.writeSingleDataJson(modelResult, response);
+        return metaFormModel;
     }
 
     /**
@@ -104,19 +82,15 @@ public class MetaFormModelController extends BaseController{
      */
     @ApiOperation(value = "新增通用模块")
     @RequestMapping(method = {RequestMethod.POST})
-    public void createMetaFormModel(MetaFormModel metaFormModel,
-             HttpServletRequest request, HttpServletResponse response) {
+    @WrapUpResponseBody
+    public void createMetaFormModel(MetaFormModel metaFormModel, HttpServletRequest request) {
         MetaFormModel model=new MetaFormModel();
         String usercode = getLoginUserCode(request);
         model.copyNotNullProperty(metaFormModel);
         model.setRecorder(usercode);
         model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));
         model.setExtendOptJs(StringEscapeUtils.unescapeHtml4(model.getExtendOptJs()));
-        model.setLastModifyDate(new Date());
         metaFormModelMag.saveNewObject(model);
-
-
-        JsonResultUtils.writeSingleDataJson(model.getModeId(),response);
     }
 
     /**
@@ -126,11 +100,9 @@ public class MetaFormModelController extends BaseController{
      */
     @ApiOperation(value = "删除单个通用模块")
     @RequestMapping(value = "/{modeId}", method = {RequestMethod.DELETE})
-    public void deleteMetaFormModel(@PathVariable String modeId, HttpServletResponse response) {
-
+    @WrapUpResponseBody
+    public void deleteMetaFormModel(@PathVariable String modeId) {
         metaFormModelMag.deleteObjectById(modeId);
-
-        JsonResultUtils.writeSuccessJson(response);
     }
 
     /**
@@ -138,20 +110,15 @@ public class MetaFormModelController extends BaseController{
 
      * @param modeId  Model_Id
      * @param metaFormModel  {@link MetaFormModel}
-     * @param response    {@link HttpServletResponse}
      */
-    @ApiOperation(value = "新增或保存通用模块")
+    @ApiOperation(value = "编辑通用模块")
     @RequestMapping(value = "/{modeId}", method = {RequestMethod.PUT})
-    public void updateMetaFormModel(@PathVariable String modeId,
-            @RequestBody MetaFormModel metaFormModel, HttpServletResponse response) {
-        MetaFormModel dbMetaFormModel = metaFormModelMag.getObjectById(modeId);
-        dbMetaFormModel.copyNotNullProperty(metaFormModel);
-        dbMetaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(dbMetaFormModel.getFormTemplate()));
-        dbMetaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(dbMetaFormModel.getExtendOptJs()));
-        dbMetaFormModel.setLastModifyDate(new Date());
-        metaFormModelMag.updateMetaFormModel(dbMetaFormModel);
-
-        JsonResultUtils.writeBlankJson(response);
+    @WrapUpResponseBody
+    public void updateMetaFormModel(@PathVariable String modeId, @RequestBody MetaFormModel metaFormModel) {
+        metaFormModel.setModeId(modeId);
+        metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));
+        metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
+        metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 
     //TODO 请完善下面两个接口
@@ -160,6 +127,9 @@ public class MetaFormModelController extends BaseController{
     @WrapUpResponseBody
     public void updateFormTemplate(@PathVariable String modeId,
                                     @RequestBody String formTemplate) {
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modeId);
+        metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));
+        metaFormModelMag.updateMetaFormModel(metaFormModel);
 
     }
 
@@ -168,6 +138,8 @@ public class MetaFormModelController extends BaseController{
     @WrapUpResponseBody
     public void updateFormOptJs(@PathVariable String modeId,
                                    @RequestBody String formOptjs) {
-
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modeId);
+        metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
+        metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 }
