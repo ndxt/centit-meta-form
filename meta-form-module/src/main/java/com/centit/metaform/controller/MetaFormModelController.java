@@ -1,6 +1,7 @@
 package com.centit.metaform.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 
@@ -83,7 +85,8 @@ public class MetaFormModelController extends BaseController{
     @ApiOperation(value = "新增通用模块")
     @RequestMapping(method = {RequestMethod.POST})
     @WrapUpResponseBody
-    public void createMetaFormModel(MetaFormModel metaFormModel, HttpServletRequest request) {
+    public void createMetaFormModel(MetaFormModel metaFormModel,
+        HttpServletRequest request, HttpServletResponse response) {
         MetaFormModel model=new MetaFormModel();
         String usercode = getLoginUserCode(request);
         model.copyNotNullProperty(metaFormModel);
@@ -91,6 +94,7 @@ public class MetaFormModelController extends BaseController{
         model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));
         model.setExtendOptJs(StringEscapeUtils.unescapeHtml4(model.getExtendOptJs()));
         metaFormModelMag.saveNewObject(model);
+        JsonResultUtils.writeSingleDataJson(model.getModeId(),response);
     }
 
     /**
