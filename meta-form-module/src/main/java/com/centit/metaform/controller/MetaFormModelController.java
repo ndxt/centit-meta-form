@@ -94,7 +94,7 @@ public class MetaFormModelController extends BaseController{
         model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));
         model.setExtendOptJs(StringEscapeUtils.unescapeHtml4(model.getExtendOptJs()));
         metaFormModelMag.saveNewObject(model);
-        JsonResultUtils.writeSingleDataJson(model.getModeId(),response);
+        JsonResultUtils.writeSingleDataJson(model.getModelId(),response);
     }
 
     /**
@@ -119,7 +119,7 @@ public class MetaFormModelController extends BaseController{
     @RequestMapping(value = "/{modeId}", method = {RequestMethod.PUT})
     @WrapUpResponseBody
     public void updateMetaFormModel(@PathVariable String modeId, @RequestBody MetaFormModel metaFormModel) {
-        metaFormModel.setModeId(modeId);
+        metaFormModel.setModelId(modeId);
         metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
         metaFormModelMag.updateMetaFormModel(metaFormModel);

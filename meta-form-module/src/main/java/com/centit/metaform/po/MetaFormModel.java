@@ -29,26 +29,30 @@ public class MetaFormModel implements java.io.Serializable {
 
     @ApiModelProperty(value = "模块代码", hidden = true)
     @Id
-    @Column(name = "MODE_ID")
+    @Column(name = "MODEL_ID")
     //@GeneratedValue(generator = "paymentableGenerator")
     @ValueGenerator(strategy = GeneratorType.UUID)
     //@GenericGenerator(name = "paymentableGenerator", strategy = "assigned")
-    private String modeId;
+    private String modelId;
 
     @ApiModelProperty(value = "表ID")
     @Column(name = "TABLE_ID")
     private String tableId;
 
-    @ApiModelProperty(value = "模块名称", required = true)
+    @ApiModelProperty(value = "表单类型 N ： 正常表单 S 子模块表单 L 列表表单")
+    @Column(name = "MODE_TYPE")
+    @Length(max = 1, message = "字段长度不能大于{max}")
+    private String  modelType;
+
+    @ApiModelProperty(value = "子模块关联表ID")
+    @Column(name = "RELATION_ID")
+    private String relationId;
+
+    @ApiModelProperty(value = "模块名称，如果是子摸快，这个字段名为 relationName ", required = true)
     @Column(name = "MODEL_NAME")
     @NotBlank(message = "字段不能为空")
     @Length(max = 64, message = "字段长度不能大于{max}")
     private String  modelName;
-
-    @ApiModelProperty(value = "存储类别 R 只读（视图、查询）;A  新增（只能新增一条）;W 修改 ;L 编辑列表（增删改）")
-    @Column(name = "ACCESS_TYPE")
-    @Length(max = 1, message = "字段长度不能大于{max}")
-    private String  accessType;
 
     @ApiModelProperty(value = "表单模板")
     @Column(name = "FORM_TEMPLATE")
@@ -115,27 +119,24 @@ public class MetaFormModel implements java.io.Serializable {
     }
     /** minimal constructor */
     public MetaFormModel(
-        String modeId
+        String modelId
         ,String  modelName) {
-
-
-        this.modeId = modeId;
-
+        this.modelId = modelId;
         this.modelName= modelName;
     }
 
     /** full constructor */
-    public MetaFormModel(String modeId, String tableId,
-            String modelComment, String modelName, String accessType,
-            String formTemplate, Date lastModifyDate,String recorder,
-            String extendOptJs, String dataFilterSql,
-            String relFlowCode, String modeOptUrl) {
+    public MetaFormModel(String modelId, String tableId,
+                         String modelComment, String modelName, String accessType,
+                         String formTemplate, Date lastModifyDate, String recorder,
+                         String extendOptJs, String dataFilterSql,
+                         String relFlowCode, String modeOptUrl) {
         super();
-        this.modeId = modeId;
+        this.modelId = modelId;
         this.tableId = tableId;
         this.modelComment = modelComment;
         this.modelName = modelName;
-        this.accessType = accessType;
+        this.modelType = accessType;
         this.formTemplate = formTemplate;
 
         this.lastModifyDate = lastModifyDate;
@@ -198,7 +199,7 @@ public class MetaFormModel implements java.io.Serializable {
             MetaFormModel odt = it.next();
             found = false;
             for(MetaFormModel newdt :newObjs){
-                if(odt.getModeId().equals( newdt.getModeId())){
+                if(odt.getModelId().equals( newdt.getModelId())){
                     found = true;
                     break;
                 }
@@ -213,7 +214,7 @@ public class MetaFormModel implements java.io.Serializable {
             for(Iterator<MetaFormModel> it=getMetaFormModels().iterator();
              it.hasNext();){
                 MetaFormModel odt = it.next();
-                if(odt.getModeId().equals( newdt.getModeId())){
+                if(odt.getModelId().equals( newdt.getModelId())){
                     odt.copy(newdt);
                     found = true;
                     break;
@@ -226,11 +227,11 @@ public class MetaFormModel implements java.io.Serializable {
 
       public MetaFormModel copy(MetaFormModel other){
 
-        this.setModeId(other.getModeId());
+        this.setModelId(other.getModelId());
         this.tableId=other.getTableId();
         this.modelComment= other.getModelComment();
         this.modelName= other.getModelName();
-        this.accessType= other.getAccessType();
+        this.modelType= other.getModelType();
         this.formTemplate= other.getFormTemplate();
         this.lastModifyDate= other.getLastModifyDate();
         this.recorder= other.getRecorder();
@@ -245,16 +246,16 @@ public class MetaFormModel implements java.io.Serializable {
 
     public MetaFormModel copyNotNullProperty(MetaFormModel other){
 
-    if( other.getModeId() != null)
-        this.setModeId(other.getModeId());
+    if( other.getModelId() != null)
+        this.setModelId(other.getModelId());
         if( other.getTableId() != null)
             this.tableId= other.getTableId();
         if( other.getModelComment() != null)
             this.modelComment= other.getModelComment();
         if( other.getModelName() != null)
             this.modelName= other.getModelName();
-        if( other.getAccessType() != null)
-            this.accessType= other.getAccessType();
+        if( other.getModelType() != null)
+            this.modelType= other.getModelType();
         if( other.getFormTemplate() != null)
             this.formTemplate=other.getFormTemplate();
         if( other.getLastModifyDate() != null)
@@ -279,7 +280,7 @@ public class MetaFormModel implements java.io.Serializable {
 //        this.setMdTable(null);
         this.modelComment= null;
         this.modelName= null;
-        this.accessType= null;
+        this.modelType= null;
         this.formTemplate= null;
         this.lastModifyDate= null;
         this.recorder= null;
