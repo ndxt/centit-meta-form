@@ -100,6 +100,15 @@ public class MetaFormModel implements java.io.Serializable {
 //    @OrderBy(value="displayOrder asc")
     private Set<MetaFormModel> childFormModels;
 
+    @Transient
+    private String relationName;
+
+    public String getRelationName() {
+        if (relationId != null && !"".equals(relationId))
+        relationName = this.modelName;
+        return relationName;
+    }
+
     public JSONObject getFormTemplateJson() {
         if(StringUtils.isBlank(formTemplate)) {
             return null;

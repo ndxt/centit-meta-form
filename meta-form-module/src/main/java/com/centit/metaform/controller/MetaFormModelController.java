@@ -65,14 +65,14 @@ public class MetaFormModelController extends BaseController{
     /**
      * 查询单个  通用模块管理
 
-     * @param modeId  Model_Id
+     * @param modelId  Model_Id
      * @return {data:{}}
      */
     @ApiOperation(value = "查询单个通用模块")
-    @RequestMapping(value = "/{modeId}", method = {RequestMethod.GET})
+    @RequestMapping(value = "/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
-    public MetaFormModel getMetaFormModel(@PathVariable String modeId) {
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modeId);
+    public MetaFormModel getMetaFormModel(@PathVariable String modelId) {
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         return metaFormModel;
     }
 
@@ -100,26 +100,26 @@ public class MetaFormModelController extends BaseController{
     /**
      * 删除单个  通用模块管理
 
-     * @param modeId  Model_Id
+     * @param modelId  Model_Id
      */
     @ApiOperation(value = "删除单个通用模块")
-    @RequestMapping(value = "/{modeId}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
-    public void deleteMetaFormModel(@PathVariable String modeId) {
-        metaFormModelMag.deleteObjectById(modeId);
+    public void deleteMetaFormModel(@PathVariable String modelId) {
+        metaFormModelMag.deleteObjectById(modelId);
     }
 
     /**
      * 新增或保存 通用模块管理
 
-     * @param modeId  Model_Id
+     * @param modelId  Model_Id
      * @param metaFormModel  {@link MetaFormModel}
      */
     @ApiOperation(value = "编辑通用模块")
-    @RequestMapping(value = "/{modeId}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{modelId}", method = {RequestMethod.PUT})
     @WrapUpResponseBody
-    public void updateMetaFormModel(@PathVariable String modeId, @RequestBody MetaFormModel metaFormModel) {
-        metaFormModel.setModelId(modeId);
+    public void updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel) {
+        metaFormModel.setModelId(modelId);
         metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
@@ -127,22 +127,22 @@ public class MetaFormModelController extends BaseController{
 
     //TODO 请完善下面两个接口
     @ApiOperation(value = "修改模板内容")
-    @RequestMapping(value = "/{modeId}/template", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{modelId}/template", method = {RequestMethod.PUT})
     @WrapUpResponseBody
-    public void updateFormTemplate(@PathVariable String modeId,
+    public void updateFormTemplate(@PathVariable String modelId,
                                     @RequestBody String formTemplate) {
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modeId);
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
 
     }
 
     @ApiOperation(value = "修改模板事件操作")
-    @RequestMapping(value = "/{modeId}/optjs", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{modelId}/optjs", method = {RequestMethod.PUT})
     @WrapUpResponseBody
-    public void updateFormOptJs(@PathVariable String modeId,
+    public void updateFormOptJs(@PathVariable String modelId,
                                    @RequestBody String formOptjs) {
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modeId);
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
