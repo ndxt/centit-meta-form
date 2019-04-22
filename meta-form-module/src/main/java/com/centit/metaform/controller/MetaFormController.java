@@ -10,6 +10,7 @@ import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.service.MetaObjectService;
+import com.centit.support.compiler.Lexer;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,11 +61,15 @@ public class MetaFormController extends BaseController {
             JSONArray ja = metaObjectService.pageQueryObjects(
                     model.getTableId(), params, pageDesc);
             return PageQueryResult.createJSONArrayResult(ja, pageDesc, fields);
-        }else{
+        }
+        if(StringUtils.equalsIgnoreCase("select",Lexer.getFirstWord(sql))) {
             JSONArray ja = metaObjectService.pageQueryObjects(
                     model.getTableId(), sql, params, pageDesc);
             return PageQueryResult.createJSONArrayResult(ja, pageDesc);
         }
+        JSONArray ja = metaObjectService.pageQueryObjects(
+                model.getTableId(), params, sql.split(","), pageDesc);
+        return PageQueryResult.createJSONArrayResult(ja, pageDesc);
     }
 
     @ApiOperation(value = "获取一个数据，主键作为参数以key-value形式提交")
@@ -134,7 +139,7 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modeId);
         JSONObject object = JSON.parseObject(jsonString);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate")==0) {
-            metaObjectService.mergeObjectWithChildren(model.getTableId(), object);
+            metaObjectService.updateObjectWithChildren(model.getTableId(), object);
         }
         return ResponseData.makeSuccessResponse();
     }
