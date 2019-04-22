@@ -40,7 +40,7 @@ public class MetaFormModel implements java.io.Serializable {
     private String tableId;
 
     @ApiModelProperty(value = "表单类型 N ： 正常表单 S 子模块表单 L 列表表单")
-    @Column(name = "MODE_TYPE")
+    @Column(name = "MODEL_TYPE")
     @Length(max = 1, message = "字段长度不能大于{max}")
     private String  modelType;
 
