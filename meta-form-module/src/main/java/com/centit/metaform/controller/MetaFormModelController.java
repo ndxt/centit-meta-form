@@ -132,7 +132,7 @@ public class MetaFormModelController extends BaseController{
     public void updateFormTemplate(@PathVariable String modeId,
                                     @RequestBody String formTemplate) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modeId);
-        metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));
+        metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(formTemplate));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
 
     }
@@ -143,7 +143,7 @@ public class MetaFormModelController extends BaseController{
     public void updateFormOptJs(@PathVariable String modeId,
                                    @RequestBody String formOptjs) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modeId);
-        metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
+        metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(formOptjs));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 }
