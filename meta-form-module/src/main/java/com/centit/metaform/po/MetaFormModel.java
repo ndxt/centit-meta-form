@@ -39,7 +39,7 @@ public class MetaFormModel implements java.io.Serializable {
     @Column(name = "TABLE_ID")
     private String tableId;
 
-    @ApiModelProperty(value = "表单类型 N ： 正常表单 S 子模块表单 L 列表表单")
+    @ApiModelProperty(value = "表单类型 N ： 正常表单 S 子模块表单 L 列表表单 P 一对一子表表单 D 数据驱动表单（二阶表单）")
     @Column(name = "MODEL_TYPE")
     @Length(max = 1, message = "字段长度不能大于{max}")
     private String  modelType;
@@ -73,7 +73,7 @@ public class MetaFormModel implements java.io.Serializable {
     @Column(name = "EXTEND_OPT_JS")
     private String  extendOptJs;
 
-    @ApiModelProperty(value = "数据范围权限过滤")
+    @ApiModelProperty(value = "数据范围权限过滤，作为L列表表单或者二级表单是使用")
     @Column(name = "DATA_FILTER_SQL")
     @Length(max = 2000, message = "字段长度不能大于{max}")
     private String  dataFilterSql;
