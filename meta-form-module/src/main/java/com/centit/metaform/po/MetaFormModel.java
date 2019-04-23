@@ -40,7 +40,7 @@ public class MetaFormModel implements java.io.Serializable {
     private String tableId;
 
     @ApiModelProperty(value = "表单类型 N ： 正常表单 S 子模块表单 L 列表表单")
-    @Column(name = "MODE_TYPE")
+    @Column(name = "MODEL_TYPE")
     @Length(max = 1, message = "字段长度不能大于{max}")
     private String  modelType;
 
@@ -99,6 +99,15 @@ public class MetaFormModel implements java.io.Serializable {
 //    @JoinColumn(name = "MODEL_CODE", referencedColumnName = "PARENT_MODEL_CODE")
 //    @OrderBy(value="displayOrder asc")
     private Set<MetaFormModel> childFormModels;
+
+    @Transient
+    private String relationName;
+
+    public String getRelationName() {
+        if (relationId != null && !"".equals(relationId))
+        relationName = this.modelName;
+        return relationName;
+    }
 
     public JSONObject getFormTemplateJson() {
         if(StringUtils.isBlank(formTemplate)) {
