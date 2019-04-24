@@ -13,6 +13,7 @@ MAINTAINER hzf "hzf@centit.com"
 ADD target/*.war /usr/local/tomcat/webapps/{DEPLOYMENT}.war
 EXPOSE 8080
 CMD /usr/local/tomcat/bin/startup.sh && tail -f /usr/local/tomcat/logs/catalina.out
+EOF
 #构建镜像
 cd ./${MODULE}/
 docker build -t ${IMAGE_NAME} .
