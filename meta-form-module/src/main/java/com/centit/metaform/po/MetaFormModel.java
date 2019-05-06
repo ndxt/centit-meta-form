@@ -79,9 +79,17 @@ public class MetaFormModel implements java.io.Serializable {
     private String  dataFilterSql;
 
     @ApiModelProperty(value = "关联工作流代码")
-    @Column(name = "REL_WFCODE")
-    @Length(max = 32, message = "字段长度不能大于{max}")
+    @Column(name = "REL_FLOW_CODE")
+    @Length(max = 64, message = "字段长度不能大于{max}")
     private String  relFlowCode;
+
+    /**
+     * 工作流业务标题模板 可以通过{变量名称} 来引用其他属性
+     */
+    @ApiModelProperty(value = "工作流业务标题模板")
+    @Column(name = "FLOW_OPT_TITLE")
+    @Length(max = 500, message = "字段长度不能大于{max}")
+    private String  flowOptTitle;
 
     @ApiModelProperty(value = "模块描述")
     @Column(name = "MODEL_COMMENT")

@@ -2,6 +2,7 @@ package com.centit.metaform.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.common.JsonResultUtils;
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
@@ -88,7 +89,7 @@ public class MetaFormModelController extends BaseController{
     public void createMetaFormModel(MetaFormModel metaFormModel,
         HttpServletRequest request, HttpServletResponse response) {
         MetaFormModel model=new MetaFormModel();
-        String usercode = getLoginUserCode(request);
+        String usercode = WebOptUtils.getCurrentUnitCode(request);
         model.copyNotNullProperty(metaFormModel);
         model.setRecorder(usercode);
         model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));

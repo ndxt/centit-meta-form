@@ -15,6 +15,7 @@ import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.compiler.Lexer;
+import com.centit.support.compiler.Pretreatment;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.workflow.client.service.FlowEngineClient;
 import com.centit.workflow.commons.WorkflowException;
@@ -201,7 +202,7 @@ public class MetaFormController extends BaseController {
             try {
                 //TODO 这个接口需要修改，需要和 flowEngine 一致
                 String json = flowEngineClient.createInstance(model.getRelFlowCode(),
-                        "",// 这边需要添加一个title表达式
+                        Pretreatment.mapTemplateString(model.getFlowOptTitle(),object),// 这边需要添加一个title表达式
                         jsonString,
                         WebOptUtils.getCurrentUserCode(request),
                         WebOptUtils.getCurrentUnitCode(request));
