@@ -3,15 +3,21 @@ package com.centit.metaform.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.ResponseData;
+import com.centit.framework.appclient.HttpReceiveJSON;
+import com.centit.framework.common.ObjectException;
+import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.service.MetaObjectService;
+import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.compiler.Lexer;
 import com.centit.support.database.utils.PageDesc;
+import com.centit.workflow.client.service.FlowEngineClient;
+import com.centit.workflow.commons.WorkflowException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +44,9 @@ public class MetaFormController extends BaseController {
 
     @Autowired
     private MetaObjectService metaObjectService;
+
+    @Autowired
+    private FlowEngineClient flowEngineClient;
 
     private int runJSEvent(String js, Map<String, Object> object, String event){
         if(StringUtils.isBlank(js)){
@@ -85,40 +94,37 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "修改表单数据")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.PUT)
     @WrapUpResponseBody
-    public ResponseData updateObject(@PathVariable String modelId,
+    public void updateObject(@PathVariable String modelId,
                                             @RequestBody String jsonString) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate")==0) {
             metaObjectService.updateObject(model.getTableId(), object);
         }
-        return ResponseData.makeSuccessResponse();
     }
 
     @ApiOperation(value = "新增表单数据")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.POST)
     @WrapUpResponseBody
-    public ResponseData saveObject(@PathVariable String modelId,
+    public void saveObject(@PathVariable String modelId,
                                           @RequestBody String jsonString) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSave")==0) {
             metaObjectService.saveObject(model.getTableId(), object);
         }
-        return ResponseData.makeSuccessResponse();
     }
 
     @ApiOperation(value = "删除表单数据")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.DELETE)
     @WrapUpResponseBody
-    public ResponseData deleteObject(@PathVariable String modelId,
+    public void deleteObject(@PathVariable String modelId,
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete")==0) {
             metaObjectService.deleteObject(model.getTableId(), parameters);
         }
-        return ResponseData.makeSuccessResponse();
     }
 
     @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
@@ -134,40 +140,87 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "修改表单数据带子表")
     @RequestMapping(value = "/{modelId}/withChildren", method = RequestMethod.PUT)
     @WrapUpResponseBody
-    public ResponseData updateObjectWithChildren(@PathVariable String modelId,
+    public void updateObjectWithChildren(@PathVariable String modelId,
                                      @RequestBody String jsonString) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate")==0) {
             metaObjectService.updateObjectWithChildren(model.getTableId(), object);
         }
-        return ResponseData.makeSuccessResponse();
     }
 
     @ApiOperation(value = "新增表单数据带子表")
     @RequestMapping(value = "/{modelId}/withChildren", method = RequestMethod.POST)
     @WrapUpResponseBody
-    public ResponseData saveObjectWithChildren(@PathVariable String modelId,
+    public void saveObjectWithChildren(@PathVariable String modelId,
                                    @RequestBody String jsonString) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSave")==0) {
             metaObjectService.saveObjectWithChildren(model.getTableId(), object);
         }
-        return ResponseData.makeSuccessResponse();
     }
 
     @ApiOperation(value = "删除表单数据带子表")
     @RequestMapping(value = "/{modelId}/withChildren", method = RequestMethod.DELETE)
     @WrapUpResponseBody
-    public ResponseData deleteObjectWithChildren(@PathVariable String modelId,
+    public void deleteObjectWithChildren(@PathVariable String modelId,
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete")==0) {
             metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters);
         }
-        return ResponseData.makeSuccessResponse();
+    }
+
+    /**
+     * 提交工作流 ; 分两种情况
+     * 一： 新建业务，操作流程为， 保存表单，提交流程，这时表单对应的表中flowInstId字段必然为空，所以:
+     *  1,创建流程,获取流程实例编号回填到这个表单中
+     *  2,提交首节点，进入下一个节点(这个操作同时在流程引擎中执行)
+     * 二： 提交节点，操作流程如下:
+     *  1, 从工作流引擎中获得待办列表,通过这个待办列表进入节点实例
+     *  2, 进入节点实例分两种情况,新建表单或者修改表单,无论是那种情况表单中都有两个字段flowInstId和nodeInstId
+     *  3, 保存表单
+     *  4, 提交表单
+     * @param modelId 模块id
+     * @param jsonString 模块对象对应的主键
+     */
+    @ApiOperation(value = "提交工作流")
+    @RequestMapping(value = "/{modelId}/submit", method = RequestMethod.PUT)
+    @WrapUpResponseBody
+    public void submitFlow(@PathVariable String modelId,
+                           @RequestBody String jsonString,
+                           HttpServletRequest request) {
+        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        JSONObject parameters = JSON.parseObject(jsonString);
+        Map<String, Object> object = metaObjectService.getObjectById(model.getTableId(), parameters);
+        Object flowInstId = object.get("flowInstId");
+        if(flowInstId == null){
+            //TODO create flow instance
+            try {
+                //TODO 这个接口需要修改，需要和 flowEngine 一致
+                String json = flowEngineClient.createInstance(model.getRelFlowCode(),
+                        "",// 这边需要添加一个title表达式
+                        jsonString,
+                        WebOptUtils.getCurrentUserCode(request),
+                        WebOptUtils.getCurrentUnitCode(request));
+                HttpReceiveJSON obj = HttpReceiveJSON.valueOfJson(json);
+                object.put("flowInstId", obj.getData("flowInstId"));
+                metaObjectService.updateObjectByProperties(model.getTableId(),
+                        CollectionsOpt.createList("flowInstId","nodeInstId"), object);
+            } catch (Exception e) {
+                throw new ObjectException(e);
+            }
+        } else {
+            Long nodeInstId = NumberBaseOpt.castObjectToLong(object.get("nodeInstId"));
+            if(nodeInstId == null){
+                throw new ObjectException(WorkflowException.NodeInstNotFound,"找不到对应的节点实例号！" + jsonString);
+            }
+            // TODO submit flow
+            flowEngineClient.submitOpt(nodeInstId , WebOptUtils.getCurrentUserCode(request),
+                    WebOptUtils.getCurrentUnitCode(request), null, null);
+        }
     }
 
 }
