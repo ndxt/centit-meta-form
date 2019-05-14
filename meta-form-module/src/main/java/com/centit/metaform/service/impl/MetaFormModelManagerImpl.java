@@ -2,11 +2,12 @@ package com.centit.metaform.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
-import com.centit.product.dbdesign.service.MetaTableManager;
+import com.centit.product.metadata.dao.MetaTableDao;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.logging.Log;
@@ -45,7 +46,7 @@ public class MetaFormModelManagerImpl
     }
 
     @Autowired
-    private MetaTableManager metaTableManager;
+    private MetaTableDao metaTableDao;
 
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
@@ -61,17 +62,17 @@ public class MetaFormModelManagerImpl
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
     public void updateMetaFormModel(MetaFormModel mtaFormModel) {
-           metaFormModelDao.updateObject(mtaFormModel);
+        metaFormModelDao.updateObject(mtaFormModel);
         metaFormModelDao.saveObjectReferences(mtaFormModel);
     }
 
     @Override
     public JSONArray addTableNameToList(JSONArray listObjects) {
+        List<MetaTable> tableObjects = metaTableDao.listObjects();
         if (listObjects != null && listObjects.size()>0) {
             for (int i=0; i<listObjects.size(); i++) {
                 JSONObject tempObj = listObjects.getJSONObject(i);
                 Long tableId = tempObj.getLong("tableId");
-                List<MetaTable> tableObjects = metaTableManager.listObjects();
                 if (tableObjects != null && tableObjects.size()>0) {
                     for (int j=0; j<tableObjects.size(); j++) {
                         if (tableId != null &&tableId.equals(tableObjects.get(j).getTableId())) {
@@ -83,6 +84,14 @@ public class MetaFormModelManagerImpl
             }
         }
         return listObjects;
+    }
+
+    @Override
+    @Transactional
+    public void deleteFormOptJs(String modelId) {
+        DatabaseOptUtils.doExecuteSql(metaFormModelDao,
+                "update M_META_FORM_MODEL set EXTEND_OPT_JS = null where MODEL_ID = ?",
+                new Object[]{modelId});
     }
 
 }

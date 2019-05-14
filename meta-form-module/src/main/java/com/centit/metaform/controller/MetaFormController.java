@@ -68,9 +68,15 @@ public class MetaFormController extends BaseController {
         String sql = model.getDataFilterSql();
 
         if(StringUtils.isBlank(sql)) {
-            JSONArray ja = metaObjectService.pageQueryObjects(
-                    model.getTableId(), params, pageDesc);
-            return PageQueryResult.createJSONArrayResult(ja, pageDesc, fields);
+            //if(fields !=null && fields.length>0) {
+                JSONArray ja = metaObjectService.pageQueryObjects(
+                        model.getTableId(), params, fields, pageDesc);
+                return PageQueryResult.createJSONArrayResult(ja, pageDesc);
+            /*}else{
+                JSONArray ja = metaObjectService.pageQueryObjects(
+                        model.getTableId(), params, pageDesc);
+                return PageQueryResult.createJSONArrayResult(ja, pageDesc);
+            }*/
         }
         if(StringUtils.equalsIgnoreCase("select",Lexer.getFirstWord(sql))) {
             JSONArray ja = metaObjectService.pageQueryObjects(
@@ -104,6 +110,18 @@ public class MetaFormController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "修改表单指定字段")
+    @RequestMapping(value = "/{modelId}/change", method = RequestMethod.PUT)
+    @WrapUpResponseBody
+    public void updateObjectPart(@PathVariable String modelId,
+                             @RequestBody String jsonString, HttpServletRequest request) {
+        Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
+        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        JSONObject object = JSON.parseObject(jsonString);
+        object.putAll(params);
+        metaObjectService.updateObjectByProperties(model.getTableId(), params.keySet(), object);
+    }
+
     @ApiOperation(value = "新增表单数据")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.POST)
     @WrapUpResponseBody
@@ -111,6 +129,7 @@ public class MetaFormController extends BaseController {
                                           @RequestBody String jsonString) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
+        //model.getTableId()
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSave")==0) {
             metaObjectService.saveObject(model.getTableId(), object);
         }

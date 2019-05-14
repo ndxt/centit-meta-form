@@ -126,7 +126,6 @@ public class MetaFormModelController extends BaseController{
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 
-    //TODO 请完善下面两个接口
     @ApiOperation(value = "修改模板内容")
     @RequestMapping(value = "/{modelId}/template", method = {RequestMethod.PUT})
     @WrapUpResponseBody
@@ -146,5 +145,12 @@ public class MetaFormModelController extends BaseController{
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(formOptjs));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
+    }
+
+    @ApiOperation(value = "删除模板事件操作")
+    @RequestMapping(value = "/{modelId}/optjs", method = {RequestMethod.DELETE})
+    @WrapUpResponseBody
+    public void deleteFormOptJs(@PathVariable String modelId) {
+        metaFormModelMag.deleteFormOptJs(modelId);
     }
 }

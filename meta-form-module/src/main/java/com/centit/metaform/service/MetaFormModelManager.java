@@ -25,4 +25,5 @@ public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel,ja
 
     JSONArray addTableNameToList(JSONArray listObjects);
 
+    void deleteFormOptJs(String modelId);
 }
