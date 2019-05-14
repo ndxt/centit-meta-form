@@ -196,6 +196,11 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject parameters = JSON.parseObject(jsonString);
         Map<String, Object> object = metaObjectService.getObjectById(model.getTableId(), parameters);
+
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeSubmit")!=0){
+            throw new ObjectException("beforeSubmit 执行错误！" + jsonString);
+        }
+
         Object flowInstId = object.get("flowInstId");
         if(flowInstId == null){
             //TODO create flow instance
@@ -210,6 +215,7 @@ public class MetaFormController extends BaseController {
                 object.put("flowInstId", obj.getData("flowInstId"));
                 metaObjectService.updateObjectByProperties(model.getTableId(),
                         CollectionsOpt.createList("flowInstId","nodeInstId"), object);
+                // TODO 设置流程变量
             } catch (Exception e) {
                 throw new ObjectException(e);
             }
@@ -218,6 +224,7 @@ public class MetaFormController extends BaseController {
             if(nodeInstId == null){
                 throw new ObjectException(WorkflowException.NodeInstNotFound,"找不到对应的节点实例号！" + jsonString);
             }
+            // TODO 设置流程变量
             // TODO submit flow
             flowEngineClient.submitOpt(nodeInstId , WebOptUtils.getCurrentUserCode(request),
                     WebOptUtils.getCurrentUnitCode(request), null, null);
