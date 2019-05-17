@@ -31,7 +31,7 @@ public class MetaFormModel implements java.io.Serializable {
     @Id
     @Column(name = "MODEL_ID")
     //@GeneratedValue(generator = "paymentableGenerator")
-    @ValueGenerator(strategy = GeneratorType.UUID)
+    @ValueGenerator(strategy = GeneratorType.UUID22)
     //@GenericGenerator(name = "paymentableGenerator", strategy = "assigned")
     private String modelId;
 
