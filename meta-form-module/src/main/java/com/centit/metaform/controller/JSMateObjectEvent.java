@@ -8,18 +8,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.script.ScriptException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 public class JSMateObjectEvent {
 
-    protected static final Logger logger = LoggerFactory.getLogger(JSMateObjectEvent.class);
+    private static final Logger logger = LoggerFactory.getLogger(JSMateObjectEvent.class);
     private MetaObjectService metaObjectService;
-    protected JSRuntimeContext jsRuntimeContext;
-    protected String javaScript;
+    private JSRuntimeContext jsRuntimeContext;
+    private HttpServletRequest request;
+    private String javaScript;
 
-    public JSMateObjectEvent(MetaObjectService metaObjectService, String js){
+    public JSMateObjectEvent(MetaObjectService metaObjectService, String js, HttpServletRequest request){
         this.metaObjectService = metaObjectService;
         this.javaScript = js;
+        this.request = request;
     }
 
     /**
@@ -37,7 +40,7 @@ public class JSMateObjectEvent {
             jsRuntimeContext.compileScript(javaScript);
         }
         try {
-            Object retObj = jsRuntimeContext.callJsFunc(eventFunc, metaObjectService, bizModel);
+            Object retObj = jsRuntimeContext.callJsFunc(eventFunc, this, bizModel);
             return NumberBaseOpt.castObjectToInteger(retObj, 0);
         } catch (ScriptException e) {
             logger.error(e.getMessage());
@@ -52,4 +55,19 @@ public class JSMateObjectEvent {
         this.jsRuntimeContext = jsRuntimeContext;
     }
 
+    public MetaObjectService getMetaObjectService() {
+        return metaObjectService;
+    }
+
+    public Object getRequestAttribute(String name){
+        return this.request.getAttribute(name);
+    }
+
+    public Object getSessionAttribute(String name){
+        return this.request.getSession().getAttribute(name);
+    }
+
+    public void setSessionAttribute(String name, Object value){
+        this.request.getSession().setAttribute(name, value);
+    }
 }

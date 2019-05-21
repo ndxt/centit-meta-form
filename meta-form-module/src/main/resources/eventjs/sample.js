@@ -1,19 +1,19 @@
 
 
-function beforeUpdate(metaObjectService, entity){
+function beforeUpdate(mateObjectEvent, entity){
     return 0;
 }
 
-function beforeSave(metaObjectService, entity){
+function beforeSave(mateObjectEvent, entity){
     //metaObjectService.
     entity.user = 'hi';
     return 0;
 }
 
-function beforeDelete(metaObjectService, entity){
+function beforeDelete(mateObjectEvent, entity){
     return 0;
 }
 
-function beforeSubmit(metaObjectService, entity){
+function beforeSubmit(mateObjectEvent, entity){
     return 0;
 }

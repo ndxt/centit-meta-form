@@ -60,11 +60,11 @@ public class MetaFormController extends BaseController {
     @Autowired(required=false)
     private ESSearcher esObjectSearcher;
 
-    private int runJSEvent(String js, Map<String, Object> object, String event){
+    private int runJSEvent(String js, Map<String, Object> object, String event, HttpServletRequest request){
         if(StringUtils.isBlank(js)){
             return 0;
         }
-        JSMateObjectEvent jsMateObjectEvent = new JSMateObjectEvent(metaObjectService, js);
+        JSMateObjectEvent jsMateObjectEvent = new JSMateObjectEvent(metaObjectService, js, request);
         return jsMateObjectEvent.runEvent(event,object);
     }
 
@@ -178,7 +178,7 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         //model.getTableId()
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeSave")==0) {
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeSave", request)==0) {
             metaObjectService.saveObject(model.getTableId(), object);
         }
         // 添加索引
@@ -192,7 +192,7 @@ public class MetaFormController extends BaseController {
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete")==0) {
+        if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete", request)==0) {
             metaObjectService.deleteObject(model.getTableId(), parameters);
         }
 
@@ -210,7 +210,7 @@ public class MetaFormController extends BaseController {
                              HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate")==0) {
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request)==0) {
             metaObjectService.updateObject(model.getTableId(), object);
         }
         // 更改索引
@@ -250,7 +250,7 @@ public class MetaFormController extends BaseController {
                                          HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate")==0) {
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request)==0) {
             metaObjectService.updateObjectWithChildren(model.getTableId(), object);
         }
         // 更改索引
@@ -265,7 +265,7 @@ public class MetaFormController extends BaseController {
                                        HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeSave")==0) {
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeSave", request)==0) {
             metaObjectService.saveObjectWithChildren(model.getTableId(), object);
         }
         // 添加索引
@@ -279,7 +279,7 @@ public class MetaFormController extends BaseController {
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete")==0) {
+        if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete", request)==0) {
             metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters);
         }
         // 删除索引
@@ -309,7 +309,7 @@ public class MetaFormController extends BaseController {
         JSONObject parameters = JSON.parseObject(jsonString);
         Map<String, Object> object = metaObjectService.getObjectById(model.getTableId(), parameters);
 
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeSubmit")!=0){
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeSubmit", request)!=0){
             throw new ObjectException("beforeSubmit 执行错误！" + jsonString);
         }
 
