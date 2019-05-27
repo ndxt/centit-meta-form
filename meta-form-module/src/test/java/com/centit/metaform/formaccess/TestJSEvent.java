@@ -19,6 +19,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -40,11 +41,11 @@ public class TestJSEvent {
     private MetaObjectService metaObjectService;
 
     @Test
-    public void test(){
+    public void test(HttpServletRequest request){
         try(InputStream resource = TestJSEvent
                 .class.getResourceAsStream("/eventjs/sample.js")){
             String js = FileIOOpt.readStringFromInputStream(resource);
-            JSMateObjectEvent jsMateObjectEvent = new JSMateObjectEvent(metaObjectService, js);
+            JSMateObjectEvent jsMateObjectEvent = new JSMateObjectEvent(metaObjectService, js, request);
             Map<String,Object> object = CollectionsOpt.createHashMap("hello","js");
             int n = jsMateObjectEvent.runEvent("beforeSave",object);
             System.out.println(JSON.toJSONString(object));
