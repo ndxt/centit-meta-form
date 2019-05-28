@@ -1,5 +1,6 @@
 package com.centit.metaform.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.DataPowerFilter;
 import com.centit.framework.model.basedata.IUserUnit;
@@ -35,18 +36,18 @@ public  class QueryDataScopeFilterImpl implements QueryDataScopeFilter {
      */
     @Override
     @Transactional
-    public DataPowerFilter createUserDataPowerFilter(
-            CentitUserDetails userDetails) {
+    public DataPowerFilter createUserDataPowerFilter(JSONObject userInfo, String currentUnit) {
         DataPowerFilter dpf = new DataPowerFilter();
         //当前用户信息
-        dpf.addSourceData("currentUser", userDetails.getUserInfo());
-        dpf.addSourceData("currentStation", userDetails.getCurrentStation());
+        dpf.addSourceData("currentUser", userInfo);
+        dpf.addSourceData("currentStation", currentUnit);
         //当前用户主机构信息
+        String userCode = userInfo.getString("userCode");
         dpf.addSourceData("primaryUnit", CodeRepositoryUtil
-                .getUnitInfoByCode(userDetails.getUserInfo().getString("primaryUnit")));
+                .getUnitInfoByCode(userInfo.getString("primaryUnit")));
         //当前用户所有机构关联关系信息
         List<? extends IUserUnit>  userUnits = CodeRepositoryUtil
-              .listUserUnits(userDetails.getUserCode());
+              .listUserUnits(userCode);
         if(userUnits!=null) {
             dpf.addSourceData("userUnits", userUnits);
             Map<String, List<IUserUnit>> rankUnits = new HashMap<>(5);
@@ -70,7 +71,7 @@ public  class QueryDataScopeFilterImpl implements QueryDataScopeFilter {
             dpf.addSourceData("stationUnits", stationUnits);
         }
         //当前用户的角色信息
-        dpf.addSourceData("userRoles", userDetails.getUserRoles());
+        dpf.addSourceData("userRoles", CodeRepositoryUtil.listUserRoles(userCode));
         return dpf;
     }
 }

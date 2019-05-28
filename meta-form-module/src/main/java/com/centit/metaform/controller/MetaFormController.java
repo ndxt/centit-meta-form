@@ -8,6 +8,7 @@ import com.centit.framework.common.ObjectException;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
+import com.centit.framework.core.dao.DataPowerFilter;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
@@ -21,7 +22,10 @@ import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.compiler.Lexer;
 import com.centit.support.compiler.Pretreatment;
+import com.centit.support.database.utils.FieldType;
 import com.centit.support.database.utils.PageDesc;
+import com.centit.support.database.utils.QueryAndNamedParams;
+import com.centit.support.database.utils.QueryUtils;
 import com.centit.workflow.client.service.FlowEngineClient;
 import com.centit.workflow.commons.WorkflowException;
 import io.swagger.annotations.Api;
@@ -37,6 +41,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,29 +85,42 @@ public class MetaFormController extends BaseController {
                                                String [] fields, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        //model.getTableId()
+        MetaTable table = metaObjectService.getTableInfo(model.getTableId());
+        String optId = FieldType.mapClassName(table.getTableName());
+
+        List<String> filters = queryDataScopeFilter.listUserDataFiltersByOptIdAndMethod(
+                WebOptUtils.getCurrentUserCode(request), optId, "list");
 
         String sql = model.getDataFilterSql();
-
-        if(StringUtils.isBlank(sql)) {
-            //if(fields !=null && fields.length>0) {
-                JSONArray ja = metaObjectService.pageQueryObjects(
-                        model.getTableId(), params, fields, pageDesc);
-                return PageQueryResult.createJSONArrayResult(ja, pageDesc);
-            /*}else{
-                JSONArray ja = metaObjectService.pageQueryObjects(
-                        model.getTableId(), params, pageDesc);
-                return PageQueryResult.createJSONArrayResult(ja, pageDesc);
-            }*/
-        }
-        if(StringUtils.equalsIgnoreCase("select",Lexer.getFirstWord(sql))) {
+        if(StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select",Lexer.getFirstWord(sql))) {
+            DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
+                    WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
+            dataPowerFilter.addSourceDatas(params);
+            QueryAndNamedParams qap = dataPowerFilter.translateQuery(sql, filters);
             JSONArray ja = metaObjectService.pageQueryObjects(
-                    model.getTableId(), sql, params, pageDesc);
+                    model.getTableId(), qap.getQuery(), qap.getParams(), pageDesc);
             return PageQueryResult.createJSONArrayResult(ja, pageDesc);
         }
+
+        if(StringUtils.isNotBlank(sql)) {
+            fields = sql.split(",");
+        }
+        String extFilter = null;
+        if(filters !=null) {
+            DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
+                    WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
+            dataPowerFilter.addSourceDatas(params);
+            Map<String, String> tableAlias = new HashMap<>(3);
+            tableAlias.put(table.getTableName(),"");
+            QueryAndNamedParams qap = dataPowerFilter.translateQueryFilter(
+                    tableAlias, filters) ;
+            params.putAll(qap.getParams());
+            extFilter = qap.getQuery();
+        }
         JSONArray ja = metaObjectService.pageQueryObjects(
-                model.getTableId(), params, sql.split(","), pageDesc);
+                model.getTableId(), extFilter, params, fields, pageDesc);
         return PageQueryResult.createJSONArrayResult(ja, pageDesc);
+
     }
 
     @ApiOperation(value = "获取一个数据，主键作为参数以key-value形式提交")

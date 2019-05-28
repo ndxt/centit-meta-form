@@ -1,7 +1,7 @@
 package com.centit.metaform.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.core.dao.DataPowerFilter;
-import com.centit.framework.security.model.CentitUserDetails;
 
 import java.util.List;
 
@@ -25,8 +25,9 @@ public interface QueryDataScopeFilter {
      (String sUserCode, String sOptid, String sOptMethod);
     /**
      * 创建用户数据范围过滤器，和上面的方法结合使用
-     * @param userDetails CentitUserDetails
+     * @param userInfo CentitUserDetails
+     * @param currentUnit 当前机构
      * @return DataPowerFilter
      */
-     DataPowerFilter createUserDataPowerFilter(CentitUserDetails userDetails);
+     DataPowerFilter createUserDataPowerFilter(JSONObject userInfo, String currentUnit);
 }
