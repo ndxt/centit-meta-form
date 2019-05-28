@@ -124,12 +124,6 @@ public class MetaFormModel implements java.io.Serializable {
         return JSONObject.parseObject(formTemplate);
     }
 
-    public JSONObject getExtendOptJson() {
-        if(StringUtils.isBlank(extendOptJs)) {
-            return null;
-        }
-        return JSONObject.parseObject(extendOptJs);
-    }
     // Constructors
     /** default constructor */
     public MetaFormModel() {
