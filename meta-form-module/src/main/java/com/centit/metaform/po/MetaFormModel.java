@@ -125,10 +125,10 @@ public class MetaFormModel implements java.io.Serializable {
     }
 
     // Constructors
-    /** default constructor */
+    /* default constructor */
     public MetaFormModel() {
     }
-    /** minimal constructor */
+    /* minimal constructor */
     public MetaFormModel(
         String modelId
         ,String  modelName) {
@@ -136,7 +136,7 @@ public class MetaFormModel implements java.io.Serializable {
         this.modelName= modelName;
     }
 
-    /** full constructor */
+    /* full constructor */
     public MetaFormModel(String modelId, String tableId,
                          String modelComment, String modelName, String accessType,
                          String formTemplate, Date lastModifyDate, String recorder,
