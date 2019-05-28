@@ -156,14 +156,14 @@ public class MetaFormModel implements java.io.Serializable {
         this.dataFilterSql = dataFilterSql;
         this.relFlowCode = relFlowCode;
         this.modeOptUrl = modeOptUrl;
-        this.childFormModels = new HashSet<MetaFormModel>();
+        this.childFormModels = new HashSet<>();
     }
 
 
 
     public Set<MetaFormModel> getMetaFormModels(){
         if(this.childFormModels==null)
-            this.childFormModels = new HashSet<MetaFormModel>();
+            this.childFormModels = new HashSet<>();
         return this.childFormModels;
     }
 
@@ -173,7 +173,7 @@ public class MetaFormModel implements java.io.Serializable {
 
     public void addMetaFormModel(MetaFormModel metaFormModel ){
         if (this.childFormModels==null)
-            this.childFormModels = new HashSet<MetaFormModel>();
+            this.childFormModels = new HashSet<>();
         this.childFormModels.add(metaFormModel);
     }
 
