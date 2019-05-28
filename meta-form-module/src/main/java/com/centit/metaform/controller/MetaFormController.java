@@ -11,6 +11,7 @@ import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
+import com.centit.metaform.service.QueryDataScopeFilter;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.search.document.ObjectDocument;
@@ -54,6 +55,9 @@ public class MetaFormController extends BaseController {
     @Autowired
     private FlowEngineClient flowEngineClient;
 
+    @Autowired
+    private QueryDataScopeFilter queryDataScopeFilter;
+
     @Autowired(required=false)
     private ESIndexer esObjectIndexer;
 
@@ -76,6 +80,8 @@ public class MetaFormController extends BaseController {
                                                String [] fields, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        //model.getTableId()
+
         String sql = model.getDataFilterSql();
 
         if(StringUtils.isBlank(sql)) {

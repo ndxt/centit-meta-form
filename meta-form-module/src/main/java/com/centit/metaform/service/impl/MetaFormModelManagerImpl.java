@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,6 @@ public class MetaFormModelManagerImpl
     implements MetaFormModelManager{
 
     public static final Log log = LogFactory.getLog(MetaFormModelManager.class);
-
 
     @Autowired
     private MetaFormModelDao metaFormModelDao ;
