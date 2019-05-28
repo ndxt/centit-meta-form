@@ -25,7 +25,6 @@ import com.centit.support.compiler.Pretreatment;
 import com.centit.support.database.utils.FieldType;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.support.database.utils.QueryAndNamedParams;
-import com.centit.support.database.utils.QueryUtils;
 import com.centit.workflow.client.service.FlowEngineClient;
 import com.centit.workflow.commons.WorkflowException;
 import io.swagger.annotations.Api;

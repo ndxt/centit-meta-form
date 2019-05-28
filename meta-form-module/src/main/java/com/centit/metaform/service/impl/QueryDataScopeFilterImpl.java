@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.DataPowerFilter;
 import com.centit.framework.model.basedata.IUserUnit;
-import com.centit.framework.security.model.CentitUserDetails;
 import com.centit.metaform.service.QueryDataScopeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
