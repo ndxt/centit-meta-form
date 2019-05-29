@@ -165,30 +165,42 @@ public class MetaFormController extends BaseController {
     private void saveFulltextIndex(Map<String, Object> obj, String tableId, HttpServletRequest request){
         MetaTable metaTable = metaObjectService.getTableInfo(tableId);
         if(metaTable != null && "T".equals(metaTable.getFulltextSearch())) {
-            esObjectIndexer.saveNewDocument(
+            try {
+                esObjectIndexer.saveNewDocument(
                     mapObjectToDocument(obj, metaTable,
                             WebOptUtils.getCurrentUserCode(request),
                             WebOptUtils.getCurrentUnitCode(request)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void deleteFulltextIndex(Map<String, Object> obj, String tableId){
         MetaTable metaTable = metaObjectService.getTableInfo(tableId);
         if(metaTable != null && "T".equals(metaTable.getFulltextSearch())) {
-            esObjectIndexer.deleteDocument(
-                    mapObjectToDocument(obj, metaTable,"",""));
+            try {
+                esObjectIndexer.deleteDocument(
+                        mapObjectToDocument(obj, metaTable, "", ""));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void updataFulltextIndex(Map<String, Object> obj, String tableId, HttpServletRequest request){
         MetaTable metaTable = metaObjectService.getTableInfo(tableId);
         if(metaTable != null && "T".equals(metaTable.getFulltextSearch())) {
-            Map<String, Object> dbObject =
-                metaObjectService.getObjectWithChildren(tableId, obj, 1);
-            esObjectIndexer.mergeDocument(
-                    mapObjectToDocument(dbObject, metaTable,
-                            WebOptUtils.getCurrentUserCode(request),
-                            WebOptUtils.getCurrentUnitCode(request)));
+            try {
+                Map<String, Object> dbObject =
+                        metaObjectService.getObjectWithChildren(tableId, obj, 1);
+                esObjectIndexer.mergeDocument(
+                        mapObjectToDocument(dbObject, metaTable,
+                                WebOptUtils.getCurrentUserCode(request),
+                                WebOptUtils.getCurrentUnitCode(request)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

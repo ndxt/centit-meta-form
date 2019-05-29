@@ -121,7 +121,12 @@ public class MetaFormModel implements java.io.Serializable {
         if(StringUtils.isBlank(formTemplate)) {
             return null;
         }
-        return JSONObject.parseObject(formTemplate);
+        try {
+            return JSONObject.parseObject(formTemplate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  null;
+        }
     }
 
     // Constructors
