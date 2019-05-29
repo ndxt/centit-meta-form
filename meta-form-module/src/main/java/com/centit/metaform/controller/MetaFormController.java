@@ -84,11 +84,9 @@ public class MetaFormController extends BaseController {
                                                String [] fields, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        MetaTable table = metaObjectService.getTableInfo(model.getTableId());
-        String optId = FieldType.mapClassName(table.getTableName());
-
+        //String optId = FieldType.mapClassName(table.getTableName());
         List<String> filters = queryDataScopeFilter.listUserDataFiltersByOptIdAndMethod(
-                WebOptUtils.getCurrentUserCode(request), optId, "list");
+                WebOptUtils.getCurrentUserCode(request), modelId, "list");
 
         String sql = model.getDataFilterSql();
         if(StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select",Lexer.getFirstWord(sql))) {
@@ -106,6 +104,7 @@ public class MetaFormController extends BaseController {
         }
         String extFilter = null;
         if(filters !=null) {
+            MetaTable table = metaObjectService.getTableInfo(model.getTableId());
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceDatas(params);
