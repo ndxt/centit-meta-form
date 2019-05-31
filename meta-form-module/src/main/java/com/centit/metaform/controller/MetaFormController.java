@@ -20,11 +20,12 @@ import com.centit.search.document.ObjectDocument;
 import com.centit.search.service.Impl.ESIndexer;
 import com.centit.search.service.Impl.ESSearcher;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.GeneralAlgorithm;
 import com.centit.support.algorithm.NumberBaseOpt;
-import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.compiler.Lexer;
 import com.centit.support.compiler.Pretreatment;
+import com.centit.support.database.metadata.TableInfo;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.support.database.utils.QueryAndNamedParams;
 import com.centit.workflow.client.service.FlowEngineClient;
@@ -223,7 +224,7 @@ public class MetaFormController extends BaseController {
 
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+        if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
                     modelId,JSON.toJSONString(primaryKey),"save","保存新的数据对象", object);
         }
@@ -238,7 +239,7 @@ public class MetaFormController extends BaseController {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
-        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp());
+        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getWriteOptLog());
         Map<String, Object> dbObject = null;
 
         if(writeLog) {
@@ -258,6 +259,15 @@ public class MetaFormController extends BaseController {
         }
     }
 
+    private void checkUpdateTimeStamp(Map<String, Object> dbObject, Map<String, Object> object){
+        Object oldDate = dbObject.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
+        Object newDate = object.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
+        if(!GeneralAlgorithm.equals(oldDate, newDate)){
+            throw new ObjectException(CollectionsOpt.createHashMap(
+                    "yourTimeStamp",newDate,"databaseTimeStamp",oldDate),
+                    ObjectException.DATABASE_OUT_SYNC_EXCEPTION,"更新数据对象时，数据版本不同步。");
+        }
+    }
 
 
     @ApiOperation(value = "修改表单数据")
@@ -269,10 +279,15 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
-        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp());
+        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getWriteOptLog());
+        boolean needCheck = StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp());
         Map<String, Object> dbObject = null;
-        if(writeLog) {
+        if(writeLog || needCheck) {
             dbObject = metaObjectService.getObjectById(model.getTableId(), object);
+        }
+
+        if(needCheck){
+            checkUpdateTimeStamp(dbObject, object);
         }
 
         if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request)==0) {
@@ -303,7 +318,7 @@ public class MetaFormController extends BaseController {
         updataFulltextIndex(object, model.getTableId(), request);
 
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
-        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+        if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
             OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
                     modelId,JSON.toJSONString(primaryKey),"change","修改数据指定字段",params, null);
@@ -329,13 +344,17 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
-        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp());
+        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getWriteOptLog());
         Map<String, Object> dbObject = null;
 
         if(writeLog) {
             dbObject = metaObjectService.getObjectWithChildren(model.getTableId(), object, 1);
         }
 
+        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+            dbObject = metaObjectService.getObjectById(model.getTableId(), object);
+            checkUpdateTimeStamp(dbObject, object);
+        }
 
         if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request)==0) {
             metaObjectService.updateObjectWithChildren(model.getTableId(), object);
@@ -366,7 +385,7 @@ public class MetaFormController extends BaseController {
 
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+        if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
                     modelId,JSON.toJSONString(primaryKey),"save","保存新的数据对象（包括子对象）", object);
         }
@@ -382,7 +401,7 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
 
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
-        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp());
+        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getWriteOptLog());
         Map<String, Object> dbObject = null;
 
         if(writeLog) {
@@ -461,7 +480,7 @@ public class MetaFormController extends BaseController {
 
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+        if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
                     modelId,JSON.toJSONString(primaryKey),"submit","提交流程", object);
         }
