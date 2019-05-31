@@ -17,43 +17,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers-common:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-backward-codecs:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-grouping:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-highlighter:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-join:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-memory:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-misc:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queries:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queryparser:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-sandbox:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spatial:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spatial-extras:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spatial3d:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-suggest:7.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch:elasticsearch-cli:6.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch.plugin:transport-netty4-client:6.6.0" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.32.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.32.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.32.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.32.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.32.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.32.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.32.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch.plugin:reindex-client:6.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch.plugin:lang-mustache-client:6.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch.plugin:percolator-client:6.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch.plugin:parent-join-client:6.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch.plugin:rank-eval-client:6.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch.client:elasticsearch-rest-high-level-client:6.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch.client:elasticsearch-rest-client:6.6.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.5" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpasyncclient:4.1.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore-nio:4.4.5" level="project" />
-    <orderEntry type="library" name="Maven: org.elasticsearch.plugin:aggs-matrix-stats-client:6.6.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.xml.bind:jaxb-core:2.3.0.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.xml.bind:jaxb-impl:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.centit.product:business-operation-core:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.6" level="project" />
@@ -83,7 +46,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:rt:1.8">
         <CLASSES>
-          <root url="jar://D:/jdk8/jre/lib/rt.jar!/" />
+          <root url="jar:///opt/develop/jvm/jdk1.8.0_201/jre/lib/rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -92,7 +55,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:jce:1.8">
         <CLASSES>
-          <root url="jar://D:/jdk8/jre/lib/jce.jar!/" />
+          <root url="jar:///opt/develop/jvm/jdk1.8.0_201/jre/lib/jce.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -253,6 +216,8 @@
     <orderEntry type="library" name="Maven: org.apache.uima:uimaj-core:3.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.bitbucket.mstrobel:procyon-compilertools:0.5.32" level="project" />
     <orderEntry type="library" name="Maven: org.bitbucket.mstrobel:procyon-core:0.5.32" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.xml.bind:jaxb-core:2.3.0.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.xml.bind:jaxb-impl:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.jdom:jdom2:2.0.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.7" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.7" level="project" />
@@ -277,7 +242,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.8">
         <CLASSES>
-          <root url="jar://D:/jdk8/lib/tools.jar!/" />
+          <root url="jar:///opt/develop/jvm/jdk1.8.0_201/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

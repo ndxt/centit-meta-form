@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.appclient.HttpReceiveJSON;
 import com.centit.framework.common.ObjectException;
 import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DataPowerFilter;
@@ -20,9 +21,10 @@ import com.centit.search.service.Impl.ESIndexer;
 import com.centit.search.service.Impl.ESSearcher;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.algorithm.StringRegularOpt;
 import com.centit.support.compiler.Lexer;
 import com.centit.support.compiler.Pretreatment;
-import com.centit.support.database.utils.FieldType;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.support.database.utils.QueryAndNamedParams;
 import com.centit.workflow.client.service.FlowEngineClient;
@@ -126,6 +128,7 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     public Map<String, Object> getObject(@PathVariable String modelId,
                                                HttpServletRequest request) {
+
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         return metaObjectService.getObjectById(model.getTableId(), parameters);
@@ -206,7 +209,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "新增表单数据")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.POST)
     @WrapUpResponseBody
-    public void saveObject(@PathVariable String modelId,
+    public Map<String, Object> saveObject(@PathVariable String modelId,
                                           @RequestBody String jsonString,
                            HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
@@ -217,6 +220,14 @@ public class MetaFormController extends BaseController {
         }
         // 添加索引
         saveFulltextIndex(object,model.getTableId(),request);
+
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
+        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+            OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
+                    modelId,JSON.toJSONString(primaryKey),"save","保存新的数据对象", object);
+        }
+        return primaryKey;
     }
 
     @ApiOperation(value = "删除表单数据")
@@ -226,12 +237,25 @@ public class MetaFormController extends BaseController {
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp());
+        Map<String, Object> dbObject = null;
+
+        if(writeLog) {
+            dbObject = metaObjectService.getObjectById(model.getTableId(), parameters);
+        }
+
         if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete", request)==0) {
             metaObjectService.deleteObject(model.getTableId(), parameters);
         }
-
         // 删除索引
         deleteFulltextIndex(parameters,model.getTableId());
+
+        if(writeLog){
+            Map<String, Object> primaryKey = tableInfo.fetchObjectPk(parameters);
+            OperationLogCenter.logDeleteObject(WebOptUtils.getCurrentUserCode(request),
+                    modelId,JSON.toJSONString(primaryKey),"delete","删除数据对象", dbObject);
+        }
     }
 
 
@@ -244,12 +268,26 @@ public class MetaFormController extends BaseController {
                              HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp());
+        Map<String, Object> dbObject = null;
+        if(writeLog) {
+            dbObject = metaObjectService.getObjectById(model.getTableId(), object);
+        }
+
         if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request)==0) {
             metaObjectService.updateObject(model.getTableId(), object);
         }
         // 更改索引
         updataFulltextIndex(object, model.getTableId(), request);
+
+        if(writeLog){
+            Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
+            OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
+                    modelId,JSON.toJSONString(primaryKey),"update","修改数据对象",object, dbObject);
+        }
     }
+
 
     @ApiOperation(value = "修改表单指定字段")
     @RequestMapping(value = "/{modelId}/change", method = RequestMethod.PUT)
@@ -261,9 +299,15 @@ public class MetaFormController extends BaseController {
         JSONObject object = JSON.parseObject(jsonString);
         object.putAll(params);
         metaObjectService.updateObjectByProperties(model.getTableId(), params.keySet(), object);
-
         // 更改索引
         updataFulltextIndex(object, model.getTableId(), request);
+
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+            Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
+            OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
+                    modelId,JSON.toJSONString(primaryKey),"change","修改数据指定字段",params, null);
+        }
     }
 
     @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
@@ -284,17 +328,32 @@ public class MetaFormController extends BaseController {
                                          HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp());
+        Map<String, Object> dbObject = null;
+
+        if(writeLog) {
+            dbObject = metaObjectService.getObjectWithChildren(model.getTableId(), object, 1);
+        }
+
+
         if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request)==0) {
             metaObjectService.updateObjectWithChildren(model.getTableId(), object);
         }
         // 更改索引
         updataFulltextIndex(object, model.getTableId(), request);
+
+        if(writeLog){
+            Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
+            OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
+                    modelId,JSON.toJSONString(primaryKey),"update","修改数据对象（子对象）",object, dbObject);
+        }
     }
 
     @ApiOperation(value = "新增表单数据带子表")
     @RequestMapping(value = "/{modelId}/withChildren", method = RequestMethod.POST)
     @WrapUpResponseBody
-    public void saveObjectWithChildren(@PathVariable String modelId,
+    public Map<String, Object> saveObjectWithChildren(@PathVariable String modelId,
                                    @RequestBody String jsonString,
                                        HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
@@ -304,6 +363,14 @@ public class MetaFormController extends BaseController {
         }
         // 添加索引
         saveFulltextIndex(object,model.getTableId(),request);
+
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
+        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+            OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
+                    modelId,JSON.toJSONString(primaryKey),"save","保存新的数据对象（包括子对象）", object);
+        }
+        return primaryKey;
     }
 
     @ApiOperation(value = "删除表单数据带子表")
@@ -313,11 +380,26 @@ public class MetaFormController extends BaseController {
                                      HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp());
+        Map<String, Object> dbObject = null;
+
+        if(writeLog) {
+            dbObject = metaObjectService.getObjectById(model.getTableId(), parameters);
+        }
+
         if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete", request)==0) {
             metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters);
         }
         // 删除索引
         deleteFulltextIndex(parameters,model.getTableId());
+
+        if(writeLog){
+            Map<String, Object> primaryKey = tableInfo.fetchObjectPk(parameters);
+            OperationLogCenter.logDeleteObject(WebOptUtils.getCurrentUserCode(request),
+                    modelId,JSON.toJSONString(primaryKey),"delete","删除数据对象（包括子对象）", dbObject);
+        }
     }
 
     /**
@@ -334,9 +416,9 @@ public class MetaFormController extends BaseController {
      * @param jsonString 模块对象对应的主键
      */
     @ApiOperation(value = "提交工作流")
-    @RequestMapping(value = "/{modelId}/submit", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{modelId}/submit", method = RequestMethod.POST)
     @WrapUpResponseBody
-    public void submitFlow(@PathVariable String modelId,
+    public Map<String, Object> submitFlow(@PathVariable String modelId,
                            @RequestBody String jsonString,
                            HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
@@ -358,15 +440,16 @@ public class MetaFormController extends BaseController {
                         WebOptUtils.getCurrentUserCode(request),
                         WebOptUtils.getCurrentUnitCode(request));
                 HttpReceiveJSON obj = HttpReceiveJSON.valueOfJson(json);
-                object.put("flowInstId", obj.getData("flowInstId"));
+                object.put(MetaTable.WORKFLOW_INST_ID_PROP, obj.getData(MetaTable.WORKFLOW_INST_ID_PROP));
                 metaObjectService.updateObjectByProperties(model.getTableId(),
-                        CollectionsOpt.createList("flowInstId","nodeInstId"), object);
+                        CollectionsOpt.createList(
+                                MetaTable.WORKFLOW_INST_ID_PROP,MetaTable.WORKFLOW_NODE_INST_ID_PROP), object);
                 // TODO 设置流程变量
             } catch (Exception e) {
                 throw new ObjectException(e);
             }
         } else {
-            Long nodeInstId = NumberBaseOpt.castObjectToLong(object.get("nodeInstId"));
+            Long nodeInstId = NumberBaseOpt.castObjectToLong(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
             if(nodeInstId == null){
                 throw new ObjectException(WorkflowException.NodeInstNotFound,"找不到对应的节点实例号！" + jsonString);
             }
@@ -375,6 +458,17 @@ public class MetaFormController extends BaseController {
             flowEngineClient.submitOpt(nodeInstId , WebOptUtils.getCurrentUserCode(request),
                     WebOptUtils.getCurrentUnitCode(request), null, null);
         }
+
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
+        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+            OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
+                    modelId,JSON.toJSONString(primaryKey),"submit","提交流程", object);
+        }
+
+        return CollectionsOpt.createHashMap(
+                MetaTable.WORKFLOW_INST_ID_PROP,object.get(MetaTable.WORKFLOW_INST_ID_PROP),
+                MetaTable.WORKFLOW_NODE_INST_ID_PROP,object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
     }
 
 }
