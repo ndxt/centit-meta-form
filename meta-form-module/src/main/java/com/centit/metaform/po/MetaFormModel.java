@@ -101,7 +101,9 @@ public class MetaFormModel implements java.io.Serializable {
     @Length(max = 800, message = "字段长度不能大于{max}")
     private String  modeOptUrl;
 
-    @OneToMany(mappedBy="metaFormModel",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = MetaFormModel.class, mappedBy="metaFormModel",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "MODEL_CODE", referencedColumnName = "MODEL_CODE")
 //    @OneToMany(mappedBy="parentModelCode",fetch = FetchType.EAGER)
 //    @JoinColumn(name = "MODEL_CODE", referencedColumnName = "PARENT_MODEL_CODE")
@@ -112,8 +114,9 @@ public class MetaFormModel implements java.io.Serializable {
     private String relationName;
 
     public String getRelationName() {
-        if (relationId != null && !"".equals(relationId))
-        relationName = this.modelName;
+        /*if (relationId != null && !"".equals(relationId)) {
+            relationName = this.modelName;
+        }*/
         return relationName;
     }
 
@@ -167,8 +170,9 @@ public class MetaFormModel implements java.io.Serializable {
 
 
     public Set<MetaFormModel> getMetaFormModels(){
-        if(this.childFormModels==null)
+        if(this.childFormModels==null) {
             this.childFormModels = new HashSet<>();
+        }
         return this.childFormModels;
     }
 
@@ -177,22 +181,19 @@ public class MetaFormModel implements java.io.Serializable {
     }
 
     public void addMetaFormModel(MetaFormModel metaFormModel ){
-        if (this.childFormModels==null)
+        if (this.childFormModels==null) {
             this.childFormModels = new HashSet<>();
+        }
         this.childFormModels.add(metaFormModel);
     }
 
     public void removeMetaFormModel(MetaFormModel metaFormModel ){
-        if (this.childFormModels==null)
+        if (this.childFormModels==null) {
             return;
+        }
         this.childFormModels.remove(metaFormModel);
     }
 
-    public MetaFormModel newMetaFormModel(){
-        MetaFormModel res = new MetaFormModel();
-
-        return res;
-    }
     /**
      * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
      *
@@ -202,13 +203,13 @@ public class MetaFormModel implements java.io.Serializable {
         for(MetaFormModel p :set){
             if(p==null)
                 continue;
-            MetaFormModel newdt = newMetaFormModel();
+            MetaFormModel newdt = new MetaFormModel();
             newdt.copyNotNullProperty(p);
             newObjs.add(newdt);
         }
         //delete
         boolean found = false;
-        Set<MetaFormModel> oldObjs = new HashSet<MetaFormModel>();
+        Set<MetaFormModel> oldObjs = new HashSet<>();
         oldObjs.addAll(getMetaFormModels());
 
         for(Iterator<MetaFormModel> it=oldObjs.iterator(); it.hasNext();){

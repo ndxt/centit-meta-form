@@ -14,7 +14,9 @@ import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.metaform.service.QueryDataScopeFilter;
+import com.centit.product.metadata.po.MetaRelation;
 import com.centit.product.metadata.po.MetaTable;
+import com.centit.product.metadata.service.MetaDataService;
 import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.search.document.ObjectDocument;
 import com.centit.search.service.Impl.ESIndexer;
@@ -60,6 +62,9 @@ public class MetaFormController extends BaseController {
     private MetaObjectService metaObjectService;
 
     @Autowired
+    private MetaDataService metaDataService;
+
+    @Autowired
     private FlowEngineClient flowEngineClient;
 
     @Autowired
@@ -79,6 +84,19 @@ public class MetaFormController extends BaseController {
         return jsMateObjectEvent.runEvent(event,object);
     }
 
+    @ApiOperation(value = "查询作为字表表单数据列表，不分页；传入的参数为父表的主键")
+    @RequestMapping(value = "/{modelId}/tabulation", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public JSONArray listObjectsAsTabulation(@PathVariable String modelId, HttpServletRequest request) {
+        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        Map<String, Object> parameters = collectRequestParameters(request);
+        MetaRelation relation = metaDataService.getMetaRelationById(model.getRelationId());
+        Map<String, Object> parentObject = metaObjectService
+                .getObjectById(relation.getParentTableId(), parameters);
+
+        return metaObjectService.listObjectsByProperties(relation.getChildTableId(),
+                relation.fetchObjectFk(parentObject));
+    }
 
     @ApiOperation(value = "分页查询表单数据列表")
     @RequestMapping(value = "/{modelId}/list", method = RequestMethod.GET)
@@ -105,6 +123,7 @@ public class MetaFormController extends BaseController {
         if(StringUtils.isNotBlank(sql)) {
             fields = sql.split(",");
         }
+
         String extFilter = null;
         if(filters !=null) {
             MetaTable table = metaObjectService.getTableInfo(model.getTableId());
