@@ -21,10 +21,7 @@ import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.search.document.ObjectDocument;
 import com.centit.search.service.Impl.ESIndexer;
 import com.centit.search.service.Impl.ESSearcher;
-import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.algorithm.GeneralAlgorithm;
-import com.centit.support.algorithm.NumberBaseOpt;
-import com.centit.support.algorithm.StringRegularOpt;
+import com.centit.support.algorithm.*;
 import com.centit.support.compiler.Lexer;
 import com.centit.support.compiler.Pretreatment;
 import com.centit.support.database.metadata.TableInfo;
@@ -234,6 +231,11 @@ public class MetaFormController extends BaseController {
                            HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
+
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+            object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
+        }
         //model.getTableId()
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSave", request)==0) {
             metaObjectService.saveObject(model.getTableId(), object);
@@ -241,7 +243,6 @@ public class MetaFormController extends BaseController {
         // 添加索引
         saveFulltextIndex(object,model.getTableId(),request);
 
-        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
@@ -286,6 +287,8 @@ public class MetaFormController extends BaseController {
                     "yourTimeStamp",newDate,"databaseTimeStamp",oldDate),
                     ObjectException.DATABASE_OUT_SYNC_EXCEPTION,"更新数据对象时，数据版本不同步。");
         }
+
+        object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
     }
 
 
@@ -396,13 +399,18 @@ public class MetaFormController extends BaseController {
                                        HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
+
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+            object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
+        }
+
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSave", request)==0) {
             metaObjectService.saveObjectWithChildren(model.getTableId(), object);
         }
         // 添加索引
         saveFulltextIndex(object,model.getTableId(),request);
 
-        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
