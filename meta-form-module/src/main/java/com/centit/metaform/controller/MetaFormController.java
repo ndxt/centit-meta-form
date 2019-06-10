@@ -14,6 +14,7 @@ import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.metaform.service.QueryDataScopeFilter;
+import com.centit.product.metadata.po.MetaColumn;
 import com.centit.product.metadata.po.MetaRelation;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataService;
@@ -29,6 +30,8 @@ import com.centit.support.database.utils.PageDesc;
 import com.centit.support.database.utils.QueryAndNamedParams;
 import com.centit.workflow.client.service.FlowEngineClient;
 import com.centit.workflow.commons.WorkflowException;
+import com.centit.workflow.po.FlowInstance;
+import com.centit.workflow.po.NodeInstance;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -448,6 +451,26 @@ public class MetaFormController extends BaseController {
         }
     }
 
+    // 这个 设置流程变量的时机 需要考虑，应该不仅仅实在 流程提交，在表单保存时也应该修改
+    private void setWorkflowVariables(MetaFormModel model, Map<String, Object> object) throws Exception {
+        //MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        Long flowInstId = NumberBaseOpt.castObjectToLong(object.get(MetaTable.WORKFLOW_INST_ID_PROP));
+        Long nodeInstId = NumberBaseOpt.castObjectToLong(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
+        List<MetaColumn> columns = metaDataService.listMetaColumns(model.getTableId());
+        for(MetaColumn col : columns) {
+            Object value = object.get(col.getColumnName());
+            if(value != null) {
+                if ("1".equals(col.getWorkFlowVariableType()) && flowInstId != null) {
+                    flowEngineClient.saveFlowVariable(flowInstId, col.getColumnName(),
+                            StringBaseOpt.castObjectToString(value));
+                } else if ("2".equals(col.getWorkFlowVariableType()) && nodeInstId != null) {
+                    flowEngineClient.saveFlowNodeVariable(nodeInstId, col.getColumnName(),
+                            StringBaseOpt.castObjectToString(value));
+                }
+            }
+        }
+    }
+
     /**
      * 提交工作流 ; 分两种情况
      * 一： 新建业务，操作流程为， 保存表单，提交流程，这时表单对应的表中flowInstId字段必然为空，所以:
@@ -477,20 +500,26 @@ public class MetaFormController extends BaseController {
 
         Object flowInstId = object.get("flowInstId");
         if(flowInstId == null){
-            //TODO create flow instance
+            // create flow instance
             try {
-                //TODO 这个接口需要修改，需要和 flowEngine 一致
-                String json = flowEngineClient.createInstance(model.getRelFlowCode(),
+                // 这个接口需要修改，需要和 flowEngine 一致
+                FlowInstance flowInstance = flowEngineClient.createInstance(model.getRelFlowCode(),
                         Pretreatment.mapTemplateString(model.getFlowOptTitle(),object),// 这边需要添加一个title表达式
                         jsonString,
                         WebOptUtils.getCurrentUserCode(request),
                         WebOptUtils.getCurrentUnitCode(request));
-                HttpReceiveJSON obj = HttpReceiveJSON.valueOfJson(json);
-                object.put(MetaTable.WORKFLOW_INST_ID_PROP, obj.getData(MetaTable.WORKFLOW_INST_ID_PROP));
+
+                object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
+                NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
+                if(nodeInstance != null) {
+                    object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstance.getNodeInstId());
+                }
                 metaObjectService.updateObjectByProperties(model.getTableId(),
                         CollectionsOpt.createList(
-                                MetaTable.WORKFLOW_INST_ID_PROP,MetaTable.WORKFLOW_NODE_INST_ID_PROP), object);
-                // TODO 设置流程变量
+                                MetaTable.WORKFLOW_INST_ID_PROP,
+                                MetaTable.WORKFLOW_NODE_INST_ID_PROP), object);
+                //  设置流程变量
+                setWorkflowVariables(model, object);
             } catch (Exception e) {
                 throw new ObjectException(e);
             }
@@ -499,10 +528,14 @@ public class MetaFormController extends BaseController {
             if(nodeInstId == null){
                 throw new ObjectException(WorkflowException.NodeInstNotFound,"找不到对应的节点实例号！" + jsonString);
             }
-            // TODO 设置流程变量
-            // TODO submit flow
-            flowEngineClient.submitOpt(nodeInstId , WebOptUtils.getCurrentUserCode(request),
-                    WebOptUtils.getCurrentUnitCode(request), null, null);
+            try {
+                setWorkflowVariables(model, object);
+                // submit flow
+                flowEngineClient.submitOpt(nodeInstId , WebOptUtils.getCurrentUserCode(request),
+                        WebOptUtils.getCurrentUnitCode(request), null, null);
+            } catch (Exception e) {
+                throw new ObjectException(e);
+            }
         }
 
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
