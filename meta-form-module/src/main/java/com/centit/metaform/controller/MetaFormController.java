@@ -379,7 +379,7 @@ public class MetaFormController extends BaseController {
         }
         for(String skey : object.keySet()){
             // 办件角色
-            if(skey.startsWith("_flowRole")){
+            if(skey.startsWith("flowRole")){
                 flowEngineClient.assignFlowWorkTeam(flowInstId, skey.substring(9),
                         StringBaseOpt.objectToStringList(object.get(skey)));
             }
