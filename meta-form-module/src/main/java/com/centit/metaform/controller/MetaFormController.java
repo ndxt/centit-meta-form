@@ -257,6 +257,19 @@ public class MetaFormController extends BaseController {
         return metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
     }
 
+    private void innerUpdateObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
+                                   Map<String, Object> dbObject, HttpServletRequest request ){
+        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+            checkUpdateTimeStamp(dbObject, object);
+        }
+
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request)==0) {
+            metaObjectService.updateObjectWithChildren(model.getTableId(), object);
+        }
+        // 更改索引
+        updataFulltextIndex(object, model.getTableId(), request);
+    }
+
     @ApiOperation(value = "修改表单数据带子表")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.PUT)
     @WrapUpResponseBody
@@ -268,27 +281,30 @@ public class MetaFormController extends BaseController {
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
         boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getWriteOptLog());
         Map<String, Object> dbObject = null;
-
-        if(writeLog) {
+        if(writeLog || StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())) {
             dbObject = metaObjectService.getObjectWithChildren(model.getTableId(), object, 1);
         }
-
-        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
-            dbObject = metaObjectService.getObjectById(model.getTableId(), object);
-            checkUpdateTimeStamp(dbObject, object);
-        }
-
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request)==0) {
-            metaObjectService.updateObjectWithChildren(model.getTableId(), object);
-        }
-        // 更改索引
-        updataFulltextIndex(object, model.getTableId(), request);
+        innerUpdateObject(model,tableInfo,object, dbObject, request);
 
         if(writeLog){
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
             OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
                     modelId,JSON.toJSONString(primaryKey),"update","修改数据对象（子对象）",object, dbObject);
         }
+    }
+
+    private void innerSaveObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
+                                 HttpServletRequest request ){
+
+        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+            object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
+        }
+
+        if(runJSEvent(model.getExtendOptJs(), object, "beforeSave", request)==0) {
+            metaObjectService.saveObjectWithChildren(model.getTableId(), object);
+        }
+        // 添加索引
+        saveFulltextIndex(object,model.getTableId(),request);
     }
 
     @ApiOperation(value = "新增表单数据带子表")
@@ -299,17 +315,8 @@ public class MetaFormController extends BaseController {
                                        HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
-
         MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
-        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
-            object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
-        }
-
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeSave", request)==0) {
-            metaObjectService.saveObjectWithChildren(model.getTableId(), object);
-        }
-        // 添加索引
-        saveFulltextIndex(object,model.getTableId(),request);
+        innerSaveObject(model,tableInfo,object,request);
 
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
@@ -352,18 +359,29 @@ public class MetaFormController extends BaseController {
     private void setWorkflowVariables(MetaFormModel model, Map<String, Object> object) throws Exception {
         //MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
         Long flowInstId = NumberBaseOpt.castObjectToLong(object.get(MetaTable.WORKFLOW_INST_ID_PROP));
+        if(flowInstId == null){
+            throw new ObjectException(object,
+                    ObjectException.NULL_EXCEPTION,"工作流实例号为空。");
+        }
         Long nodeInstId = NumberBaseOpt.castObjectToLong(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
         List<MetaColumn> columns = metaDataService.listMetaColumns(model.getTableId());
         for(MetaColumn col : columns) {
             Object value = object.get(col.getColumnName());
             if(value != null) {
-                if ("1".equals(col.getWorkFlowVariableType()) && flowInstId != null) {
+                if ("1".equals(col.getWorkFlowVariableType())) {
                     flowEngineClient.saveFlowVariable(flowInstId, col.getColumnName(),
                             StringBaseOpt.castObjectToString(value));
                 } else if ("2".equals(col.getWorkFlowVariableType()) && nodeInstId != null) {
                     flowEngineClient.saveFlowNodeVariable(nodeInstId, col.getColumnName(),
                             StringBaseOpt.castObjectToString(value));
                 }
+            }
+        }
+        for(String skey : object.keySet()){
+            // 办件角色
+            if(skey.startsWith("_flowRole")){
+                flowEngineClient.assignFlowWorkTeam(flowInstId, skey.substring(9),
+                        StringBaseOpt.objectToStringList(object.get(skey)));
             }
         }
     }
@@ -388,8 +406,15 @@ public class MetaFormController extends BaseController {
                            @RequestBody String jsonString,
                            HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        JSONObject parameters = JSON.parseObject(jsonString);
-        Map<String, Object> object = metaObjectService.getObjectById(model.getTableId(), parameters);
+        JSONObject object = JSON.parseObject(jsonString);
+        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        Map<String, Object> dbobject = metaObjectService.getObjectById(model.getTableId(), object);
+
+        if(dbobject == null){
+            innerSaveObject(model,tableInfo,object,request);
+        } else {
+            innerUpdateObject(model,tableInfo,object,dbobject,request);
+        }
 
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSubmit", request)!=0){
             throw new ObjectException("beforeSubmit 执行错误！" + jsonString);
@@ -400,6 +425,7 @@ public class MetaFormController extends BaseController {
             // create flow instance
             try {
                 // 这个接口需要修改，需要和 flowEngine 一致
+                // TODO 从工作流中 找到模块对应的业务流程代码
                 FlowInstance flowInstance = flowEngineClient.createInstance(model.getRelFlowCode(),
                         Pretreatment.mapTemplateString(model.getFlowOptTitle(),object),// 这边需要添加一个title表达式
                         jsonString,
@@ -435,7 +461,7 @@ public class MetaFormController extends BaseController {
             }
         }
 
-        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
