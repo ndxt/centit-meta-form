@@ -300,8 +300,13 @@ public class MetaFormController extends BaseController {
             object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
         }
 
+        JSONObject userDetails = WebOptUtils.getCurrentUserInfo(request);
+        if(userDetails != null){
+            userDetails.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
+        }
+
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSave", request)==0) {
-            metaObjectService.saveObjectWithChildren(model.getTableId(), object);
+            metaObjectService.saveObjectWithChildren(model.getTableId(), object, userDetails);
         }
         // 添加索引
         saveFulltextIndex(object,model.getTableId(),request);
