@@ -16,6 +16,7 @@ import com.centit.metaform.service.QueryDataScopeFilter;
 import com.centit.product.metadata.po.MetaColumn;
 import com.centit.product.metadata.po.MetaRelation;
 import com.centit.product.metadata.po.MetaTable;
+import com.centit.product.metadata.service.DatabaseRunTime;
 import com.centit.product.metadata.service.MetaDataService;
 import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.search.document.ObjectDocument;
@@ -60,6 +61,9 @@ public class MetaFormController extends BaseController {
     private MetaObjectService metaObjectService;
 
     @Autowired
+    private DatabaseRunTime databaseRunTime;
+
+    @Autowired
     private MetaDataService metaDataService;
 
     @Autowired
@@ -78,7 +82,9 @@ public class MetaFormController extends BaseController {
         if(StringUtils.isBlank(js)){
             return 0;
         }
-        JSMateObjectEvent jsMateObjectEvent = new JSMateObjectEvent(metaObjectService, js, request);
+
+        JSMateObjectEvent jsMateObjectEvent = new JSMateObjectEvent(
+                metaObjectService, databaseRunTime, js, request);
         return jsMateObjectEvent.runEvent(event,object);
     }
 
@@ -108,7 +114,7 @@ public class MetaFormController extends BaseController {
                 WebOptUtils.getCurrentUserCode(request), modelId, "list");
 
         String sql = model.getDataFilterSql();
-        if(StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select",Lexer.getFirstWord(sql))) {
+        if(StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select",new Lexer(sql).getAWord())) {
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceDatas(params);

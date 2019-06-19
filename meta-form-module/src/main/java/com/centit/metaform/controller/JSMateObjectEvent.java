@@ -1,6 +1,8 @@
 package com.centit.metaform.controller;
 
+import com.centit.framework.common.ObjectException;
 import com.centit.product.dataopt.utils.JSRuntimeContext;
+import com.centit.product.metadata.service.DatabaseRunTime;
 import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.support.algorithm.NumberBaseOpt;
 import org.apache.commons.lang3.StringUtils;
@@ -16,11 +18,17 @@ public class JSMateObjectEvent {
     private static final Logger logger = LoggerFactory.getLogger(JSMateObjectEvent.class);
     private MetaObjectService metaObjectService;
     private JSRuntimeContext jsRuntimeContext;
+
+    private DatabaseRunTime databaseRunTime;
     private HttpServletRequest request;
     private String javaScript;
 
-    public JSMateObjectEvent(MetaObjectService metaObjectService, String js, HttpServletRequest request){
+    public JSMateObjectEvent(MetaObjectService metaObjectService,
+                             DatabaseRunTime databaseRunTime,
+                             String js,
+                             HttpServletRequest request){
         this.metaObjectService = metaObjectService;
+        this.databaseRunTime = databaseRunTime;
         this.javaScript = js;
         this.request = request;
     }
@@ -31,7 +39,7 @@ public class JSMateObjectEvent {
      * @param bizModel 业务数据对象
      * @return 0 表示正常， &lg;0 表示报错， &gt;0 表示事件已经处理好所有任务，无需在做额外的数据库操作
      */
-    public int runEvent(String eventFunc, Map<String, Object> bizModel) {
+    public int runEvent(String eventFunc, Map<String, Object> bizModel)  {
         if(jsRuntimeContext == null){
             jsRuntimeContext = new JSRuntimeContext();
         }
@@ -43,8 +51,8 @@ public class JSMateObjectEvent {
             Object retObj = jsRuntimeContext.callJsFunc(eventFunc, this, bizModel);
             return NumberBaseOpt.castObjectToInteger(retObj, 0);
         } catch (ScriptException e) {
-            logger.error(e.getMessage());
-            return -1;
+            throw new ObjectException(ObjectException.UNKNOWN_EXCEPTION,
+                    e.getMessage());
         } catch (NoSuchMethodException e) {
             logger.info(e.getMessage());
             return 0;
@@ -57,6 +65,10 @@ public class JSMateObjectEvent {
 
     public MetaObjectService getMetaObjectService() {
         return metaObjectService;
+    }
+
+    public void setDatabaseRunTime(DatabaseRunTime databaseRunTime) {
+        this.databaseRunTime = databaseRunTime;
     }
 
     public Object getRequestAttribute(String name){
