@@ -8,6 +8,7 @@ function beforeUpdate(mateObjectEvent, entity){
 }
 
 function beforeSave(mateObjectEvent, entity){
+    var optType = mateObjectEvent.getRequestAttribute("optType");
     var allUsers = mateObjectEvent.metaObjectService.listObjectsByProperties("F_USER_INFO", {isVaild : "T" } );
     for( i=0; i<allUsers.length; i++) {
         var user = allUsers[i];
@@ -17,7 +18,8 @@ function beforeSave(mateObjectEvent, entity){
                     attendanceTime_ge: date(),
                     attendanceTime_lt: date()+1
                 })
-
+        mateObjectEvent.databaseRuntime.query("0000124");
+        mateObjectEvent.databaseRuntime.execute("0000124");
         var obj = {};
         mateObjectEvent.metaObjectService.saveObject("",obj)
     };

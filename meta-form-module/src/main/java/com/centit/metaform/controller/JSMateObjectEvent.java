@@ -5,6 +5,7 @@ import com.centit.product.dataopt.utils.JSRuntimeContext;
 import com.centit.product.metadata.service.DatabaseRunTime;
 import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,15 +65,19 @@ public class JSMateObjectEvent {
     }
 
     public MetaObjectService getMetaObjectService() {
-        return metaObjectService;
+        return this.metaObjectService;
     }
 
-    public void setDatabaseRunTime(DatabaseRunTime databaseRunTime) {
-        this.databaseRunTime = databaseRunTime;
+    public DatabaseRunTime getDatabaseRunTime() {
+        return this.databaseRunTime;
     }
 
     public Object getRequestAttribute(String name){
-        return this.request.getAttribute(name);
+        Object pvalue = this.request.getAttribute(name);
+        if(pvalue == null || StringUtils.isBlank(StringBaseOpt.castObjectToString(pvalue))){
+            pvalue = request.getParameter(name);
+        }
+        return pvalue;
     }
 
     public Object getSessionAttribute(String name){
