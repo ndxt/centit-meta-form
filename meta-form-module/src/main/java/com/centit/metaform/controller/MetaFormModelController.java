@@ -134,7 +134,6 @@ public class MetaFormModelController extends BaseController{
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(formTemplate));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
-
     }
 
     @ApiOperation(value = "修改模板事件操作")
