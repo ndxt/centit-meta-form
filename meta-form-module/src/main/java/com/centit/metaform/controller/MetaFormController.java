@@ -254,6 +254,21 @@ public class MetaFormController extends BaseController {
     }
 
     @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
+    @RequestMapping(value = "/{modelId}/new", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public Map<String, Object> makeNewObject(@PathVariable String modelId,
+                                                     HttpServletRequest request) {
+        Map<String, Object> parameters = collectRequestParameters(request);
+        JSONObject userDetails = WebOptUtils.getCurrentUserInfo(request);
+        if(userDetails != null){
+            userDetails.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
+        }
+        parameters.put("currentUser", userDetails);
+        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        return metaObjectService.makeNewObject(model.getTableId(), parameters);
+    }
+
+    @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.GET)
     @WrapUpResponseBody
     public Map<String, Object> getObjectWithChildren(@PathVariable String modelId,
@@ -310,9 +325,10 @@ public class MetaFormController extends BaseController {
         if(userDetails != null){
             userDetails.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
         }
-
+        Map<String, Object> parameters = collectRequestParameters(request);
+        parameters.put("currentUser", userDetails);
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSave", request)==0) {
-            metaObjectService.saveObjectWithChildren(model.getTableId(), object, userDetails);
+            metaObjectService.saveObjectWithChildren(model.getTableId(), object, parameters);
         }
         // 添加索引
         saveFulltextIndex(object,model.getTableId(),request);
