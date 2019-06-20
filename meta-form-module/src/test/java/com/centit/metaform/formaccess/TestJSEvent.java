@@ -6,6 +6,7 @@ import com.centit.framework.jdbc.config.JdbcConfig;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.StandardPasswordEncoderImpl;
 import com.centit.metaform.controller.JSMateObjectEvent;
+import com.centit.product.metadata.service.DatabaseRunTime;
 import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.file.FileIOOpt;
@@ -39,13 +40,15 @@ public class TestJSEvent {
 
     @Autowired
     private MetaObjectService metaObjectService;
-
+    @Autowired
+    private DatabaseRunTime databaseRunTime;
     @Test
     public void test(HttpServletRequest request){
         try(InputStream resource = TestJSEvent
                 .class.getResourceAsStream("/eventjs/sample.js")){
             String js = FileIOOpt.readStringFromInputStream(resource);
-            JSMateObjectEvent jsMateObjectEvent = new JSMateObjectEvent(metaObjectService, js, request);
+            JSMateObjectEvent jsMateObjectEvent =
+                    new JSMateObjectEvent(metaObjectService,databaseRunTime,js, request);
             Map<String,Object> object = CollectionsOpt.createHashMap("hello","js");
             int n = jsMateObjectEvent.runEvent("beforeSave",object);
             System.out.println(JSON.toJSONString(object));
