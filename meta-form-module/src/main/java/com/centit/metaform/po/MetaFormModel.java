@@ -1,6 +1,7 @@
 package com.centit.metaform.po;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.core.dao.DictionaryMap;
 import com.centit.support.database.orm.GeneratorCondition;
 import com.centit.support.database.orm.GeneratorTime;
@@ -56,6 +57,7 @@ public class MetaFormModel implements java.io.Serializable {
 
     @ApiModelProperty(value = "表单模板")
     @Column(name = "FORM_TEMPLATE")
+    @JSONField(serialize=false)
     private String  formTemplate;
 
     @ApiModelProperty(value = "更改时间")
@@ -118,6 +120,15 @@ public class MetaFormModel implements java.io.Serializable {
             relationName = this.modelName;
         }*/
         return relationName;
+    }
+
+    @JSONField(serialize=false)
+    public String getFormTemplate() {
+        return formTemplate;
+    }
+
+    public void setFormTemplate(String formTemplate) {
+        this.formTemplate = formTemplate;
     }
 
     public JSONObject getFormTemplateJson() {
