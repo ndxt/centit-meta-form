@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * 将项目Service层需要用到的通用服务放在这个，供其他业务服务调用。
  * 使用方法：用下面的注解
- *             (name = "generalService")
- *            protected GeneralService  generalService;
+ *             (name = "queryDataScopeFilter")
+ *            protected QueryDataScopeFilter  queryDataScopeFilter;
  * @author codefan
  *
  */
