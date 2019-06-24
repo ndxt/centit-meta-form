@@ -43,7 +43,7 @@ public class ImportTableInfo2Database {
                             + "max_Length,scale,column_state,column_Comment,auto_create_Rule,"
                             + "auto_create_Param,primarykey) "
                             + "values(?,?,?,?,'N', ?,?,'N',?,?,?,?)",
-                        new Object[]{tableId,col.getColumnName(),col.getFieldLabelName(),col.getColumnFieldType(),
+                        new Object[]{tableId,col.getColumnName(),col.getFieldLabelName(),col.getFieldType(),
                                 col.getMaxLength(),col.getScale(),col.getColumnComment(),
                                 col.getPrimarykey()});
                 }
