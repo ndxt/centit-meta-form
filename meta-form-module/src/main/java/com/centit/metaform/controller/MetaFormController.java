@@ -18,6 +18,7 @@ import com.centit.product.metadata.po.MetaColumn;
 import com.centit.product.metadata.po.MetaRelation;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.DatabaseRunTime;
+import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.product.metadata.service.MetaDataService;
 import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.search.document.ObjectDocument;
@@ -66,6 +67,9 @@ public class MetaFormController extends BaseController {
 
     @Autowired
     private MetaDataService metaDataService;
+
+    @Autowired
+    private MetaDataCache metaDataCache;
 
     @Autowired
     private FlowEngineClient flowEngineClient;
@@ -133,7 +137,7 @@ public class MetaFormController extends BaseController {
 
         String extFilter = null;
         if(filters !=null) {
-            MetaTable table = metaObjectService.getTableInfo(model.getTableId());
+            MetaTable table = metaDataCache.getTableInfo(model.getTableId());
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceDatas(params);
@@ -181,7 +185,7 @@ public class MetaFormController extends BaseController {
     }
 
     private void saveFulltextIndex(Map<String, Object> obj, String tableId, HttpServletRequest request){
-        MetaTable metaTable = metaObjectService.getTableInfo(tableId);
+        MetaTable metaTable = metaDataCache.getTableInfo(tableId);
         if(metaTable != null && "T".equals(metaTable.getFulltextSearch())) {
             try {
                 esObjectIndexer.saveNewDocument(
@@ -195,7 +199,7 @@ public class MetaFormController extends BaseController {
     }
 
     private void deleteFulltextIndex(Map<String, Object> obj, String tableId){
-        MetaTable metaTable = metaObjectService.getTableInfo(tableId);
+        MetaTable metaTable = metaDataCache.getTableInfo(tableId);
         if(metaTable != null && "T".equals(metaTable.getFulltextSearch())) {
             try {
                 esObjectIndexer.deleteDocument(
@@ -207,7 +211,7 @@ public class MetaFormController extends BaseController {
     }
 
     private void updataFulltextIndex(Map<String, Object> obj, String tableId, HttpServletRequest request){
-        MetaTable metaTable = metaObjectService.getTableInfo(tableId);
+        MetaTable metaTable = metaDataCache.getTableInfo(tableId);
         if(metaTable != null && "T".equals(metaTable.getFulltextSearch())) {
             try {
                 Map<String, Object> dbObject =
@@ -249,7 +253,7 @@ public class MetaFormController extends BaseController {
         // 更改索引
         updataFulltextIndex(object, model.getTableId(), request);
 
-        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
             OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
@@ -306,7 +310,7 @@ public class MetaFormController extends BaseController {
                                          HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
-        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getWriteOptLog());
         Map<String, Object> dbObject = null;
         if(writeLog || StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())) {
@@ -350,7 +354,7 @@ public class MetaFormController extends BaseController {
                                        HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
-        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         innerSaveObject(model,tableInfo,object,request);
 
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
@@ -370,7 +374,7 @@ public class MetaFormController extends BaseController {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
 
-        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getWriteOptLog());
         Map<String, Object> dbObject = null;
 
@@ -400,7 +404,9 @@ public class MetaFormController extends BaseController {
                     ObjectException.NULL_EXCEPTION,"工作流实例号为空。");
         }
         Long nodeInstId = NumberBaseOpt.castObjectToLong(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
-        List<MetaColumn> columns = metaDataService.listMetaColumns(model.getTableId());
+        //List<MetaColumn> columns = metaDataCache.listMetaColumns(model.getTableId());
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+        List<MetaColumn> columns = tableInfo.getColumns();
         for(MetaColumn col : columns) {
             Object value = object.get(col.getColumnName());
             if(value != null) {
@@ -444,7 +450,7 @@ public class MetaFormController extends BaseController {
                            HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
-        MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         Map<String, Object> dbobject = metaObjectService.getObjectById(model.getTableId(), object);
 
         if(dbobject == null){
