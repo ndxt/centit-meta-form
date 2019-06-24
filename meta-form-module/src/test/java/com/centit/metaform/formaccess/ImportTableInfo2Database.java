@@ -1,6 +1,6 @@
 package com.centit.metaform.formaccess;
 
-import com.centit.product.dbdesign.pdmutils.PdmTableInfo;
+import com.centit.product.dbdesign.pdmutils.PdmTableInfoUtils;
 import com.centit.product.dbdesign.po.PendingMetaColumn;
 import com.centit.product.dbdesign.po.PendingMetaTable;
 import com.centit.support.algorithm.NumberBaseOpt;
@@ -21,7 +21,7 @@ public class ImportTableInfo2Database {
         String pdmFilePath =
               "D:/Projects/framework3/centit-meta-form/document/内部经营数据管理系统文档/公司经营数据管理（一期）物理模型设计.pdm";
 
-        List<Pair<String, String>> tables = PdmTableInfo.listTablesInPdm(pdmFilePath);
+        List<Pair<String, String>> tables = PdmTableInfoUtils.listTablesInPdm(pdmFilePath);
         if(tables==null){
             System.out.println("读取文件出错!");
             return;
@@ -32,7 +32,7 @@ public class ImportTableInfo2Database {
                 Long tableId =  NumberBaseOpt.castObjectToLong(DatabaseAccess.getScalarObjectQuery(
                          conn,
                          "SELECT SEQ_PENDINGTABLEID.nextval from dual"));
-                PendingMetaTable metaTable = PdmTableInfo.importTableFromPdm(pdmFilePath, t.getLeft(), "1");
+                PendingMetaTable metaTable = PdmTableInfoUtils.importTableFromPdm(pdmFilePath, t.getLeft(), "1");
                 DatabaseAccess.doExecuteSql(conn, "insert into F_PENDING_META_TABLE"
                         + "(Table_ID,Database_Code,Table_Name,Table_Label_Name,table_type,table_state,table_Comment) "
                         + "values(?,'1',?,?,'T','N',?)",
