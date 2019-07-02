@@ -17,7 +17,7 @@ public class TestJSON {
         pc.setPropertyName( FieldType.mapPropName(
                 "USER_NAME"));
         pc.setFieldLabelName("object");
-        pc.setJavaType(FieldType.TEXT);
+        pc.setFieldType(FieldType.TEXT);
         pc.setColumnType("CLOB");
         pc.setColumnName( "USER_NAME");
         pc.setColumnComment("存储对象的大字段");
