@@ -46,11 +46,11 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String
 
             filterField.put("modelComment" , CodeBook.EQUAL_HQL_ID);
 
-            filterField.put("modelName" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("modelName" , CodeBook.LIKE_HQL_ID);
 
-            filterField.put("accessType" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("modelType" , CodeBook.EQUAL_HQL_ID);
 
-            filterField.put("relationType" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("relationId" , CodeBook.EQUAL_HQL_ID);
 
             filterField.put("parentModelCode" , CodeBook.EQUAL_HQL_ID);
 

@@ -157,7 +157,7 @@ public class MetaFormModel implements java.io.Serializable {
 
     /* full constructor */
     public MetaFormModel(String modelId, String tableId,
-                         String modelComment, String modelName, String accessType,
+                         String modelComment, String modelName, String modelType,
                          String formTemplate, Date lastModifyDate, String recorder,
                          String extendOptJs, String dataFilterSql,
                          String relFlowCode, String modeOptUrl) {
@@ -166,7 +166,7 @@ public class MetaFormModel implements java.io.Serializable {
         this.tableId = tableId;
         this.modelComment = modelComment;
         this.modelName = modelName;
-        this.modelType = accessType;
+        this.modelType = modelType;
         this.formTemplate = formTemplate;
 
         this.lastModifyDate = lastModifyDate;
