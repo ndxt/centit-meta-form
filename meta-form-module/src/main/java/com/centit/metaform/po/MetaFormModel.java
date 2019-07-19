@@ -108,6 +108,7 @@ public class MetaFormModel implements java.io.Serializable {
      */
     @Column(name = "DATABASE_CODE")
     @ApiModelProperty(value = "数据库ID")
+    @DictionaryMap(value="databaseInfo", fieldName = "databaseName")
     private String databaseCode;
 
     @OneToMany(targetEntity = MetaFormModel.class, mappedBy="metaFormModel",
