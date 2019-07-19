@@ -92,5 +92,18 @@ public class MetaFormModelManagerImpl
                 new Object[]{modelId});
     }
 
+    @Override
+    @Transactional
+    public  JSONArray listObjectsAsJson(Map<String, Object> filterMap, PageDesc pageDesc) {
+        String sql ="select a.*,b.TABLE_NAME,b.TABLE_LABEL_NAME "+
+                " from M_META_FORM_MODEL a left join F_MD_TABLE b on a.table_id=b.table_id "+
+                " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] "+
+                " [:tableId | and a.table_id = :tableId] "+
+                " [:modelType |and a.MODEL_TYPE = :modelType] "+
+                " [:(startWith)modelName | and a.model_name like :modelName]" ;
+        JSONArray listTables = DatabaseOptUtils.listObjectsByParamsDriverSqlAsJson(metaFormModelDao,sql,filterMap,pageDesc);
+        return listTables;
+    }
+
 }
 
