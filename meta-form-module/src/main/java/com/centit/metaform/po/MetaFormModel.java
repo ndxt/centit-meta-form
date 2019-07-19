@@ -103,6 +103,13 @@ public class MetaFormModel implements java.io.Serializable {
     @Length(max = 800, message = "字段长度不能大于{max}")
     private String  modeOptUrl;
 
+    /**
+     * 所属数据库ID
+     */
+    @Column(name = "DATABASE_CODE")
+    @ApiModelProperty(value = "数据库ID")
+    private String databaseCode;
+
     @OneToMany(targetEntity = MetaFormModel.class, mappedBy="metaFormModel",
             orphanRemoval = true,
             cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -160,7 +167,7 @@ public class MetaFormModel implements java.io.Serializable {
                          String modelComment, String modelName, String modelType,
                          String formTemplate, Date lastModifyDate, String recorder,
                          String extendOptJs, String dataFilterSql,
-                         String relFlowCode, String modeOptUrl) {
+                         String relFlowCode, String modeOptUrl, String databaseCode) {
         super();
         this.modelId = modelId;
         this.tableId = tableId;
@@ -176,6 +183,7 @@ public class MetaFormModel implements java.io.Serializable {
         this.relFlowCode = relFlowCode;
         this.modeOptUrl = modeOptUrl;
         this.childFormModels = new HashSet<>();
+        this.databaseCode = databaseCode;
     }
 
 
@@ -268,6 +276,7 @@ public class MetaFormModel implements java.io.Serializable {
         this.dataFilterSql = other.getDataFilterSql();
         this.relFlowCode = other.getRelFlowCode();
         this.modeOptUrl = other.getModeOptUrl();
+        this.databaseCode = other.getDatabaseCode();
         return this;
     }
 
@@ -300,6 +309,8 @@ public class MetaFormModel implements java.io.Serializable {
             this.dataFilterSql = other.getDataFilterSql();
         if( other.getModeOptUrl() != null)
             this.modeOptUrl = other.getModeOptUrl();
+        if( other.getDatabaseCode() != null)
+            this.databaseCode = other.getDatabaseCode();
         return this;
     }
 
@@ -317,6 +328,7 @@ public class MetaFormModel implements java.io.Serializable {
         this.relFlowCode = null;
         this.modeOptUrl = null;
         this.childFormModels = new HashSet<>();
+        this.databaseCode = null;
         return this;
     }
 }

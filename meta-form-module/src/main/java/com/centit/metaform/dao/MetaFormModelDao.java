@@ -60,6 +60,8 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String
 
             filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
 
+            filterField.put("databaseCode",CodeBook.EQUAL_HQL_ID);
+
         }
         return filterField;
     }
