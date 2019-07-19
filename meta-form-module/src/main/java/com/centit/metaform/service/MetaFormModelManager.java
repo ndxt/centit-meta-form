@@ -27,5 +27,5 @@ public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel,ja
 
     void deleteFormOptJs(String modelId);
 
-    JSONArray listObjectsAsJson(Map<String, Object> filterMap, PageDesc pageDesc);
+    JSONArray listObjectsAsJson(String[] fields,Map<String, Object> filterMap, PageDesc pageDesc);
 }

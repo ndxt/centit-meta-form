@@ -55,7 +55,7 @@ public class MetaFormModelController extends BaseController{
     @WrapUpResponseBody
     public PageQueryResult list(String[] field, PageDesc pageDesc, HttpServletRequest request) {
         Map<String, Object> searchColumn = collectRequestParameters(request);
-        JSONArray listObjects = metaFormModelMag.listObjectsAsJson(searchColumn, pageDesc);
+        JSONArray listObjects = metaFormModelMag.listObjectsAsJson(field,searchColumn, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
            return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
         }

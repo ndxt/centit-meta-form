@@ -9,7 +9,12 @@ import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.dao.MetaTableDao;
 import com.centit.product.metadata.po.MetaTable;
+import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
+import com.centit.support.database.orm.JpaMetadata;
+import com.centit.support.database.orm.TableMapInfo;
 import com.centit.support.database.utils.PageDesc;
+import com.centit.support.database.utils.QueryUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -94,13 +100,23 @@ public class MetaFormModelManagerImpl
 
     @Override
     @Transactional
-    public  JSONArray listObjectsAsJson(Map<String, Object> filterMap, PageDesc pageDesc) {
-        String sql ="select a.*,b.TABLE_NAME,b.TABLE_LABEL_NAME "+
+    public  JSONArray listObjectsAsJson(String[] fields,Map<String, Object> filterMap, PageDesc pageDesc) {
+        TableMapInfo mapInfo = JpaMetadata.fetchTableMapInfo(MetaFormModel.class);
+        String sql ="select "+
+                        GeneralJsonObjectDao.buildFieldSql(mapInfo, "a") +
+                ",b.TABLE_NAME,b.TABLE_LABEL_NAME "+
                 " from M_META_FORM_MODEL a left join F_MD_TABLE b on a.table_id=b.table_id "+
                 " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] "+
                 " [:tableId | and a.table_id = :tableId] "+
                 " [:modelType |and a.MODEL_TYPE = :modelType] "+
+                " [:modelId |and a.MODEL_ID = :modelType] "+
                 " [:(startWith)modelName | and a.model_name like :modelName]" ;
+        String orderBy = GeneralJsonObjectDao.fetchSelfOrderSql(sql, filterMap);
+        if(StringUtils.isNotBlank(orderBy)){
+            sql = sql + " order by "
+                    + QueryUtils.cleanSqlStatement(orderBy);
+        }
+
         JSONArray listTables = DatabaseOptUtils.listObjectsByParamsDriverSqlAsJson(metaFormModelDao,sql,filterMap,pageDesc);
         return listTables;
     }

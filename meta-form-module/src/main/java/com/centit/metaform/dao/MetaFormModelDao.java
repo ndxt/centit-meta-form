@@ -39,7 +39,7 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String
         if( filterField == null){
             filterField = new HashMap<>();
 
-            filterField.put("modelCode" , CodeBook.EQUAL_HQL_ID);
+            filterField.put("modelId" , CodeBook.EQUAL_HQL_ID);
 
 
             filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
