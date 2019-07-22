@@ -22,9 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * MetaFormModel  Service.
@@ -102,8 +100,12 @@ public class MetaFormModelManagerImpl
     @Transactional
     public  JSONArray listObjectsAsJson(String[] fields,Map<String, Object> filterMap, PageDesc pageDesc) {
         TableMapInfo mapInfo = JpaMetadata.fetchTableMapInfo(MetaFormModel.class);
+        List<String> c=new ArrayList<String>( );
+        c.addAll(Arrays.asList(fields));
         String sql ="select "+
-                        GeneralJsonObjectDao.buildFieldSql(mapInfo, "a") +
+                ((c != null && c.size()>0)
+                        ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a")
+                        : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a") ) +
                 ",b.TABLE_NAME,b.TABLE_LABEL_NAME "+
                 " from M_META_FORM_MODEL a left join F_MD_TABLE b on a.table_id=b.table_id "+
                 " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] "+
