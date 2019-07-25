@@ -101,6 +101,7 @@ public class MetaFormModelManagerImpl
     public  JSONArray listObjectsAsJson(String[] fields,Map<String, Object> filterMap, PageDesc pageDesc) {
         TableMapInfo mapInfo = JpaMetadata.fetchTableMapInfo(MetaFormModel.class);
         List<String> c=new ArrayList<String>( );
+        if (fields !=null)
         c.addAll(Arrays.asList(fields));
         String sql ="select "+
                 ((c != null && c.size()>0)
