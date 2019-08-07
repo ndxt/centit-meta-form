@@ -38,7 +38,11 @@ public class MetaFormModelManagerImpl
     public static final Log log = LogFactory.getLog(MetaFormModelManager.class);
 
     @Autowired
-    private MetaFormModelDao metaFormModelDao ;
+    private MetaFormModelDao metaFormModelDao;
+
+    @Autowired
+    private MetaTableDao metaTableDao;
+
 
     @Autowired
     public void setMetaFormModelDao(MetaFormModelDao baseDao)
@@ -46,9 +50,6 @@ public class MetaFormModelManagerImpl
         this.metaFormModelDao = baseDao;
         super.setBaseDao(this.metaFormModelDao);
     }
-
-    @Autowired
-    private MetaTableDao metaTableDao;
 
     @Override
     @Transactional(propagation=Propagation.REQUIRED)
@@ -59,6 +60,20 @@ public class MetaFormModelManagerImpl
         JSONArray resultArray =
                 baseDao.listObjectsAsJson(filterMap, pageDesc);
         return resultArray;
+    }
+
+    @Override
+    @Transactional(propagation=Propagation.REQUIRED)
+    public void saveNewMetaFormModel(MetaFormModel metaFormModel){
+        MetaTable table = metaTableDao.getObjectById(metaFormModel.getTableId());
+        if("1".equals(table.getWorkFlowOptType())){
+            metaFormModel.setRelFlowCode("flow");
+        } else if("2".equals(table.getWorkFlowOptType())){
+            metaFormModel.setRelFlowCode("node");
+        } else {
+            metaFormModel.setRelFlowCode("none");
+        }
+        super.saveNewObject(metaFormModel);
     }
 
     @Override
@@ -100,7 +115,7 @@ public class MetaFormModelManagerImpl
     @Transactional
     public  JSONArray listObjectsAsJson(String[] fields,Map<String, Object> filterMap, PageDesc pageDesc) {
         TableMapInfo mapInfo = JpaMetadata.fetchTableMapInfo(MetaFormModel.class);
-        List<String> c=new ArrayList<String>( );
+        List<String> c=new ArrayList<>( );
         if (fields !=null)
         c.addAll(Arrays.asList(fields));
         String sql ="select "+
@@ -111,8 +126,10 @@ public class MetaFormModelManagerImpl
                 " from M_META_FORM_MODEL a left join F_MD_TABLE b on a.table_id=b.table_id "+
                 " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] "+
                 " [:tableId | and a.table_id = :tableId] "+
-                " [:modelType |and a.MODEL_TYPE = :modelType] "+
-                " [:modelId |and a.MODEL_ID = :modelId] "+
+                " [:modelType | and a.MODEL_TYPE = :modelType] "+
+                " [:relFlowCode | and a.REL_FLOW_CODE = :relFlowCode ] "+
+                " [allFlowOpt | and a.REL_FLOW_CODE <> 'none' ] "+
+                " [:modelId | and a.MODEL_ID = :modelId ] "+
                 " [:(like)modelName | and a.model_name like :modelName]" ;
         String orderBy = GeneralJsonObjectDao.fetchSelfOrderSql(sql, filterMap);
         if(StringUtils.isNotBlank(orderBy)){

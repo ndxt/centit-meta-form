@@ -47,6 +47,7 @@ public class MetaFormModelController extends BaseController{
      * 查询所有   通用模块管理  列表
      *
      * @param field    json中只保存需要的属性名
+     * @param pageDesc  分页信息
      * @param request  {@link HttpServletRequest}
      * @return {data:[]}
      */
@@ -58,6 +59,37 @@ public class MetaFormModelController extends BaseController{
         JSONArray listObjects = metaFormModelMag.listObjectsAsJson(field,searchColumn, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
            return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
+        }
+        else{
+            return PageQueryResult.createJSONArrayResult(listObjects,pageDesc,MetaFormModel.class);
+        }
+    }
+
+    /**
+     * 查询 可以和流程关联的 模块 列表
+     *
+     * @param field    json中只保存需要的属性名
+     * @param optType  flow 查找和流程关联的业务， node查找和节点关联的业务， all查找所有相关业务
+     * @param pageDesc  分页信息
+     * @param request  {@link HttpServletRequest}
+     * @return {data:[]}
+     */
+    @ApiOperation(value = "查询工作流相关模块")
+    @RequestMapping(method = RequestMethod.GET)
+    @WrapUpResponseBody
+    public PageQueryResult listFlowModel(String[] field, String optType, PageDesc pageDesc, HttpServletRequest request) {
+        Map<String, Object> searchColumn = collectRequestParameters(request);
+        if("flow".equalsIgnoreCase(optType)){
+            searchColumn.put("relFlowCode","flow");
+        } else if("node".equalsIgnoreCase(optType)){
+            searchColumn.put("relFlowCode","node");
+        } else {
+            searchColumn.put("allFlowOpt","all");
+        }
+
+        JSONArray listObjects = metaFormModelMag.listObjectsAsJson(field,searchColumn, pageDesc);
+        if (ArrayUtils.isNotEmpty(field)) {
+            return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
         }
         else{
             return PageQueryResult.createJSONArrayResult(listObjects,pageDesc,MetaFormModel.class);
@@ -94,7 +126,7 @@ public class MetaFormModelController extends BaseController{
         model.setRecorder(usercode);
         model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));
         model.setExtendOptJs(StringEscapeUtils.unescapeHtml4(model.getExtendOptJs()));
-        metaFormModelMag.saveNewObject(model);
+        metaFormModelMag.saveNewMetaFormModel(model);
         JsonResultUtils.writeSingleDataJson(model.getModelId(),response);
     }
 
