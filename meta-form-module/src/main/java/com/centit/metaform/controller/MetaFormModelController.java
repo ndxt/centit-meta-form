@@ -56,7 +56,7 @@ public class MetaFormModelController extends BaseController{
     @WrapUpResponseBody
     public PageQueryResult list(String[] field, PageDesc pageDesc, HttpServletRequest request) {
         Map<String, Object> searchColumn = collectRequestParameters(request);
-        JSONArray listObjects = metaFormModelMag.listObjectsAsJson(field,searchColumn, pageDesc);
+        JSONArray listObjects = metaFormModelMag.listFormModeAsJson(field,searchColumn, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
            return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
         }
@@ -80,14 +80,14 @@ public class MetaFormModelController extends BaseController{
     public PageQueryResult listFlowModel(String[] field, String optType, PageDesc pageDesc, HttpServletRequest request) {
         Map<String, Object> searchColumn = collectRequestParameters(request);
         if("flow".equalsIgnoreCase(optType)){
-            searchColumn.put("relFlowCode","flow");
+            searchColumn.put("flowOptType","1");
         } else if("node".equalsIgnoreCase(optType)){
-            searchColumn.put("relFlowCode","node");
+            searchColumn.put("flowOptType","2");
         } else {
             searchColumn.put("allFlowOpt","all");
         }
 
-        JSONArray listObjects = metaFormModelMag.listObjectsAsJson(field,searchColumn, pageDesc);
+        JSONArray listObjects = metaFormModelMag.listFormModeAsJson(field,searchColumn, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
             return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
         }
