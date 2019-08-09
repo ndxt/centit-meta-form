@@ -75,7 +75,7 @@ public class MetaFormModelController extends BaseController{
      * @return {data:[]}
      */
     @ApiOperation(value = "查询工作流相关模块")
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/workflow",method = RequestMethod.GET)
     @WrapUpResponseBody
     public PageQueryResult listFlowModel(String[] field, String optType, PageDesc pageDesc, HttpServletRequest request) {
         Map<String, Object> searchColumn = collectRequestParameters(request);
