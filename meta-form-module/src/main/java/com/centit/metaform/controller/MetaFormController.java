@@ -398,12 +398,12 @@ public class MetaFormController extends BaseController {
     // 这个 设置流程变量的时机 需要考虑，应该不仅仅实在 流程提交，在表单保存时也应该修改
     private void setWorkflowVariables(MetaFormModel model, Map<String, Object> object) throws Exception {
         //MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
-        Long flowInstId = NumberBaseOpt.castObjectToLong(object.get(MetaTable.WORKFLOW_INST_ID_PROP));
+        String flowInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_INST_ID_PROP));
         if(flowInstId == null){
             throw new ObjectException(object,
                     ObjectException.NULL_EXCEPTION,"工作流实例号为空。");
         }
-        Long nodeInstId = NumberBaseOpt.castObjectToLong(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
+        String nodeInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
         //List<MetaColumn> columns = metaDataCache.listMetaColumns(model.getTableId());
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         List<MetaColumn> columns = tableInfo.getColumns();
@@ -469,11 +469,14 @@ public class MetaFormController extends BaseController {
             try {
                 // 这个接口需要修改，需要和 flowEngine 一致
                 // TODO 从工作流中 找到模块对应的业务流程代码
-                FlowInstance flowInstance = flowEngineClient.createInstance(model.getRelFlowCode(),
+                FlowInstance flowInstance = flowEngineClient.createMetaFormFlowAndSubmit(model.getModelId(),
                         Pretreatment.mapTemplateString(model.getFlowOptTitle(),object),// 这边需要添加一个title表达式
-                        jsonString,
-                        WebOptUtils.getCurrentUserCode(request),
-                        WebOptUtils.getCurrentUnitCode(request));
+                        object.get(tableInfo.getPkColumns().get(0).toLowerCase()).toString(),
+                        "U0000019",
+                        "D00005"
+                        //WebOptUtils.getCurrentUserCode(request),
+                        //WebOptUtils.getCurrentUnitCode(request)
+                );
 
                 object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
                 NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
@@ -490,7 +493,7 @@ public class MetaFormController extends BaseController {
                 throw new ObjectException(e);
             }
         } else {
-            Long nodeInstId = NumberBaseOpt.castObjectToLong(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
+            String nodeInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
             if(nodeInstId == null){
                 throw new ObjectException(WorkflowException.NodeInstNotFound,"找不到对应的节点实例号！" + jsonString);
             }
