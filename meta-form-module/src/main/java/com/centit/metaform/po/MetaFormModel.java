@@ -52,7 +52,7 @@ public class MetaFormModel implements java.io.Serializable {
     @ApiModelProperty(value = "模块名称，如果是子摸快，这个字段名为 relationName ", required = true)
     @Column(name = "MODEL_NAME")
     @NotBlank(message = "字段不能为空")
-    @Length(max = 64, message = "字段长度不能大于{max}")
+    @Length(max = 200, message = "字段长度不能大于{max}")
     private String  modelName;
 
     @ApiModelProperty(value = "表单模板")
