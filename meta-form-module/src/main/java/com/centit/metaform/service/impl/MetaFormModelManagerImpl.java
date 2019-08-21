@@ -123,7 +123,8 @@ public class MetaFormModelManagerImpl
                 " [:flowOptType | and b.WORKFLOW_OPT_TYPE = :flowOptType ] "+
                 " [allFlowOpt | and b.WORKFLOW_OPT_TYPE <> '0' ] "+
                 " [:modelId | and a.MODEL_ID = :modelId ] "+
-                " [:(like)modelName | and a.model_name like :modelName]" ;
+                " [:(like)modelName | and a.model_name like :modelName]"+
+                " [:applicationId | and a.APPLICATION_ID = :applicationId ] ";
         String orderBy = GeneralJsonObjectDao.fetchSelfOrderSql(sql, filterMap);
         if(StringUtils.isNotBlank(orderBy)){
             sql = sql + " order by "
