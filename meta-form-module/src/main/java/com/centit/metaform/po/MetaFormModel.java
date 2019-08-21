@@ -110,7 +110,9 @@ public class MetaFormModel implements java.io.Serializable {
     @ApiModelProperty(value = "数据库ID")
     @DictionaryMap(value="databaseInfo", fieldName = "databaseName")
     private String databaseCode;
-
+    @ApiModelProperty(value = "业务模块代码")
+    @Column(name = "APPLICATION_ID")
+    private String  applicationId;
     @OneToMany(targetEntity = MetaFormModel.class, mappedBy="metaFormModel",
             orphanRemoval = true,
             cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -168,7 +170,7 @@ public class MetaFormModel implements java.io.Serializable {
                          String modelComment, String modelName, String modelType,
                          String formTemplate, Date lastModifyDate, String recorder,
                          String extendOptJs, String dataFilterSql,
-                         String relFlowCode, String modeOptUrl, String databaseCode) {
+                         String relFlowCode, String modeOptUrl, String databaseCode,String applicationId) {
         super();
         this.modelId = modelId;
         this.tableId = tableId;
@@ -185,6 +187,7 @@ public class MetaFormModel implements java.io.Serializable {
         this.modeOptUrl = modeOptUrl;
         this.childFormModels = new HashSet<>();
         this.databaseCode = databaseCode;
+        this.applicationId = applicationId;
     }
 
 
@@ -278,6 +281,7 @@ public class MetaFormModel implements java.io.Serializable {
         this.relFlowCode = other.getRelFlowCode();
         this.modeOptUrl = other.getModeOptUrl();
         this.databaseCode = other.getDatabaseCode();
+        this.applicationId = other.getApplicationId();
         return this;
     }
 
@@ -312,6 +316,8 @@ public class MetaFormModel implements java.io.Serializable {
             this.modeOptUrl = other.getModeOptUrl();
         if( other.getDatabaseCode() != null)
             this.databaseCode = other.getDatabaseCode();
+        if (other.getApplicationId()!=null)
+            this.applicationId = other.getApplicationId();
         return this;
     }
 
@@ -330,6 +336,7 @@ public class MetaFormModel implements java.io.Serializable {
         this.modeOptUrl = null;
         this.childFormModels = new HashSet<>();
         this.databaseCode = null;
+        this.applicationId = null;
         return this;
     }
 }
