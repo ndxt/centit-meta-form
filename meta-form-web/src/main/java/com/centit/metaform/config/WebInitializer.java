@@ -27,15 +27,15 @@ public class WebInitializer implements WebApplicationInitializer {
         initializeSystemSpringMvcConfig(servletContext);
         initializeNormalSpringMvcConfig(servletContext);
         initializeDBDesignSpringMvcConfig(servletContext);
-
+        String [] servletUrlPatterns = {"/system/*","/metaform/*","/dbdesign/*"};
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);
 //        WebConfig.registerResponseCorsFilter(servletContext);
-        WebConfig.registerCharacterEncodingFilter(servletContext);
-        WebConfig.registerHttpPutFormContentFilter(servletContext);
-        WebConfig.registerHiddenHttpMethodFilter(servletContext);
+        WebConfig.registerCharacterEncodingFilter(servletContext,servletUrlPatterns);
+        WebConfig.registerHttpPutFormContentFilter(servletContext,servletUrlPatterns);
+        WebConfig.registerHiddenHttpMethodFilter(servletContext,servletUrlPatterns);
         WebConfig.registerRequestThreadLocalFilter(servletContext);
-        WebConfig.registerSpringSecurityFilter(servletContext);
+        WebConfig.registerSpringSecurityFilter(servletContext,servletUrlPatterns);
         //registerOpenSessionInViewFilter(servletContext);
 
         Properties properties = PropertiesReader.getClassPathProperties("/system.properties");
