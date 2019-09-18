@@ -469,14 +469,20 @@ public class MetaFormController extends BaseController {
             try {
                 // 这个接口需要修改，需要和 flowEngine 一致
                 // TODO 从工作流中 找到模块对应的业务流程代码
-                FlowInstance flowInstance = flowEngineClient.createMetaFormFlowAndSubmit(model.getModelId(),
+                /*FlowInstance flowInstance = flowEngineClient.createMetaFormFlowAndSubmit(model.getModelId(),
                         Pretreatment.mapTemplateString(model.getFlowOptTitle(),object),// 这边需要添加一个title表达式
                         object.get(tableInfo.getPkColumns().get(0).toLowerCase()).toString(),
                         "U0000019",
                         "D00005"
                         //WebOptUtils.getCurrentUserCode(request),
                         //WebOptUtils.getCurrentUnitCode(request)
-                );
+                );*/
+
+                FlowInstance flowInstance = flowEngineClient.createInstance(model.getRelFlowCode(),
+                        Pretreatment.mapTemplateString(model.getFlowOptTitle(),object),// 这边需要添加一个title表达式
+                        jsonString,
+                        WebOptUtils.getCurrentUserCode(request),
+                        WebOptUtils.getCurrentUnitCode(request));
 
                 object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
                 NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();

@@ -12,7 +12,8 @@ import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -183,5 +184,17 @@ public class MetaFormModelController extends BaseController{
     @WrapUpResponseBody
     public void deleteFormOptJs(@PathVariable String modelId) {
         metaFormModelMag.deleteFormOptJs(modelId);
+    }
+
+    @ApiOperation(value = "修改模板与流程关联")
+    @RequestMapping(value = "/{modelId}/flow", method = {RequestMethod.PUT})
+    @WrapUpResponseBody
+    public void updateFormFlow(@PathVariable String modelId,
+                                @RequestBody String formOptjs) {
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        metaFormModel.setRelFlowCode(
+                StringUtils.substring(
+                    StringEscapeUtils.unescapeHtml4(formOptjs),0,64));
+        metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 }
