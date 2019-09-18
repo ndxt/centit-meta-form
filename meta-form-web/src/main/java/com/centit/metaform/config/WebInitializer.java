@@ -27,7 +27,9 @@ public class WebInitializer implements WebApplicationInitializer {
         initializeSystemSpringMvcConfig(servletContext);
         initializeNormalSpringMvcConfig(servletContext);
         initializeDBDesignSpringMvcConfig(servletContext);
-        String [] servletUrlPatterns = {"/system/*","/metaform/*","/dbdesign/*"};
+        initializeMetaSpringMvcConfig(servletContext);
+
+        String [] servletUrlPatterns = {"/system/*","/metadata/*","/metaform/*","/dbdesign/*"};
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);
 //        WebConfig.registerResponseCorsFilter(servletContext);
@@ -89,6 +91,15 @@ public class WebInitializer implements WebApplicationInitializer {
         dbdesign.addMapping("/dbdesign/*");
         dbdesign.setLoadOnStartup(1);
         dbdesign.setAsyncSupported(true);
+    }
+
+    private void initializeMetaSpringMvcConfig(ServletContext servletContext) {
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.register(MetaDataSpringMvcConfig.class, SwaggerConfig.class);
+        ServletRegistration.Dynamic metadata  = servletContext.addServlet("metadata", new DispatcherServlet(context));
+        metadata.addMapping("/metadata/*");
+        metadata.setLoadOnStartup(1);
+        metadata.setAsyncSupported(true);
     }
 
     /*public void registerOpenSessionInViewFilter(ServletContext servletContext) {
