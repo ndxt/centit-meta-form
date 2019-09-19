@@ -40,13 +40,11 @@
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>centit-persistence-extend</artifactId>
-            <version>${centit.persistence.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.centit.framework</groupId>
-            <artifactId>centit-persistence-jdbc-transaction</artifactId>
-            <version>${centit.persistence.version}</version>
+            <groupId>com.centit.support</groupId>
+            <artifactId>centit-database-transaction</artifactId>
         </dependency>
 
         <dependency>

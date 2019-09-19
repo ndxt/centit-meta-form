@@ -3,8 +3,6 @@ package com.centit.application.controller;
 import com.centit.application.po.ApplicationInfo;
 import com.centit.application.service.ApplicationInfoManager;
 import com.centit.framework.common.JsonResultUtils;
-import com.centit.framework.common.ObjectException;
-import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
