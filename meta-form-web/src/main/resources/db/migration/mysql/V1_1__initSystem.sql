@@ -57,10 +57,11 @@ create table D_OS_INFO
 create table F_META_CHANG_LOG
 (
   change_ID            varchar(32) not null,
+  DATABASE_CODE        varchar(32),
   Table_ID             varchar(32) comment '表单主键',
   change_Date          datetime not null default NOW(),
   changer              varchar(6) not null,
-  change_Script        text,
+  change_Script        longtext,
   change_comment       varchar(2048),
   primary key (change_ID)
 );
@@ -68,24 +69,25 @@ create table F_META_CHANG_LOG
 create table F_META_COLUMN
 (
   Table_ID             varchar(32) not null comment '表单主键',
-  column_Name          varchar(32) not null,
-  field_Label_Name     varchar(64) not null,
+  column_Name          varchar(64) not null,
+  field_Label_Name     varchar(200) not null,
   column_Comment       varchar(256),
   column_Order         numeric(3,0) default 99,
   column_Type          varchar(32) not null,
-  max_Length           numeric(6,0) comment 'precision',
+  FIELD_TYPE           varchar(32) not null,
+  COLUMN_LENGTH        numeric(6,0) comment 'precision',
   scale                numeric(3,0),
   access_type          char(1) not null,
   mandatory            char(1),
-  primarykey           char(1),
-  column_state         char(1) not null,
+  PRIMARY_KEY          char(1),
   reference_Type       char(1) comment ' 0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
             	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））',
-  reference_Data       varchar(1000) comment '根据paramReferenceType类型（1,2,3）填写对应值',
-  Validate_Regex       varchar(200) comment 'regex表达式',
-  Validate_Info        varchar(200) comment '约束不通过提示信息',
+  REFERENCE_DATA       varchar(1000) comment '根据paramReferenceType类型（1,2,3）填写对应值',
+  VALIDATE_REGEX       varchar(200) comment 'regex表达式',
+  VALIDATE_INFO        varchar(200) comment '约束不通过提示信息',
   auto_create_Rule     char(1) comment 'C 常量  U uuid S sequence',
   auto_create_Param    varchar(1000) comment '常量（默认值）或则 sequence名字',
+  WORKFLOW_VARIABLE_TYPE char(1) comment '0: 不是流程变量 1：流程业务变量 2： 流程过程变量',
   last_modify_Date     datetime,
   Recorder             varchar(8),
   primary key (Table_ID, column_Name)
@@ -94,8 +96,8 @@ create table F_META_COLUMN
 create table F_META_RELATION
 (
   relation_ID          varchar(32) not null comment '关联关系，类似与外键，但不创建外键',
-  Parent_Table_ID      varchar(32) comment '表单主键',
-  Child_Table_ID       varchar(32) comment '表单主键',
+  PARENT_TABLE_ID      varchar(32) comment '表单主键',
+  CHILD_TABLE_ID       varchar(32) comment '表单主键',
   relation_name        varchar(64) not null,
   relation_state       char(1) not null,
   relation_comment     varchar(256),
@@ -130,8 +132,8 @@ create table F_META_TABLE
             Name	Code	Comment	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
             节点实例编号	NODEINSTID		NUMBER(12)	12		TRUE	FALSE	TRUE
             流程实例ID	WFINSTID		NUMBER(12)	12		FALSE	TRUE	FALSE',
-  FULLTEXT_SEARCH  char(1) comment,
-  WRITE_OPT_LOG char(1) comment,
+  FULLTEXT_SEARCH  char(1),
+  WRITE_OPT_LOG char(1),
   update_check_timestamp char(1) comment 'Y/N 更新时是否校验时间戳 添加 Last_modify_time datetime',
   RECORD_DATE     datetime,
   Recorder             varchar(8),
@@ -150,55 +152,24 @@ create table F_PENDING_META_COLUMN
   field_Label_Name     varchar(64) not null,
   column_Comment       varchar(256),
   column_Order         numeric(3,0) default 99,
+  FIELD_TYPE           varchar(32) not null,
   column_Type          varchar(32) not null,
   max_Length           numeric(6,0) comment 'precision',
   scale                numeric(3,0),
   access_type          char(1) not null,
   mandatory            char(1),
-  primarykey           char(1),
-  column_state         char(1) not null,
-  reference_Type       char(1) comment ' 0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
-            	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））',
-  reference_Data       varchar(1000) comment '根据paramReferenceType类型（1,2,3）填写对应值',
-  Validate_Regex       varchar(200) comment 'regex表达式',
-  Validate_Info        varchar(200) comment '约束不通过提示信息',
-  auto_create_Rule     char(1),
-  auto_create_Param    varchar(1000),
+  PRIMARY_KEY           char(1),
   last_modify_Date     datetime,
   Recorder             varchar(8),
   primary key (Table_ID)
-);
-
-create table F_PENDING_META_RELATION
-(
-  relation_ID          varchar(32) not null comment '关联关系，类似与外键，但不创建外键',
-  Parent_Table_ID      varchar(32) comment '表单主键',
-  Child_Table_ID       varchar(32) comment '表单主键',
-  relation_name        varchar(64) not null,
-  relation_state       char(1) not null,
-  relation_comment     varchar(256),
-  last_modify_Date     datetime,
-  Recorder             varchar(8),
-  primary key (relation_ID)
-);
-
-create table F_PENDING_META_REL_DETIAL
-(
-  relation_ID          varchar(32) not null,
-  parent_column_Name   varchar(32) not null,
-  child_column_Name    varchar(32) not null,
-  primary key (relation_ID, parent_column_Name)
 );
 
 create table F_PENDING_META_TABLE
 (
   Table_ID             varchar(32) not null comment '表单主键',
   Database_Code        varchar(32),
-  table_type           char(1) not null comment '表/视图 目前只能是表',
   Table_Name           varchar(64) not null,
   Table_Label_Name     varchar(100) not null,
-  EXT_COLUMN_NAME      varchar(64) comment '扩展字段名成(字段类型 必须是 CLOB 或者 TEXT )',
-  EXT_COLUMN_FROMAT    varchar(10) comment 'XML\JSON',
   table_state          char(1) not null comment '系统 S / R 查询(只读)/ N 新建(读写)',
   table_Comment        varchar(256),
   Workflow_OPT_TYPE    char(1) not null default '0' comment '0: 不关联工作流 1：和流程业务关联 2： 和流程过程关联',
