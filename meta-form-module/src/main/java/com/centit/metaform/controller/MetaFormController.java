@@ -451,7 +451,9 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        Map<String, Object> dbobject = metaObjectService.getObjectById(model.getTableId(), object);
+        Map<String, Object> dbobjectPk = tableInfo.fetchObjectPk(object);
+        Map<String, Object> dbobject = dbobjectPk==null? null :
+                metaObjectService.getObjectById(model.getTableId(), dbobjectPk);
 
         if(dbobject == null){
             innerSaveObject(model,tableInfo,object,request);
