@@ -249,7 +249,7 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         object.putAll(params);
-        metaObjectService.updateObjectByProperties(model.getTableId(), params.keySet(), object);
+        metaObjectService.updateObjectFields(model.getTableId(), params.keySet(), object);
         // 更改索引
         updataFulltextIndex(object, model.getTableId(), request);
 
@@ -491,7 +491,7 @@ public class MetaFormController extends BaseController {
                 if(nodeInstance != null) {
                     object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstance.getNodeInstId());
                 }
-                metaObjectService.updateObjectByProperties(model.getTableId(),
+                metaObjectService.updateObjectFields(model.getTableId(),
                         CollectionsOpt.createList(
                                 MetaTable.WORKFLOW_INST_ID_PROP,
                                 MetaTable.WORKFLOW_NODE_INST_ID_PROP), object);
