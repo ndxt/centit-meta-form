@@ -190,11 +190,11 @@ public class MetaFormModelController extends BaseController{
     @RequestMapping(value = "/{modelId}/flow", method = {RequestMethod.PUT})
     @WrapUpResponseBody
     public void updateFormFlow(@PathVariable String modelId,
-                                @RequestBody String formOptjs) {
+                                @RequestBody String workFlowCode) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         metaFormModel.setRelFlowCode(
                 StringUtils.substring(
-                    StringEscapeUtils.unescapeHtml4(formOptjs),0,64));
+                    StringEscapeUtils.unescapeHtml4(workFlowCode),0,64));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 }
