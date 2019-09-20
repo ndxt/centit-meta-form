@@ -117,11 +117,9 @@ create table F_META_TABLE
   Table_ID             varchar(32) not null comment '表编号',
   Database_Code        varchar(32),
   table_type           char(1) not null comment '表/视图/已存在表的扩展字段    目前只能是表',
+  ACCESS_TYPE          char(1) not null comment '表的存储类别  H：隐藏；R：只读；N：可读写',
   Table_Name           varchar(64) not null,
   Table_Label_Name     varchar(100) not null,
-  EXT_COLUMN_NAME      varchar(64) comment '扩展字段名成(字段类型 必须是 CLOB 或者 TEXT )',
-  EXT_COLUMN_FROMAT    varchar(10) comment 'XML\JSON',
-  Recorder             varchar(8),
   table_state          char(1) not null comment '系统 S / R 查询(只读)/ N 新建(读写)',
   table_Comment        varchar(256),
   Workflow_OPT_TYPE    char(1) not null default '0' comment '0: 不关联工作流 1：和流程业务关联 2： 和流程过程关联
@@ -132,8 +130,11 @@ create table F_META_TABLE
             Name	Code	Comment	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
             节点实例编号	NODEINSTID		NUMBER(12)	12		TRUE	FALSE	TRUE
             流程实例ID	WFINSTID		NUMBER(12)	12		FALSE	TRUE	FALSE',
+  FULLTEXT_SEARCH  char(1) comment,
+  WRITE_OPT_LOG char(1) comment,
   update_check_timestamp char(1) comment 'Y/N 更新时是否校验时间戳 添加 Last_modify_time datetime',
-  last_modify_Date     datetime,
+  RECORD_DATE     datetime,
+  Recorder             varchar(8),
   primary key (Table_ID)
 );
 
@@ -227,7 +228,7 @@ create table M_Meta_Form_Model
   Recorder             varchar(8),
   primary key (Model_Code)
 );
-
+/*
 create table M_Model_Data_Field
 (
   Model_Code           varchar(32) not null,
@@ -272,7 +273,7 @@ create table M_Model_OPERATION
   OPT_MESSAGE          varchar(500),
   primary key (Model_Code, OPERATION)
 );
-
+*/
 create table M_APPLICATION_INFO
 (
     APPLICATION_ID varchar(32) not null primary key,
