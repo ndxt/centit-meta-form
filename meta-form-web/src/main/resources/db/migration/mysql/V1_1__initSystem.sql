@@ -30,7 +30,7 @@ create table D_DataBase_Info
 (
   Database_Code        varchar(32) not null,
   database_name        varchar(100),
-  OS_ID                varchar(20),
+  OS_ID                varchar(64),
   database_url         varchar(1000),
   username             varchar(100),
   password             varchar(100) comment '加密',
@@ -43,7 +43,7 @@ create table D_DataBase_Info
 
 create table D_OS_INFO
 (
-  OS_ID                varchar(20) not null,
+  OS_ID                varchar(64) not null,
   OS_NAME              varchar(200) not null,
   OS_URL               char(10),
   DDE_SYNC_URL         char(10) comment '这个仅供DDE使用',
@@ -56,8 +56,8 @@ create table D_OS_INFO
 
 create table F_META_CHANG_LOG
 (
-  change_ID            numeric(12,0) not null,
-  Table_ID             numeric(12,0) comment '表单主键',
+  change_ID            varchar(32) not null,
+  Table_ID             varchar(32) comment '表单主键',
   change_Date          datetime not null default NOW(),
   changer              varchar(6) not null,
   change_Script        text,
@@ -67,7 +67,7 @@ create table F_META_CHANG_LOG
 
 create table F_META_COLUMN
 (
-  Table_ID             numeric(12,0) not null comment '表单主键',
+  Table_ID             varchar(32) not null comment '表单主键',
   column_Name          varchar(32) not null,
   field_Label_Name     varchar(64) not null,
   column_Comment       varchar(256),
@@ -93,9 +93,9 @@ create table F_META_COLUMN
 
 create table F_META_RELATION
 (
-  relation_ID          numeric(12,0) not null comment '关联关系，类似与外键，但不创建外键',
-  Parent_Table_ID      numeric(12,0) comment '表单主键',
-  Child_Table_ID       numeric(12,0) comment '表单主键',
+  relation_ID          varchar(32) not null comment '关联关系，类似与外键，但不创建外键',
+  Parent_Table_ID      varchar(32) comment '表单主键',
+  Child_Table_ID       varchar(32) comment '表单主键',
   relation_name        varchar(64) not null,
   relation_state       char(1) not null,
   relation_comment     varchar(256),
@@ -114,7 +114,7 @@ create table F_META_REL_DETIAL
 
 create table F_META_TABLE
 (
-  Table_ID             numeric(12,0) not null comment '表编号',
+  Table_ID             varchar(32) not null comment '表编号',
   Database_Code        varchar(32),
   table_type           char(1) not null comment '表/视图/已存在表的扩展字段    目前只能是表',
   Table_Name           varchar(64) not null,
@@ -144,7 +144,7 @@ alter table F_META_TABLE comment '状态分为 系统/查询/更新
 
 create table F_PENDING_META_COLUMN
 (
-  Table_ID             numeric(12,0) not null comment '表单主键',
+  Table_ID             varchar(32) not null comment '表单主键',
   column_Name          varchar(32) not null,
   field_Label_Name     varchar(64) not null,
   column_Comment       varchar(256),
@@ -170,9 +170,9 @@ create table F_PENDING_META_COLUMN
 
 create table F_PENDING_META_RELATION
 (
-  relation_ID          numeric(12,0) not null comment '关联关系，类似与外键，但不创建外键',
-  Parent_Table_ID      numeric(12,0) comment '表单主键',
-  Child_Table_ID       numeric(12,0) comment '表单主键',
+  relation_ID          varchar(32) not null comment '关联关系，类似与外键，但不创建外键',
+  Parent_Table_ID      varchar(32) comment '表单主键',
+  Child_Table_ID       varchar(32) comment '表单主键',
   relation_name        varchar(64) not null,
   relation_state       char(1) not null,
   relation_comment     varchar(256),
@@ -191,7 +191,7 @@ create table F_PENDING_META_REL_DETIAL
 
 create table F_PENDING_META_TABLE
 (
-  Table_ID             numeric(12,0) not null comment '表单主键',
+  Table_ID             varchar(32) not null comment '表单主键',
   Database_Code        varchar(32),
   table_type           char(1) not null comment '表/视图 目前只能是表',
   Table_Name           varchar(64) not null,
@@ -209,29 +209,28 @@ create table F_PENDING_META_TABLE
 
 create table M_Meta_Form_Model
 (
-  Model_Code           varchar(16) not null,
-  Table_ID             numeric(12,0) comment '表单主表',
-  Model_Comment        varchar(256),
+  MODEL_ID             varchar(32) not null,
+  Table_ID             varchar(32) comment '表单主表',
+  modelType            char(1) comment '表单类型 C 卡片类型 R 日历类型 N 正常表单 S 子模块表单 L 列表表单 P 一对一子表表单 D 数据驱动表单（二阶表单）',
+  RELATION_ID          varchar(32) comment '字表关联信息',
   Model_Name           varchar(64) not null,
-  Access_Type          char(1) comment 'R 只读（视图、查询），A  新增（只能新增一条），W 修改 ，L 编辑列表（增删改）',
-  form_template        varchar(128),
-  list_as_tree         char(1),
-  Relation_type        char(1) comment '0 没有父模块  1  一对一，2 多对一',
-  Parent_Model_Code    varchar(16) comment '子模块必需对应父模块对应的子表',
-  Display_Order        numeric(4,0),
+  form_template        longtext,
+  extendOptJs          longtext,
+  Data_filter_Sql      varchar(2000) comment '条件语句',
+  REL_FLOW_CODE        varchar(32),
+  FLOW_OPT_TITLE       varchar(500),
+  Model_Comment        varchar(256),
+  MODE_OPT_URL         varchar(800),
+  DATABASE_CODE        varchar(32),
+  APPLICATION_ID      varchar(32),
   last_modify_Date     datetime,
   Recorder             varchar(8),
-  extend_Options       varchar(800),
-  extend_opt_bean      varchar(64) comment '实现特定接口的bean，这个可以在业务保存、提交、修改、删除的时候调用对应的业务处理方法',
-  extend_opt_bean_param varchar(800) comment 'json String 格式的参数',
-  Data_filter_Sql      varchar(800) comment '条件语句',
-  REL_WFCODE           varchar(32),
   primary key (Model_Code)
 );
 
 create table M_Model_Data_Field
 (
-  Model_Code           varchar(16) not null,
+  Model_Code           varchar(32) not null,
   column_Name          varchar(32) not null,
   column_type          char(1) not null comment '表字段，关联只读字段（reference_Data 中为关联SQL语句）',
   Access_Type          char(1) default 'W' comment 'H 隐藏  R 只读 C 新建是可以编辑 F 非空时可以编辑 N 正常编辑',
@@ -258,11 +257,11 @@ create table M_Model_Data_Field
 
 create table M_Model_OPERATION
 (
-  Model_Code           varchar(16) not null comment '所属（关联）',
+  Model_Code           varchar(32) not null comment '所属（关联）',
   OPERATION            varchar(32) not null,
   OPT_Model_Code       varchar(16) comment '一个模块中的操作可能是针对其他模块的',
   method               varchar(16),
-  label              varchar(32),
+  label                varchar(32),
   DATA_RELATION_TYPE   varchar(1) comment 'L: list 列表   N ：不关联数据   S：单选择  M多选',
   Display_Order        numeric(4,0),
   open_type            varchar(1) comment '0：没有：1： 提示信息  2：只读表单  3：读写表单  ',
@@ -272,4 +271,11 @@ create table M_Model_OPERATION
   extend_Options       varchar(1000),
   OPT_MESSAGE          varchar(500),
   primary key (Model_Code, OPERATION)
+);
+
+create table M_APPLICATION_INFO
+(
+    APPLICATION_ID varchar(32) not null primary key,
+    APPLICATION_ID_NAME varchar(200),
+    PAGE_FLOW longtext
 );
