@@ -451,14 +451,14 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        Map<String, Object> dbobjectPk = tableInfo.fetchObjectPk(object);
-        Map<String, Object> dbobject = dbobjectPk==null? null :
-                metaObjectService.getObjectById(model.getTableId(), dbobjectPk);
+        Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
+        Map<String, Object> dbObject = dbObjectPk==null? null :
+                metaObjectService.getObjectById(model.getTableId(), dbObjectPk);
 
-        if(dbobject == null){
+        if(dbObject == null){
             innerSaveObject(model,tableInfo,object,request);
         } else {
-            innerUpdateObject(model,tableInfo,object,dbobject,request);
+            innerUpdateObject(model,tableInfo,object,dbObject,request);
         }
 
         if(runJSEvent(model.getExtendOptJs(), object, "beforeSubmit", request)!=0){
