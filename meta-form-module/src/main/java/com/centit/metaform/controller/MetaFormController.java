@@ -479,10 +479,10 @@ public class MetaFormController extends BaseController {
                         //WebOptUtils.getCurrentUserCode(request),
                         //WebOptUtils.getCurrentUnitCode(request)
                 );*/
-
+                dbObjectPk = tableInfo.fetchObjectPk(object);
                 FlowInstance flowInstance = flowEngineClient.createInstance(model.getRelFlowCode(),
-                        Pretreatment.mapTemplateString(model.getFlowOptTitle(),object),// 这边需要添加一个title表达式
-                        jsonString,
+                        Pretreatment.mapTemplateString(model.getFlowOptTitle(), object),// 这边需要添加一个title表达式
+                        JSON.toJSONString(dbObjectPk),
                         WebOptUtils.getCurrentUserCode(request),
                         WebOptUtils.getCurrentUnitCode(request));
 
