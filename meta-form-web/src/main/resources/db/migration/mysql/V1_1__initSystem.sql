@@ -197,7 +197,7 @@ create table M_Meta_Form_Model
   APPLICATION_ID      varchar(32),
   last_modify_Date     datetime,
   Recorder             varchar(8),
-  primary key (Model_Code)
+  primary key (MODEL_ID)
 );
 /*
 create table M_Model_Data_Field
