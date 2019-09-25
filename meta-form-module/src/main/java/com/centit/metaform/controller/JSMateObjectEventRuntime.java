@@ -14,9 +14,9 @@ import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-public class JSMateObjectEvent {
+public class JSMateObjectEventRuntime {
 
-    private static final Logger logger = LoggerFactory.getLogger(JSMateObjectEvent.class);
+    private static final Logger logger = LoggerFactory.getLogger(JSMateObjectEventRuntime.class);
     private MetaObjectService metaObjectService;
     private JSRuntimeContext jsRuntimeContext;
 
@@ -24,10 +24,10 @@ public class JSMateObjectEvent {
     private HttpServletRequest request;
     private String javaScript;
 
-    public JSMateObjectEvent(MetaObjectService metaObjectService,
-                             DatabaseRunTime databaseRunTime,
-                             String js,
-                             HttpServletRequest request){
+    public JSMateObjectEventRuntime(MetaObjectService metaObjectService,
+                                    DatabaseRunTime databaseRunTime,
+                                    String js,
+                                    HttpServletRequest request){
         this.metaObjectService = metaObjectService;
         this.databaseRunTime = databaseRunTime;
         this.javaScript = js;

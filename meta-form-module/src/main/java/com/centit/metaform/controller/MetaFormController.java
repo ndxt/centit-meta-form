@@ -88,7 +88,7 @@ public class MetaFormController extends BaseController {
             return 0;
         }
 
-        JSMateObjectEvent jsMateObjectEvent = new JSMateObjectEvent(
+        JSMateObjectEventRuntime jsMateObjectEvent = new JSMateObjectEventRuntime(
                 metaObjectService, databaseRunTime, js, request);
         return jsMateObjectEvent.runEvent(event,object);
     }
