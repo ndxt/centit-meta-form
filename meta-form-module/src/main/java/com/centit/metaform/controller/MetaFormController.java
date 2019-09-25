@@ -428,6 +428,24 @@ public class MetaFormController extends BaseController {
         }
     }
 
+    private static String fetchExtendParam(String paramName, JSONObject object, HttpServletRequest request){
+        String paramValue = request.getParameter(paramName);
+        if(StringUtils.isNotBlank(paramValue)){
+            return paramValue;
+        }
+        paramValue = object.getString(paramName);
+        if(StringUtils.isNotBlank(paramValue)){
+            return paramValue;
+        }
+
+        if("userCode".equals(paramName)){
+            return WebOptUtils.getCurrentUserCode(request);
+        } else if("unitCode".equals(paramName)){
+            return WebOptUtils.getCurrentUnitCode(request);
+        }
+
+        return null;
+    }
     /**
      * 提交工作流 ; 分两种情况
      * 一： 新建业务，操作流程为， 保存表单，提交流程，这时表单对应的表中flowInstId字段必然为空，所以:
@@ -483,8 +501,8 @@ public class MetaFormController extends BaseController {
                 FlowInstance flowInstance = flowEngineClient.createInstance(model.getRelFlowCode(),
                         Pretreatment.mapTemplateString(model.getFlowOptTitle(), object),// 这边需要添加一个title表达式
                         JSON.toJSONString(dbObjectPk),
-                        object.getString("userCode"),// WebOptUtils.getCurrentUserCode(request),
-                        object.getString("unitCode"));//WebOptUtils.getCurrentUnitCode(request));
+                        fetchExtendParam("userCode", object, request),
+                        fetchExtendParam("unitCode", object, request));
 
                 object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
                 NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
