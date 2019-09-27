@@ -484,7 +484,7 @@ public class MetaFormController extends BaseController {
         }
 
         Object flowInstId = object.get("flowInstId");
-        if(flowInstId == null){
+        if(flowInstId==null || StringUtils.isBlank(flowInstId.toString())){
             // create flow instance
             try {
                 // 这个接口需要修改，需要和 flowEngine 一致
@@ -498,9 +498,11 @@ public class MetaFormController extends BaseController {
                         //WebOptUtils.getCurrentUnitCode(request)
                 );*/
                 dbObjectPk = tableInfo.fetchObjectPk(object);
+
                 FlowInstance flowInstance = flowEngineClient.createInstance(model.getRelFlowCode(),
                         Pretreatment.mapTemplateString(model.getFlowOptTitle(), object),// 这边需要添加一个title表达式
-                        JSON.toJSONString(dbObjectPk),
+                        dbObjectPk.size()==1? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
+                                :JSON.toJSONString(dbObjectPk),
                         fetchExtendParam("userCode", object, request),
                         fetchExtendParam("unitCode", object, request));
 
