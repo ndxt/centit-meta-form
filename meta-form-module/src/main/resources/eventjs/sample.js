@@ -20,3 +20,11 @@ function beforeDelete(eventRuntime, entity){
 function beforeSubmit(eventRuntime, entity){
     return 0;
 }
+
+function afterCreateFlow(eventRuntime, entity){
+    return 0;
+}
+
+function afterSubmit(eventRuntime, entity){
+    return 0;
+}

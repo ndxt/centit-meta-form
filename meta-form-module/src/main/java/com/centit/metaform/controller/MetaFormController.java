@@ -90,7 +90,12 @@ public class MetaFormController extends BaseController {
 
         JSMateObjectEventRuntime jsMateObjectEvent = new JSMateObjectEventRuntime(
                 metaObjectService, databaseRunTime, js, request);
-        return jsMateObjectEvent.runEvent(event,object);
+        jsMateObjectEvent.setFlowEngineClient(flowEngineClient);
+        int ret = jsMateObjectEvent.runEvent(event,object);
+        if(ret < 0){
+            throw new ObjectException(ret, "外部事件"+event+"运行异常" + js);
+        }
+        return ret;
     }
 
     @ApiOperation(value = "查询作为字表表单数据列表，不分页；传入的参数为父表的主键")
@@ -445,12 +450,12 @@ public class MetaFormController extends BaseController {
         }
     }
 
-    private static String fetchExtendParam(String paramName, JSONObject object, HttpServletRequest request){
+    static String fetchExtendParam(String paramName, Map<String, Object> object, HttpServletRequest request){
         String paramValue = request.getParameter(paramName);
         if(StringUtils.isNotBlank(paramValue)){
             return paramValue;
         }
-        paramValue = object.getString(paramName);
+        paramValue = StringBaseOpt.castObjectToString(object.get(paramName));
         if(StringUtils.isNotBlank(paramValue)){
             return paramValue;
         }
@@ -537,6 +542,8 @@ public class MetaFormController extends BaseController {
                                 MetaTable.WORKFLOW_NODE_INST_ID_PROP), object);
                 //  设置流程变量
                 setWorkflowVariables(model, object);
+
+                runJSEvent(model.getExtendOptJs(), object, "afterCreateFlow", request);
             } catch (Exception e) {
                 throw new ObjectException(e);
             }
@@ -548,8 +555,9 @@ public class MetaFormController extends BaseController {
             try {
                 setWorkflowVariables(model, object);
                 // submit flow
-                flowEngineClient.submitOpt(nodeInstId , WebOptUtils.getCurrentUserCode(request),
-                        WebOptUtils.getCurrentUnitCode(request), null, null);
+                flowEngineClient.submitOpt(nodeInstId , fetchExtendParam("userCode", object, request),
+                        fetchExtendParam("unitCode", object, request), null);
+                runJSEvent(model.getExtendOptJs(), object, "afterSubmit", request);
             } catch (Exception e) {
                 throw new ObjectException(e);
             }
