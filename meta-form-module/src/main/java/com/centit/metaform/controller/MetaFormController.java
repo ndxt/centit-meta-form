@@ -395,6 +395,23 @@ public class MetaFormController extends BaseController {
         }
     }
 
+    private Map<String, Object> fetchWorkflowVariables(MetaFormModel model, Map<String, Object> object) {
+        Map<String, Object> params = new HashMap<>(10);
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+        List<MetaColumn> columns = tableInfo.getColumns();
+        for(MetaColumn col : columns) {
+            Object value = object.get(col.getPropertyName());
+            params.put( col.getColumnName(),value);
+        }
+        for(Map.Entry<String, Object> entry : object.entrySet()){
+            // 办件角色
+            if(entry.getKey().startsWith("flowRole")){
+                params.put(entry.getKey().substring(9), entry.getValue());
+            }
+        }
+        return params;
+    }
+
     // 这个 设置流程变量的时机 需要考虑，应该不仅仅实在 流程提交，在表单保存时也应该修改
     private void setWorkflowVariables(MetaFormModel model, Map<String, Object> object) throws Exception {
         //MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
@@ -408,13 +425,13 @@ public class MetaFormController extends BaseController {
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         List<MetaColumn> columns = tableInfo.getColumns();
         for(MetaColumn col : columns) {
-            Object value = object.get(col.getColumnName());
+            Object value = object.get(col.getPropertyName());
             if(value != null) {
                 if ("1".equals(col.getWorkFlowVariableType())) {
-                    flowEngineClient.saveFlowVariable(flowInstId, col.getColumnName(),
+                    flowEngineClient.saveFlowVariable(flowInstId, col.getPropertyName(),
                             StringBaseOpt.castObjectToString(value));
                 } else if ("2".equals(col.getWorkFlowVariableType()) && nodeInstId != null) {
-                    flowEngineClient.saveFlowNodeVariable(nodeInstId, col.getColumnName(),
+                    flowEngineClient.saveFlowNodeVariable(nodeInstId, col.getPropertyName(),
                             StringBaseOpt.castObjectToString(value));
                 }
             }
@@ -497,12 +514,15 @@ public class MetaFormController extends BaseController {
                         //WebOptUtils.getCurrentUserCode(request),
                         //WebOptUtils.getCurrentUnitCode(request)
                 );*/
+                Map<String, Object> extPrams = BaseController.collectRequestParameters(request);
+                extPrams.putAll(fetchWorkflowVariables(model, object));
                 dbObjectPk = tableInfo.fetchObjectPk(object);
                 FlowInstance flowInstance = flowEngineClient.createInstance(model.getRelFlowCode(),
                         Pretreatment.mapTemplateString(model.getFlowOptTitle(), object),// 这边需要添加一个title表达式
                         JSON.toJSONString(dbObjectPk),
                         fetchExtendParam("userCode", object, request),
-                        fetchExtendParam("unitCode", object, request));
+                        fetchExtendParam("unitCode", object, request),
+                        extPrams);
 
                 object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
                 NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
