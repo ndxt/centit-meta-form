@@ -406,7 +406,9 @@ public class MetaFormController extends BaseController {
         List<MetaColumn> columns = tableInfo.getColumns();
         for(MetaColumn col : columns) {
             Object value = object.get(col.getPropertyName());
-            params.put( col.getColumnName(),value);
+            if (value != null && ( "1".equals(col.getWorkFlowVariableType()) || "2".equals(col.getWorkFlowVariableType()))) {
+               params.put(col.getColumnName(), value);
+            }
         }
         for(Map.Entry<String, Object> entry : object.entrySet()){
             // 办件角色
@@ -528,8 +530,7 @@ public class MetaFormController extends BaseController {
                         dbObjectPk.size()==1? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
                                 :JSON.toJSONString(dbObjectPk),
                         fetchExtendParam("userCode", object, request),
-                        fetchExtendParam("unitCode", object, request),
-                        extPrams);
+                        fetchExtendParam("unitCode", object, request),extPrams);
 
                 object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
                 NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
