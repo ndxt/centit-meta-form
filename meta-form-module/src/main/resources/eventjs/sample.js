@@ -22,6 +22,8 @@ function beforeSubmit(eventRuntime, entity){
 }
 
 function afterCreateFlow(eventRuntime, entity){
+    eventRuntime.setFlowVariable("XSQ", 1) ;
+    eventRuntime.submitOpt();
     return 0;
 }
 

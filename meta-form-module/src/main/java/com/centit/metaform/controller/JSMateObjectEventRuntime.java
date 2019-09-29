@@ -138,4 +138,8 @@ public class JSMateObjectEventRuntime {
     public void setFlowEngineClient(FlowEngineClient flowEngineClient) {
         this.flowEngineClient = flowEngineClient;
     }
+
+    public FlowEngineClient getFlowEngineClient() {
+        return flowEngineClient;
+    }
 }
