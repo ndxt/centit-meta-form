@@ -549,7 +549,10 @@ public class MetaFormController extends BaseController {
                 throw new ObjectException(e);
             }
         } else {
-            String nodeInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
+            String nodeInstId = fetchExtendParam("nodeInstId", object, request);
+            if(StringUtils.isBlank(nodeInstId)) {
+                nodeInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
+            }
             if(nodeInstId == null){
                 throw new ObjectException(WorkflowException.NodeInstNotFound,"找不到对应的节点实例号！" + jsonString);
             }
