@@ -496,6 +496,14 @@ public class MetaFormController extends BaseController {
         Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
         Map<String, Object> dbObject = dbObjectPk==null? null :
                 metaObjectService.getObjectById(model.getTableId(), dbObjectPk);
+        // 如果是节点提交 应该有节点实例号
+        String nodeInstId = fetchExtendParam("nodeInstId", object, request);
+        if(StringUtils.isBlank(nodeInstId)) {
+            nodeInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
+        } else {
+            //和流程过程对应的 表单 要写入 节点实例号
+            object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstId);
+        }
 
         if(dbObject == null){
             innerSaveObject(model,tableInfo,object,request);
@@ -549,11 +557,7 @@ public class MetaFormController extends BaseController {
                 throw new ObjectException(e);
             }
         } else {
-            String nodeInstId = fetchExtendParam("nodeInstId", object, request);
-            if(StringUtils.isBlank(nodeInstId)) {
-                nodeInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
-            }
-            if(nodeInstId == null){
+            if(StringUtils.isBlank(nodeInstId)){
                 throw new ObjectException(WorkflowException.NodeInstNotFound,"找不到对应的节点实例号！" + jsonString);
             }
             try {
