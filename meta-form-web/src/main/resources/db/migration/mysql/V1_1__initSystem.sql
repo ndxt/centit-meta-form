@@ -4,13 +4,13 @@ drop table if exists D_OS_INFO;
 
 drop table if exists F_META_CHANG_LOG;
 
-drop table if exists F_META_COLUMN;
+drop table if exists F_MD_COLUMN;
 
-drop table if exists F_META_RELATION;
+drop table if exists F_MD_RELATION;
 
-drop table if exists F_META_REL_DETIAL;
+drop table if exists F_MD_REL_DETIAL;
 
-drop table if exists F_META_TABLE;
+drop table if exists F_MD_TABLE;
 
 drop table if exists F_PENDING_META_COLUMN;
 
@@ -56,7 +56,7 @@ create table D_OS_INFO
 
 create table F_META_CHANG_LOG
 (
-  change_ID            varchar(32) not null,
+  change_ID            varchar(64) not null,
   DATABASE_CODE        varchar(32),
   Table_ID             varchar(32) comment '表单主键',
   change_Date          datetime not null default NOW(),
@@ -66,138 +66,117 @@ create table F_META_CHANG_LOG
   primary key (change_ID)
 );
 
-create table F_META_COLUMN
-(
-  Table_ID             varchar(32) not null comment '表单主键',
-  column_Name          varchar(64) not null,
-  field_Label_Name     varchar(200) not null,
-  column_Comment       varchar(256),
-  column_Order         numeric(3,0) default 99,
-  column_Type          varchar(32) not null,
-  FIELD_TYPE           varchar(32) not null,
-  COLUMN_LENGTH        numeric(6,0) comment 'precision',
-  scale                numeric(3,0),
-  access_type          char(1) not null,
-  mandatory            char(1),
-  PRIMARY_KEY          char(1),
-  reference_Type       char(1) comment ' 0：没有：1： 数据字典(列表)   2： 数据字典(树型)   3：JSON表达式 4：sql语句   5：SQL（树）
-            	   9 :框架内置字典（用户、机构、角色等等）  Y：年份 M：月份   F:文件（column_Type 必须为 varchar（64））',
-  REFERENCE_DATA       varchar(1000) comment '根据paramReferenceType类型（1,2,3）填写对应值',
-  VALIDATE_REGEX       varchar(200) comment 'regex表达式',
-  VALIDATE_INFO        varchar(200) comment '约束不通过提示信息',
-  auto_create_Rule     char(1) comment 'C 常量  U uuid S sequence',
-  auto_create_Param    varchar(1000) comment '常量（默认值）或则 sequence名字',
-  WORKFLOW_VARIABLE_TYPE char(1) comment '0: 不是流程变量 1：流程业务变量 2： 流程过程变量',
-  last_modify_Date     datetime,
-  Recorder             varchar(8),
-  primary key (Table_ID, column_Name)
+CREATE TABLE `f_md_column` (
+  `TABLE_ID` varchar(64) NOT NULL,
+  `COLUMN_NAME` varchar(32) NOT NULL,
+  `FIELD_LABEL_NAME` varchar(64) DEFAULT NULL,
+  `COLUMN_LENGTH` decimal(6,0) DEFAULT NULL,
+  `SCALE` decimal(3,0) DEFAULT NULL,
+  `ACCESS_TYPE` char(1) NOT NULL,
+  `COLUMN_TYPE` varchar(32) DEFAULT NULL,
+  `FIELD_TYPE` varchar(32) DEFAULT NULL,
+  `PRIMARY_KEY` char(1) DEFAULT NULL,
+  `MANDATORY` char(1) DEFAULT NULL,
+  `COLUMN_COMMENT` varchar(1024) DEFAULT NULL,
+  `COLUMN_ORDER` decimal(3,0) DEFAULT '99',
+  `LAST_MODIFY_DATE` datetime DEFAULT NULL,
+  `RECORDER` varchar(32) DEFAULT NULL,
+  `REFERENCE_TYPE` varchar(1) DEFAULT NULL,
+  `REFERENCE_DATA` varchar(256) DEFAULT NULL,
+  `VALIDATE_REGEX` varchar(32) DEFAULT NULL,
+  `VALIDATE_INFO` varchar(32) DEFAULT NULL,
+  `AUTO_CREATE_RULE` varchar(1) DEFAULT NULL,
+  `AUTO_CREATE_PARAM` varchar(16) DEFAULT NULL,
+  `WORKFLOW_VARIABLE_TYPE` varchar(1) DEFAULT NULL,
+  PRIMARY KEY (`TABLE_ID`,`COLUMN_NAME`)
 );
 
-create table F_META_RELATION
-(
-  relation_ID          varchar(32) not null comment '关联关系，类似与外键，但不创建外键',
-  PARENT_TABLE_ID      varchar(32) comment '表单主键',
-  CHILD_TABLE_ID       varchar(32) comment '表单主键',
-  relation_name        varchar(64) not null,
-  relation_state       char(1) not null,
-  relation_comment     varchar(256),
-  last_modify_Date     datetime,
-  Recorder             varchar(8),
-  primary key (relation_ID)
+CREATE TABLE `f_md_relation` (
+  `RELATION_ID` varchar(64) NOT NULL,
+  `PARENT_TABLE_ID` varchar(64) NOT NULL,
+  `CHILD_TABLE_ID` varchar(64) NOT NULL,
+  `RELATION_NAME` varchar(64) NOT NULL,
+  `RELATION_STATE` char(1) NOT NULL,
+  `RELATION_COMMENT` varchar(256) DEFAULT NULL,
+  `last_modify_Date` datetime DEFAULT NULL,
+  `RECORDER` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`RELATION_ID`)
 );
 
-create table F_META_REL_DETIAL
-(
-  relation_ID          varchar(32) not null,
-  parent_column_Name   varchar(32) not null,
-  child_column_Name    varchar(32) not null,
-  primary key (relation_ID, parent_column_Name)
+CREATE TABLE `f_md_rel_detail` (
+  `RELATION_ID` varchar(64) NOT NULL,
+  `PARENT_COLUMN_CODE` varchar(32) NOT NULL,
+  `CHILD_COLUMN_CODE` varchar(32) NOT NULL,
+  PRIMARY KEY (`RELATION_ID`,`PARENT_COLUMN_CODE`)
 );
 
-create table F_META_TABLE
-(
-  Table_ID             varchar(32) not null comment '表编号',
-  Database_Code        varchar(32),
-  table_type           char(1) not null comment '表/视图/已存在表的扩展字段    目前只能是表',
-  ACCESS_TYPE          char(1) not null comment '表的存储类别  H：隐藏；R：只读；N：可读写',
-  Table_Name           varchar(64) not null,
-  Table_Label_Name     varchar(100) not null,
-  table_state          char(1) not null comment '系统 S / R 查询(只读)/ N 新建(读写)',
-  table_Comment        varchar(256),
-  Workflow_OPT_TYPE    char(1) not null default '0' comment '0: 不关联工作流 1：和流程业务关联 2： 和流程过程关联
-            1, 添加  WFINSTID 流程实例ID
-            2, 添加 NODEINSTID WFINSTID	节点实例编号 流程实例ID
-
-
-            Name	Code	Comment	Data Type	Length	Precision	Primary	Foreign Key	Mandatory
-            节点实例编号	NODEINSTID		NUMBER(12)	12		TRUE	FALSE	TRUE
-            流程实例ID	WFINSTID		NUMBER(12)	12		FALSE	TRUE	FALSE',
-  FULLTEXT_SEARCH  char(1),
-  WRITE_OPT_LOG char(1),
-  update_check_timestamp char(1) comment 'Y/N 更新时是否校验时间戳 添加 Last_modify_time datetime',
-  RECORD_DATE     datetime,
-  Recorder             varchar(8),
-  primary key (Table_ID)
+CREATE TABLE `f_md_table` (
+  `TABLE_ID` varchar(64) NOT NULL,
+  `TABLE_LABEL_NAME` varchar(500) NOT NULL,
+  `DATABASE_CODE` varchar(32) NOT NULL COMMENT '数据库代码',
+  `TABLE_NAME` varchar(500) DEFAULT NULL,
+  `TABLE_TYPE` char(1) NOT NULL COMMENT '表/视图 目前只能是表',
+  `ACCESS_TYPE` char(1) NOT NULL COMMENT '系统 S / R 查询(只读)/ N 新建(读写)',
+  `TABLE_COMMENT` varchar(256) DEFAULT NULL,
+  `WORKFLOW_OPT_TYPE` char(1) NOT NULL DEFAULT '0',
+  `Record_Date` datetime DEFAULT NULL,
+  `Recorder` varchar(32) DEFAULT NULL,
+  `UPDATE_CHECK_TIMESTAMP` char(1) DEFAULT NULL,
+  `FULLTEXT_SEARCH` char(1) DEFAULT NULL,
+  `WRITE_OPT_LOG` char(1) DEFAULT NULL,
+  PRIMARY KEY (`TABLE_ID`)
 );
 
-alter table F_META_TABLE comment '状态分为 系统/查询/更新
-系统，不可以做任何操作
-查询，仅用于通用查询模块，不可以更新
-                                 -&';
 
-create table F_PENDING_META_COLUMN
-(
-  Table_ID             varchar(32) not null comment '表单主键',
-  column_Name          varchar(32) not null,
-  field_Label_Name     varchar(64) not null,
-  column_Comment       varchar(256),
-  column_Order         numeric(3,0) default 99,
-  FIELD_TYPE           varchar(32) not null,
-  column_Type          varchar(32) not null,
-  max_Length           numeric(6,0) comment 'precision',
-  scale                numeric(3,0),
-  access_type          char(1) not null,
-  mandatory            char(1),
-  PRIMARY_KEY           char(1),
-  last_modify_Date     datetime,
-  Recorder             varchar(8),
-  primary key (Table_ID)
+CREATE TABLE `f_pending_meta_column` (
+  `Table_ID` varchar(64) NOT NULL COMMENT '表单主键',
+  `column_Name` varchar(32) NOT NULL,
+  `field_Label_Name` varchar(64) NOT NULL,
+  `column_Comment` varchar(1000) DEFAULT NULL,
+  `column_Order` decimal(3,0) DEFAULT '99',
+  `FIELD_TYPE` varchar(32) NOT NULL,
+  `max_Length` decimal(12,0) DEFAULT NULL COMMENT 'precision',
+  `scale` decimal(3,0) DEFAULT NULL,
+  `mandatory` char(1) DEFAULT NULL,
+  `primary_key` char(1) DEFAULT NULL,
+  `last_modify_Date` datetime DEFAULT NULL,
+  `Recorder` varchar(8) DEFAULT NULL,
+  PRIMARY KEY (`Table_ID`,`column_Name`)
 );
 
-create table F_PENDING_META_TABLE
-(
-  Table_ID             varchar(32) not null comment '表单主键',
-  Database_Code        varchar(32),
-  Table_Name           varchar(64) not null,
-  Table_Label_Name     varchar(100) not null,
-  table_state          char(1) not null comment '系统 S / R 查询(只读)/ N 新建(读写)',
-  table_Comment        varchar(256),
-  Workflow_OPT_TYPE    char(1) not null default '0' comment '0: 不关联工作流 1：和流程业务关联 2： 和流程过程关联',
-  update_check_timestamp char(1) comment 'Y/N 更新时是否校验时间戳',
-  last_modify_Date     datetime,
-  Recorder             varchar(8),
-  primary key (Table_ID)
+CREATE TABLE `f_pending_meta_table` (
+  `Table_ID` varchar(64) NOT NULL COMMENT '表单主键',
+  `PRIMARY_KEY` varchar(64) DEFAULT NULL,
+  `Database_Code` varchar(32) DEFAULT NULL,
+  `Table_Name` varchar(64) NOT NULL,
+  `Table_Label_Name` varchar(100) NOT NULL,
+  `table_Comment` varchar(256) DEFAULT NULL,
+  `table_state` char(1) NOT NULL COMMENT '系统 S / R 查询(只读)/ N 新建(读写)',
+  `Workflow_OPT_TYPE` char(1) NOT NULL DEFAULT '0' COMMENT '0: 不关联工作流 1：和流程业务关联 2： 和流程过程关联',
+  `update_check_timestamp` char(1) DEFAULT NULL COMMENT 'Y/N 更新时是否校验时间戳',
+  `last_modify_Date` datetime DEFAULT NULL,
+  `Recorder` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`Table_ID`)
 );
 
-create table M_Meta_Form_Model
-(
-  MODEL_ID             varchar(32) not null,
-  Table_ID             varchar(32) comment '表单主表',
-  modelType            char(1) comment '表单类型 C 卡片类型 R 日历类型 N 正常表单 S 子模块表单 L 列表表单 P 一对一子表表单 D 数据驱动表单（二阶表单）',
-  RELATION_ID          varchar(32) comment '字表关联信息',
-  Model_Name           varchar(64) not null,
-  form_template        longtext,
-  extendOptJs          longtext,
-  Data_filter_Sql      varchar(2000) comment '条件语句',
-  REL_FLOW_CODE        varchar(32),
-  FLOW_OPT_TITLE       varchar(500),
-  Model_Comment        varchar(256),
-  MODE_OPT_URL         varchar(800),
-  DATABASE_CODE        varchar(32),
-  APPLICATION_ID      varchar(32),
-  last_modify_Date     datetime,
-  Recorder             varchar(8),
-  primary key (MODEL_ID)
+CREATE TABLE `m_meta_form_model` (
+  `MODEL_ID` varchar(64) NOT NULL,
+  `Table_ID` varchar(64) DEFAULT NULL COMMENT '表单主表',
+  `Model_Name` varchar(64) NOT NULL,
+  `APPLICATION_ID` varchar(64) DEFAULT NULL,
+  `Model_Type` char(1) DEFAULT NULL COMMENT ' N 正常表单 S 子模块表单 L 列表表单',
+  `RELATION_ID` varchar(64) DEFAULT NULL,
+  `form_template` longtext,
+  `REL_FLOW_CODE` varchar(32) DEFAULT NULL,
+  `last_modify_Date` datetime DEFAULT NULL,
+  `Recorder` varchar(8) DEFAULT NULL,
+  `Model_Comment` varchar(256) DEFAULT NULL,
+  `extend_opt_js` longtext,
+  `Data_filter_Sql` varchar(2000) DEFAULT NULL COMMENT '条件语句',
+  `mode_Opt_Url` varchar(800) DEFAULT NULL COMMENT 'json String 格式的参数',
+  `FLOW_OPT_TITLE` varchar(500) DEFAULT NULL,
+  `DATABASE_CODE` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT '数据库代码',
+  PRIMARY KEY (`MODEL_ID`)
 );
 /*
 create table M_Model_Data_Field
