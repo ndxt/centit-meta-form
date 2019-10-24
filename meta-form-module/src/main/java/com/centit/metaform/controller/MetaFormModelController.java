@@ -166,10 +166,9 @@ public class MetaFormModelController extends BaseController{
     @RequestMapping(value = "/{modelId}/template", method = {RequestMethod.PUT})
     @WrapUpResponseBody
     public void updateFormTemplate(@PathVariable String modelId,
-                                    @RequestBody String formTemplate) {
+                                    @RequestBody JSONObject formTemplate) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        metaFormModel.setFormTemplate(
-                (JSONObject) JSON.parse(StringEscapeUtils.unescapeHtml4(formTemplate)));
+        metaFormModel.setFormTemplate(formTemplate);
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 
