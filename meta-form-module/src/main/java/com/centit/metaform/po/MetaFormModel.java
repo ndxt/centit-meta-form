@@ -294,4 +294,7 @@ public class MetaFormModel implements java.io.Serializable {
         this.applicationId = null;
         return this;
     }
+    public JSONObject getFormTemplateJson() {
+        return this.formTemplate;
+    }
 }
