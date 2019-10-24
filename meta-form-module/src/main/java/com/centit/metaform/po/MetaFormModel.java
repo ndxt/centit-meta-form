@@ -58,7 +58,7 @@ public class MetaFormModel implements java.io.Serializable {
     @ApiModelProperty(value = "表单模板")
     @Column(name = "FORM_TEMPLATE")
     @JSONField(serialize=false)
-    private String  formTemplate;
+    private JSONObject formTemplate;
 
     @ApiModelProperty(value = "更改时间")
     @Column(name = "LAST_MODIFY_DATE")
@@ -133,26 +133,6 @@ public class MetaFormModel implements java.io.Serializable {
         return relationName;
     }
 
-    @JSONField(serialize=false)
-    public String getFormTemplate() {
-        return formTemplate;
-    }
-
-    public void setFormTemplate(String formTemplate) {
-        this.formTemplate = formTemplate;
-    }
-
-    public JSONObject getFormTemplateJson() {
-        if(StringUtils.isBlank(formTemplate)) {
-            return null;
-        }
-        try {
-            return JSONObject.parseObject(formTemplate);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return  null;
-        }
-    }
 
     // Constructors
     /* default constructor */
@@ -165,32 +145,6 @@ public class MetaFormModel implements java.io.Serializable {
         this.modelId = modelId;
         this.modelName= modelName;
     }
-
-    /* full constructor */
-    public MetaFormModel(String modelId, String tableId,
-                         String modelComment, String modelName, String modelType,
-                         String formTemplate, Date lastModifyDate, String recorder,
-                         String extendOptJs, String dataFilterSql,
-                         String relFlowCode, String modeOptUrl, String databaseCode,String applicationId) {
-        super();
-        this.modelId = modelId;
-        this.tableId = tableId;
-        this.modelComment = modelComment;
-        this.modelName = modelName;
-        this.modelType = modelType;
-        this.formTemplate = formTemplate;
-
-        this.lastModifyDate = lastModifyDate;
-        this.recorder = recorder;
-        this.extendOptJs = extendOptJs;
-        this.dataFilterSql = dataFilterSql;
-        this.relFlowCode = relFlowCode;
-        this.modeOptUrl = modeOptUrl;
-        this.childFormModels = new HashSet<>();
-        this.databaseCode = databaseCode;
-        this.applicationId = applicationId;
-    }
-
 
 
     public Set<MetaFormModel> getMetaFormModels(){
@@ -300,7 +254,7 @@ public class MetaFormModel implements java.io.Serializable {
         if( other.getModelType() != null)
             this.modelType= other.getModelType();
         if( other.getFormTemplate() != null)
-            this.formTemplate=other.getFormTemplate();
+            this.formTemplate= other.getFormTemplate();
         if( other.getLastModifyDate() != null)
             this.lastModifyDate= other.getLastModifyDate();
         if( other.getRecorder() != null)

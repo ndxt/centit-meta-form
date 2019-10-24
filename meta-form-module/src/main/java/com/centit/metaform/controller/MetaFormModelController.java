@@ -1,6 +1,8 @@
 package com.centit.metaform.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
@@ -119,13 +121,13 @@ public class MetaFormModelController extends BaseController{
     @ApiOperation(value = "新增通用模块")
     @RequestMapping(method = {RequestMethod.POST})
     @WrapUpResponseBody
-    public void createMetaFormModel(MetaFormModel metaFormModel,
+    public void createMetaFormModel(@RequestBody MetaFormModel metaFormModel,
         HttpServletRequest request, HttpServletResponse response) {
         MetaFormModel model=new MetaFormModel();
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         model.copyNotNullProperty(metaFormModel);
         model.setRecorder(usercode);
-        model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));
+        /*model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));*/
         model.setExtendOptJs(StringEscapeUtils.unescapeHtml4(model.getExtendOptJs()));
         metaFormModelMag.saveNewMetaFormModel(model);
         JsonResultUtils.writeSingleDataJson(model.getModelId(),response);
@@ -154,7 +156,8 @@ public class MetaFormModelController extends BaseController{
     @WrapUpResponseBody
     public void updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel) {
         metaFormModel.setModelId(modelId);
-        metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));
+        /*metaFormModel.setFormTemplate(JSON
+                JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
@@ -165,7 +168,8 @@ public class MetaFormModelController extends BaseController{
     public void updateFormTemplate(@PathVariable String modelId,
                                     @RequestBody String formTemplate) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        metaFormModel.setFormTemplate(StringEscapeUtils.unescapeHtml4(formTemplate));
+        metaFormModel.setFormTemplate(
+                (JSONObject) JSON.parse(StringEscapeUtils.unescapeHtml4(formTemplate)));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 
