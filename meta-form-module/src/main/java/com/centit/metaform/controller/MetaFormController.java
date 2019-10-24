@@ -113,7 +113,7 @@ public class MetaFormController extends BaseController {
                 relation.fetchObjectFk(parentObject));
     }
 
-    @ApiOperation(value = "分页查询表单数据列表")
+    @ApiOperation(value = "分页查询表单数据列表，传入自定义表单id")
     @RequestMapping(value = "/{modelId}/list", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
