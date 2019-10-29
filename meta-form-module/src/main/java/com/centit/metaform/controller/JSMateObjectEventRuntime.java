@@ -1,6 +1,5 @@
 package com.centit.metaform.controller;
 
-import com.centit.framework.common.ObjectException;
 import com.centit.product.dataopt.utils.JSRuntimeContext;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.DatabaseRunTime;
@@ -8,7 +7,9 @@ import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.common.ObjectException;
 import com.centit.workflow.client.service.FlowEngineClient;
+import com.centit.workflow.commons.SubmitOptOptions;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,10 +111,9 @@ public class JSMateObjectEventRuntime {
     public void submitOpt(){
         String nodeInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
         try {
-            flowEngineClient.submitOpt(nodeInstId ,
-                    MetaFormController.fetchExtendParam("userCode", this.bizModel, request),
-                    MetaFormController.fetchExtendParam("unitCode", this.bizModel, request),
-                    null);
+            flowEngineClient.submitOpt(SubmitOptOptions.create().nodeInst(nodeInstId)
+                    .user(MetaFormController.fetchExtendParam("userCode", this.bizModel, request))
+                    .unit(MetaFormController.fetchExtendParam("unitCode", this.bizModel, request)));
         } catch (Exception e) {
             logger.info(e.getMessage());
         }

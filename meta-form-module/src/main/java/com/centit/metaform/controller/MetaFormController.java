@@ -3,7 +3,6 @@ package com.centit.metaform.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.ObjectException;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.controller.BaseController;
@@ -24,12 +23,17 @@ import com.centit.search.document.ObjectDocument;
 import com.centit.search.service.Impl.ESIndexer;
 import com.centit.search.service.Impl.ESSearcher;
 import com.centit.support.algorithm.*;
+import com.centit.support.common.ObjectException;
 import com.centit.support.compiler.Lexer;
 import com.centit.support.compiler.Pretreatment;
 import com.centit.support.database.transaction.JdbcTransaction;
 import com.centit.support.database.utils.PageDesc;
+import com.centit.support.database.utils.PersistenceException;
 import com.centit.support.database.utils.QueryAndNamedParams;
 import com.centit.workflow.client.service.FlowEngineClient;
+import com.centit.workflow.commons.CreateFlowOptions;
+import com.centit.workflow.commons.FlowOptParamOptions;
+import com.centit.workflow.commons.SubmitOptOptions;
 import com.centit.workflow.commons.WorkflowException;
 import com.centit.workflow.po.FlowInstance;
 import com.centit.workflow.po.NodeInstance;
@@ -49,6 +53,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/formaccess")
@@ -237,7 +242,7 @@ public class MetaFormController extends BaseController {
         if(!GeneralAlgorithm.equals(oldDate, newDate)){
             throw new ObjectException(CollectionsOpt.createHashMap(
                     "yourTimeStamp",newDate,"databaseTimeStamp",oldDate),
-                    ObjectException.DATABASE_OUT_SYNC_EXCEPTION,"更新数据对象时，数据版本不同步。");
+                    PersistenceException.DATABASE_OUT_SYNC_EXCEPTION,"更新数据对象时，数据版本不同步。");
         }
 
         object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
@@ -400,56 +405,53 @@ public class MetaFormController extends BaseController {
         }
     }
 
-    private Map<String, Object> fetchWorkflowVariables(MetaFormModel model, Map<String, Object> object) {
-        Map<String, Object> params = new HashMap<>(10);
-        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        List<MetaColumn> columns = tableInfo.getColumns();
-        for(MetaColumn col : columns) {
-            Object value = object.get(col.getPropertyName());
-            if (value != null && ( "1".equals(col.getWorkFlowVariableType()) || "2".equals(col.getWorkFlowVariableType()))) {
-               params.put(col.getColumnName(), value);
-            }
-        }
-        for(Map.Entry<String, Object> entry : object.entrySet()){
-            // 办件角色
-            if(entry.getKey().startsWith("flowRole")){
-                params.put(entry.getKey().substring(9), entry.getValue());
-            }
-        }
-        return params;
-    }
+    void fetchWorkflowVariables(FlowOptParamOptions options, MetaFormModel model, Map<String, Object> object) {
+        Map<String, Object> variables = new HashMap<>(10);
+        Map<String, Object> globalVariables = new HashMap<>(10);
 
-    // 这个 设置流程变量的时机 需要考虑，应该不仅仅实在 流程提交，在表单保存时也应该修改
-    private void setWorkflowVariables(MetaFormModel model, Map<String, Object> object) throws Exception {
-        //MetaTable tableInfo = metaObjectService.getTableInfo(model.getTableId());
-        String flowInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_INST_ID_PROP));
-        if(flowInstId == null){
-            throw new ObjectException(object,
-                    ObjectException.NULL_EXCEPTION,"工作流实例号为空。");
-        }
-        String nodeInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
-        //List<MetaColumn> columns = metaDataCache.listMetaColumns(model.getTableId());
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         List<MetaColumn> columns = tableInfo.getColumns();
         for(MetaColumn col : columns) {
             Object value = object.get(col.getPropertyName());
-            if(value != null) {
-                if ("1".equals(col.getWorkFlowVariableType())) {
-                    flowEngineClient.saveFlowVariable(flowInstId, col.getPropertyName(),
-                            StringBaseOpt.castObjectToString(value));
-                } else if ("2".equals(col.getWorkFlowVariableType()) && nodeInstId != null) {
-                    flowEngineClient.saveFlowNodeVariable(nodeInstId, col.getPropertyName(),
-                            StringBaseOpt.castObjectToString(value));
+            if (value != null){
+                if( "1".equals(col.getWorkFlowVariableType())) {
+                    variables.put(col.getColumnName(), value);
+                } else if( "2".equals(col.getWorkFlowVariableType())) {
+                    globalVariables.put(col.getColumnName(), value);
                 }
             }
         }
-        for(String skey : object.keySet()){
+        Map<String, List<String>> flowRoleUsers = new HashMap<>(10);
+        Map<String, List<String>> flowOrganizes = new HashMap<>(10);
+        Map<String, String> nodeUnits = new HashMap<>(10);
+        Map<String, Set<String>> nodeOptUsers = new HashMap<>(10);
+
+        for(Map.Entry<String, Object> entry : object.entrySet()){
             // 办件角色
-            if(skey.startsWith("flowRole")){
-                flowEngineClient.assignFlowWorkTeam(flowInstId, skey.substring(9),
-                        StringBaseOpt.objectToStringList(object.get(skey)));
+            if(entry.getKey().startsWith("wfv_")){
+                variables.put(entry.getKey().substring(4), entry.getValue());
+            } else if(entry.getKey().startsWith("wfgv_")){
+                globalVariables.put(entry.getKey().substring(5), entry.getValue());
+            } else if(entry.getKey().startsWith("wfr_")){
+                flowRoleUsers.put(entry.getKey().substring(4),
+                        StringBaseOpt.objectToStringList(entry.getValue()));
+            } else if(entry.getKey().startsWith("wfo_")){
+                flowOrganizes.put(entry.getKey().substring(4),
+                        StringBaseOpt.objectToStringList(entry.getValue()));
+            } else if(entry.getKey().startsWith("wfnd_")){
+                nodeUnits.put(entry.getKey().substring(5),
+                        StringBaseOpt.castObjectToString(entry.getValue()));
+            } else if(entry.getKey().startsWith("wfnu_")){
+                nodeOptUsers.put(entry.getKey().substring(5),
+                        StringBaseOpt.objectToStringSet(entry.getValue()));
             }
         }
+        options.setVariables(variables);
+        options.setGlobalVariables(globalVariables);
+        options.setFlowRoleUsers(flowRoleUsers);
+        options.setFlowOrganizes(flowOrganizes);
+        options.setNodeUnits(nodeUnits);
+        options.setNodeOptUsers(nodeOptUsers);
     }
 
     static String fetchExtendParam(String paramName, Map<String, Object> object, HttpServletRequest request){
@@ -519,26 +521,26 @@ public class MetaFormController extends BaseController {
         if(flowInstId==null || StringUtils.isBlank(flowInstId.toString())){
             // create flow instance
             try {
-                // 这个接口需要修改，需要和 flowEngine 一致
-                // TODO 从工作流中 找到模块对应的业务流程代码
-                /*FlowInstance flowInstance = flowEngineClient.createMetaFormFlowAndSubmit(model.getModelId(),
-                        Pretreatment.mapTemplateString(model.getFlowOptTitle(),object),// 这边需要添加一个title表达式
-                        object.get(tableInfo.getPkColumns().get(0).toLowerCase()).toString(),
-                        "U0000019",
-                        "D00005"
-                        //WebOptUtils.getCurrentUserCode(request),
-                        //WebOptUtils.getCurrentUnitCode(request)
-                );*/
-                Map<String, Object> extPrams = BaseController.collectRequestParameters(request);
-                extPrams.putAll(fetchWorkflowVariables(model, object));
+                String flowCode = fetchExtendParam("flowCode", object, request);
+                if(StringUtils.isBlank(flowCode)){
+                    flowCode = model.getRelFlowCode();
+                }
+                if(StringUtils.isBlank(flowCode)){
+                    throw new ObjectException(model, "找不到对应的流程");
+                }
+
                 dbObjectPk = tableInfo.fetchObjectPk(object);
 
-                FlowInstance flowInstance = flowEngineClient.createInstance(model.getRelFlowCode(),
-                        Pretreatment.mapTemplateString(model.getFlowOptTitle(), object),// 这边需要添加一个title表达式
-                        dbObjectPk.size()==1? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
-                                :JSON.toJSONString(dbObjectPk),
-                        fetchExtendParam("userCode", object, request),
-                        fetchExtendParam("unitCode", object, request),extPrams);
+                CreateFlowOptions options= CreateFlowOptions.create().flow(flowCode)
+                        .user(fetchExtendParam("userCode", object, request))
+                        .unit(fetchExtendParam("unitCode", object, request))
+                        .optName(Pretreatment.mapTemplateString(model.getFlowOptTitle(), object))
+                        .optTag(dbObjectPk.size()==1? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
+                                :JSON.toJSONString(dbObjectPk));
+
+                fetchWorkflowVariables(options, model, object);
+
+                FlowInstance flowInstance = flowEngineClient.createInstance(options);
 
                 object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
                 NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
@@ -549,8 +551,7 @@ public class MetaFormController extends BaseController {
                         CollectionsOpt.createList(
                                 MetaTable.WORKFLOW_INST_ID_PROP,
                                 MetaTable.WORKFLOW_NODE_INST_ID_PROP), object);
-                //  设置流程变量
-                setWorkflowVariables(model, object);
+
 
                 runJSEvent(model.getExtendOptJs(), object, "afterCreateFlow", request);
             } catch (Exception e) {
@@ -561,10 +562,12 @@ public class MetaFormController extends BaseController {
                 throw new ObjectException(WorkflowException.NodeInstNotFound,"找不到对应的节点实例号！" + jsonString);
             }
             try {
-                setWorkflowVariables(model, object);
+                SubmitOptOptions options = SubmitOptOptions.create().nodeInst(nodeInstId)
+                        .user(fetchExtendParam("userCode", object, request))
+                        .unit(fetchExtendParam("unitCode", object, request));
+                fetchWorkflowVariables(options, model, object);
                 // submit flow
-                flowEngineClient.submitOpt(nodeInstId , fetchExtendParam("userCode", object, request),
-                        fetchExtendParam("unitCode", object, request), null);
+                flowEngineClient.submitOpt(options);
                 runJSEvent(model.getExtendOptJs(), object, "afterSubmit", request);
             } catch (Exception e) {
                 throw new ObjectException(e);
