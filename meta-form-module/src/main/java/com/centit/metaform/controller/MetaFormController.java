@@ -528,13 +528,16 @@ public class MetaFormController extends BaseController {
                 if(StringUtils.isBlank(flowCode)){
                     throw new ObjectException(model, "找不到对应的流程");
                 }
-
+                String flowOptTitle = fetchExtendParam("titleTemplate", object, request);
+                if(StringUtils.isBlank(flowOptTitle)){
+                    flowOptTitle = model.getFlowOptTitle();
+                }
                 dbObjectPk = tableInfo.fetchObjectPk(object);
 
                 CreateFlowOptions options= CreateFlowOptions.create().flow(flowCode)
                         .user(fetchExtendParam("userCode", object, request))
                         .unit(fetchExtendParam("unitCode", object, request))
-                        .optName(Pretreatment.mapTemplateString(model.getFlowOptTitle(), object))
+                        .optName(Pretreatment.mapTemplateString(flowOptTitle, object))
                         .optTag(dbObjectPk.size()==1? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
                                 :JSON.toJSONString(dbObjectPk));
 
