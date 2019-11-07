@@ -57,6 +57,7 @@ public class MetaFormModel implements java.io.Serializable {
     @ApiModelProperty(value = "表单模板")
     @Column(name = "FORM_TEMPLATE")
     @JSONField(serialize=false)
+    @Basic(fetch = FetchType.LAZY)
     private JSONObject formTemplate;
 
     @ApiModelProperty(value = "更改时间")
