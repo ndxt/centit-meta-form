@@ -187,7 +187,7 @@ public class MetaFormController extends BaseController {
         ObjectDocument doc = new ObjectDocument();
         doc.setOptId(metaTable.getTableId());
         doc.setOptTag(JSON.toJSONString(metaTable.fetchObjectPk(object)));
-        doc.setContent(JSON.toJSONString(object));
+        doc.contentObject(object);//.setContent(JSON.toJSONString(object));
         doc.setOsId(metaTable.getDatabaseCode());
         doc.setUserCode(userCode);
         doc.setUserCode(unitCode);
