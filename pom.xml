@@ -22,7 +22,7 @@
         <workflow.version>4.5-SNAPSHOT</workflow.version>
         <common.module.version>1.1-SNAPSHOT</common.module.version>
         <metadata.commons.version>1.1-SNAPSHOT</metadata.commons.version>
-        <centit.es.version>1.1-SNAPSHOT</centit.es.version>
+        <centit.es.version>1.2-SNAPSHOT</centit.es.version>
     </properties>
 
     <licenses>

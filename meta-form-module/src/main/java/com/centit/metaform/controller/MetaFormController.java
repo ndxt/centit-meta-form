@@ -175,9 +175,24 @@ public class MetaFormController extends BaseController {
     @RequestMapping(value = "/{modelId}/search", method = RequestMethod.GET)
     @WrapUpResponseBody
     public PageQueryResult<Map<String, Object>> searchObject(@PathVariable String modelId,
-                             @RequestParam("query") String query, PageDesc pageDesc) {
+                            HttpServletRequest request, PageDesc pageDesc) {
+        Map<String, Object> queryParam = collectRequestParameters(request);
+        Map<String, Object> searchQuery = new HashMap<>(10);
+        String queryWord = StringBaseOpt.castObjectToString(queryParam.get("query"));
+        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        searchQuery.put("optId", model.getTableId());
+        Object user = queryParam.get("userCode");
+        if(user != null){
+            searchQuery.put("userCode", StringBaseOpt.castObjectToString(user));
+        }
+        Object units = queryParam.get("unitCode");
+        if(units != null){
+            searchQuery.put("unitCode", StringBaseOpt.objectToStringArray(units));
+        }
+
         Pair<Long, List<Map<String, Object>>> res =
-                esObjectSearcher.searchOpt(modelId, query, pageDesc.getPageNo(), pageDesc.getPageSize());
+                esObjectSearcher.search(searchQuery, queryWord, pageDesc.getPageNo(), pageDesc.getPageSize());
+
         pageDesc.setTotalRows(NumberBaseOpt.castObjectToInteger(res.getLeft()));
         return PageQueryResult.createResult(res.getRight(), pageDesc);
     }
@@ -185,12 +200,12 @@ public class MetaFormController extends BaseController {
     private ObjectDocument mapObjectToDocument(Map<String, Object> object, MetaTable metaTable,
                                                String userCode, String unitCode){
         ObjectDocument doc = new ObjectDocument();
+        doc.setOsId(metaTable.getDatabaseCode());
         doc.setOptId(metaTable.getTableId());
         doc.setOptTag(JSON.toJSONString(metaTable.fetchObjectPk(object)));
-        doc.setContent(JSON.toJSONString(object));
-        doc.setOsId(metaTable.getDatabaseCode());
+        doc.contentObject(object);//.setContent(JSON.toJSONString(object));
         doc.setUserCode(userCode);
-        doc.setUserCode(unitCode);
+        doc.setUnitCode(unitCode);
         return doc;
     }
 
@@ -247,7 +262,6 @@ public class MetaFormController extends BaseController {
 
         object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
     }
-
 
     @ApiOperation(value = "修改表单指定字段")
     @RequestMapping(value = "/{modelId}/change", method = RequestMethod.PUT)
