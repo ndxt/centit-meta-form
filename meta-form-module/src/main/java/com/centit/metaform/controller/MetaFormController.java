@@ -454,9 +454,9 @@ public class MetaFormController extends BaseController {
             Object value = object.get(col.getPropertyName());
             if (value != null){
                 if( "1".equals(col.getWorkFlowVariableType())) {
-                    variables.put(col.getColumnName(), value);
+                    variables.put(col.getPropertyName(), value);
                 } else if( "2".equals(col.getWorkFlowVariableType())) {
-                    globalVariables.put(col.getColumnName(), value);
+                    globalVariables.put(col.getPropertyName(), value);
                 }
             }
         }
@@ -498,17 +498,17 @@ public class MetaFormController extends BaseController {
         if(StringUtils.isNotBlank(paramValue)){
             return paramValue;
         }
+
+        if("currentOperatorUserCode".equals(paramName)){
+            object.put("currentOperatorUserCode",WebOptUtils.getCurrentUserCode(request));
+        } else if("currentOperatorUnitCode".equals(paramName)){
+            object.put("currentOperatorUnitCode",WebOptUtils.getCurrentUnitCode(request));
+        }
+
         paramValue = StringBaseOpt.castObjectToString(object.get(paramName));
         if(StringUtils.isNotBlank(paramValue)){
             return paramValue;
         }
-
-        if("userCode".equals(paramName)){
-            return WebOptUtils.getCurrentUserCode(request);
-        } else if("unitCode".equals(paramName)){
-            return WebOptUtils.getCurrentUnitCode(request);
-        }
-
         return null;
     }
     /**
@@ -574,8 +574,8 @@ public class MetaFormController extends BaseController {
                 dbObjectPk = tableInfo.fetchObjectPk(object);
 
                 CreateFlowOptions options= CreateFlowOptions.create().flow(flowCode)
-                        .user(fetchExtendParam("userCode", object, request))
-                        .unit(fetchExtendParam("unitCode", object, request))
+                        .user(fetchExtendParam("currentOperatorUserCode", object, request))
+                        .unit(fetchExtendParam("currentOperatorUnitCode", object, request))
                         .optName(Pretreatment.mapTemplateString(flowOptTitle, object))
                         .optTag(dbObjectPk.size()==1? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
                                 :JSON.toJSONString(dbObjectPk));
@@ -605,13 +605,16 @@ public class MetaFormController extends BaseController {
             }
             try {
                 SubmitOptOptions options = SubmitOptOptions.create().nodeInst(nodeInstId)
-                        .user(fetchExtendParam("userCode", object, request))
-                        .unit(fetchExtendParam("unitCode", object, request));
+                        .user(fetchExtendParam("currentOperatorUserCode", object, request))
+                        .unit(fetchExtendParam("currentOperatorUnitCode", object, request));
                 fetchWorkflowVariables(options, model, object);
                 // submit flow
-                flowEngineClient.submitOpt(options);
+                Map<String, Object> s= flowEngineClient.submitOpt(options);
                 runJSEvent(model.getExtendOptJs(), object, "afterSubmit", request);
-            } catch (Exception e) {
+            } catch(WorkflowException e){
+                throw new WorkflowException(e.getMessage());
+            }
+            catch (Exception e) {
                 throw new ObjectException(e);
             }
         }
