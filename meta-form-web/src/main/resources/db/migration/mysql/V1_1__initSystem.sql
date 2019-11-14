@@ -115,7 +115,7 @@ CREATE TABLE `f_md_table` (
   `TABLE_LABEL_NAME` varchar(500) NOT NULL,
   `DATABASE_CODE` varchar(32) NOT NULL COMMENT '数据库代码',
   `TABLE_NAME` varchar(500) DEFAULT NULL,
-  `TABLE_TYPE` char(1) NOT NULL COMMENT '表/视图 目前只能是表',
+  `TABLE_TYPE` char(1) NOT NULL COMMENT '表/视图/大字段 ',
   `ACCESS_TYPE` char(1) NOT NULL COMMENT '系统 S / R 查询(只读)/ N 新建(读写)',
   `TABLE_COMMENT` varchar(256) DEFAULT NULL,
   `WORKFLOW_OPT_TYPE` char(1) NOT NULL DEFAULT '0',
