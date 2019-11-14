@@ -47,7 +47,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -202,8 +205,22 @@ public class MetaFormController extends BaseController {
         ObjectDocument doc = new ObjectDocument();
         doc.setOsId(metaTable.getDatabaseCode());
         doc.setOptId(metaTable.getTableId());
+        //Map<String, Object> pkMap = metaTable.fetchObjectPk(object);
         doc.setOptTag(JSON.toJSONString(metaTable.fetchObjectPk(object)));
-        doc.contentObject(object);//.setContent(JSON.toJSONString(object));
+        if("C".equals(metaTable.getTableType())){
+            Object jsonObject = object.get(MetaTable.OBJECT_AS_CLOB_PROP);
+            if(jsonObject instanceof Map){
+                ((Map) jsonObject).put("objectId",metaTable.fetchObjectPkAsId(object));
+                doc.contentObject(jsonObject);
+                doc.setTitle(Pretreatment.mapTemplateString(metaTable.getObjectTitle(), jsonObject));
+            } else {
+                doc.contentObject(object);
+                doc.setTitle(Pretreatment.mapTemplateString(metaTable.getObjectTitle(), object));
+            }
+        } else {
+            doc.contentObject(object);//.setContent(JSON.toJSONString(object));
+            doc.setTitle(Pretreatment.mapTemplateString(metaTable.getObjectTitle(), object));
+        }
         doc.setUserCode(userCode);
         doc.setUnitCode(unitCode);
         return doc;
@@ -211,7 +228,10 @@ public class MetaFormController extends BaseController {
 
     private void saveFulltextIndex(Map<String, Object> obj, String tableId, HttpServletRequest request){
         MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if(metaTable != null && "T".equals(metaTable.getFulltextSearch())) {
+        if(metaTable != null &&
+                ("T".equals(metaTable.getFulltextSearch())
+                        // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
+                        || "C".equals(metaTable.getTableType()))) {
             try {
                 esObjectIndexer.saveNewDocument(
                     mapObjectToDocument(obj, metaTable,
@@ -225,7 +245,10 @@ public class MetaFormController extends BaseController {
 
     private void deleteFulltextIndex(Map<String, Object> obj, String tableId){
         MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if(metaTable != null && "T".equals(metaTable.getFulltextSearch())) {
+        if(metaTable != null &&
+                ("T".equals(metaTable.getFulltextSearch())
+                        // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
+                        || "C".equals(metaTable.getTableType()))) {
             try {
                 esObjectIndexer.deleteDocument(
                         mapObjectToDocument(obj, metaTable, "", ""));
@@ -237,7 +260,10 @@ public class MetaFormController extends BaseController {
 
     private void updataFulltextIndex(Map<String, Object> obj, String tableId, HttpServletRequest request){
         MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if(metaTable != null && "T".equals(metaTable.getFulltextSearch())) {
+        if(metaTable != null &&
+                ("T".equals(metaTable.getFulltextSearch())
+                // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
+                || "C".equals(metaTable.getTableType()))) {
             try {
                 Map<String, Object> dbObject =
                         metaObjectService.getObjectWithChildren(tableId, obj, 1);
@@ -278,7 +304,7 @@ public class MetaFormController extends BaseController {
         updataFulltextIndex(object, model.getTableId(), request);
 
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
+        if(tableInfo.isWriteOptLog()){
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
             OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
                     modelId,JSON.toJSONString(primaryKey),"change","修改数据指定字段",params, null);
@@ -314,7 +340,7 @@ public class MetaFormController extends BaseController {
 
     private void innerUpdateObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
                                    Map<String, Object> dbObject, HttpServletRequest request ){
-        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+        if(tableInfo.isUpdateCheckTimeStamp()){
             checkUpdateTimeStamp(dbObject, object);
         }
 
@@ -335,9 +361,9 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getWriteOptLog());
+        boolean writeLog =  tableInfo.isWriteOptLog();
         Map<String, Object> dbObject = null;
-        if(writeLog || StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())) {
+        if(writeLog || tableInfo.isUpdateCheckTimeStamp()) {
             dbObject = metaObjectService.getObjectWithChildren(model.getTableId(), object, 1);
         }
         innerUpdateObject(model,tableInfo,object, dbObject, request);
@@ -352,7 +378,7 @@ public class MetaFormController extends BaseController {
     private void innerSaveObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
                                  HttpServletRequest request ){
 
-        if(StringRegularOpt.isTrue(tableInfo.getUpdateCheckTimeStamp())){
+        if(tableInfo.isUpdateCheckTimeStamp()){
             object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
         }
 
@@ -382,7 +408,7 @@ public class MetaFormController extends BaseController {
         innerSaveObject(model,tableInfo,object,request);
 
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-        if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
+        if(tableInfo.isWriteOptLog()){
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
                     modelId,JSON.toJSONString(primaryKey),"save","保存新的数据对象（包括子对象）", object);
         }
@@ -399,9 +425,8 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
 
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        boolean writeLog =  StringRegularOpt.isTrue(tableInfo.getWriteOptLog());
+        boolean writeLog =  tableInfo.isWriteOptLog();
         Map<String, Object> dbObject = null;
-
         if(writeLog) {
             dbObject = metaObjectService.getObjectById(model.getTableId(), parameters);
         }
@@ -593,7 +618,7 @@ public class MetaFormController extends BaseController {
 
 
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-        if(StringRegularOpt.isTrue(tableInfo.getWriteOptLog())){
+        if(tableInfo.isWriteOptLog()){
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
                     modelId,JSON.toJSONString(primaryKey),"submit","提交流程", object);
         }
