@@ -19,6 +19,9 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.7" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.7" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.7" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-es-client:1.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.xml.bind:jaxb-core:2.3.0.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.xml.bind:jaxb-impl:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.centit.product:business-operation-core:1.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.6" level="project" />
@@ -31,7 +34,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:rt:1.8">
         <CLASSES>
-          <root url="jar:///opt/develop/jvm/jdk11/jre/lib/rt.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../jdk1.8.0_131/jre/lib/rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -40,7 +43,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:jce:1.8">
         <CLASSES>
-          <root url="jar:///opt/develop/jvm/jdk11/jre/lib/jce.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../jdk1.8.0_131/jre/lib/jce.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -220,8 +223,6 @@
     <orderEntry type="library" name="Maven: org.apache.uima:uimaj-core:3.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.bitbucket.mstrobel:procyon-compilertools:0.5.32" level="project" />
     <orderEntry type="library" name="Maven: org.bitbucket.mstrobel:procyon-core:0.5.32" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.xml.bind:jaxb-core:2.3.0.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.xml.bind:jaxb-impl:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.jdom:jdom2:2.0.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.9" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.9" level="project" />
@@ -248,7 +249,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.8">
         <CLASSES>
-          <root url="jar:///opt/develop/jvm/jdk11/lib/tools.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../jdk1.8.0_131/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -429,9 +429,9 @@ public class MetaFormController extends BaseController {
             Object value = object.get(col.getPropertyName());
             if (value != null){
                 if( "1".equals(col.getWorkFlowVariableType())) {
-                    variables.put(col.getColumnName(), value);
+                    variables.put(col.getPropertyName(), value);
                 } else if( "2".equals(col.getWorkFlowVariableType())) {
-                    globalVariables.put(col.getColumnName(), value);
+                    globalVariables.put(col.getPropertyName(), value);
                 }
             }
         }
@@ -475,9 +475,9 @@ public class MetaFormController extends BaseController {
         }
 
         if("currentOperatorUserCode".equals(paramName)){
-            return WebOptUtils.getCurrentUserCode(request);
+            object.put("currentOperatorUserCode",WebOptUtils.getCurrentUserCode(request));
         } else if("currentOperatorUnitCode".equals(paramName)){
-            return WebOptUtils.getCurrentUnitCode(request);
+            object.put("currentOperatorUnitCode",WebOptUtils.getCurrentUnitCode(request));
         }
 
         paramValue = StringBaseOpt.castObjectToString(object.get(paramName));
