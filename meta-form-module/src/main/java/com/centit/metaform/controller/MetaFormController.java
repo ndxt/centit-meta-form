@@ -205,29 +205,17 @@ public class MetaFormController extends BaseController {
         ObjectDocument doc = new ObjectDocument();
         doc.setOsId(metaTable.getDatabaseCode());
         doc.setOptId(metaTable.getTableId());
-        //Map<String, Object> pkMap = metaTable.fetchObjectPk(object);
-        doc.setOptTag(JSON.toJSONString(metaTable.fetchObjectPk(object)));
-        if("C".equals(metaTable.getTableType())){
-            Object jsonObject = object.get(MetaTable.OBJECT_AS_CLOB_PROP);
-            if(jsonObject instanceof Map){
-                ((Map) jsonObject).put("objectId",metaTable.fetchObjectPkAsId(object));
-                doc.contentObject(jsonObject);
-                doc.setTitle(Pretreatment.mapTemplateString(metaTable.getObjectTitle(), jsonObject));
-            } else {
-                doc.contentObject(object);
-                doc.setTitle(Pretreatment.mapTemplateString(metaTable.getObjectTitle(), object));
-            }
-        } else {
-            doc.contentObject(object);//.setContent(JSON.toJSONString(object));
-            doc.setTitle(Pretreatment.mapTemplateString(metaTable.getObjectTitle(), object));
-        }
+        //Map<String, Object> pkMap = metaTable.fetchObjectPkAsId(object);
+        doc.setOptTag(metaTable.fetchObjectPkAsId(object));
+        doc.contentObject(object);//.setContent(JSON.toJSONString(object));
+        doc.setTitle(Pretreatment.mapTemplateString(metaTable.getObjectTitle(), object));
         doc.setUserCode(userCode);
         doc.setUnitCode(unitCode);
         return doc;
     }
 
-    private void saveFulltextIndex(Map<String, Object> obj, String tableId, HttpServletRequest request){
-        MetaTable metaTable = metaDataCache.getTableInfo(tableId);
+    private void saveFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request){
+        //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
         if(metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
@@ -258,15 +246,15 @@ public class MetaFormController extends BaseController {
         }
     }
 
-    private void updataFulltextIndex(Map<String, Object> obj, String tableId, HttpServletRequest request){
-        MetaTable metaTable = metaDataCache.getTableInfo(tableId);
+    private void updataFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request){
+        //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
         if(metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                 // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                 || "C".equals(metaTable.getTableType()))) {
             try {
                 Map<String, Object> dbObject =
-                        metaObjectService.getObjectWithChildren(tableId, obj, 1);
+                        metaObjectService.getObjectWithChildren(metaTable.getTableId(), obj, 1);
                 esObjectIndexer.mergeDocument(
                         mapObjectToDocument(dbObject, metaTable,
                                 WebOptUtils.getCurrentUserCode(request),
@@ -301,7 +289,7 @@ public class MetaFormController extends BaseController {
         object.putAll(params);
         metaObjectService.updateObjectFields(model.getTableId(), params.keySet(), object);
         // 更改索引
-        updataFulltextIndex(object, model.getTableId(), request);
+        updataFulltextIndex(object,metaDataCache.getTableInfo(model.getTableId()), request);
 
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         if(tableInfo.isWriteOptLog()){
@@ -333,22 +321,54 @@ public class MetaFormController extends BaseController {
     @JdbcTransaction
     public Map<String, Object> getObjectWithChildren(@PathVariable String modelId,
                                          HttpServletRequest request) {
-        Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        return metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
+        MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
+        Map<String, Object> parameters = collectRequestParameters(request);
+        if("C".equals(tableInfo.getTableType())){
+            if(tableInfo.countPkColumn() != 1) {
+                String pkCol = tableInfo.getPkFields().get(0).getPropertyName();
+                Object pkValue = parameters.get(pkCol);
+                Object idValue = parameters.get("id");
+                if (pkValue == null && idValue != null) {
+                    parameters.put(pkCol, idValue);
+                }
+            }
+            String optTag = StringBaseOpt.castObjectToString(parameters.get("optTag"));
+            if(StringUtils.isNotBlank(optTag)){
+                Map<String, Object> pk = tableInfo.parseObjectPkId(optTag);
+                if(pk != null){
+                    parameters.putAll(pk);
+                }
+            }
+        }
+
+        Map<String, Object> objectMap = metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
+
+        if("C".equals(tableInfo.getTableType())){
+            Object obj = objectMap.get(MetaTable.OBJECT_AS_CLOB_PROP);
+            if(obj!=null && objectMap instanceof Map){
+                return (Map<String, Object>) obj;
+            }
+        }
+        return objectMap;
     }
 
     private void innerUpdateObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
                                    Map<String, Object> dbObject, HttpServletRequest request ){
-        if(tableInfo.isUpdateCheckTimeStamp()){
-            checkUpdateTimeStamp(dbObject, object);
-        }
-
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request)==0) {
-            metaObjectService.updateObjectWithChildren(model.getTableId(), object);
+        if("C".equals(tableInfo.getTableType())){
+            Map<String, Object> objectMap = tableInfo.fetchObjectPk(object);
+            objectMap.put(MetaTable.OBJECT_AS_CLOB_PROP, object);
+            metaObjectService.updateObject(model.getTableId(), object);
+        } else {
+            if (tableInfo.isUpdateCheckTimeStamp()) {
+                checkUpdateTimeStamp(dbObject, object);
+            }
+            if (runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request) == 0) {
+                metaObjectService.updateObjectWithChildren(model.getTableId(), object);
+            }
         }
         // 更改索引
-        updataFulltextIndex(object, model.getTableId(), request);
+        updataFulltextIndex(object, tableInfo, request);
     }
 
     @ApiOperation(value = "修改表单数据带子表")
@@ -366,7 +386,7 @@ public class MetaFormController extends BaseController {
         if(writeLog || tableInfo.isUpdateCheckTimeStamp()) {
             dbObject = metaObjectService.getObjectWithChildren(model.getTableId(), object, 1);
         }
-        innerUpdateObject(model,tableInfo,object, dbObject, request);
+        innerUpdateObject(model, tableInfo, object, dbObject, request);
 
         if(writeLog){
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
@@ -377,22 +397,28 @@ public class MetaFormController extends BaseController {
 
     private void innerSaveObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
                                  HttpServletRequest request ){
+        // 大字段 表格 只保存主键和 jsonObjectField 字段
+        if("C".equals(tableInfo.getTableType())){
+            Map<String, Object> objectMap = tableInfo.fetchObjectPk(object);
+            objectMap.put(MetaTable.OBJECT_AS_CLOB_PROP, object);
+            metaObjectService.saveObject(model.getTableId(), object);
+        } else {
+            if (tableInfo.isUpdateCheckTimeStamp()) {
+                object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
+            }
 
-        if(tableInfo.isUpdateCheckTimeStamp()){
-            object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
-        }
+            JSONObject userDetails = WebOptUtils.getCurrentUserInfo(request);
+            Map<String, Object> parameters = collectRequestParameters(request);
+            parameters.put("currentUser", userDetails);
+            parameters.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
 
-        JSONObject userDetails = WebOptUtils.getCurrentUserInfo(request);
-        if(userDetails != null){
-            userDetails.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
-        }
-        Map<String, Object> parameters = collectRequestParameters(request);
-        parameters.put("currentUser", userDetails);
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeSave", request)==0) {
-            metaObjectService.saveObjectWithChildren(model.getTableId(), object, parameters);
+            if (runJSEvent(model.getExtendOptJs(), object, "beforeSave", request) == 0) {
+                metaObjectService.saveObjectWithChildren(model.getTableId(), object, parameters);
+            }
         }
         // 添加索引
-        saveFulltextIndex(object,model.getTableId(),request);
+        saveFulltextIndex(object,tableInfo,request);
+
     }
 
     @ApiOperation(value = "新增表单数据带子表")
@@ -405,7 +431,7 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        innerSaveObject(model,tableInfo,object,request);
+        innerSaveObject(model, tableInfo, object, request);
 
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if(tableInfo.isWriteOptLog()){
