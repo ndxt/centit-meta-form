@@ -346,12 +346,22 @@ public class MetaFormController extends BaseController {
         Map<String, Object> objectMap = metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
 
         if("C".equals(tableInfo.getTableType())){
-            Object obj = objectMap.get(MetaTable.OBJECT_AS_CLOB_PROP);
-            if(obj!=null && objectMap instanceof Map){
-                return (Map<String, Object>) obj;
-            }
+            return mapPoToDto(objectMap);
         }
         return objectMap;
+    }
+    private Map<String, Object> mapPoToDto(Map<String, Object> po){
+        Object obj = po.get(MetaTable.OBJECT_AS_CLOB_PROP);
+        if(/*obj!=null && */obj instanceof Map){
+            Map<String, Object> dto = (Map<String, Object>) obj;
+            for(Map.Entry<String, Object> ent : po.entrySet()){
+                if(!MetaTable.OBJECT_AS_CLOB_PROP.equals(ent.getKey()) && ent.getValue() != null){
+                    dto.put(ent.getKey(), ent.getValue());
+                }
+            }
+            return dto;
+        }
+        return po;
     }
 
     private Map<String, Object> mapDtoToPo(Map<String, Object> dto){
