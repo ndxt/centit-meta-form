@@ -163,6 +163,7 @@ public class MetaFormController extends BaseController {
         }
         JSONArray ja = metaObjectService.pageQueryObjects(
                 model.getTableId(), extFilter, params, fields, pageDesc);
+
         return PageQueryResult.createJSONArrayResult(ja, pageDesc);
 
     }
@@ -353,19 +354,27 @@ public class MetaFormController extends BaseController {
         return objectMap;
     }
 
+    private Map<String, Object> mapDtoToPo(Map<String, Object> dto){
+        Map<String, Object> po = new HashMap<>(dto);
+        //Map<String, Object> po = dto;
+        po.remove(MetaTable.OBJECT_AS_CLOB_PROP);
+        String jsonString = JSON.toJSONString(po);
+        po.put(MetaTable.OBJECT_AS_CLOB_PROP, jsonString);
+        return dto;
+    }
+
     private void innerUpdateObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
                                    Map<String, Object> dbObject, HttpServletRequest request ){
+        Map<String, Object> po = object;
         if("C".equals(tableInfo.getTableType())){
-            Map<String, Object> objectMap = tableInfo.fetchObjectPk(object);
-            objectMap.put(MetaTable.OBJECT_AS_CLOB_PROP, object);
-            metaObjectService.updateObject(model.getTableId(), object);
-        } else {
-            if (tableInfo.isUpdateCheckTimeStamp()) {
-                checkUpdateTimeStamp(dbObject, object);
-            }
-            if (runJSEvent(model.getExtendOptJs(), object, "beforeUpdate", request) == 0) {
-                metaObjectService.updateObjectWithChildren(model.getTableId(), object);
-            }
+            po = mapDtoToPo(object);
+        }
+
+        if (tableInfo.isUpdateCheckTimeStamp()) {
+            checkUpdateTimeStamp(dbObject, po);
+        }
+        if (runJSEvent(model.getExtendOptJs(), po, "beforeUpdate", request) == 0) {
+            metaObjectService.updateObjectWithChildren(model.getTableId(), po);
         }
         // 更改索引
         updataFulltextIndex(object, tableInfo, request);
@@ -398,24 +407,24 @@ public class MetaFormController extends BaseController {
     private void innerSaveObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
                                  HttpServletRequest request ){
         // 大字段 表格 只保存主键和 jsonObjectField 字段
+        Map<String, Object> po = object;
         if("C".equals(tableInfo.getTableType())){
-            Map<String, Object> objectMap = tableInfo.fetchObjectPk(object);
-            objectMap.put(MetaTable.OBJECT_AS_CLOB_PROP, object);
-            metaObjectService.saveObject(model.getTableId(), object);
-        } else {
-            if (tableInfo.isUpdateCheckTimeStamp()) {
-                object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
-            }
-
-            JSONObject userDetails = WebOptUtils.getCurrentUserInfo(request);
-            Map<String, Object> parameters = collectRequestParameters(request);
-            parameters.put("currentUser", userDetails);
-            parameters.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
-
-            if (runJSEvent(model.getExtendOptJs(), object, "beforeSave", request) == 0) {
-                metaObjectService.saveObjectWithChildren(model.getTableId(), object, parameters);
-            }
+            po = mapDtoToPo(object);
         }
+
+        if (tableInfo.isUpdateCheckTimeStamp()) {
+            po.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
+        }
+
+        JSONObject userDetails = WebOptUtils.getCurrentUserInfo(request);
+        Map<String, Object> parameters = collectRequestParameters(request);
+        parameters.put("currentUser", userDetails);
+        parameters.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
+
+        if (runJSEvent(model.getExtendOptJs(), po, "beforeSave", request) == 0) {
+            metaObjectService.saveObjectWithChildren(model.getTableId(), object, parameters);
+        }
+
         // 添加索引
         saveFulltextIndex(object,tableInfo,request);
 
