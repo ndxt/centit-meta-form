@@ -118,7 +118,7 @@ public class MetaFormController extends BaseController {
                 .getObjectById(relation.getParentTableId(), parameters);
 
         return metaObjectService.listObjectsByProperties(relation.getChildTableId(),
-                relation.fetchObjectFk(parentObject));
+                relation.fetchChildFk(parentObject));
     }
 
     @ApiOperation(value = "分页查询表单数据列表，传入自定义表单id")
