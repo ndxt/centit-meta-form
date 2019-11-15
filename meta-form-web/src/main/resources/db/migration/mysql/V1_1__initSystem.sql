@@ -142,6 +142,7 @@ CREATE TABLE `f_pending_meta_column` (
   `primary_key` char(1) DEFAULT NULL,
   `last_modify_Date` datetime DEFAULT NULL,
   `Recorder` varchar(8) DEFAULT NULL,
+  `table_type` char(1) DEFAULT 'T'
   PRIMARY KEY (`Table_ID`,`column_Name`)
 );
 
