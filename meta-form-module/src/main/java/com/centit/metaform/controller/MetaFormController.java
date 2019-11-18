@@ -329,7 +329,7 @@ public class MetaFormController extends BaseController {
             if(tableInfo.countPkColumn() != 1) {
                 String pkCol = tableInfo.getPkFields().get(0).getPropertyName();
                 Object pkValue = parameters.get(pkCol);
-                Object idValue = parameters.get("id");
+                Object idValue = parameters.get("_id");
                 if (pkValue == null && idValue != null) {
                     parameters.put(pkCol, idValue);
                 }
