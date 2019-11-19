@@ -370,7 +370,7 @@ public class MetaFormController extends BaseController {
         po.remove(MetaTable.OBJECT_AS_CLOB_PROP);
         String jsonString = JSON.toJSONString(po);
         po.put(MetaTable.OBJECT_AS_CLOB_PROP, jsonString);
-        return dto;
+        return po;
     }
 
     private void innerUpdateObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
@@ -432,7 +432,7 @@ public class MetaFormController extends BaseController {
         parameters.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
 
         if (runJSEvent(model.getExtendOptJs(), po, "beforeSave", request) == 0) {
-            metaObjectService.saveObjectWithChildren(model.getTableId(), object, parameters);
+            metaObjectService.saveObjectWithChildren(model.getTableId(), po, parameters);
         }
 
         // 添加索引
