@@ -194,7 +194,7 @@ public class MetaFormController extends BaseController {
 
         Pair<Long, List<Map<String, Object>>> res =
                 esObjectSearcher.search(searchQuery, queryWord, pageDesc.getPageNo(), pageDesc.getPageSize());
-        if (res==null) return PageQueryResult.createResult(new ArrayList<>(),pageDesc);
+        if (res==null) throw new ObjectException("ELK异常");
         pageDesc.setTotalRows(NumberBaseOpt.castObjectToInteger(res.getLeft()));
         return PageQueryResult.createResult(res.getRight(), pageDesc);
     }
