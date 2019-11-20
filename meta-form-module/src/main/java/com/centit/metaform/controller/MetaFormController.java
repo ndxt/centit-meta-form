@@ -37,7 +37,6 @@ import com.centit.workflow.commons.SubmitOptOptions;
 import com.centit.workflow.commons.WorkflowException;
 import com.centit.workflow.po.FlowInstance;
 import com.centit.workflow.po.NodeInstance;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
