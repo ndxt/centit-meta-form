@@ -587,7 +587,8 @@ public class MetaFormController extends BaseController {
             //和流程过程对应的 表单 要写入 节点实例号
             object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstId);
         }
-
+        fetchExtendParam("currentOperatorUserCode", object, request);
+        fetchExtendParam("currentOperatorUnitCode", object, request);
         if(dbObject == null){
             innerSaveObject(model,tableInfo,object,request);
         } else {
@@ -616,8 +617,8 @@ public class MetaFormController extends BaseController {
                 dbObjectPk = tableInfo.fetchObjectPk(object);
 
                 CreateFlowOptions options= CreateFlowOptions.create().flow(flowCode)
-                        .user(fetchExtendParam("currentOperatorUserCode", object, request))
-                        .unit(fetchExtendParam("currentOperatorUnitCode", object, request))
+                        .user(object.getString("currentOperatorUserCode"))
+                        .unit(object.getString("currentOperatorUnitCode"))
                         .optName(Pretreatment.mapTemplateString(flowOptTitle, object))
                         .optTag(dbObjectPk.size()==1? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
                                 :JSON.toJSONString(dbObjectPk));
@@ -647,8 +648,8 @@ public class MetaFormController extends BaseController {
             }
             try {
                 SubmitOptOptions options = SubmitOptOptions.create().nodeInst(nodeInstId)
-                        .user(fetchExtendParam("currentOperatorUserCode", object, request))
-                        .unit(fetchExtendParam("currentOperatorUnitCode", object, request));
+                        .user(object.getString("currentOperatorUserCode"))
+                        .unit(object.getString("currentOperatorUnitCode"));
                 fetchWorkflowVariables(options, model, object);
                 // submit flow
                 Map<String, Object> s= flowEngineClient.submitOpt(options);
