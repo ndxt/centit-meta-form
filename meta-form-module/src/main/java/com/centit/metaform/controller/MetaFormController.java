@@ -267,7 +267,7 @@ public class MetaFormController extends BaseController {
     private void checkUpdateTimeStamp(Map<String, Object> dbObject, Map<String, Object> object){
         Object oldDate = dbObject.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
         Object newDate = object.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
-        if(!GeneralAlgorithm.equals(oldDate, newDate)){
+        if(!DatetimeOpt.equalOnSecond(DatetimeOpt.castObjectToDate(oldDate), DatetimeOpt.castObjectToDate(newDate))){
             throw new ObjectException(CollectionsOpt.createHashMap(
                     "yourTimeStamp",newDate,"databaseTimeStamp",oldDate),
                     PersistenceException.DATABASE_OUT_SYNC_EXCEPTION,"更新数据对象时，数据版本不同步。");
