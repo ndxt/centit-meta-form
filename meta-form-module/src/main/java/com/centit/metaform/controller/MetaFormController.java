@@ -82,23 +82,23 @@ public class MetaFormController extends BaseController {
     @Autowired
     private QueryDataScopeFilter queryDataScopeFilter;
 
-    @Autowired(required=false)
+    @Autowired(required = false)
     private ESIndexer esObjectIndexer;
 
-    @Autowired(required=false)
+    @Autowired(required = false)
     private ESSearcher esObjectSearcher;
 
-    private int runJSEvent(String js, Map<String, Object> object, String event, HttpServletRequest request){
-        if(StringUtils.isBlank(js)){
+    private int runJSEvent(String js, Map<String, Object> object, String event, HttpServletRequest request) {
+        if (StringUtils.isBlank(js)) {
             return 0;
         }
 
         JSMateObjectEventRuntime jsMateObjectEvent = new JSMateObjectEventRuntime(
                 metaObjectService, databaseRunTime, js, request);
         jsMateObjectEvent.setFlowEngineClient(flowEngineClient);
-        int ret = jsMateObjectEvent.runEvent(event,object);
-        if(ret < 0){
-            throw new ObjectException(ret, "外部事件"+event+"运行异常" + js);
+        int ret = jsMateObjectEvent.runEvent(event, object);
+        if (ret < 0) {
+            throw new ObjectException(ret, "外部事件" + event + "运行异常" + js);
         }
         return ret;
     }
@@ -123,7 +123,7 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public PageQueryResult<Object> listObjects(@PathVariable String modelId, PageDesc pageDesc,
-                                               String [] fields, HttpServletRequest request) {
+                                               String[] fields, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         //String optId = FieldType.mapClassName(table.getTableName());
@@ -131,7 +131,7 @@ public class MetaFormController extends BaseController {
                 WebOptUtils.getCurrentUserCode(request), modelId, "list");
 
         String sql = model.getDataFilterSql();
-        if(StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select",new Lexer(sql).getAWord())) {
+        if (StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select", new Lexer(sql).getAWord())) {
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceDatas(params);
@@ -141,20 +141,20 @@ public class MetaFormController extends BaseController {
             return PageQueryResult.createJSONArrayResult(ja, pageDesc);
         }
 
-        if(StringUtils.isNotBlank(sql)) {
+        if (StringUtils.isNotBlank(sql)) {
             fields = sql.split(",");
         }
 
         String extFilter = null;
-        if(filters !=null) {
+        if (filters != null) {
             MetaTable table = metaDataCache.getTableInfo(model.getTableId());
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceDatas(params);
             Map<String, String> tableAlias = new HashMap<>(3);
-            tableAlias.put(table.getTableName(),"");
+            tableAlias.put(table.getTableName(), "");
             QueryAndNamedParams qap = dataPowerFilter.translateQueryFilter(
-                    tableAlias, filters) ;
+                    tableAlias, filters);
             params.putAll(qap.getParams());
             extFilter = qap.getQuery();
         }
@@ -167,39 +167,39 @@ public class MetaFormController extends BaseController {
 
     @ApiOperation(value = "全文检索")
     @ApiImplicitParams({@ApiImplicitParam(
-            name = "modelId", value="表单id",
-            required=true, paramType = "path", dataType ="String"
-    ),@ApiImplicitParam(
-            name = "query", value="检索关键字",
-            required=true, paramType = "query", dataType ="String"
+            name = "modelId", value = "表单id",
+            required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "query", value = "检索关键字",
+            required = true, paramType = "query", dataType = "String"
     )})
     @RequestMapping(value = "/{modelId}/search", method = RequestMethod.GET)
     @WrapUpResponseBody
     public PageQueryResult<Map<String, Object>> searchObject(@PathVariable String modelId,
-                            HttpServletRequest request, PageDesc pageDesc) {
+                                                             HttpServletRequest request, PageDesc pageDesc) {
         Map<String, Object> queryParam = collectRequestParameters(request);
         Map<String, Object> searchQuery = new HashMap<>(10);
         String queryWord = StringBaseOpt.castObjectToString(queryParam.get("query"));
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         searchQuery.put("optId", model.getTableId());
         Object user = queryParam.get("userCode");
-        if(user != null){
+        if (user != null) {
             searchQuery.put("userCode", StringBaseOpt.castObjectToString(user));
         }
         Object units = queryParam.get("unitCode");
-        if(units != null){
+        if (units != null) {
             searchQuery.put("unitCode", StringBaseOpt.objectToStringArray(units));
         }
 
         Pair<Long, List<Map<String, Object>>> res =
                 esObjectSearcher.search(searchQuery, queryWord, pageDesc.getPageNo(), pageDesc.getPageSize());
-        if (res==null) throw new ObjectException("ELK异常");
+        if (res == null) throw new ObjectException("ELK异常");
         pageDesc.setTotalRows(NumberBaseOpt.castObjectToInteger(res.getLeft()));
         return PageQueryResult.createResult(res.getRight(), pageDesc);
     }
 
     private ObjectDocument mapObjectToDocument(Map<String, Object> object, MetaTable metaTable,
-                                               String userCode, String unitCode){
+                                               String userCode, String unitCode) {
         ObjectDocument doc = new ObjectDocument();
         doc.setOsId(metaTable.getDatabaseCode());
         doc.setOptId(metaTable.getTableId());
@@ -212,26 +212,26 @@ public class MetaFormController extends BaseController {
         return doc;
     }
 
-    private void saveFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request){
+    private void saveFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request) {
         //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if(metaTable != null &&
+        if (metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
             try {
                 esObjectIndexer.saveNewDocument(
-                    mapObjectToDocument(obj, metaTable,
-                            WebOptUtils.getCurrentUserCode(request),
-                            WebOptUtils.getCurrentUnitCode(request)));
+                        mapObjectToDocument(obj, metaTable,
+                                WebOptUtils.getCurrentUserCode(request),
+                                WebOptUtils.getCurrentUnitCode(request)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void deleteFulltextIndex(Map<String, Object> obj, String tableId){
+    private void deleteFulltextIndex(Map<String, Object> obj, String tableId) {
         MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if(metaTable != null &&
+        if (metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
@@ -244,12 +244,12 @@ public class MetaFormController extends BaseController {
         }
     }
 
-    private void updataFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request){
+    private void updataFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request) {
         //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if(metaTable != null &&
+        if (metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
-                // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
-                || "C".equals(metaTable.getTableType()))) {
+                        // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
+                        || "C".equals(metaTable.getTableType()))) {
             try {
                 Map<String, Object> dbObject =
                         metaObjectService.getObjectWithChildren(metaTable.getTableId(), obj, 1);
@@ -263,13 +263,13 @@ public class MetaFormController extends BaseController {
         }
     }
 
-    private void checkUpdateTimeStamp(Map<String, Object> dbObject, Map<String, Object> object){
+    private void checkUpdateTimeStamp(Map<String, Object> dbObject, Map<String, Object> object) {
         Object oldDate = dbObject.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
         Object newDate = object.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
-        if(!DatetimeOpt.equalOnSecond(DatetimeOpt.castObjectToDate(oldDate), DatetimeOpt.castObjectToDate(newDate))){
+        if (!DatetimeOpt.equalOnSecond(DatetimeOpt.castObjectToDate(oldDate), DatetimeOpt.castObjectToDate(newDate))) {
             throw new ObjectException(CollectionsOpt.createHashMap(
-                    "yourTimeStamp",newDate,"databaseTimeStamp",oldDate),
-                    PersistenceException.DATABASE_OUT_SYNC_EXCEPTION,"更新数据对象时，数据版本不同步。");
+                    "yourTimeStamp", newDate, "databaseTimeStamp", oldDate),
+                    PersistenceException.DATABASE_OUT_SYNC_EXCEPTION, "更新数据对象时，数据版本不同步。");
         }
 
         object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
@@ -287,13 +287,13 @@ public class MetaFormController extends BaseController {
         object.putAll(params);
         metaObjectService.updateObjectFields(model.getTableId(), params.keySet(), object);
         // 更改索引
-        updataFulltextIndex(object,metaDataCache.getTableInfo(model.getTableId()), request);
+        updataFulltextIndex(object, metaDataCache.getTableInfo(model.getTableId()), request);
 
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        if(tableInfo.isWriteOptLog()){
+        if (tableInfo.isWriteOptLog()) {
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
             OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
-                    modelId,JSON.toJSONString(primaryKey),"change","修改数据指定字段",params, null);
+                    modelId, JSON.toJSONString(primaryKey), "change", "修改数据指定字段", params, null);
         }
     }
 
@@ -302,10 +302,10 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> makeNewObject(@PathVariable String modelId,
-                                                     HttpServletRequest request) {
+                                             HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         JSONObject userDetails = WebOptUtils.getCurrentUserInfo(request);
-        if(userDetails != null){
+        if (userDetails != null) {
             userDetails.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
         }
         parameters.put("currentUser", userDetails);
@@ -318,12 +318,12 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> getObjectWithChildren(@PathVariable String modelId,
-                                         HttpServletRequest request) {
+                                                     HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
         Map<String, Object> parameters = collectRequestParameters(request);
-        if("C".equals(tableInfo.getTableType())){
-            if(tableInfo.countPkColumn() != 1) {
+        if ("C".equals(tableInfo.getTableType())) {
+            if (tableInfo.countPkColumn() != 1) {
                 String pkCol = tableInfo.getPkFields().get(0).getPropertyName();
                 Object pkValue = parameters.get(pkCol);
                 Object idValue = parameters.get("_id");
@@ -332,9 +332,9 @@ public class MetaFormController extends BaseController {
                 }
             }
             String optTag = StringBaseOpt.castObjectToString(parameters.get("optTag"));
-            if(StringUtils.isNotBlank(optTag)){
+            if (StringUtils.isNotBlank(optTag)) {
                 Map<String, Object> pk = tableInfo.parseObjectPkId(optTag);
-                if(pk != null){
+                if (pk != null) {
                     parameters.putAll(pk);
                 }
             }
@@ -342,17 +342,18 @@ public class MetaFormController extends BaseController {
 
         Map<String, Object> objectMap = metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
 
-        if("C".equals(tableInfo.getTableType())){
+        if ("C".equals(tableInfo.getTableType())) {
             return mapPoToDto(objectMap);
         }
         return objectMap;
     }
-    private Map<String, Object> mapPoToDto(Map<String, Object> po){
+
+    private Map<String, Object> mapPoToDto(Map<String, Object> po) {
         Object obj = po.get(MetaTable.OBJECT_AS_CLOB_PROP);
-        if(/*obj!=null && */obj instanceof Map){
+        if (/*obj!=null && */obj instanceof Map) {
             Map<String, Object> dto = (Map<String, Object>) obj;
-            for(Map.Entry<String, Object> ent : po.entrySet()){
-                if(!MetaTable.OBJECT_AS_CLOB_PROP.equals(ent.getKey()) && ent.getValue() != null){
+            for (Map.Entry<String, Object> ent : po.entrySet()) {
+                if (!MetaTable.OBJECT_AS_CLOB_PROP.equals(ent.getKey()) && ent.getValue() != null) {
                     dto.put(ent.getKey(), ent.getValue());
                 }
             }
@@ -361,7 +362,7 @@ public class MetaFormController extends BaseController {
         return po;
     }
 
-    private Map<String, Object> mapDtoToPo(Map<String, Object> dto){
+    private Map<String, Object> mapDtoToPo(Map<String, Object> dto) {
         Map<String, Object> po = new HashMap<>(dto);
         //Map<String, Object> po = dto;
         po.remove(MetaTable.OBJECT_AS_CLOB_PROP);
@@ -371,9 +372,9 @@ public class MetaFormController extends BaseController {
     }
 
     private void innerUpdateObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
-                                   Map<String, Object> dbObject, HttpServletRequest request ){
+                                   Map<String, Object> dbObject, HttpServletRequest request) {
         Map<String, Object> po = object;
-        if("C".equals(tableInfo.getTableType())){
+        if ("C".equals(tableInfo.getTableType())) {
             po = mapDtoToPo(object);
         }
 
@@ -392,30 +393,30 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public void updateObjectWithChildren(@PathVariable String modelId,
-                                     @RequestBody String jsonString,
+                                         @RequestBody String jsonString,
                                          HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        boolean writeLog =  tableInfo.isWriteOptLog();
+        boolean writeLog = tableInfo.isWriteOptLog();
         Map<String, Object> dbObject = null;
-        if(writeLog || tableInfo.isUpdateCheckTimeStamp()) {
+        if (writeLog || tableInfo.isUpdateCheckTimeStamp()) {
             dbObject = metaObjectService.getObjectWithChildren(model.getTableId(), object, 1);
         }
         innerUpdateObject(model, tableInfo, object, dbObject, request);
 
-        if(writeLog){
+        if (writeLog) {
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
             OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
-                    modelId,JSON.toJSONString(primaryKey),"update","修改数据对象（子对象）",object, dbObject);
+                    modelId, JSON.toJSONString(primaryKey), "update", "修改数据对象（子对象）", object, dbObject);
         }
     }
 
     private void innerSaveObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
-                                 HttpServletRequest request ){
+                                 HttpServletRequest request) {
         // 大字段 表格 只保存主键和 jsonObjectField 字段
         Map<String, Object> po = object;
-        if("C".equals(tableInfo.getTableType())){
+        if ("C".equals(tableInfo.getTableType())) {
             po = mapDtoToPo(object);
         }
 
@@ -433,7 +434,7 @@ public class MetaFormController extends BaseController {
         }
 
         // 添加索引
-        saveFulltextIndex(object,tableInfo,request);
+        saveFulltextIndex(object, tableInfo, request);
 
     }
 
@@ -442,17 +443,17 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> saveObjectWithChildren(@PathVariable String modelId,
-                                   @RequestBody String jsonString,
-                                       HttpServletRequest request) {
+                                                      @RequestBody String jsonString,
+                                                      HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         innerSaveObject(model, tableInfo, object, request);
 
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-        if(tableInfo.isWriteOptLog()){
+        if (tableInfo.isWriteOptLog()) {
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
-                    modelId,JSON.toJSONString(primaryKey),"save","保存新的数据对象（包括子对象）", object);
+                    modelId, JSON.toJSONString(primaryKey), "save", "保存新的数据对象（包括子对象）", object);
         }
         return primaryKey;
     }
@@ -462,27 +463,27 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public void deleteObjectWithChildren(@PathVariable String modelId,
-                                     HttpServletRequest request) {
+                                         HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
 
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        boolean writeLog =  tableInfo.isWriteOptLog();
+        boolean writeLog = tableInfo.isWriteOptLog();
         Map<String, Object> dbObject = null;
-        if(writeLog) {
+        if (writeLog) {
             dbObject = metaObjectService.getObjectById(model.getTableId(), parameters);
         }
 
-        if(runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete", request)==0) {
+        if (runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete", request) == 0) {
             metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters);
         }
         // 删除索引
-        deleteFulltextIndex(parameters,model.getTableId());
+        deleteFulltextIndex(parameters, model.getTableId());
 
-        if(writeLog){
+        if (writeLog) {
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(parameters);
             OperationLogCenter.logDeleteObject(WebOptUtils.getCurrentUserCode(request),
-                    modelId,JSON.toJSONString(primaryKey),"delete","删除数据对象（包括子对象）", dbObject);
+                    modelId, JSON.toJSONString(primaryKey), "delete", "删除数据对象（包括子对象）", dbObject);
         }
     }
 
@@ -492,12 +493,12 @@ public class MetaFormController extends BaseController {
 
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         List<MetaColumn> columns = tableInfo.getColumns();
-        for(MetaColumn col : columns) {
+        for (MetaColumn col : columns) {
             Object value = object.get(col.getPropertyName());
-            if (value != null){
-                if( "1".equals(col.getWorkFlowVariableType())) {
+            if (value != null) {
+                if ("1".equals(col.getWorkFlowVariableType())) {
                     variables.put(col.getPropertyName(), value);
-                } else if( "2".equals(col.getWorkFlowVariableType())) {
+                } else if ("2".equals(col.getWorkFlowVariableType())) {
                     globalVariables.put(col.getPropertyName(), value);
                 }
             }
@@ -507,22 +508,22 @@ public class MetaFormController extends BaseController {
         Map<String, String> nodeUnits = new HashMap<>(10);
         Map<String, Set<String>> nodeOptUsers = new HashMap<>(10);
 
-        for(Map.Entry<String, Object> entry : object.entrySet()){
+        for (Map.Entry<String, Object> entry : object.entrySet()) {
             // 办件角色
-            if(entry.getKey().startsWith("wfv_")){
+            if (entry.getKey().startsWith("wfv_")) {
                 variables.put(entry.getKey().substring(4), entry.getValue());
-            } else if(entry.getKey().startsWith("wfgv_")){
+            } else if (entry.getKey().startsWith("wfgv_")) {
                 globalVariables.put(entry.getKey().substring(5), entry.getValue());
-            } else if(entry.getKey().startsWith("wfr_")){
+            } else if (entry.getKey().startsWith("wfr_")) {
                 flowRoleUsers.put(entry.getKey().substring(4),
                         StringBaseOpt.objectToStringList(entry.getValue()));
-            } else if(entry.getKey().startsWith("wfo_")){
+            } else if (entry.getKey().startsWith("wfo_")) {
                 flowOrganizes.put(entry.getKey().substring(4),
                         StringBaseOpt.objectToStringList(entry.getValue()));
-            } else if(entry.getKey().startsWith("wfnd_")){
+            } else if (entry.getKey().startsWith("wfnd_")) {
                 nodeUnits.put(entry.getKey().substring(5),
                         StringBaseOpt.castObjectToString(entry.getValue()));
-            } else if(entry.getKey().startsWith("wfnu_")){
+            } else if (entry.getKey().startsWith("wfnu_")) {
                 nodeOptUsers.put(entry.getKey().substring(5),
                         StringBaseOpt.objectToStringSet(entry.getValue()));
             }
@@ -535,13 +536,13 @@ public class MetaFormController extends BaseController {
         options.setNodeOptUsers(nodeOptUsers);
     }
 
-    static String fetchExtendParam(String paramName, Map<String, Object> object, HttpServletRequest request){
+    static String fetchExtendParam(String paramName, Map<String, Object> object, HttpServletRequest request) {
         String paramValue = request.getParameter(paramName);
-        if(StringUtils.isNotBlank(paramValue)){
+        if (StringUtils.isNotBlank(paramValue)) {
             return paramValue;
         }
         paramValue = StringBaseOpt.castObjectToString(object.get(paramName));
-        if(StringUtils.isNotBlank(paramValue)){
+        if (StringUtils.isNotBlank(paramValue)) {
             return paramValue;
         } else {
             if ("currentOperatorUserCode".equals(paramName)) {
@@ -552,17 +553,19 @@ public class MetaFormController extends BaseController {
             return StringBaseOpt.castObjectToString(object.get(paramName));
         }
     }
+
     /**
      * 提交工作流 ; 分两种情况
      * 一： 新建业务，操作流程为， 保存表单，提交流程，这时表单对应的表中flowInstId字段必然为空，所以:
-     *  1,创建流程,获取流程实例编号回填到这个表单中
-     *  2,提交首节点，进入下一个节点(这个操作同时在流程引擎中执行)
+     * 1,创建流程,获取流程实例编号回填到这个表单中
+     * 2,提交首节点，进入下一个节点(这个操作同时在流程引擎中执行)
      * 二： 提交节点，操作流程如下:
-     *  1, 从工作流引擎中获得待办列表,通过这个待办列表进入节点实例
-     *  2, 进入节点实例分两种情况,新建表单或者修改表单,无论是那种情况表单中都有两个字段flowInstId和nodeInstId
-     *  3, 保存表单
-     *  4, 提交表单
-     * @param modelId 模块id
+     * 1, 从工作流引擎中获得待办列表,通过这个待办列表进入节点实例
+     * 2, 进入节点实例分两种情况,新建表单或者修改表单,无论是那种情况表单中都有两个字段flowInstId和nodeInstId
+     * 3, 保存表单
+     * 4, 提交表单
+     *
+     * @param modelId    模块id
      * @param jsonString 模块对象对应的主键
      */
     @ApiOperation(value = "提交工作流")
@@ -570,17 +573,17 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> submitFlow(@PathVariable String modelId,
-                           @RequestBody String jsonString,
-                           HttpServletRequest request) {
+                                          @RequestBody String jsonString,
+                                          HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
-        Map<String, Object> dbObject = dbObjectPk==null? null :
+        Map<String, Object> dbObject = dbObjectPk == null ? null :
                 metaObjectService.getObjectById(model.getTableId(), dbObjectPk);
         // 如果是节点提交 应该有节点实例号
         String nodeInstId = fetchExtendParam("nodeInstId", object, request);
-        if(StringUtils.isBlank(nodeInstId)) {
+        if (StringUtils.isBlank(nodeInstId)) {
             nodeInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
         } else {
             //和流程过程对应的 表单 要写入 节点实例号
@@ -588,39 +591,39 @@ public class MetaFormController extends BaseController {
         }
         String userCode = fetchExtendParam("currentOperatorUserCode", object, request);
         String unitCode = fetchExtendParam("currentOperatorUnitCode", object, request);
-        if(dbObject == null){
-            innerSaveObject(model,tableInfo,object,request);
+        if (dbObject == null) {
+            innerSaveObject(model, tableInfo, object, request);
         } else {
-            innerUpdateObject(model,tableInfo,object,dbObject,request);
+            innerUpdateObject(model, tableInfo, object, dbObject, request);
         }
 
-        if(runJSEvent(model.getExtendOptJs(), object, "beforeSubmit", request)!=0){
+        if (runJSEvent(model.getExtendOptJs(), object, "beforeSubmit", request) != 0) {
             throw new ObjectException("beforeSubmit 执行错误！" + jsonString);
         }
 
         Object flowInstId = object.get("flowInstId");
-        if(flowInstId==null || StringUtils.isBlank(flowInstId.toString())){
+        if (flowInstId == null || StringUtils.isBlank(flowInstId.toString())) {
             // create flow instance
             try {
                 String flowCode = fetchExtendParam("flowCode", object, request);
-                if(StringUtils.isBlank(flowCode)){
+                if (StringUtils.isBlank(flowCode)) {
                     flowCode = model.getRelFlowCode();
                 }
-                if(StringUtils.isBlank(flowCode)){
+                if (StringUtils.isBlank(flowCode)) {
                     throw new ObjectException(model, "找不到对应的流程");
                 }
                 String flowOptTitle = fetchExtendParam("titleTemplate", object, request);
-                if(StringUtils.isBlank(flowOptTitle)){
+                if (StringUtils.isBlank(flowOptTitle)) {
                     flowOptTitle = model.getFlowOptTitle();
                 }
                 dbObjectPk = tableInfo.fetchObjectPk(object);
 
-                CreateFlowOptions options= CreateFlowOptions.create().flow(flowCode)
+                CreateFlowOptions options = CreateFlowOptions.create().flow(flowCode)
                         .user(userCode)
                         .unit(unitCode)
                         .optName(Pretreatment.mapTemplateString(flowOptTitle, object))
-                        .optTag(dbObjectPk.size()==1? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
-                                :JSON.toJSONString(dbObjectPk));
+                        .optTag(dbObjectPk.size() == 1 ? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
+                                : JSON.toJSONString(dbObjectPk));
 
                 fetchWorkflowVariables(options, model, object);
 
@@ -628,7 +631,7 @@ public class MetaFormController extends BaseController {
 
                 object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
                 NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
-                if(nodeInstance != null) {
+                if (nodeInstance != null) {
                     object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstance.getNodeInstId());
                 }
                 metaObjectService.updateObjectFields(model.getTableId(),
@@ -642,35 +645,28 @@ public class MetaFormController extends BaseController {
                 throw new ObjectException(e);
             }
         } else {
-            if(StringUtils.isBlank(nodeInstId)){
-                throw new ObjectException(WorkflowException.NodeInstNotFound,"找不到对应的节点实例号！" + jsonString);
+            if (StringUtils.isBlank(nodeInstId)) {
+                throw new ObjectException(WorkflowException.NodeInstNotFound, "找不到对应的节点实例号！" + jsonString);
             }
-            try {
-                SubmitOptOptions options = SubmitOptOptions.create().nodeInst(nodeInstId)
-                        .user(userCode)
-                        .unit(unitCode);
-                fetchWorkflowVariables(options, model, object);
-                // submit flow
-                Map<String, Object> s= flowEngineClient.submitOpt(options);
-                runJSEvent(model.getExtendOptJs(), object, "afterSubmit", request);
-            } catch(WorkflowException e){
-                throw new WorkflowException(e.getMessage());
-            }
-            catch (Exception e) {
-                throw new ObjectException(e);
-            }
+            SubmitOptOptions options = SubmitOptOptions.create().nodeInst(nodeInstId)
+                    .user(userCode)
+                    .unit(unitCode);
+            fetchWorkflowVariables(options, model, object);
+            // submit flow
+            Map<String, Object> s = flowEngineClient.submitOpt(options);
+            runJSEvent(model.getExtendOptJs(), object, "afterSubmit", request);
         }
 
 
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-        if(tableInfo.isWriteOptLog()){
+        if (tableInfo.isWriteOptLog()) {
             OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
-                    modelId,JSON.toJSONString(primaryKey),"submit","提交流程", object);
+                    modelId, JSON.toJSONString(primaryKey), "submit", "提交流程", object);
         }
 
         return CollectionsOpt.createHashMap(
-                MetaTable.WORKFLOW_INST_ID_PROP,object.get(MetaTable.WORKFLOW_INST_ID_PROP),
-                MetaTable.WORKFLOW_NODE_INST_ID_PROP,object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
+                MetaTable.WORKFLOW_INST_ID_PROP, object.get(MetaTable.WORKFLOW_INST_ID_PROP),
+                MetaTable.WORKFLOW_NODE_INST_ID_PROP, object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
     }
 
 }
