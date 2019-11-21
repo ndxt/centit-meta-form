@@ -540,16 +540,14 @@ public class MetaFormController extends BaseController {
         if(StringUtils.isNotBlank(paramValue)){
             return paramValue;
         }
-
+        paramValue = StringBaseOpt.castObjectToString(object.get(paramName));
+        if(StringUtils.isNotBlank(paramValue)){
+            return paramValue;
+        }
         if("currentOperatorUserCode".equals(paramName)){
             object.put("currentOperatorUserCode",WebOptUtils.getCurrentUserCode(request));
         } else if("currentOperatorUnitCode".equals(paramName)){
             object.put("currentOperatorUnitCode",WebOptUtils.getCurrentUnitCode(request));
-        }
-
-        paramValue = StringBaseOpt.castObjectToString(object.get(paramName));
-        if(StringUtils.isNotBlank(paramValue)){
-            return paramValue;
         }
         return null;
     }
@@ -587,8 +585,8 @@ public class MetaFormController extends BaseController {
             //和流程过程对应的 表单 要写入 节点实例号
             object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstId);
         }
-        fetchExtendParam("currentOperatorUserCode", object, request);
-        fetchExtendParam("currentOperatorUnitCode", object, request);
+        String userCode = fetchExtendParam("currentOperatorUserCode", object, request);
+        String unitCode = fetchExtendParam("currentOperatorUnitCode", object, request);
         if(dbObject == null){
             innerSaveObject(model,tableInfo,object,request);
         } else {
@@ -617,8 +615,8 @@ public class MetaFormController extends BaseController {
                 dbObjectPk = tableInfo.fetchObjectPk(object);
 
                 CreateFlowOptions options= CreateFlowOptions.create().flow(flowCode)
-                        .user(object.getString("currentOperatorUserCode"))
-                        .unit(object.getString("currentOperatorUnitCode"))
+                        .user(userCode)
+                        .unit(unitCode)
                         .optName(Pretreatment.mapTemplateString(flowOptTitle, object))
                         .optTag(dbObjectPk.size()==1? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
                                 :JSON.toJSONString(dbObjectPk));
@@ -648,8 +646,8 @@ public class MetaFormController extends BaseController {
             }
             try {
                 SubmitOptOptions options = SubmitOptOptions.create().nodeInst(nodeInstId)
-                        .user(object.getString("currentOperatorUserCode"))
-                        .unit(object.getString("currentOperatorUnitCode"));
+                        .user(userCode)
+                        .unit(unitCode);
                 fetchWorkflowVariables(options, model, object);
                 // submit flow
                 Map<String, Object> s= flowEngineClient.submitOpt(options);
