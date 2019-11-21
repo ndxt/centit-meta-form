@@ -543,13 +543,14 @@ public class MetaFormController extends BaseController {
         paramValue = StringBaseOpt.castObjectToString(object.get(paramName));
         if(StringUtils.isNotBlank(paramValue)){
             return paramValue;
+        } else {
+            if ("currentOperatorUserCode".equals(paramName)) {
+                object.put("currentOperatorUserCode", WebOptUtils.getCurrentUserCode(request));
+            } else if ("currentOperatorUnitCode".equals(paramName)) {
+                object.put("currentOperatorUnitCode", WebOptUtils.getCurrentUnitCode(request));
+            }
+            return StringBaseOpt.castObjectToString(object.get(paramName));
         }
-        if("currentOperatorUserCode".equals(paramName)){
-            object.put("currentOperatorUserCode",WebOptUtils.getCurrentUserCode(request));
-        } else if("currentOperatorUnitCode".equals(paramName)){
-            object.put("currentOperatorUnitCode",WebOptUtils.getCurrentUnitCode(request));
-        }
-        return null;
     }
     /**
      * 提交工作流 ; 分两种情况
