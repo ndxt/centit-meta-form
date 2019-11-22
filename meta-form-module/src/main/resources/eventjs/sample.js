@@ -5,6 +5,11 @@
 
 // 方法的第一个参数为 事件的运行环境，第二个参数为 业务对象
 
+function initNewObject(eventRuntime, entity){
+    //eventRuntime.
+    return 0;
+}
+
 function beforeUpdate(eventRuntime, entity){
     //eventRuntime.
     return 0;

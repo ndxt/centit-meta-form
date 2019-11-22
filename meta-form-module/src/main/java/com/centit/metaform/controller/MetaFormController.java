@@ -310,7 +310,10 @@ public class MetaFormController extends BaseController {
         }
         parameters.put("currentUser", userDetails);
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        return metaObjectService.makeNewObject(model.getTableId(), parameters);
+        Map<String, Object> newObject =
+                metaObjectService.makeNewObject(model.getTableId(), parameters);
+        runJSEvent(model.getExtendOptJs(), newObject, "initNewObject", request);
+        return newObject;
     }
 
     @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
