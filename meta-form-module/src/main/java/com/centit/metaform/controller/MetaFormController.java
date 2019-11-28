@@ -210,8 +210,8 @@ public class MetaFormController extends BaseController {
                 CollectionsOpt.listToArray(header),  CollectionsOpt.listToArray(property));
         String fileName = URLEncoder.encode(model.getModelName(), "UTF-8") +
                 pageDesc.getRowStart()+"-"+pageDesc.getRowEnd()+"-" +pageDesc.getTotalRows() +
-                ".xlsm";
-        response.setContentType(FileType.mapExtNameToMimeType("xlsm"));
+                ".xlsx";
+        response.setContentType(FileType.mapExtNameToMimeType("xlsx"));
         response.setHeader("Content-disposition", "attachment; filename=" + fileName);
         IOUtils.copy(excelStream, response.getOutputStream());
     }
