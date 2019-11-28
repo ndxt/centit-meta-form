@@ -50,7 +50,13 @@
         <dependency>
             <groupId>com.centit.support</groupId>
             <artifactId>centit-es-client</artifactId>
-            <version>${centit.es.version}</version>
+            <version>${centit.search.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.centit.support</groupId>
+            <artifactId>centit-report-utils</artifactId>
+            <version>${common.module.version}</version>
         </dependency>
 
         <dependency>

@@ -3,6 +3,7 @@ package com.centit.metaform.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.OperationLogCenter;
 import com.centit.framework.core.controller.BaseController;
@@ -22,7 +23,10 @@ import com.centit.product.metadata.service.MetaObjectService;
 import com.centit.search.document.ObjectDocument;
 import com.centit.search.service.Impl.ESIndexer;
 import com.centit.search.service.Impl.ESSearcher;
-import com.centit.support.algorithm.*;
+import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.algorithm.NumberBaseOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.compiler.Lexer;
 import com.centit.support.compiler.Pretreatment;
@@ -30,6 +34,8 @@ import com.centit.support.database.transaction.JdbcTransaction;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.support.database.utils.PersistenceException;
 import com.centit.support.database.utils.QueryAndNamedParams;
+import com.centit.support.file.FileType;
+import com.centit.support.report.ExcelExportUtil;
 import com.centit.workflow.client.service.FlowEngineClient;
 import com.centit.workflow.commons.CreateFlowOptions;
 import com.centit.workflow.commons.FlowOptParamOptions;
@@ -41,6 +47,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -53,6 +60,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.*;
 
 @Controller
@@ -118,17 +129,13 @@ public class MetaFormController extends BaseController {
                 relation.fetchChildFk(parentObject));
     }
 
-    @ApiOperation(value = "分页查询表单数据列表，传入自定义表单id")
-    @RequestMapping(value = "/{modelId}/list", method = RequestMethod.GET)
-    @WrapUpResponseBody
-    @JdbcTransaction
-    public PageQueryResult<Object> listObjects(@PathVariable String modelId, PageDesc pageDesc,
+    private JSONArray queryObjects(MetaFormModel model, PageDesc pageDesc,
                                                String[] fields, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+
         //String optId = FieldType.mapClassName(table.getTableName());
         List<String> filters = queryDataScopeFilter.listUserDataFiltersByOptIdAndMethod(
-                WebOptUtils.getCurrentUserCode(request), modelId, "list");
+                WebOptUtils.getCurrentUserCode(request), model.getModelId(), "list");
 
         String sql = model.getDataFilterSql();
         if (StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select", new Lexer(sql).getAWord())) {
@@ -136,9 +143,8 @@ public class MetaFormController extends BaseController {
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceDatas(params);
             QueryAndNamedParams qap = dataPowerFilter.translateQuery(sql, filters);
-            JSONArray ja = metaObjectService.pageQueryObjects(
+            return metaObjectService.pageQueryObjects(
                     model.getTableId(), qap.getQuery(), qap.getParams(), pageDesc);
-            return PageQueryResult.createJSONArrayResult(ja, pageDesc);
         }
 
         if (StringUtils.isNotBlank(sql)) {
@@ -161,8 +167,53 @@ public class MetaFormController extends BaseController {
         JSONArray ja = metaObjectService.pageQueryObjects(
                 model.getTableId(), extFilter, params, fields, pageDesc);
 
+        return ja;
+    }
+    @ApiOperation(value = "分页查询表单数据列表，传入自定义表单id")
+    @RequestMapping(value = "/{modelId}/list", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    @JdbcTransaction
+    public PageQueryResult<Object> listObjects(@PathVariable String modelId, PageDesc pageDesc,
+                                               String[] fields, HttpServletRequest request) {
+        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        JSONArray ja = queryObjects(model, pageDesc, fields, request);
         return PageQueryResult.createJSONArrayResult(ja, pageDesc);
 
+    }
+
+    @ApiOperation(value = "导出表单数据列表可分页，传入自定义表单id")
+    @RequestMapping(value = "/{modelId}/export", method = RequestMethod.GET)
+    @JdbcTransaction
+    public void exportObjects(@PathVariable String modelId, PageDesc pageDesc,
+                              String[] fields,
+                              HttpServletRequest request,
+                              HttpServletResponse response) throws IOException {
+        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        JSONArray ja = queryObjects(model, pageDesc, fields, request);
+        if(ja == null || ja.isEmpty()){
+            throw new ObjectException(ResponseData.ERROR_NOT_FOUND, "没有查询到任务数据！");
+        }
+        MetaTable table = metaDataCache.getTableInfo(model.getTableId());
+
+        Map<String, Object> firstRow = (Map<String, Object>) ja.get(0);
+        List<String> property = new ArrayList<>(firstRow.keySet());
+        List<String> header = new ArrayList<>();
+        for(String p : property){
+            MetaColumn col = table.findFieldByName(p);
+            if(col == null && p.endsWith("Desc")){
+                col = table.findFieldByName(p.substring(0,p.length()-4));
+            }
+            header.add(col == null?p:col.getFieldLabelName());
+        }
+
+        InputStream excelStream = ExcelExportUtil.generateExcelStream(ja,
+                CollectionsOpt.listToArray(header),  CollectionsOpt.listToArray(property));
+        String fileName = URLEncoder.encode(model.getModelName(), "UTF-8") +
+                pageDesc.getRowStart()+"-"+pageDesc.getRowEnd()+"-" +pageDesc.getTotalRows() +
+                ".xlsm";
+        response.setContentType(FileType.mapExtNameToMimeType("xlsm"));
+        response.setHeader("Content-disposition", "attachment; filename=" + fileName);
+        IOUtils.copy(excelStream, response.getOutputStream());
     }
 
     @ApiOperation(value = "全文检索")
