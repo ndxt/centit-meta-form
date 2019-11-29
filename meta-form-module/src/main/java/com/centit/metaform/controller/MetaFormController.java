@@ -125,8 +125,14 @@ public class MetaFormController extends BaseController {
         Map<String, Object> parentObject = metaObjectService
                 .getObjectById(relation.getParentTableId(), parameters);
 
-        return metaObjectService.listObjectsByProperties(relation.getChildTableId(),
+        JSONArray ja = metaObjectService.listObjectsByProperties(relation.getChildTableId(),
                 relation.fetchChildFk(parentObject));
+
+        MetaTable tableInfo = this.metaDataCache.getTableInfo(relation.getChildTableId());
+        if ("C".equals(tableInfo.getTableType())) {
+            return mapListPoToDto(ja);
+        }
+        return ja;
     }
 
     private JSONArray queryObjects(MetaFormModel model, PageDesc pageDesc,
@@ -137,14 +143,20 @@ public class MetaFormController extends BaseController {
         List<String> filters = queryDataScopeFilter.listUserDataFiltersByOptIdAndMethod(
                 WebOptUtils.getCurrentUserCode(request), model.getModelId(), "list");
 
+        MetaTable tableInfo = this.metaDataCache.getTableInfo(model.getTableId());
+
         String sql = model.getDataFilterSql();
         if (StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select", new Lexer(sql).getAWord())) {
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceDatas(params);
             QueryAndNamedParams qap = dataPowerFilter.translateQuery(sql, filters);
-            return metaObjectService.pageQueryObjects(
+            JSONArray ja = metaObjectService.pageQueryObjects(
                     model.getTableId(), qap.getQuery(), qap.getParams(), pageDesc);
+            if ("C".equals(tableInfo.getTableType())) {
+                return mapListPoToDto(ja);
+            }
+            return ja;
         }
 
         if (StringUtils.isNotBlank(sql)) {
@@ -167,8 +179,31 @@ public class MetaFormController extends BaseController {
         JSONArray ja = metaObjectService.pageQueryObjects(
                 model.getTableId(), extFilter, params, fields, pageDesc);
 
+        if ("C".equals(tableInfo.getTableType())) {
+            return mapListPoToDto(ja);
+        }
         return ja;
     }
+
+    private JSONArray mapListPoToDto(JSONArray ja ) {
+        if(ja == null){
+            return null;
+        }
+
+        JSONArray jsonArray = new JSONArray(ja.size());
+        for (Object json : ja) {
+            if(json instanceof Map) {
+                jsonArray.add(mapPoToDto((Map<String, Object>) json));
+            } else {
+                jsonArray.add(json);
+            }
+        }
+        return jsonArray;
+    }
+
+
+
+
     @ApiOperation(value = "分页查询表单数据列表，传入自定义表单id")
     @RequestMapping(value = "/{modelId}/list", method = RequestMethod.GET)
     @WrapUpResponseBody
