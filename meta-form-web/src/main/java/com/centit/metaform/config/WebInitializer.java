@@ -16,6 +16,7 @@ import java.util.Properties;
 /**
  * Created by zou_wy on 2017/3/29.
  */
+
 public class WebInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
