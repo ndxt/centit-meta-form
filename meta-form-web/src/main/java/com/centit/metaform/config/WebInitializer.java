@@ -20,13 +20,25 @@ import java.util.Properties;
 public class WebInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        initializeSpringConfig(servletContext);
-        initializeSystemSpringMvcConfig(servletContext);
-        initializeNormalSpringMvcConfig(servletContext);
-        initializeDBDesignSpringMvcConfig(servletContext);
-        initializeMetaSpringMvcConfig(servletContext);
 
         String [] servletUrlPatterns = {"/system/*","/metadata/*","/metaform/*","/dbdesign/*"};
+        WebConfig.registerSpringConfig(servletContext, ServiceConfig.class);
+
+        WebConfig.registerServletConfig(servletContext, "system",
+                "/system/*",
+                SystemSpringMvcConfig.class,SwaggerConfig.class);
+
+        WebConfig.registerServletConfig(servletContext, "metaform",
+                "/metaform/*",
+                NormalSpringMvcConfig.class,SwaggerConfig.class);
+        WebConfig.registerServletConfig(servletContext, "metadata",
+                "/metadata/*",
+                MetaDataSpringMvcConfig.class,SwaggerConfig.class);
+        WebConfig.registerServletConfig(servletContext, "dbdesign",
+                "/dbdesign/*",
+                DBDesignSpringMvcConfig.class,SwaggerConfig.class);
+
+
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);
 //        WebConfig.registerResponseCorsFilter(servletContext);
@@ -45,64 +57,4 @@ public class WebInitializer implements WebApplicationInitializer {
         }
     }
 
-    /**
-     * 加载Spring 配置
-     * @param servletContext ServletContext
-     */
-    private void initializeSpringConfig(ServletContext servletContext){
-        AnnotationConfigWebApplicationContext springContext = new AnnotationConfigWebApplicationContext();
-        springContext.register(ServiceConfig.class);
-        servletContext.addListener(new ContextLoaderListener(springContext));
-    }
-
-    /**
-     * 加载Servlet 配置
-     * @param servletContext ServletContext
-     */
-    private void initializeSystemSpringMvcConfig(ServletContext servletContext) {
-        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(SystemSpringMvcConfig.class, SwaggerConfig.class);
-        ServletRegistration.Dynamic system  = servletContext.addServlet("system", new DispatcherServlet(context));
-        system.addMapping("/system/*");
-        system.setLoadOnStartup(1);
-        system.setAsyncSupported(true);
-    }
-
-    /**
-     * 加载Servlet 项目配置
-     * @param servletContext ServletContext
-     */
-    private void initializeNormalSpringMvcConfig(ServletContext servletContext) {
-        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(NormalSpringMvcConfig.class, SwaggerConfig.class);
-        ServletRegistration.Dynamic metaform  = servletContext.addServlet("metaform", new DispatcherServlet(context));
-        metaform.addMapping("/metaform/*");
-        metaform.setLoadOnStartup(1);
-        metaform.setAsyncSupported(true);
-    }
-
-    private void initializeDBDesignSpringMvcConfig(ServletContext servletContext) {
-        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(DBDesignSpringMvcConfig.class, SwaggerConfig.class);
-        ServletRegistration.Dynamic dbdesign  = servletContext.addServlet("dbdesign", new DispatcherServlet(context));
-        dbdesign.addMapping("/dbdesign/*");
-        dbdesign.setLoadOnStartup(1);
-        dbdesign.setAsyncSupported(true);
-    }
-
-    private void initializeMetaSpringMvcConfig(ServletContext servletContext) {
-        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.register(MetaDataSpringMvcConfig.class, SwaggerConfig.class);
-        ServletRegistration.Dynamic metadata  = servletContext.addServlet("metadata", new DispatcherServlet(context));
-        metadata.addMapping("/metadata/*");
-        metadata.setLoadOnStartup(1);
-        metadata.setAsyncSupported(true);
-    }
-
-    /*public void registerOpenSessionInViewFilter(ServletContext servletContext) {
-        javax.servlet.FilterRegistration.Dynamic openSessionInViewFilter
-                = servletContext.addFilter("openSessionInViewFilter", OpenSessionInViewFilter.class);
-        openSessionInViewFilter.addMappingForUrlPatterns(null, false, "/service/*", "/system/*");
-        openSessionInViewFilter.setAsyncSupported(true);
-    }*/
 }
