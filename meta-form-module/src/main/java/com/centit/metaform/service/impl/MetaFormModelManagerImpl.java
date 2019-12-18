@@ -112,11 +112,12 @@ public class MetaFormModelManagerImpl
     public  JSONArray listFormModeAsJson(String[] fields, Map<String, Object> filterMap, PageDesc pageDesc) {
         TableMapInfo mapInfo = JpaMetadata.fetchTableMapInfo(MetaFormModel.class);
         List<String> c=new ArrayList<>( );
-        if (fields !=null)
-        c.addAll(Arrays.asList(fields));
+        if (fields !=null) {
+            c.addAll(Arrays.asList(fields));
+        }
         String sql ="select "+
                 ((c != null && c.size()>0)
-                        ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a")
+                        ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a", true)
                         : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a",1) ) +
                 ",b.TABLE_NAME,b.TABLE_LABEL_NAME "+
                 " from M_META_FORM_MODEL a join F_MD_TABLE b on a.table_id=b.table_id "+

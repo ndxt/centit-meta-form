@@ -402,11 +402,27 @@ public class MetaFormController extends BaseController {
         return newObject;
     }
 
-    @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
+    @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交," +
+            "如果没有指定 fields、parents、children则默认返回所有字段并且返回父表和字表对象")
+    @ApiImplicitParams({@ApiImplicitParam(
+            name = "modelId", value = "表单id",
+            required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "fields", value = "字段列表，仅返回指定的字段类表，会自动添加主键字段",
+            required = true, paramType = "query", dataType = "String[]"
+    ), @ApiImplicitParam(
+            name = "parents", value = "父表属性名列表，可以指定一个或者多个",
+            required = true, paramType = "query", dataType = "String[]"
+    ), @ApiImplicitParam(
+            name = "children", value = "子表属性名列表，可以指定一个或者多个",
+            required = true, paramType = "query", dataType = "String[]"
+    )})
     @RequestMapping(value = "/{modelId}", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> getObjectWithChildren(@PathVariable String modelId,
+                                                     String [] fields,
+                                                     String [] parents, String [] children,
                                                      HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
@@ -429,7 +445,11 @@ public class MetaFormController extends BaseController {
             }
         }
 
-        Map<String, Object> objectMap = metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
+        Map<String, Object> objectMap = (fields != null && fields.length>0) ||
+                (parents != null && parents.length>0) || (children != null && children.length>0) ?
+                metaObjectService.getObjectWithChildren(
+                        model.getTableId(), parameters, fields, parents, children)
+                : metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
 
         if ("C".equals(tableInfo.getTableType())) {
             return mapPoToDto(objectMap);
