@@ -408,14 +408,14 @@ public class MetaFormController extends BaseController {
             name = "modelId", value = "表单id",
             required = true, paramType = "path", dataType = "String"
     ), @ApiImplicitParam(
-            name = "fields", value = "字段列表，仅返回指定的字段类表，会自动添加主键字段",
-            required = true, paramType = "query", dataType = "String[]"
+            name = "fields", value = "字段列表，仅返回指定的字段类表，会自动添加主键字段。 String[]",
+            required = true, paramType = "query", dataTypeClass = String[].class
     ), @ApiImplicitParam(
-            name = "parents", value = "父表属性名列表，可以指定一个或者多个",
-            required = true, paramType = "query", dataType = "String[]"
+            name = "parents", value = "父表属性名列表，可以指定一个或者多个。 String[]",
+            required = true, paramType = "query", dataTypeClass = String[].class
     ), @ApiImplicitParam(
-            name = "children", value = "子表属性名列表，可以指定一个或者多个",
-            required = true, paramType = "query", dataType = "String[]"
+            name = "children", value = "子表属性名列表，可以指定一个或者多个。 String[]",
+            required = true, paramType = "query", dataTypeClass = String[].class
     )})
     @RequestMapping(value = "/{modelId}", method = RequestMethod.GET)
     @WrapUpResponseBody
