@@ -122,7 +122,7 @@ public class MetaFormController extends BaseController {
                                              HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         MetaRelation relation = null;
-        if(StringUtils.isNotBlank(relationName)) {
+        if(StringUtils.isNotBlank(relationName) && !"default".equals(relationName)) {
             relation = metaDataService.getMetaRelationByName(model.getTableId(), relationName);
         }
         if(relation == null) {
