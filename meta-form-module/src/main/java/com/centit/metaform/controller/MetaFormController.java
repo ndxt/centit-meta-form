@@ -114,7 +114,15 @@ public class MetaFormController extends BaseController {
         return ret;
     }
 
-    @ApiOperation(value = "查询作为字表表单数据列表，不分页；传入的参数为父表的主键")
+    @ApiOperation(value = "查询作为子表表单数据列表，不分页；传入的参数为父表的主键")
+    @ApiImplicitParams({@ApiImplicitParam(
+            name = "modelId", value = "表单模块id",
+            required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "relationName", value = "字表关联关系名称，注意区分大小写。 " +
+            "如果是作为子表模块使用的可以传default，这样会使用RELATION_ID属性获得关联关系",
+            required = true, paramType = "path", dataType = "String"
+    )})
     @RequestMapping(value = "/{modelId}/tabulation/{relationName}", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
@@ -212,10 +220,7 @@ public class MetaFormController extends BaseController {
         return jsonArray;
     }
 
-
-
-
-    @ApiOperation(value = "分页查询表单数据列表，传入自定义表单id")
+    @ApiOperation(value = "分页查询表单数据列表，传入自定义表单模块id")
     @RequestMapping(value = "/{modelId}/list", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
@@ -227,7 +232,7 @@ public class MetaFormController extends BaseController {
 
     }
 
-    @ApiOperation(value = "导出表单数据列表可分页，传入自定义表单id")
+    @ApiOperation(value = "导出表单数据列表可分页，传入自定义表单模块id")
     @RequestMapping(value = "/{modelId}/export", method = RequestMethod.GET)
     @JdbcTransaction
     public void exportObjects(@PathVariable String modelId, PageDesc pageDesc,
@@ -264,7 +269,7 @@ public class MetaFormController extends BaseController {
 
     @ApiOperation(value = "全文检索")
     @ApiImplicitParams({@ApiImplicitParam(
-            name = "modelId", value = "表单id",
+            name = "modelId", value = "表单模块id",
             required = true, paramType = "path", dataType = "String"
     ), @ApiImplicitParam(
             name = "query", value = "检索关键字",
@@ -416,7 +421,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交," +
             "如果没有指定 fields、parents、children则默认返回所有字段并且返回父表和字表对象")
     @ApiImplicitParams({@ApiImplicitParam(
-            name = "modelId", value = "表单id",
+            name = "modelId", value = "表单模块id",
             required = true, paramType = "path", dataType = "String"
     ), @ApiImplicitParam(
             name = "fields", value = "字段列表，仅返回指定的字段类表，会自动添加主键字段。 String[]",
