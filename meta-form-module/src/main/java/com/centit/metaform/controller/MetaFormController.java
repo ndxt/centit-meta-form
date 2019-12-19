@@ -115,13 +115,24 @@ public class MetaFormController extends BaseController {
     }
 
     @ApiOperation(value = "查询作为字表表单数据列表，不分页；传入的参数为父表的主键")
-    @RequestMapping(value = "/{modelId}/tabulation", method = RequestMethod.GET)
+    @RequestMapping(value = "/{modelId}/tabulation/{relationName}", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
-    public JSONArray listObjectsAsTabulation(@PathVariable String modelId, HttpServletRequest request) {
+    public JSONArray listObjectsAsTabulation(@PathVariable String modelId, @PathVariable String relationName,
+                                             HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaRelation relation = null;
+        if(StringUtils.isNotBlank(relationName)) {
+            relation = metaDataService.getMetaRelationByName(model.getTableId(), relationName);
+        }
+        if(relation == null) {
+            relation = metaDataService.getMetaRelationById(model.getRelationId());
+        }
+        if(relation == null) {
+           throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                   "找不到对应的关联字表信息");
+        }
         Map<String, Object> parameters = collectRequestParameters(request);
-        MetaRelation relation = metaDataService.getMetaRelationById(model.getRelationId());
         Map<String, Object> parentObject = metaObjectService
                 .getObjectById(relation.getParentTableId(), parameters);
 
