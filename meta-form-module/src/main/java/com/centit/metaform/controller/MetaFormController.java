@@ -762,7 +762,7 @@ public class MetaFormController extends BaseController {
                     .unit(unitCode);
             fetchWorkflowVariables(options, model, object);
             // submit flow
-            Map<String, Object> s = flowEngineClient.submitOpt(options);
+            /*Map<String, Object> s = */flowEngineClient.submitOpt(options);
             runJSEvent(model.getExtendOptJs(), object, "afterSubmit", request);
         }
 
