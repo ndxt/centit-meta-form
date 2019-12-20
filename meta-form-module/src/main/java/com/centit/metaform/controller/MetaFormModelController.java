@@ -109,7 +109,7 @@ public class MetaFormModelController extends BaseController{
      * @param modelId  Model_Id
      * @return {data:{}}
      */
-    @ApiOperation(value = "查询单个通用模块")
+    @ApiOperation(value = "查询单个通用模块,其中keyProps为其主表对应的主键字段名称数组", response = MetaFormModel.class)
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
     public ObjectAppendProperties<MetaFormModel> getMetaFormModel(@PathVariable String modelId) {
