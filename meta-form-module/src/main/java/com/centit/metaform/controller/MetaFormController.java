@@ -227,9 +227,12 @@ public class MetaFormController extends BaseController {
     public PageQueryResult<Object> listObjects(@PathVariable String modelId, PageDesc pageDesc,
                                                String[] fields, HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        JSONArray ja = queryObjects(model, pageDesc, fields, request);
-        return PageQueryResult.createJSONArrayResult(ja, pageDesc);
-
+        if(model!=null) {
+            JSONArray ja = queryObjects(model, pageDesc, fields, request);
+            return PageQueryResult.createJSONArrayResult(ja, pageDesc);
+        } else {
+            return PageQueryResult.createResult(CollectionsOpt.createList(modelId + "无此表单"), pageDesc);
+        }
     }
 
     @ApiOperation(value = "导出表单数据列表可分页，传入自定义表单模块id")
