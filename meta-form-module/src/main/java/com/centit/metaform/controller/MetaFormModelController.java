@@ -5,23 +5,28 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
+import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
+import com.centit.product.metadata.po.MetaTable;
+import com.centit.product.metadata.service.MetaDataCache;
+import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -41,10 +46,11 @@ import java.util.Map;
 public class MetaFormModelController extends BaseController{
     //private static final Log log = LogFactory.getLog(MetaFormModelController.class);
 
-    @Resource
+    @Autowired
     private MetaFormModelManager metaFormModelMag;
 
-
+    @Autowired
+    private MetaDataCache metaDataCache;
     /**
      * 查询所有   通用模块管理  列表
      *
@@ -106,9 +112,21 @@ public class MetaFormModelController extends BaseController{
     @ApiOperation(value = "查询单个通用模块")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
-    public MetaFormModel getMetaFormModel(@PathVariable String modelId) {
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        return metaFormModel;
+    public ObjectAppendProperties<MetaFormModel> getMetaFormModel(@PathVariable String modelId) {
+        /*return*/ MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        MetaTable tableInfo = this.metaDataCache.getTableInfo(metaFormModel.getTableId());
+        if(tableInfo!=null && tableInfo.getPkFields()!=null && tableInfo.getPkFields().size()>0) {
+            String[] pks = tableInfo.getPkFields().stream()
+                    .map(TableField::getPropertyName)
+                    .toArray(String[]::new);
+            //List<String> pkCols = new ArrayList<>(4);
+        /*for(TableField field : tableInfo.getPkFields()){
+            pkCols.add(field.getPropertyName());
+        }*/
+            return ObjectAppendProperties.create(metaFormModel,
+                    CollectionsOpt.createHashMap("keyProps", pks));
+        }
+        return ObjectAppendProperties.create(metaFormModel, null);
     }
 
     /**
