@@ -71,11 +71,13 @@ public class MetaFormModel implements java.io.Serializable {
 
     @ApiModelProperty(value = "业务特殊处理脚本")
     @Column(name = "EXTEND_OPT_JS")
+    @Basic(fetch = FetchType.LAZY)
     private String  extendOptJs;
 
     @ApiModelProperty(value = "数据范围权限过滤，作为L列表表单或者二级表单是使用")
     @Column(name = "DATA_FILTER_SQL")
     @Length(max = 2000, message = "字段长度不能大于{max}")
+    @Basic(fetch = FetchType.LAZY)
     private String  dataFilterSql;
 
     @ApiModelProperty(value = "关联工作流代码")
