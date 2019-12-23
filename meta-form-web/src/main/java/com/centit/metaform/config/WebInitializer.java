@@ -26,7 +26,7 @@ public class WebInitializer implements WebApplicationInitializer {
 
         WebConfig.registerServletConfig(servletContext, "metaform",
                 "/metaform/*",
-                NormalSpringMvcConfig.class,SwaggerConfig.class);
+                MetaformSpringMvcConfig.class,SwaggerConfig.class);
         WebConfig.registerServletConfig(servletContext, "metadata",
                 "/metadata/*",
                 MetaDataSpringMvcConfig.class,SwaggerConfig.class);
