@@ -282,6 +282,9 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     public PageQueryResult<Map<String, Object>> searchObject(@PathVariable String modelId,
                                                              HttpServletRequest request, PageDesc pageDesc) {
+        if(esObjectSearcher==null){
+            throw new ObjectException(ObjectException.SYSTEM_CONFIG_ERROR, "没有正确配置Elastic Search");
+        }
         Map<String, Object> queryParam = collectRequestParameters(request);
         Map<String, Object> searchQuery = new HashMap<>(10);
         String queryWord = StringBaseOpt.castObjectToString(queryParam.get("query"));
@@ -319,7 +322,7 @@ public class MetaFormController extends BaseController {
 
     private void saveFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request) {
         //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if (metaTable != null &&
+        if (esObjectIndexer!=null && metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
@@ -336,7 +339,7 @@ public class MetaFormController extends BaseController {
 
     private void deleteFulltextIndex(Map<String, Object> obj, String tableId) {
         MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if (metaTable != null &&
+        if (esObjectIndexer!=null && metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
@@ -351,7 +354,7 @@ public class MetaFormController extends BaseController {
 
     private void updataFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request) {
         //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if (metaTable != null &&
+        if (esObjectIndexer!=null && metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
