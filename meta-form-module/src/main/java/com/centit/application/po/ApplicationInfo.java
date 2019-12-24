@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.support.database.orm.GeneratorType;
 import com.centit.support.database.orm.ValueGenerator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -22,11 +23,12 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "M_APPLICATION_INFO")
+@ApiModel("业务系统模块")
 public class ApplicationInfo implements java.io.Serializable {
 
     private static final long serialVersionUID =  1L;
 
-    @ApiModelProperty(value = "模块代码", hidden = true)
+    @ApiModelProperty(value = "模块代码，等同于OS_ID、OPT_ID这个地方命名有点乱", hidden = true)
     @Id
     @Column(name = "APPLICATION_ID")
     @ValueGenerator(strategy = GeneratorType.UUID22)
