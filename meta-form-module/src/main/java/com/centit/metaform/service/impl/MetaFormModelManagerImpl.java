@@ -1,5 +1,6 @@
 package com.centit.metaform.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.jdbc.dao.DatabaseOptUtils;
@@ -7,6 +8,7 @@ import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
+import com.centit.product.dataopt.core.SimpleDataSet;
 import com.centit.product.metadata.dao.MetaTableDao;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
@@ -14,6 +16,7 @@ import com.centit.support.database.orm.JpaMetadata;
 import com.centit.support.database.orm.TableMapInfo;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.support.database.utils.QueryUtils;
+import com.centit.support.file.FileIOOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -137,6 +142,16 @@ public class MetaFormModelManagerImpl
 
         JSONArray listTables = DatabaseOptUtils.listObjectsByParamsDriverSqlAsJson(metaFormModelDao,sql,filterMap,pageDesc);
         return listTables;
+    }
+
+    @Override
+    public MetaFormModel getObjectByIdAndFile(String filePath, String modelId) {
+        try {
+            return FileIOOpt.readObjectAsJsonFromFile(filePath+ File.separator+modelId, MetaFormModel.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

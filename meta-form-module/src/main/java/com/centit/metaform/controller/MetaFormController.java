@@ -227,6 +227,7 @@ public class MetaFormController extends BaseController {
     public PageQueryResult<Object> listObjects(@PathVariable String modelId, PageDesc pageDesc,
                                                String[] fields, HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        //MetaFormModel model1=metaFormModelManager.getObjectByIdAndFile("D:\\D\\Projects\\RunData\\2019-12-24 153156",modelId);
         if(model!=null) {
             JSONArray ja = queryObjects(model, pageDesc, fields, request);
             return PageQueryResult.createJSONArrayResult(ja, pageDesc);
