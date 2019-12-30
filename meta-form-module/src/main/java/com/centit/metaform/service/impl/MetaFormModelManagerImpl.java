@@ -147,7 +147,8 @@ public class MetaFormModelManagerImpl
     @Override
     public MetaFormModel getObjectByIdAndFile(String filePath, String modelId) {
         try {
-            String metaModel=FileIOOpt.readStringFromFile(filePath+ File.separator+modelId,"UTF-8");
+            String metaModel=FileIOOpt.readStringFromFile(filePath+ File.separator+modelId+".json",
+                    "UTF-8");
             return JSON.parseObject(metaModel, MetaFormModel.class);
         } catch (IOException e) {
             e.printStackTrace();
