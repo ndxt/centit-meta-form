@@ -54,9 +54,13 @@ public class MetaFormModel implements java.io.Serializable {
 
     @ApiModelProperty(value = "表单模板")
     @Column(name = "FORM_TEMPLATE")
-    @JSONField(serialize=false)
     @Basic(fetch = FetchType.LAZY)
     private JSONObject formTemplate;
+
+    @ApiModelProperty(value = "移动表单模板")
+    @Column(name = "MOBILE_FORM_TEMPLATE")
+    @Basic(fetch = FetchType.LAZY)
+    private JSONObject mobileFormTemplate;
 
     @ApiModelProperty(value = "更改时间")
     @Column(name = "LAST_MODIFY_DATE")
@@ -132,7 +136,6 @@ public class MetaFormModel implements java.io.Serializable {
         }*/
         return relationName;
     }
-
 
     // Constructors
     /* default constructor */
@@ -220,14 +223,14 @@ public class MetaFormModel implements java.io.Serializable {
         }
     }
 
-      public MetaFormModel copy(MetaFormModel other){
-
+    public MetaFormModel copy(MetaFormModel other){
         this.setModelId(other.getModelId());
         this.tableId=other.getTableId();
         this.modelComment= other.getModelComment();
         this.modelName= other.getModelName();
         this.modelType= other.getModelType();
         this.formTemplate= other.getFormTemplate();
+        this.mobileFormTemplate= other.getMobileFormTemplate();
         this.lastModifyDate= other.getLastModifyDate();
         this.recorder= other.getRecorder();
         this.extendOptJs= other.getExtendOptJs();
@@ -240,11 +243,9 @@ public class MetaFormModel implements java.io.Serializable {
         return this;
     }
 
-
     public MetaFormModel copyNotNullProperty(MetaFormModel other){
-
-    if( other.getModelId() != null)
-        this.setModelId(other.getModelId());
+        if( other.getModelId() != null)
+            this.setModelId(other.getModelId());
         if( other.getTableId() != null)
             this.tableId= other.getTableId();
         if( other.getModelComment() != null)
@@ -255,6 +256,8 @@ public class MetaFormModel implements java.io.Serializable {
             this.modelType= other.getModelType();
         if( other.getFormTemplate() != null)
             this.formTemplate= other.getFormTemplate();
+        if( other.getMobileFormTemplate() != null)
+            this.mobileFormTemplate= other.getMobileFormTemplate();
         if( other.getLastModifyDate() != null)
             this.lastModifyDate= other.getLastModifyDate();
         if( other.getRecorder() != null)
@@ -276,25 +279,4 @@ public class MetaFormModel implements java.io.Serializable {
         return this;
     }
 
-    public MetaFormModel clearProperties(){
-
-//        this.setMdTable(null);
-        this.modelComment= null;
-        this.modelName= null;
-        this.modelType= null;
-        this.formTemplate= null;
-        this.lastModifyDate= null;
-        this.recorder= null;
-        this.extendOptJs= null;
-        this.dataFilterSql= null;
-        this.relFlowCode = null;
-        this.modeOptUrl = null;
-        this.childFormModels = new HashSet<>();
-        this.databaseCode = null;
-        this.applicationId = null;
-        return this;
-    }
-    public JSONObject getFormTemplateJson() {
-        return this.formTemplate;
-    }
 }

@@ -16,6 +16,8 @@ import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -192,13 +194,46 @@ public class MetaFormModelController extends BaseController{
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 
+    @ApiOperation(value = "获取模板内容")
+    @RequestMapping(value = "/{modelId}/template", method = {RequestMethod.GET})
+    @ApiImplicitParams({@ApiImplicitParam(
+            name = "modelId", value = "表单模块id",
+            required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "type", value = "表单类型， m、mo、mobile为移动表单，其他的默认返回pc表单 ",
+            paramType = "query", dataType = "String"
+    )})
+    @WrapUpResponseBody
+    public JSONObject getFormTemplate(@PathVariable String modelId, String type) {
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        if(StringUtils.equalsAnyIgnoreCase(type, "m","mo","mobile")){
+            return metaFormModel.getMobileFormTemplate();
+        }
+        return metaFormModel.getFormTemplate();
+    }
+
     @ApiOperation(value = "修改模板内容")
     @RequestMapping(value = "/{modelId}/template", method = {RequestMethod.PUT})
+    @ApiImplicitParams({@ApiImplicitParam(
+            name = "modelId", value = "表单模块id",
+            required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "formTemplate", value = "表单类型， m、mo、mobile为更改移动表单，其他的默认更改pc表单",
+            required = true, paramType = "body", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "type", value = "表单类型， m、mo、mobile为更改移动表单，其他的默认更改pc表单",
+            paramType = "query", dataType = "String"
+    )})
     @WrapUpResponseBody
     public void updateFormTemplate(@PathVariable String modelId,
-                                    @RequestBody JSONObject formTemplate) {
+                                   @RequestBody JSONObject formTemplate,
+                                   String type) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        metaFormModel.setFormTemplate(formTemplate);
+        if(StringUtils.equalsAnyIgnoreCase(type, "m","mo","mobile")) {
+            metaFormModel.setMobileFormTemplate(formTemplate);
+        } else {
+            metaFormModel.setFormTemplate(formTemplate);
+        }
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 
