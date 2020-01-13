@@ -125,7 +125,7 @@ public class MetaFormModelManagerImpl
                         ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a", true)
                         : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a",1) ) +
                 ",b.TABLE_NAME,b.TABLE_LABEL_NAME "+
-                " from M_META_FORM_MODEL a join F_MD_TABLE b on a.table_id=b.table_id "+
+                " from M_META_FORM_MODEL a left join F_MD_TABLE b on a.table_id=b.table_id "+
                 " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] "+
                 " [:tableId | and a.table_id = :tableId] "+
                 " [:modelType | and a.MODEL_TYPE = :modelType] "+

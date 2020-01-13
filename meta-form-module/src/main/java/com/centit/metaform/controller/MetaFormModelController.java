@@ -118,26 +118,28 @@ public class MetaFormModelController extends BaseController{
     @WrapUpResponseBody
     public ObjectAppendProperties<MetaFormModel> getMetaFormModel(@PathVariable String modelId) {
         /*return*/ MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        MetaTable tableInfo = this.metaDataCache.getTableInfo(metaFormModel.getTableId());
+        List<String> pkCols = new ArrayList<>(6);
+        if (metaFormModel.getTableId()!=null && !"".equals(metaFormModel.getTableId())) {
+            MetaTable tableInfo = this.metaDataCache.getTableInfo(metaFormModel.getTableId());
         /*if(tableInfo!=null && tableInfo.getPkFields()!=null && tableInfo.getPkFields().size()>0) {
             String[] pks = tableInfo.getPkFields().stream()
                     .map(TableField::getPropertyName)
                     .toArray(String[]::new);*/
-        List<String> pkCols = new ArrayList<>(6);
-        if(tableInfo != null) {
-            //if(tableInfo.getPkFields()!=null) {
-            for (TableField field : tableInfo.getPkFields()) {
-                pkCols.add(field.getPropertyName());
-            }
-            if(!"0".equals(tableInfo.getWorkFlowOptType())){
-                pkCols.add(MetaTable.WORKFLOW_INST_ID_PROP);
-                pkCols.add(MetaTable.WORKFLOW_NODE_INST_ID_PROP);
-            }
-            if("C".equals(tableInfo.getTableType())) {
-                pkCols.add("_id");
-            }
-            if("C".equals(tableInfo.getTableType()) || tableInfo.isFulltextSearch()) {
-                pkCols.add("optTag");
+            if (tableInfo != null) {
+                //if(tableInfo.getPkFields()!=null) {
+                for (TableField field : tableInfo.getPkFields()) {
+                    pkCols.add(field.getPropertyName());
+                }
+                if (!"0".equals(tableInfo.getWorkFlowOptType())) {
+                    pkCols.add(MetaTable.WORKFLOW_INST_ID_PROP);
+                    pkCols.add(MetaTable.WORKFLOW_NODE_INST_ID_PROP);
+                }
+                if ("C".equals(tableInfo.getTableType())) {
+                    pkCols.add("_id");
+                }
+                if ("C".equals(tableInfo.getTableType()) || tableInfo.isFulltextSearch()) {
+                    pkCols.add("optTag");
+                }
             }
         }
         return ObjectAppendProperties.create(metaFormModel,
