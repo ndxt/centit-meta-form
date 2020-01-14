@@ -67,7 +67,7 @@
 
         <dependency>
             <groupId>com.centit.framework</groupId>
-            <artifactId>centit-ip-app</artifactId>
+            <artifactId>centit-ip-adapter</artifactId>
         </dependency>
 
         <dependency>
@@ -126,11 +126,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.centit.framework</groupId>
-            <artifactId>centit-ip-app-config</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
