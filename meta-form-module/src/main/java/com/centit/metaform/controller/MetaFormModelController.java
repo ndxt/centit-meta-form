@@ -48,7 +48,7 @@ import java.util.Map;
 @RequestMapping("/metaformmodel")
 @Api(value = "自定义表单管理", tags = "自定义表单管理")
 public class MetaFormModelController extends BaseController{
-    //private static final Log log = LogFactory.getLog(MetaFormModelController.class);
+    //private static final Log logger = LogFactory.getLog(MetaFormModelController.class);
 
     @Autowired
     private MetaFormModelManager metaFormModelMag;
