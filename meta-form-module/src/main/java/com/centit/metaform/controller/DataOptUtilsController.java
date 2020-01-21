@@ -10,6 +10,8 @@ import com.centit.product.dbdesign.pdmutils.PdmTableInfoUtils;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.metadata.SimpleTableInfo;
 import com.centit.support.file.FileSystemOpt;
+import com.centit.support.report.ExcelExportUtil;
+import com.centit.support.report.ExcelImportUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -35,34 +37,7 @@ public class DataOptUtilsController {
 
     private static final Log logger = LogFactory.getLog(DataOptUtilsController.class);
 
-    private List<SimpleTableInfo> fetchPdmTables(String tempFilePath) {
-        if ("".equals(tempFilePath)) {
-            throw new ObjectException("pdm文件不能为空");
-        }
-        return PdmTableInfoUtils.importTableFromPdm(tempFilePath);
-    }
-
-    @ApiOperation(value = "range")
-    @CrossOrigin(origins = "*", allowCredentials = "true", maxAge = 86400, methods = RequestMethod.GET)
-    @RequestMapping(value = "/range", method = {RequestMethod.GET})
-    @WrapUpResponseBody
-    public JSONObject checkFileRange(String token, long size) {
-        //FileRangeInfo fr = new FileRangeInfo(token,size);
-        //Pair<String, InputStream> fileInfo = UploadDownloadUtils.fetchInputStreamFromMultipartResolver(request);
-        //检查临时目录中的文件大小，返回文件的其实点
-        String tempFilePath = SystemTempFileUtils.getTempFilePath(token, size);
-        long tempFileSize = SystemTempFileUtils.checkTempFileSize(tempFilePath);
-        Map<String, Object> data = new HashMap<>(4);
-        data.put("tempFilePath", token +"_"+size);
-        JSONObject jsonObject = UploadDownloadUtils.makeRangeUploadJson(tempFileSize, token, token +"_"+size);
-        if (tempFileSize == size) {
-            data.put("tables", fetchPdmTables(tempFilePath));
-            jsonObject.put("tables", data);
-        }
-        return jsonObject;
-    }
-
-    @ApiOperation(value = "导入pdm返回表数据")
+    @ApiOperation(value = "导入excl返回json数据")
     @CrossOrigin(origins = "*", allowCredentials = "true", maxAge = 86400, methods = RequestMethod.POST)
     @RequestMapping(value = "/excelData", method = {RequestMethod.POST})
     @WrapUpResponseBody
@@ -77,10 +52,7 @@ public class DataOptUtilsController {
             if(uploadSize>0){
                 //上传到临时区成功
                 JSONObject jsonObject = new JSONObject();
-                Map<String, Object> data = new HashMap<>(4);
-                data.put("tempFilePath", token +"_"+size);
-                data.put("tables", PdmTableInfoUtils.getTableNameFromPdm(tempFilePath));
-                jsonObject.put("tables", data);
+                jsonObject.put("objList", ExcelImportUtil.loadMapFromExcelSheet(tempFilePath,0,0,2));
                 JsonResultUtils.writeSingleDataJson(jsonObject,response);
                 //FileSystemOpt.deleteFile(tempFilePath);
             }else {
