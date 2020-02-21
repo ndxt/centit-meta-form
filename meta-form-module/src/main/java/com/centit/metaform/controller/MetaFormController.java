@@ -384,10 +384,17 @@ public class MetaFormController extends BaseController {
         object.put(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP, DatetimeOpt.currentSqlDate());
     }
 
-    @ApiOperation(value = "修改表单指定字段")
+    @ApiOperation(value = "修改表单指定字段;需要修改的字段在url中用参数拼接")
     @RequestMapping(value = "/{modelId}/change", method = RequestMethod.PUT)
     @WrapUpResponseBody
     @JdbcTransaction
+    @ApiImplicitParams({@ApiImplicitParam(
+            name = "modelId", value = "表单模块id",
+            required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "jsonString", value = "需要修改的数据对象，一定要包括对象的主键或者工作流业务主键",
+            required = true, paramType = "jsonString", dataType = "String"
+    )})
     public void updateObjectPart(@PathVariable String modelId,
                                  @RequestBody String jsonString, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
@@ -404,6 +411,25 @@ public class MetaFormController extends BaseController {
             OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
                     modelId, JSON.toJSONString(primaryKey), "change", "修改数据指定字段", params, null);
         }
+    }
+
+    @ApiOperation(value = "批量修改数据库表数据；过滤条件在参数中拼接，规则同查询参数")
+    @RequestMapping(value = "/{modelId}/batch", method = RequestMethod.PUT)
+    @WrapUpResponseBody
+    @ApiImplicitParams({@ApiImplicitParam(
+            name = "modelId", value = "表单模块id",
+            required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "jsonString", value = "需要修改的数据键值对",
+            required = true, paramType = "jsonString", dataType = "String"
+    )})
+    public ResponseData batchUpdateObject(@PathVariable String modelId,
+                                          @RequestBody String jsonString, HttpServletRequest request) {
+        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        Map<String, Object> params = collectRequestParameters(request);
+        JSONObject object = JSON.parseObject(jsonString);
+        metaObjectService.updateObjectsByProperties(model.getTableId(), object, params);
+        return ResponseData.makeSuccessResponse();
     }
 
     @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
