@@ -423,6 +423,7 @@ public class MetaFormController extends BaseController {
             name = "jsonString", value = "需要修改的数据键值对",
             required = true, paramType = "jsonString", dataType = "String"
     )})
+    @JdbcTransaction
     public ResponseData batchUpdateObject(@PathVariable String modelId,
                                           @RequestBody String jsonString, HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
