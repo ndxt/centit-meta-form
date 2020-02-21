@@ -416,21 +416,18 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "批量修改数据库表数据；过滤条件在参数中拼接，规则同查询参数")
     @RequestMapping(value = "/{modelId}/batch", method = RequestMethod.PUT)
     @WrapUpResponseBody
-    @ApiImplicitParams({@ApiImplicitParam(
-            name = "modelId", value = "表单模块id",
-            required = true, paramType = "path", dataType = "String"
-    ), @ApiImplicitParam(
-            name = "jsonString", value = "需要修改的数据键值对",
-            required = true, paramType = "jsonString", dataType = "String"
-    )})
     @JdbcTransaction
     public ResponseData batchUpdateObject(@PathVariable String modelId,
                                           @RequestBody String jsonString, HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         Map<String, Object> params = collectRequestParameters(request);
         JSONObject object = JSON.parseObject(jsonString);
-        metaObjectService.updateObjectsByProperties(model.getTableId(), object, params);
-        return ResponseData.makeSuccessResponse();
+        int ireturn =metaObjectService.updateObjectsByProperties(model.getTableId(), object, params);
+        if (ireturn==0){
+           return ResponseData.makeErrorMessage("无对应sql生成");
+        } else {
+            return ResponseData.makeSuccessResponse();
+        }
     }
 
     @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
