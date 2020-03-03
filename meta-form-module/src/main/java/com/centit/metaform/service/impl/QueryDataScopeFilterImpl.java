@@ -37,6 +37,9 @@ public  class QueryDataScopeFilterImpl implements QueryDataScopeFilter {
     @Transactional
     public DataPowerFilter createUserDataPowerFilter(JSONObject userInfo, String currentUnit) {
         DataPowerFilter dpf = new DataPowerFilter();
+        if (userInfo==null){
+            return dpf;
+        }
         //当前用户信息
         dpf.addSourceData("currentUser", userInfo);
         dpf.addSourceData("currentStation", currentUnit);
