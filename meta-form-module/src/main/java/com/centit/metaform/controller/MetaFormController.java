@@ -791,10 +791,10 @@ public class MetaFormController extends BaseController {
 
                 FlowInstance flowInstance = flowEngineClient.createInstance(options);
 
-                object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
+                object.put(MetaTable.WORKFLOW_INST_ID_PROP, ""+flowInstance.getFlowInstId());
                 NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
                 if (nodeInstance != null) {
-                    object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstance.getNodeInstId());
+                    object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, ""+nodeInstance.getNodeInstId());
                 }
                 metaObjectService.updateObjectFields(model.getTableId(),
                         CollectionsOpt.createList(
