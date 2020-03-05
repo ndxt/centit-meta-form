@@ -746,7 +746,13 @@ public class MetaFormController extends BaseController {
             object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstId);
         }
         String userCode = fetchExtendParam("currentOperatorUserCode", object, request);
+        if(userCode.equals("")){
+            userCode=StringBaseOpt.castObjectToString(object.get("userCode"));
+        }
         String unitCode = fetchExtendParam("currentOperatorUnitCode", object, request);
+        if(unitCode.equals("")){
+            unitCode=StringBaseOpt.castObjectToString(object.get("unitCode"));
+        }
         if (dbObject == null) {
             innerSaveObject(model, tableInfo, object, request);
         } else {
