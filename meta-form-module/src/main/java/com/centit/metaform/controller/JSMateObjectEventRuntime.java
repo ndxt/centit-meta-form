@@ -1,5 +1,8 @@
 package com.centit.metaform.controller;
 
+import com.centit.framework.model.adapter.NotificationCenter;
+import com.centit.framework.model.basedata.NoticeMessage;
+import com.centit.metaform.po.MetaFormModel;
 import com.centit.product.dataopt.utils.JSRuntimeContext;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.DatabaseRunTime;
@@ -28,14 +31,21 @@ public class JSMateObjectEventRuntime {
     private DatabaseRunTime databaseRunTime;
     private HttpServletRequest request;
     private String javaScript;
+    private NotificationCenter notificationCenter;
+    private MetaFormModel metaModel;
+    private MetaTable tableInfo;
 
     public JSMateObjectEventRuntime(MetaObjectService metaObjectService,
                                     DatabaseRunTime databaseRunTime,
-                                    String js,
+                                    NotificationCenter notificationCenter,
+                                    MetaFormModel model, MetaTable tableInfo,
                                     HttpServletRequest request){
         this.metaObjectService = metaObjectService;
         this.databaseRunTime = databaseRunTime;
-        this.javaScript = js;
+        this.notificationCenter = notificationCenter;
+        this.metaModel = model;
+        this.tableInfo = tableInfo;
+        this.javaScript = model.getExtendOptJs();
         this.request = request;
     }
 
@@ -106,6 +116,14 @@ public class JSMateObjectEventRuntime {
         } catch (Exception e) {
             logger.info(e.getMessage());
         }
+    }
+
+    public void sendMessage(String userCode, String title, String msg){
+        notificationCenter.sendMessage("system", userCode,
+                NoticeMessage.create().operation(metaModel.getModelId())
+                        .tag(this.tableInfo.fetchObjectPkAsId(bizModel))
+                        .subject(title)
+        .content(msg));
     }
 
     public void submitOpt(){

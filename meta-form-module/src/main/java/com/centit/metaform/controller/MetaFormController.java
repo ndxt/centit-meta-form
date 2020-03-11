@@ -10,6 +10,7 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DataPowerFilter;
 import com.centit.framework.core.dao.PageQueryResult;
+import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.metaform.service.QueryDataScopeFilter;
@@ -93,23 +94,27 @@ public class MetaFormController extends BaseController {
     @Autowired
     private QueryDataScopeFilter queryDataScopeFilter;
 
+    @Autowired
+    private NotificationCenter notificationCenter;
+
     @Autowired(required = false)
     private ESIndexer esObjectIndexer;
 
     @Autowired(required = false)
     private ESSearcher esObjectSearcher;
 
-    private int runJSEvent(String js, Map<String, Object> object, String event, HttpServletRequest request) {
-        if (StringUtils.isBlank(js)) {
+    private int runJSEvent(MetaFormModel model, Map<String, Object> object,
+                           String event, HttpServletRequest request) {
+        if (StringUtils.isBlank(model.getExtendOptJs())) {
             return 0;
         }
-
+        MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
         JSMateObjectEventRuntime jsMateObjectEvent = new JSMateObjectEventRuntime(
-                metaObjectService, databaseRunTime, js, request);
+                metaObjectService, databaseRunTime, notificationCenter, model, tableInfo, request);
         jsMateObjectEvent.setFlowEngineClient(flowEngineClient);
         int ret = jsMateObjectEvent.runEvent(event, object);
         if (ret < 0) {
-            throw new ObjectException(ret, "外部事件" + event + "运行异常" + js);
+            throw new ObjectException(ret, "外部事件" + event + "运行异常" + model.getExtendOptJs());
         }
         return ret;
     }
@@ -445,7 +450,7 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         Map<String, Object> newObject =
                 metaObjectService.makeNewObject(model.getTableId(), parameters);
-        runJSEvent(model.getExtendOptJs(), newObject, "initNewObject", request);
+        runJSEvent(model, newObject, "initNewObject", request);
         return newObject;
     }
 
@@ -537,7 +542,7 @@ public class MetaFormController extends BaseController {
         if (tableInfo.isUpdateCheckTimeStamp()) {
             checkUpdateTimeStamp(dbObject, po);
         }
-        if (runJSEvent(model.getExtendOptJs(), po, "beforeUpdate", request) == 0) {
+        if (runJSEvent(model, po, "beforeUpdate", request) == 0) {
             metaObjectService.updateObjectWithChildren(model.getTableId(), po);
         }
         // 更改索引
@@ -585,7 +590,7 @@ public class MetaFormController extends BaseController {
         parameters.put("currentUser", userDetails);
         parameters.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
 
-        if (runJSEvent(model.getExtendOptJs(), po, "beforeSave", request) == 0) {
+        if (runJSEvent(model, po, "beforeSave", request) == 0) {
             metaObjectService.saveObjectWithChildren(model.getTableId(), po, parameters);
         }
 
@@ -630,7 +635,7 @@ public class MetaFormController extends BaseController {
             dbObject = metaObjectService.getObjectById(model.getTableId(), parameters);
         }
 
-        if (runJSEvent(model.getExtendOptJs(), parameters, "beforeDelete", request) == 0) {
+        if (runJSEvent(model, parameters, "beforeDelete", request) == 0) {
             metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters);
         }
         // 删除索引
@@ -759,7 +764,7 @@ public class MetaFormController extends BaseController {
             innerUpdateObject(model, tableInfo, object, dbObject, request);
         }
 
-        if (runJSEvent(model.getExtendOptJs(), object, "beforeSubmit", request) != 0) {
+        if (runJSEvent(model, object, "beforeSubmit", request) != 0) {
             throw new ObjectException("beforeSubmit 执行错误！" + jsonString);
         }
 
@@ -802,7 +807,7 @@ public class MetaFormController extends BaseController {
                                 MetaTable.WORKFLOW_NODE_INST_ID_PROP), object);
 
 
-                runJSEvent(model.getExtendOptJs(), object, "afterCreateFlow", request);
+                runJSEvent(model, object, "afterCreateFlow", request);
             } catch (Exception e) {
                 throw new ObjectException(e);
             }
@@ -816,7 +821,7 @@ public class MetaFormController extends BaseController {
             fetchWorkflowVariables(options, model, object);
             // submit flow
             /*Map<String, Object> s = */flowEngineClient.submitOpt(options);
-            runJSEvent(model.getExtendOptJs(), object, "afterSubmit", request);
+            runJSEvent(model, object, "afterSubmit", request);
         }
 
 
