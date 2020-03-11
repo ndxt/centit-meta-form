@@ -119,16 +119,16 @@ public class JSMateObjectEventRuntime {
         }
     }
 
-    public void sendMessage(List<String> userCodes, String title, String msg){
-        notificationCenter.sendMessage("system", userCodes,
+    public void sendMessage(String sender,List<String> userCodes, String title, String msg){
+        notificationCenter.sendMessage(sender, userCodes,
                 NoticeMessage.create().operation(metaModel.getModelId())
                         .tag(this.tableInfo.fetchObjectPkAsId(bizModel))
                         .subject(title)
                         .content(msg));
     }
 
-    public void sendUnitMessage(String unitCode, boolean includeSubUnit, String title, String msg){
-        notificationCenter.sendUnitMessage("system", unitCode, includeSubUnit,
+    public void sendUnitMessage(String sender,String unitCode, boolean includeSubUnit, String title, String msg){
+        notificationCenter.sendUnitMessage(sender, unitCode, includeSubUnit,
                 NoticeMessage.create().operation(metaModel.getModelId())
                         .tag(this.tableInfo.fetchObjectPkAsId(bizModel))
                         .subject(title)
