@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 public class JSMateObjectEventRuntime {
@@ -118,8 +119,8 @@ public class JSMateObjectEventRuntime {
         }
     }
 
-    public void sendMessage(String userCode, String title, String msg){
-        notificationCenter.sendMessage("system", userCode,
+    public void sendMessage(List<String> userCodes, String title, String msg){
+        notificationCenter.sendMessage("system", userCodes,
                 NoticeMessage.create().operation(metaModel.getModelId())
                         .tag(this.tableInfo.fetchObjectPkAsId(bizModel))
                         .subject(title)
