@@ -127,6 +127,14 @@ public class JSMateObjectEventRuntime {
                         .content(msg));
     }
 
+    public void sendUnitMessage(String unitCode, boolean includeSubUnit, String title, String msg){
+        notificationCenter.sendUnitMessage("system", unitCode, includeSubUnit,
+                NoticeMessage.create().operation(metaModel.getModelId())
+                        .tag(this.tableInfo.fetchObjectPkAsId(bizModel))
+                        .subject(title)
+                        .content(msg));
+    }
+
     public void submitOpt(){
         String nodeInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
         try {
