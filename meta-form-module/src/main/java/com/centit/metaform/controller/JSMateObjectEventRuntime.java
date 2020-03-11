@@ -123,7 +123,7 @@ public class JSMateObjectEventRuntime {
                 NoticeMessage.create().operation(metaModel.getModelId())
                         .tag(this.tableInfo.fetchObjectPkAsId(bizModel))
                         .subject(title)
-        .content(msg));
+                        .content(msg));
     }
 
     public void submitOpt(){
