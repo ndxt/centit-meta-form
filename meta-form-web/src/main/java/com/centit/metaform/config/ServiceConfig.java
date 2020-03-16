@@ -1,10 +1,12 @@
 package com.centit.metaform.config;
 
 import com.centit.framework.common.SysParametersUtils;
+import com.centit.framework.components.impl.NotificationCenterImpl;
 import com.centit.framework.config.SpringSecurityCasConfig;
 import com.centit.framework.config.SpringSecurityDaoConfig;
 import com.centit.framework.ip.app.config.IPOrStaticAppSystemBeanConfig;
 import com.centit.framework.jdbc.config.JdbcConfig;
+import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.StandardPasswordEncoderImpl;
 import com.centit.search.document.ObjectDocument;
@@ -50,4 +52,13 @@ public class ServiceConfig {
         return IndexerSearcherFactory.obtainSearcher(
                 esServerConfig, ObjectDocument.class);
     }
+    @Bean
+    public NotificationCenter notificationCenter() {
+        NotificationCenterImpl notificationCenter = new NotificationCenterImpl();
+        notificationCenter.initDummyMsgSenders();
+        //notificationCenter.registerMessageSender("innerMsg",innerMessageManager);
+
+        return notificationCenter;
+    }
+
 }
