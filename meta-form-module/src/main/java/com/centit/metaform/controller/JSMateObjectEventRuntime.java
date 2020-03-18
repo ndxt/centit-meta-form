@@ -128,6 +128,7 @@ public class JSMateObjectEventRuntime {
     }
 
     public void sendUnitMessage(String sender,String unitCode, boolean includeSubUnit, String title, String msg){
+        if(unitCode==null) return;
         notificationCenter.sendUnitMessage(sender, unitCode, includeSubUnit,
                 NoticeMessage.create().operation(metaModel.getModelId())
                         .tag(this.tableInfo.fetchObjectPkAsId(bizModel))
