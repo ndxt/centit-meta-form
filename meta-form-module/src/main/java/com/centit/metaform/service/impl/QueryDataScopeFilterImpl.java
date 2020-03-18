@@ -6,7 +6,6 @@ import com.centit.framework.core.dao.DataPowerFilter;
 import com.centit.framework.model.basedata.IUserUnit;
 import com.centit.metaform.service.QueryDataScopeFilter;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +24,6 @@ public  class QueryDataScopeFilterImpl implements QueryDataScopeFilter {
      * @return 过滤条件列表，null或者空位不过来
      */
     @Override
-    @Transactional
     public List<String> listUserDataFiltersByOptIdAndMethod(String sUserCode, String sOptId, String sOptMethod) {
         return CodeRepositoryUtil.listUserDataFiltersByOptIdAndMethod(sUserCode,sOptId,sOptMethod);
     }
@@ -34,7 +32,6 @@ public  class QueryDataScopeFilterImpl implements QueryDataScopeFilter {
      * @return  DataPowerFilter
      */
     @Override
-    @Transactional
     public DataPowerFilter createUserDataPowerFilter(JSONObject userInfo, String currentUnit) {
         DataPowerFilter dpf = new DataPowerFilter();
         if (userInfo==null){
