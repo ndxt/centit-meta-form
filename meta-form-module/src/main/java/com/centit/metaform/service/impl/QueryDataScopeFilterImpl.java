@@ -3,8 +3,8 @@ package com.centit.metaform.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.DataPowerFilter;
+import com.centit.framework.core.service.DataScopePowerManager;
 import com.centit.framework.model.basedata.IUserUnit;
-import com.centit.metaform.service.QueryDataScopeFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service("queryDataScopeFilter")
-public  class QueryDataScopeFilterImpl implements QueryDataScopeFilter {
+public  class QueryDataScopeFilterImpl implements DataScopePowerManager {
 
     /**
      * 获取用户数据权限过滤器

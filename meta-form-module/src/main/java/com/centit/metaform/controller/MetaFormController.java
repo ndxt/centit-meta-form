@@ -10,10 +10,10 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.DataPowerFilter;
 import com.centit.framework.core.dao.PageQueryResult;
+import com.centit.framework.core.service.DataScopePowerManager;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
-import com.centit.metaform.service.QueryDataScopeFilter;
 import com.centit.product.metadata.po.MetaColumn;
 import com.centit.product.metadata.po.MetaRelation;
 import com.centit.product.metadata.po.MetaTable;
@@ -92,7 +92,7 @@ public class MetaFormController extends BaseController {
     private FlowEngineClient flowEngineClient;
 
     @Autowired
-    private QueryDataScopeFilter queryDataScopeFilter;
+    private DataScopePowerManager queryDataScopeFilter;
 
     @Autowired
     private NotificationCenter notificationCenter;
