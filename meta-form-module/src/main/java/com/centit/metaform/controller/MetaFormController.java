@@ -130,7 +130,7 @@ public class MetaFormController extends BaseController {
     )
     @WrapUpResponseBody
     public ResponseData sendUnitMessage(@RequestBody JSONObject msgJson){
-        if(null!=msgJson.getString("unitCode")) return null;
+        if(null==msgJson.getString("unitCode")) return null;
         return notificationCenter.sendUnitMessage(msgJson.getString("sender"),
                 msgJson.getString("unitCode"), false,
                 NoticeMessage.create().operation(msgJson.getString("modelId"))
