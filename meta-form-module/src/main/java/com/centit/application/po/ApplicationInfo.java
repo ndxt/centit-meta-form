@@ -34,11 +34,15 @@ public class ApplicationInfo implements java.io.Serializable {
     @ValueGenerator(strategy = GeneratorType.UUID22)
     private String applicationId;
 
-    @ApiModelProperty(value = "应用模块名称，如果是子摸快，这个字段名为 relationName ", required = true)
+    @ApiModelProperty(value = "应用模块名称，如果是子摸快，这个字段名为 applicationName", required = true)
     @Column(name = "APPLICATION_ID_NAME")
     @Length(max = 200, message = "字段长度不能大于{max}")
     private String  applicationName;
 
+    @ApiModelProperty(value = "所属机构，用于用户隔离")
+    @Column(name = "OWNER_UNIT")
+    @Length(max = 32, message = "字段长度不能大于{max}")
+    private String  ownerUnit;
 
     //CLOB 字段
     @ApiModelProperty(value = "应用流程")
