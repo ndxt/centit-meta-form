@@ -268,7 +268,16 @@ public class MetaFormController extends BaseController {
                               HttpServletRequest request,
                               HttpServletResponse response) throws IOException {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        JSONObject columnName = JSON.parseObject(StringEscapeUtils.unescapeHtml4(jsonString));
+        Map<String,String> columnName=null;
+        if(null!=jsonString){
+            columnName=new HashMap<>();
+           String[] a= StringUtils.split(jsonString,";");
+           for(int i=0;i<a.length;i++){
+               String[] a0=StringUtils.split(a[i],",");
+               columnName.put(a0[0],a0[1]);
+           }
+        }
+
         JSONArray ja = queryObjects(model, pageDesc, columnName==null?null:columnName.keySet().toArray(new String[0]), request);
         if(ja == null || ja.isEmpty()){
             throw new ObjectException(ResponseData.ERROR_NOT_FOUND, "没有查询到任务数据！");
