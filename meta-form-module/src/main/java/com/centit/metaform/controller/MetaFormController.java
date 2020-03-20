@@ -12,6 +12,7 @@ import com.centit.framework.core.dao.DataPowerFilter;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.core.service.DataScopePowerManager;
 import com.centit.framework.model.adapter.NotificationCenter;
+import com.centit.framework.model.basedata.NoticeMessage;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.po.MetaColumn;
@@ -49,11 +50,13 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -118,7 +121,23 @@ public class MetaFormController extends BaseController {
         }
         return ret;
     }
-
+    @ApiOperation(value ="单位发送消息接口")
+    @RequestMapping(value = "/sendUnitMessage", method = RequestMethod.POST)
+    @ApiImplicitParam(
+            name = "msgJson", value = "sender:发送人,unitCode:接收单位(必填),modelId:表单ID,pk:业务主键," +
+            "title:标题,msg:内容",
+            required = true, paramType = "body", dataType = "String"
+    )
+    @WrapUpResponseBody
+    public ResponseData sendUnitMessage(@RequestBody JSONObject msgJson){
+        if(null!=msgJson.getString("unitCode")) return null;
+        return notificationCenter.sendUnitMessage(msgJson.getString("sender"),
+                msgJson.getString("unitCode"), false,
+                NoticeMessage.create().operation(msgJson.getString("modelId"))
+                        .tag(msgJson.getString("pk"))
+                        .subject(msgJson.getString("title"))
+                        .content(msgJson.getString("msg")));
+    }
     @ApiOperation(value = "查询作为子表表单数据列表，不分页；传入的参数为父表的主键")
     @ApiImplicitParams({@ApiImplicitParam(
             name = "modelId", value = "表单模块id",
@@ -244,28 +263,33 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "导出表单数据列表可分页，传入自定义表单模块id")
     @RequestMapping(value = "/{modelId}/export", method = RequestMethod.GET)
     @JdbcTransaction
-    public void exportObjects(@PathVariable String modelId, PageDesc pageDesc,
-                              String[] fields,
+        public void exportObjects(@PathVariable String modelId, PageDesc pageDesc,
+                               String jsonString,
                               HttpServletRequest request,
                               HttpServletResponse response) throws IOException {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
-        JSONArray ja = queryObjects(model, pageDesc, fields, request);
+        JSONObject columnName = JSON.parseObject(StringEscapeUtils.unescapeHtml4(jsonString));
+        JSONArray ja = queryObjects(model, pageDesc, columnName==null?null:columnName.keySet().toArray(new String[0]), request);
         if(ja == null || ja.isEmpty()){
             throw new ObjectException(ResponseData.ERROR_NOT_FOUND, "没有查询到任务数据！");
         }
-        MetaTable table = metaDataCache.getTableInfo(model.getTableId());
-
-        Map<String, Object> firstRow = (Map<String, Object>) ja.get(0);
-        List<String> property = new ArrayList<>(firstRow.keySet());
+        List<String> property = new ArrayList<>();
         List<String> header = new ArrayList<>();
-        for(String p : property){
-            MetaColumn col = table.findFieldByName(p);
-            if(col == null && p.endsWith("Desc")){
-                col = table.findFieldByName(p.substring(0,p.length()-4));
+        if(null!=columnName){
+            property=new ArrayList<>(columnName.keySet());
+            Collections.addAll(header,columnName.values().toArray(new String[0]));
+        }else {
+            MetaTable table = metaDataCache.getTableInfo(model.getTableId());
+            Map<String, Object> firstRow = (Map<String, Object>) ja.get(0);
+            property = new ArrayList<>(firstRow.keySet());
+            for (String p : property) {
+                MetaColumn col = table.findFieldByName(p);
+                if (col == null && p.endsWith("Desc")) {
+                    col = table.findFieldByName(p.substring(0, p.length() - 4));
+                }
+                header.add(col == null ? p : col.getFieldLabelName());
             }
-            header.add(col == null?p:col.getFieldLabelName());
         }
-
         InputStream excelStream = ExcelExportUtil.generateExcelStream(ja,
                 CollectionsOpt.listToArray(header),  CollectionsOpt.listToArray(property));
         String fileName = URLEncoder.encode(model.getModelName(), "UTF-8") +
