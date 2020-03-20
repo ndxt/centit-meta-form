@@ -270,7 +270,7 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
         Map<String,String> columnName=null;
         if(null!=jsonString){
-            columnName=new HashMap<>();
+            columnName=new LinkedHashMap<>();
            String[] a= StringUtils.split(jsonString,";");
            for(int i=0;i<a.length;i++){
                String[] a0=StringUtils.split(a[i],",");
