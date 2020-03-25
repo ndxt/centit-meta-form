@@ -510,7 +510,9 @@ public class MetaFormController extends BaseController {
                                                      String [] parents, String [] children,
                                                      HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        if(model.getTableId()==null) return null;
         MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
+        if (tableInfo==null) return null;
         Map<String, Object> parameters = collectRequestParameters(request);
         if ("C".equals(tableInfo.getTableType())) {
             if (tableInfo.countPkColumn() != 1) {
