@@ -152,7 +152,7 @@ public class MetaFormController extends BaseController {
     @JdbcTransaction
     public JSONArray listObjectsAsTabulation(@PathVariable String modelId, @PathVariable String relationName,
                                              HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         MetaRelation relation = null;
         if(StringUtils.isNotBlank(relationName) && !"default".equals(relationName)) {
             relation = metaDataService.getMetaRelationByName(model.getTableId(), relationName);
@@ -254,7 +254,7 @@ public class MetaFormController extends BaseController {
     @JdbcTransaction
     public PageQueryResult<Object> listObjects(@PathVariable String modelId, PageDesc pageDesc,
                                                String[] fields, HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         //MetaFormModel model1=metaFormModelManager.getObjectByIdAndFile("D:\\D\\Projects\\RunData\\2019-12-24 153156",modelId);
         if(model!=null) {
             JSONArray ja = queryObjects(model, pageDesc, fields, request);
@@ -271,7 +271,7 @@ public class MetaFormController extends BaseController {
                                String jsonString,
                               HttpServletRequest request,
                               HttpServletResponse response) throws IOException {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         Map<String,String> columnName=null;
         if(null!=jsonString){
             columnName=new LinkedHashMap<>();
@@ -331,7 +331,7 @@ public class MetaFormController extends BaseController {
         Map<String, Object> queryParam = collectRequestParameters(request);
         Map<String, Object> searchQuery = new HashMap<>(10);
         String queryWord = StringBaseOpt.castObjectToString(queryParam.get("query"));
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         searchQuery.put("optId", model.getTableId());
         Object user = queryParam.get("userCode");
         if (user != null) {
@@ -440,7 +440,7 @@ public class MetaFormController extends BaseController {
     public void updateObjectPart(@PathVariable String modelId,
                                  @RequestBody String jsonString, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         JSONObject object = JSON.parseObject(jsonString);
         object.putAll(params);
         metaObjectService.updateObjectFields(model.getTableId(), params.keySet(), object);
@@ -461,7 +461,7 @@ public class MetaFormController extends BaseController {
     @JdbcTransaction
     public ResponseData batchUpdateObject(@PathVariable String modelId,
                                           @RequestBody String jsonString, HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         Map<String, Object> params = collectRequestParameters(request);
         JSONObject object = JSON.parseObject(jsonString);
         int ireturn =metaObjectService.updateObjectsByProperties(model.getTableId(), object, params);
@@ -484,7 +484,7 @@ public class MetaFormController extends BaseController {
             userDetails.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
         }
         parameters.put("currentUser", userDetails);
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         Map<String, Object> newObject =
                 metaObjectService.makeNewObject(model.getTableId(), parameters);
         runJSEvent(model, newObject, "initNewObject", request);
@@ -513,7 +513,7 @@ public class MetaFormController extends BaseController {
                                                      String [] fields,
                                                      String [] parents, String [] children,
                                                      HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         if(model.getTableId()==null) return null;
         MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
         if (tableInfo==null) return null;
@@ -595,7 +595,7 @@ public class MetaFormController extends BaseController {
     public void updateObjectWithChildren(@PathVariable String modelId,
                                          @RequestBody String jsonString,
                                          HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         boolean writeLog = tableInfo.isWriteOptLog();
@@ -645,7 +645,7 @@ public class MetaFormController extends BaseController {
     public Map<String, Object> saveObjectWithChildren(@PathVariable String modelId,
                                                       @RequestBody String jsonString,
                                                       HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         innerSaveObject(model, tableInfo, object, request);
@@ -665,7 +665,7 @@ public class MetaFormController extends BaseController {
     public void deleteObjectWithChildren(@PathVariable String modelId,
                                          HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
 
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         boolean writeLog = tableInfo.isWriteOptLog();
@@ -775,7 +775,7 @@ public class MetaFormController extends BaseController {
     public Map<String, Object> submitFlow(@PathVariable String modelId,
                                           @RequestBody String jsonString,
                                           HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(modelId);
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
