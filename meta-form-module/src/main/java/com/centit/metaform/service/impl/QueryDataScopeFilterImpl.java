@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.core.dao.DataPowerFilter;
 import com.centit.framework.core.service.DataScopePowerManager;
+import com.centit.framework.model.basedata.IUnitInfo;
 import com.centit.framework.model.basedata.IUserUnit;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +72,10 @@ public  class QueryDataScopeFilterImpl implements DataScopePowerManager {
         }
         //当前用户的角色信息
         dpf.addSourceData("userRoles", CodeRepositoryUtil.listUserRoles(userCode));
-        dpf.addSourceData("allSubUnits", CodeRepositoryUtil.getAllSubUnits(currentUnit));
+        List<IUnitInfo> allSubUnits=CodeRepositoryUtil.getAllSubUnits(currentUnit);
+        allSubUnits.add(CodeRepositoryUtil
+                .getUnitInfoByCode(userInfo.getString("primaryUnit")));
+        dpf.addSourceData("allSubUnits",allSubUnits);
         dpf.addSourceData("subUnits", CodeRepositoryUtil.getSubUnits(currentUnit));
         return dpf;
     }
