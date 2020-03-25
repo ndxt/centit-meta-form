@@ -71,6 +71,8 @@ public  class QueryDataScopeFilterImpl implements DataScopePowerManager {
         }
         //当前用户的角色信息
         dpf.addSourceData("userRoles", CodeRepositoryUtil.listUserRoles(userCode));
+        dpf.addSourceData("allSubUnits", CodeRepositoryUtil.getAllSubUnits(currentUnit));
+        dpf.addSourceData("subUnits", CodeRepositoryUtil.getSubUnits(currentUnit));
         return dpf;
     }
 }
