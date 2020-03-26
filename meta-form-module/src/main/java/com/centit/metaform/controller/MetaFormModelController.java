@@ -13,8 +13,11 @@ import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.DatetimeOpt;
+import com.centit.support.common.ObjectException;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
+import com.centit.support.database.utils.PersistenceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -181,19 +185,25 @@ public class MetaFormModelController extends BaseController{
 
     /**
      * 新增或保存 通用模块管理
-
      * @param modelId  Model_Id
      * @param metaFormModel  {@link MetaFormModel}
+     * @return
      */
     @ApiOperation(value = "编辑通用模块")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.PUT})
     @WrapUpResponseBody
-    public void updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel) {
+    public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel,HttpServletResponse response) {
+        MetaFormModel oldMetaForm = metaFormModelMag.getObjectById(modelId);
+        if(!DatetimeOpt.equalOnSecond(oldMetaForm.getLastModifyDate(),metaFormModel.getLastModifyDate())){
+            JsonResultUtils.writeErrorMessageJson("The form has been updated by someone else. Please open it again.",response);
+            return oldMetaForm.getLastModifyDate();
+        }
         metaFormModel.setModelId(modelId);
         /*metaFormModel.setFormTemplate(JSON
                 JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
+        return metaFormModel.getLastModifyDate();
     }
 
     @ApiOperation(value = "获取模板内容")
