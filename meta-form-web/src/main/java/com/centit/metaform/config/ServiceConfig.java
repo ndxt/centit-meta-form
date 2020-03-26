@@ -4,6 +4,8 @@ import com.centit.framework.common.SysParametersUtils;
 import com.centit.framework.components.impl.NotificationCenterImpl;
 import com.centit.framework.config.SpringSecurityCasConfig;
 import com.centit.framework.config.SpringSecurityDaoConfig;
+import com.centit.framework.core.service.DataScopePowerManager;
+import com.centit.framework.core.service.impl.DataScopePowerManagerImpl;
 import com.centit.framework.ip.app.config.IPOrStaticAppSystemBeanConfig;
 import com.centit.framework.jdbc.config.JdbcConfig;
 import com.centit.framework.model.adapter.NotificationCenter;
@@ -32,6 +34,11 @@ public class ServiceConfig {
     @Bean(name = "passwordEncoder")
     public CentitPasswordEncoder centitPasswordEncoder(){
         return new StandardPasswordEncoderImpl();
+    }
+
+    @Bean
+    public DataScopePowerManager queryDataScopeFilter(){
+        return new DataScopePowerManagerImpl();
     }
 
     @Bean
