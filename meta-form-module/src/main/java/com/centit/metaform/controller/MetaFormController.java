@@ -196,7 +196,7 @@ public class MetaFormController extends BaseController {
             }
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
-            dataPowerFilter.addSourceDatas(params);
+            dataPowerFilter.addSourceData(params);
             QueryAndNamedParams qap = dataPowerFilter.translateQuery(sql, filters);
             JSONArray ja = metaObjectService.pageQueryObjects(
                     model.getTableId(), qap.getQuery(), qap.getParams(), pageDesc);
@@ -215,7 +215,7 @@ public class MetaFormController extends BaseController {
             MetaTable table = metaDataCache.getTableInfo(model.getTableId());
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
-            dataPowerFilter.addSourceDatas(params);
+            dataPowerFilter.addSourceData(params);
             Map<String, String> tableAlias = new HashMap<>(3);
             tableAlias.put(table.getTableName(), "");
             QueryAndNamedParams qap = dataPowerFilter.translateQueryFilter(
