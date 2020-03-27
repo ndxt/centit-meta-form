@@ -194,11 +194,11 @@ public class MetaFormModelController extends BaseController{
     @WrapUpResponseBody
     public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel,HttpServletResponse response) {
         MetaFormModel oldMetaForm = metaFormModelMag.getObjectById(modelId);
-        if(!DatetimeOpt.equalOnSecond(oldMetaForm.getLastModifyDate(),metaFormModel.getLastModifyDate())){
-            throw new ObjectException(CollectionsOpt.createHashMap(
-                    "yourTimeStamp", metaFormModel.getLastModifyDate(), "databaseTimeStamp", oldMetaForm.getLastModifyDate()),
-                    PersistenceException.DATABASE_OUT_SYNC_EXCEPTION, "已有其他人更新过该表单，请重新打开后提交。");
-        }
+//        if(!DatetimeOpt.equalOnSecond(oldMetaForm.getLastModifyDate(),metaFormModel.getLastModifyDate())){
+//            throw new ObjectException(CollectionsOpt.createHashMap(
+//                    "yourTimeStamp", metaFormModel.getLastModifyDate(), "databaseTimeStamp", oldMetaForm.getLastModifyDate()),
+//                    PersistenceException.DATABASE_OUT_SYNC_EXCEPTION, "已有其他人更新过该表单，请重新打开后提交。");
+//        }
         metaFormModel.setModelId(modelId);
         /*metaFormModel.setFormTemplate(JSON
                 JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
