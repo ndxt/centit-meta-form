@@ -9,11 +9,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.context.annotation.Lazy;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 /**
  * create by codefan@sina.com
@@ -48,13 +47,22 @@ public class ApplicationInfo implements java.io.Serializable {
     @ApiModelProperty(value = "应用流程")
     @Column(name = "PAGE_FLOW")
     @JSONField(serialize=false)
+    @Basic(fetch = FetchType.LAZY)
     private String  pageFlow;
 
     @JSONField(serialize=false)
     public String getPageFlow() {
         return pageFlow;
     }
-
+    @Column(name = "is_delete")
+    @NotBlank(message = "字段不能为空[T/F]")
+    @Length(max = 1, message = "字段长度不能大于{max}")
+    private Boolean isDelete;
+    @ApiModelProperty(value = "图片id")
+    @Column(name = "pic_id")
+    @Length(max = 64, message = "字段长度不能大于{max}")
+    private String  picId;
+    public ApplicationInfo(){isDelete=false;}
     public void setPageFlow(String pageFlow) {
         this.pageFlow = pageFlow;
     }
