@@ -12,12 +12,6 @@ import java.util.Map;
 public class ApplicationInfoDao extends BaseDaoImpl<ApplicationInfo, String> {
     @Override
     public Map<String, String> getFilterField() {
-
-        if( filterField == null) {
-            filterField = new HashMap<>();
-
-            filterField.put("isDelete", " isDelete is null or isDelete='F' ");
-        }
-        return filterField;
+        return null;
     }
 }

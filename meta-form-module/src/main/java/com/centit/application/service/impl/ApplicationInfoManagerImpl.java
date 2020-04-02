@@ -25,7 +25,7 @@ public class ApplicationInfoManagerImpl implements ApplicationInfoManager {
     }
     @Override
     public List<ApplicationInfo> listApplicationInfo(Map<String, Object> param, PageDesc pageDesc){
-        return applicationInfoDao.listObjects(param,pageDesc);
+        return applicationInfoDao.listObjectsByProperties(param,pageDesc);
     }
     @Override
     public ApplicationInfo getApplicationInfo(String applicationId){
