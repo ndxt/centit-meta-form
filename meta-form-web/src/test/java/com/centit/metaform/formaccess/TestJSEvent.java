@@ -1,14 +1,11 @@
 package com.centit.metaform.formaccess;
 
-import com.alibaba.fastjson.JSON;
 import com.centit.framework.ip.app.config.IPOrStaticAppSystemBeanConfig;
 import com.centit.framework.jdbc.config.JdbcConfig;
 import com.centit.framework.security.model.CentitPasswordEncoder;
 import com.centit.framework.security.model.StandardPasswordEncoderImpl;
-import com.centit.metaform.controller.JSMateObjectEventRuntime;
 import com.centit.product.metadata.service.DatabaseRunTime;
 import com.centit.product.metadata.service.MetaObjectService;
-import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.file.FileIOOpt;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 
 @PropertySource(value = "classpath:system.properties")
 @ComponentScan(basePackages = {"com.centit"},
@@ -48,11 +44,13 @@ public class TestJSEvent {
         try(InputStream resource = TestJSEvent
                 .class.getResourceAsStream("/eventjs/sample.js")){
             String js = FileIOOpt.readStringFromInputStream(resource);
-            JSMateObjectEventRuntime jsMateObjectEvent = new JSMateObjectEventRuntime(metaObjectService,databaseRunTime, js, request);
+            /*JSMateObjectEventRuntime jsMateObjectEvent =
+                    new JSMateObjectEventRuntime(metaObjectService,
+                            databaseRunTime, js, request);
             Map<String,Object> object = CollectionsOpt.createHashMap("hello","js");
             int n = jsMateObjectEvent.runEvent("beforeSave",object);
             System.out.println(JSON.toJSONString(object));
-            System.out.println(n);
+            System.out.println(n);*/
         }catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
         }
