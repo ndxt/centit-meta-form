@@ -451,7 +451,7 @@ public class MetaFormController extends BaseController {
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         if (tableInfo.isWriteOptLog()) {
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-            OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
+            OperationLogCenter.logUpdateObject(request,
                     modelId, JSON.toJSONString(primaryKey), "change", "修改数据指定字段", params, null);
         }
     }
@@ -608,7 +608,7 @@ public class MetaFormController extends BaseController {
 
         if (writeLog) {
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-            OperationLogCenter.logUpdateObject(WebOptUtils.getCurrentUserCode(request),
+            OperationLogCenter.logUpdateObject(request,
                     modelId, JSON.toJSONString(primaryKey), "update", "修改数据对象（子对象）", object, dbObject);
         }
     }
@@ -653,7 +653,7 @@ public class MetaFormController extends BaseController {
 
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if (tableInfo.isWriteOptLog()) {
-            OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
+            OperationLogCenter.logNewObject(request,
                     modelId, JSON.toJSONString(primaryKey), "save", "保存新的数据对象（包括子对象）", object);
         }
         return primaryKey;
@@ -683,7 +683,7 @@ public class MetaFormController extends BaseController {
 
         if (writeLog) {
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(parameters);
-            OperationLogCenter.logDeleteObject(WebOptUtils.getCurrentUserCode(request),
+            OperationLogCenter.logDeleteObject(request,
                     modelId, JSON.toJSONString(primaryKey), "delete", "删除数据对象（包括子对象）", dbObject);
         }
     }
@@ -867,7 +867,7 @@ public class MetaFormController extends BaseController {
 
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if (tableInfo.isWriteOptLog()) {
-            OperationLogCenter.logNewObject(WebOptUtils.getCurrentUserCode(request),
+            OperationLogCenter.logNewObject(request,
                     modelId, JSON.toJSONString(primaryKey), "submit", "提交流程", object);
         }
 

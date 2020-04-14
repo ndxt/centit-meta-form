@@ -23,9 +23,9 @@ import java.util.Map;
 
 /**
  * MetaFormModelDao  Repository.
- * create by scaffold 2016-06-02 
- 
- * 通用模块管理null   
+ * create by scaffold 2016-06-02
+
+ * 通用模块管理null
 */
 
 @Repository
@@ -36,33 +36,19 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel,java.lang.String
 
     @Override
     public Map<String, String> getFilterField() {
-        if( filterField == null){
-            filterField = new HashMap<>();
+        Map<String, String> filterField = new HashMap<>();
 
-            filterField.put("modelId" , CodeBook.EQUAL_HQL_ID);
-
-
-            filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
-
-            filterField.put("modelComment" , CodeBook.EQUAL_HQL_ID);
-
-            filterField.put("modelName" , CodeBook.LIKE_HQL_ID);
-
-            filterField.put("modelType" , CodeBook.EQUAL_HQL_ID);
-
-            filterField.put("relationId" , CodeBook.EQUAL_HQL_ID);
-
-            filterField.put("parentModelCode" , CodeBook.EQUAL_HQL_ID);
-
-            filterField.put("displayOrder" , CodeBook.EQUAL_HQL_ID);
-
-            filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
-
-            filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
-
-            filterField.put("databaseCode",CodeBook.EQUAL_HQL_ID);
-
-        }
+        filterField.put("modelId" , CodeBook.EQUAL_HQL_ID);
+        filterField.put("tableId" , CodeBook.EQUAL_HQL_ID);
+        filterField.put("modelComment" , CodeBook.EQUAL_HQL_ID);
+        filterField.put("modelName" , CodeBook.LIKE_HQL_ID);
+        filterField.put("modelType" , CodeBook.EQUAL_HQL_ID);
+        filterField.put("relationId" , CodeBook.EQUAL_HQL_ID);
+        filterField.put("parentModelCode" , CodeBook.EQUAL_HQL_ID);
+        filterField.put("displayOrder" , CodeBook.EQUAL_HQL_ID);
+        filterField.put("lastModifyDate" , CodeBook.EQUAL_HQL_ID);
+        filterField.put("recorder" , CodeBook.EQUAL_HQL_ID);
+        filterField.put("databaseCode",CodeBook.EQUAL_HQL_ID);
         return filterField;
     }
 
