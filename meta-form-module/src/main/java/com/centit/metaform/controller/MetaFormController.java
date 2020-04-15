@@ -792,11 +792,11 @@ public class MetaFormController extends BaseController {
         }
         String userCode = fetchExtendParam("currentOperatorUserCode", object, request);
         if(userCode.equals("")){
-            userCode=StringBaseOpt.castObjectToString(object.get("userCode"));
+            userCode=StringBaseOpt.castObjectToString(object.get("userCode"),"");
         }
         String unitCode = fetchExtendParam("currentOperatorUnitCode", object, request);
         if(unitCode.equals("")){
-            unitCode=StringBaseOpt.castObjectToString(object.get("unitCode"));
+            unitCode=StringBaseOpt.castObjectToString(object.get("unitCode"),"");
         }
         if (dbObject == null) {
             innerSaveObject(model, tableInfo, object, request);
