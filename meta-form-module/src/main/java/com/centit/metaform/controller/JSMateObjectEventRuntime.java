@@ -11,7 +11,7 @@ import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.NumberBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
-import com.centit.workflow.client.service.FlowEngineClient;
+import com.centit.workflow.service.FlowEngine;
 import com.centit.workflow.commons.SubmitOptOptions;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class JSMateObjectEventRuntime {
     private static final Logger logger = LoggerFactory.getLogger(JSMateObjectEventRuntime.class);
     private MetaObjectService metaObjectService;
     private JSRuntimeContext jsRuntimeContext;
-    private FlowEngineClient flowEngineClient;
+    private FlowEngine flowEngine;
     private Map<String, Object> bizModel;
     private DatabaseRunTime databaseRunTime;
     private HttpServletRequest request;
@@ -92,7 +92,7 @@ public class JSMateObjectEventRuntime {
     public void setFlowVariable(String name, Object value){
         String flowInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_INST_ID_PROP));
         try {
-            flowEngineClient.saveFlowVariable(flowInstId, name,
+            flowEngine.saveFlowVariable(flowInstId, name,
                     StringBaseOpt.castObjectToString(value));
         } catch (Exception e) {
             logger.info(e.getMessage());
@@ -102,7 +102,7 @@ public class JSMateObjectEventRuntime {
     public void setFlowLocalVariable(String name, Object value){
         String nodeInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
         try {
-            flowEngineClient.saveFlowNodeVariable(nodeInstId, name,
+            flowEngine.saveFlowNodeVariable(nodeInstId, name,
                     StringBaseOpt.castObjectToString(value));
         } catch (Exception e) {
             logger.info(e.getMessage());
@@ -112,7 +112,7 @@ public class JSMateObjectEventRuntime {
     public void setFlowWorkRole(String roleCode, String userCode){
         String flowInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_INST_ID_PROP));
         try {
-            flowEngineClient.assignFlowWorkTeam(flowInstId, roleCode,
+            flowEngine.assignFlowWorkTeam(flowInstId, roleCode,
                     CollectionsOpt.createList(userCode));
         } catch (Exception e) {
             logger.info(e.getMessage());
@@ -139,7 +139,7 @@ public class JSMateObjectEventRuntime {
     public void submitOpt(){
         String nodeInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
         try {
-            flowEngineClient.submitOpt(SubmitOptOptions.create().nodeInst(nodeInstId)
+            flowEngine.submitOpt(SubmitOptOptions.create().nodeInst(nodeInstId)
                     .user(MetaFormController.fetchExtendParam("userCode", this.bizModel, request))
                     .unit(MetaFormController.fetchExtendParam("unitCode", this.bizModel, request)));
         } catch (Exception e) {
@@ -163,11 +163,11 @@ public class JSMateObjectEventRuntime {
         this.request.getSession().setAttribute(name, value);
     }
 
-    public void setFlowEngineClient(FlowEngineClient flowEngineClient) {
-        this.flowEngineClient = flowEngineClient;
+    public void setFlowEngine(FlowEngine flowEngine) {
+        this.flowEngine = flowEngine;
     }
 
-    public FlowEngineClient getFlowEngineClient() {
-        return flowEngineClient;
+    public FlowEngine getFlowEngine() {
+        return flowEngine;
     }
 }

@@ -33,8 +33,8 @@
     <orderEntry type="library" name="Maven: com.centit.product:database-design:1.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.centit.product:fileserver-utils:3.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-fileupload:commons-fileupload:1.3.3" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.product:centit-workflow-client:4.5-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.product:centit-workflow-core:4.5-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.product:centit-workflow-client:4.6-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.product:centit-workflow-core:4.6-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.h2database:h2:1.4.196" level="project" />
     <orderEntry type="library" name="Maven: com.centit.framework:framework-adapter:4.6-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: io.swagger:swagger-annotations:1.5.21" level="project" />

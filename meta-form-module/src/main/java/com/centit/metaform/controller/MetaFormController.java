@@ -38,7 +38,7 @@ import com.centit.support.database.utils.PersistenceException;
 import com.centit.support.database.utils.QueryAndNamedParams;
 import com.centit.support.file.FileType;
 import com.centit.support.report.ExcelExportUtil;
-import com.centit.workflow.client.service.FlowEngineClient;
+import com.centit.workflow.service.FlowEngine;
 import com.centit.workflow.commons.CreateFlowOptions;
 import com.centit.workflow.commons.FlowOptParamOptions;
 import com.centit.workflow.commons.SubmitOptOptions;
@@ -50,13 +50,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -92,7 +90,7 @@ public class MetaFormController extends BaseController {
     private MetaDataCache metaDataCache;
 
     @Autowired
-    private FlowEngineClient flowEngineClient;
+    private FlowEngine flowEngine;
 
     @Autowired
     private DataScopePowerManager queryDataScopeFilter;
@@ -114,7 +112,7 @@ public class MetaFormController extends BaseController {
         MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
         JSMateObjectEventRuntime jsMateObjectEvent = new JSMateObjectEventRuntime(
                 metaObjectService, databaseRunTime, notificationCenter, model, tableInfo, request);
-        jsMateObjectEvent.setFlowEngineClient(flowEngineClient);
+        jsMateObjectEvent.setFlowEngine(flowEngine);
         int ret = jsMateObjectEvent.runEvent(event, object);
         if (ret < 0) {
             throw new ObjectException(ret, "外部事件" + event + "运行异常" + model.getExtendOptJs());
@@ -834,7 +832,7 @@ public class MetaFormController extends BaseController {
 
                 fetchWorkflowVariables(options, model, object);
 
-                FlowInstance flowInstance = flowEngineClient.createInstance(options);
+                FlowInstance flowInstance = flowEngine.createInstance(options);
 
                 object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
                 NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
@@ -860,7 +858,8 @@ public class MetaFormController extends BaseController {
                     .unit(unitCode);
             fetchWorkflowVariables(options, model, object);
             // submit flow
-            /*Map<String, Object> s = */flowEngineClient.submitOpt(options);
+            /*Map<String, Object> s = */
+            flowEngine.submitOpt(options);
             runJSEvent(model, object, "afterSubmit", request);
         }
 
