@@ -220,7 +220,11 @@ public class MetaFormModelController extends BaseController{
     public JSONObject getFormTemplate(@PathVariable String modelId, String type) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         if(StringUtils.equalsAnyIgnoreCase(type, "m","mo","mobile")){
-            return metaFormModel.getMobileFormTemplate();
+            //获取移动页面定义，如果没有单独设置就用pc页面
+            JSONObject model = metaFormModel.getMobileFormTemplate();
+            if(model != null){
+                return model;
+            }
         }
         return metaFormModel.getFormTemplate();
     }
