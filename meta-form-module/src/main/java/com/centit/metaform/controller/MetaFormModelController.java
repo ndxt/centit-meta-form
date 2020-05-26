@@ -2,7 +2,6 @@ package com.centit.metaform.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.ObjectAppendProperties;
@@ -13,11 +12,8 @@ import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.algorithm.DatetimeOpt;
-import com.centit.support.common.ObjectException;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
-import com.centit.support.database.utils.PersistenceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -33,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -159,8 +154,8 @@ public class MetaFormModelController extends BaseController{
     @ApiOperation(value = "新增通用模块")
     @RequestMapping(method = {RequestMethod.POST})
     @WrapUpResponseBody
-    public void createMetaFormModel(@RequestBody MetaFormModel metaFormModel,
-        HttpServletRequest request, HttpServletResponse response) {
+    public String createMetaFormModel(@RequestBody MetaFormModel metaFormModel,
+        HttpServletRequest request) {
         MetaFormModel model=new MetaFormModel();
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         model.copyNotNullProperty(metaFormModel);
@@ -168,7 +163,7 @@ public class MetaFormModelController extends BaseController{
         /*model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));*/
         model.setExtendOptJs(StringEscapeUtils.unescapeHtml4(model.getExtendOptJs()));
         metaFormModelMag.saveNewMetaFormModel(model);
-        JsonResultUtils.writeSingleDataJson(model.getModelId(),response);
+        return model.getModelId();
     }
 
     /**
@@ -192,7 +187,7 @@ public class MetaFormModelController extends BaseController{
     @ApiOperation(value = "编辑通用模块")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.PUT})
     @WrapUpResponseBody
-    public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel,HttpServletResponse response) {
+    public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel) {
         MetaFormModel oldMetaForm = metaFormModelMag.getObjectById(modelId);
 //        if(!DatetimeOpt.equalOnSecond(oldMetaForm.getLastModifyDate(),metaFormModel.getLastModifyDate())){
 //            throw new ObjectException(CollectionsOpt.createHashMap(
@@ -217,9 +212,12 @@ public class MetaFormModelController extends BaseController{
             paramType = "query", dataType = "String"
     )})
     @WrapUpResponseBody
-    public JSONObject getFormTemplate(@PathVariable String modelId, String type) {
+    public JSONObject getFormTemplate(@PathVariable String modelId, String type,
+                HttpServletRequest request) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        if(StringUtils.equalsAnyIgnoreCase(type, "m","mo","mobile")){
+        boolean isFromMobile = StringUtils.isBlank(type)? WebOptUtils.isFromMobile(request)
+                :StringUtils.equalsAnyIgnoreCase(type, "m","mo","mobile");
+        if(isFromMobile){
             //获取移动页面定义，如果没有单独设置就用pc页面
             JSONObject model = metaFormModel.getMobileFormTemplate();
             if(model != null){

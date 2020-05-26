@@ -6,11 +6,8 @@ import com.centit.fileserver.utils.SystemTempFileUtils;
 import com.centit.fileserver.utils.UploadDownloadUtils;
 import com.centit.framework.common.JsonResultUtils;
 import com.centit.framework.core.controller.WrapUpResponseBody;
-import com.centit.product.dbdesign.pdmutils.PdmTableInfoUtils;
 import com.centit.support.common.ObjectException;
-import com.centit.support.database.metadata.SimpleTableInfo;
 import com.centit.support.file.FileSystemOpt;
-import com.centit.support.report.ExcelExportUtil;
 import com.centit.support.report.ExcelImportUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,9 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/optUtils")
