@@ -265,7 +265,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "导出表单数据列表可分页，传入自定义表单模块id")
     @RequestMapping(value = "/{modelId}/export", method = RequestMethod.GET)
     @JdbcTransaction
-        public void exportObjects(@PathVariable String modelId, PageDesc pageDesc,
+    public void exportObjects(@PathVariable String modelId, PageDesc pageDesc,
                                String jsonString,
                               HttpServletRequest request,
                               HttpServletResponse response) throws IOException {
@@ -284,7 +284,7 @@ public class MetaFormController extends BaseController {
         if(ja == null || ja.isEmpty()){
             throw new ObjectException(ResponseData.ERROR_NOT_FOUND, "没有查询到任务数据！");
         }
-        List<String> property = new ArrayList<>();
+        List<String> property;//= new ArrayList<>();
         List<String> header = new ArrayList<>();
         if(null!=columnName){
             property=new ArrayList<>(columnName.keySet());
