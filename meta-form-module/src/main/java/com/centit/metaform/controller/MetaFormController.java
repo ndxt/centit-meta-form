@@ -119,7 +119,11 @@ public class MetaFormController extends BaseController {
         }
         return ret;
     }
-    @ApiOperation(value ="单位发送消息接口")
+    /*
+     * 这个接口需要删除 TODO:接口不能随便添加
+     */
+    @Deprecated
+    @ApiOperation(value ="单位发送消息接口；不可以使用接口，如果使用清尽快删除")
     @RequestMapping(value = "/sendUnitMessage", method = RequestMethod.POST)
     @ApiImplicitParam(
             name = "msgJson", value = "sender:发送人,unitCode:接收单位(必填),modelId:表单ID,pk:业务主键," +
@@ -136,6 +140,7 @@ public class MetaFormController extends BaseController {
                         .subject(msgJson.getString("title"))
                         .content(msgJson.getString("msg")));
     }
+
     @ApiOperation(value = "查询作为子表表单数据列表，不分页；传入的参数为父表的主键")
     @ApiImplicitParams({@ApiImplicitParam(
             name = "modelId", value = "表单模块id",
@@ -321,6 +326,7 @@ public class MetaFormController extends BaseController {
     )})
     @RequestMapping(value = "/{modelId}/search", method = RequestMethod.GET)
     @WrapUpResponseBody
+    @JdbcTransaction
     public PageQueryResult<Map<String, Object>> searchObject(@PathVariable String modelId,
                                                              HttpServletRequest request, PageDesc pageDesc) {
         if(esObjectSearcher==null){
