@@ -12,7 +12,6 @@ import com.centit.framework.core.dao.DataPowerFilter;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.core.service.DataScopePowerManager;
 import com.centit.framework.model.adapter.NotificationCenter;
-import com.centit.framework.model.basedata.NoticeMessage;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.po.MetaColumn;
@@ -119,27 +118,6 @@ public class MetaFormController extends BaseController {
         }
         return ret;
     }
-    /*
-     * 这个接口需要删除 TODO:接口不能随便添加
-     */
-    @Deprecated
-    @ApiOperation(value ="单位发送消息接口；不可以使用接口，如果使用清尽快删除")
-    @RequestMapping(value = "/sendUnitMessage", method = RequestMethod.POST)
-    @ApiImplicitParam(
-            name = "msgJson", value = "sender:发送人,unitCode:接收单位(必填),modelId:表单ID,pk:业务主键," +
-            "title:标题,msg:内容",
-            required = true, paramType = "body", dataType = "String"
-    )
-    @WrapUpResponseBody
-    public ResponseData sendUnitMessage(@RequestBody JSONObject msgJson){
-        if(null==msgJson.getString("unitCode")) return null;
-        return notificationCenter.sendUnitMessage(msgJson.getString("sender"),
-                msgJson.getString("unitCode"), false,
-                NoticeMessage.create().operation(msgJson.getString("modelId"))
-                        .tag(msgJson.getString("pk"))
-                        .subject(msgJson.getString("title"))
-                        .content(msgJson.getString("msg")));
-    }
 
     @ApiOperation(value = "查询作为子表表单数据列表，不分页；传入的参数为父表的主键")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -226,6 +204,7 @@ public class MetaFormController extends BaseController {
             params.putAll(qap.getParams());
             extFilter = qap.getQuery();
         }
+
         JSONArray ja = metaObjectService.pageQueryObjects(
                 model.getTableId(), extFilter, params, fields, pageDesc);
 
@@ -261,6 +240,42 @@ public class MetaFormController extends BaseController {
         //MetaFormModel model1=metaFormModelManager.getObjectByIdAndFile("D:\\D\\Projects\\RunData\\2019-12-24 153156",modelId);
         if(model!=null) {
             JSONArray ja = queryObjects(model, pageDesc, fields, request);
+            return PageQueryResult.createJSONArrayResult(ja, pageDesc);
+        } else {
+            return PageQueryResult.createResult(CollectionsOpt.createList(modelId + "无此表单"), pageDesc);
+        }
+    }
+
+    @ApiOperation(value = "查询列表，附带字表属性" +
+            "如果没有指定 fields、parents、children则默认返回所有字段并且返回父表和字表对象")
+    @ApiImplicitParams({@ApiImplicitParam(
+            name = "modelId", value = "表单模块id",
+            required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "fields", value = "字段列表，仅返回指定的字段类表，会自动添加主键字段。 String[]",
+            required = true, paramType = "query", dataTypeClass = String[].class
+    ), @ApiImplicitParam(
+            name = "parents", value = "父表属性名列表，可以指定一个或者多个。 String[]",
+            required = true, paramType = "query", dataTypeClass = String[].class
+    ), @ApiImplicitParam(
+            name = "children", value = "子表属性名列表，可以指定一个或者多个。 String[]",
+            required = true, paramType = "query", dataTypeClass = String[].class
+    )})
+    @RequestMapping(value = "/{modelId}/listWithChildren", method = RequestMethod.GET)
+    @WrapUpResponseBody
+    @JdbcTransaction
+    public PageQueryResult<Object> listObjectsWithChildren(@PathVariable String modelId, PageDesc pageDesc,
+                                                     String [] fields,
+                                                     String [] parents, String [] children,
+                                                     HttpServletRequest request) {
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        if(model != null) {
+            MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+            JSONArray ja = queryObjects(model, pageDesc, fields, request);
+            for(Object obj : ja){
+                metaObjectService.fetchObjectParentAndChildren(tableInfo, (JSONObject) obj,
+                        parents, children);
+            }
             return PageQueryResult.createJSONArrayResult(ja, pageDesc);
         } else {
             return PageQueryResult.createResult(CollectionsOpt.createList(modelId + "无此表单"), pageDesc);
