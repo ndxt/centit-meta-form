@@ -300,7 +300,7 @@ public class MetaFormController extends BaseController {
            }
         }
 
-        JSONArray ja = queryObjects(model, pageDesc, columnName==null?null:columnName.keySet().toArray(new String[0]), request);
+        JSONArray ja = queryObjects(model, pageDesc, null, request);
         if(ja == null || ja.isEmpty()){
             throw new ObjectException(ResponseData.ERROR_NOT_FOUND, "没有查询到任务数据！");
         }
