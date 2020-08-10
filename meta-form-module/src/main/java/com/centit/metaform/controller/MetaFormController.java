@@ -181,9 +181,7 @@ public class MetaFormController extends BaseController {
             QueryAndNamedParams qap = dataPowerFilter.translateQuery(sql, filters);
             JSONArray ja = metaObjectService.pageQueryObjects(
                     model.getTableId(), qap.getQuery(), qap.getParams(), pageDesc);
-            if ("C".equals(tableInfo.getTableType())) {
-                return mapListPoToDto(ja);
-            }
+
             return ja;
         }
 
@@ -208,9 +206,6 @@ public class MetaFormController extends BaseController {
         JSONArray ja = metaObjectService.pageQueryObjects(
                 model.getTableId(), extFilter, params, fields, pageDesc);
 
-        if ("C".equals(tableInfo.getTableType())) {
-            return mapListPoToDto(ja);
-        }
         return ja;
     }
 
@@ -602,7 +597,7 @@ public class MetaFormController extends BaseController {
             checkUpdateTimeStamp(dbObject, po);
         }
         if (runJSEvent(model, po, "beforeUpdate", request) == 0) {
-            metaObjectService.updateObjectWithChildren(model.getTableId(), po);
+            metaObjectService.updateObjectWithChildren(model.getTableId(), object);
         }
         // 更改索引
         updataFulltextIndex(object, tableInfo, request);
