@@ -12,13 +12,6 @@
     <artifactId>meta-form-module</artifactId>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.centit.product</groupId>
-            <artifactId>business-operation-core</artifactId>
-            <version>${metadata.commons.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.centit.product</groupId>
             <artifactId>database-metadata</artifactId>

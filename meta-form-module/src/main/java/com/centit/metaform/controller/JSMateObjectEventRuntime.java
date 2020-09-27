@@ -3,7 +3,7 @@ package com.centit.metaform.controller;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.model.basedata.NoticeMessage;
 import com.centit.metaform.po.MetaFormModel;
-import com.centit.product.dataopt.utils.JSRuntimeContext;
+import com.centit.support.extend.JSRuntimeContext;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.DatabaseRunTime;
 import com.centit.product.metadata.service.MetaObjectService;
