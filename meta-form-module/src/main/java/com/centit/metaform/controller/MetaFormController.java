@@ -167,7 +167,7 @@ public class MetaFormController extends BaseController {
         List<String> filters = queryDataScopeFilter.listUserDataFiltersByOptIdAndMethod(
                 WebOptUtils.getCurrentUserCode(request), model.getModelId(), "list");
 
-        MetaTable tableInfo = this.metaDataCache.getTableInfo(model.getTableId());
+        //MetaTable tableInfo = this.metaDataCache.getTableInfo(model.getTableId());
 
         String sql = model.getDataFilterSql();
         if (StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select", new Lexer(sql).getAWord())) {
@@ -179,10 +179,8 @@ public class MetaFormController extends BaseController {
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceData(params);
             QueryAndNamedParams qap = dataPowerFilter.translateQuery(sql, filters);
-            JSONArray ja = metaObjectService.pageQueryObjects(
+            return metaObjectService.pageQueryObjects(
                     model.getTableId(), qap.getQuery(), qap.getParams(), pageDesc);
-
-            return ja;
         }
 
         if (StringUtils.isNotBlank(sql)) {
@@ -203,10 +201,8 @@ public class MetaFormController extends BaseController {
             extFilter = qap.getQuery();
         }
 
-        JSONArray ja = metaObjectService.pageQueryObjects(
+        return metaObjectService.pageQueryObjects(
                 model.getTableId(), extFilter, params, fields, pageDesc);
-
-        return ja;
     }
 
     private JSONArray mapListPoToDto(JSONArray ja ) {
