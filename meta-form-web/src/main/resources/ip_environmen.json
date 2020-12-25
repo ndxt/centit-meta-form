@@ -11,22 +11,13 @@
   ],
   "databaseInfos": [
     {
-      "databaseCode": "0000000081",
-      "osId": "CONTRACT",
-      "databaseName": "公司经营数据管理数据库",
-      "databaseUrl": "jdbc:oracle:thin:@192.168.131.81:1521:ORCL",
-      "username": "fdemo2",
-      "password": "BA7ZNX7J1WB4Q1jsM4o8Cg==",
-      "databaseDesc": "公司经营数据管理数据库",
-      "created": "u0000000"
-    },{
       "databaseCode": "0000000001",
       "osId": "CONTRACT",
-      "databaseName": "物料管理测试库",
-      "databaseUrl": "jdbc:mysql://192.168.128.32/bim?useUnicode=true&characterEncoding=utf-8",
-      "username": "framework",
-      "password": "FxV/BjjWFkrKFar10wIU6Q==",
-      "databaseDesc": "MySQL测试库",
+      "databaseName": "实战处置",
+      "databaseUrl": "jdbc:mysql://192.168.129.143:3306/eval",
+      "username": "root",
+      "password": "glkj20140709",
+      "databaseDesc": "",
       "created": "u0000000"
     }
   ],

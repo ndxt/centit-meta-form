@@ -116,6 +116,9 @@ public class MetaFormModel implements java.io.Serializable {
     @ApiModelProperty(value = "业务模块代码")
     @Column(name = "APPLICATION_ID")
     private String  applicationId;
+    @ApiModelProperty(value = "所属分组")
+    @Column(name = "own_group")
+    private String  ownGroup;
 
     @OneToMany(targetEntity = MetaFormModel.class, mappedBy="metaFormModel",
             orphanRemoval = true,

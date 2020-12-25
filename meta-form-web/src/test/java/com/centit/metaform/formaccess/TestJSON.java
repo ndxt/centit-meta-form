@@ -41,7 +41,11 @@ public class TestJSON {
         //FormField ff = new FormField();
         //ff.setKey("iPAddess");
         //ff.setType("input");
-        getAString();
+        //getAString();
+        JSONObject obj = new JSONObject();
+        if (obj.isEmpty()){
+            System.out.println("12");
+        }
     }
 
 }

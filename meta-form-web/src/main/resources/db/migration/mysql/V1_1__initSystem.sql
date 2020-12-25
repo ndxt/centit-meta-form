@@ -25,7 +25,14 @@ drop table if exists M_Meta_Form_Model;
 drop table if exists M_Model_Data_Field;
 
 drop table if exists M_Model_OPERATION;
-
+drop table if exists f_group_table;
+create table f_group_table(
+group_id varchar(32) not null,
+group_name varchar(128),
+parent_group_id varchar(32),
+application_id varchar(32),
+primary key (group_id)
+)
 create table D_DataBase_Info
 (
   Database_Code        varchar(32) not null,
@@ -178,6 +185,7 @@ CREATE TABLE `m_meta_form_model` (
   `mode_Opt_Url` varchar(800) DEFAULT NULL COMMENT 'json String 格式的参数',
   `FLOW_OPT_TITLE` varchar(500) DEFAULT NULL,
   `DATABASE_CODE` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT '数据库代码',
+  own_group varchar(32),
   PRIMARY KEY (`MODEL_ID`)
 );
 /*
