@@ -136,27 +136,36 @@
         </dependency>
     </dependencies>
 
-<!--    <profiles>-->
-<!--        <profile>-->
-<!--            <id>test</id>-->
-<!--            <properties>-->
-<!--                <profiles.active>test</profiles.active>-->
-<!--            </properties>-->
-<!--        </profile>-->
-<!--        <profile>-->
-<!--            <id>test-cas</id>-->
-<!--            <properties>-->
-<!--                <profiles.active>test-cas</profiles.active>-->
-<!--            </properties>-->
-<!--        </profile>-->
-<!--        <profile>-->
-<!--            <id>prod</id>-->
-<!--            <properties>-->
-<!--                <profiles.active>prod</profiles.active>-->
-<!--            </properties>-->
-<!--        </profile>-->
-<!--    </profiles>-->
-    <!--  end -->
+	<profiles>
+		<profile>
+	        <id>test</id>
+	        <properties>
+	            <profiles.active>test</profiles.active>
+	        </properties>
+	    </profile>
+	    <profile>
+	        <id>test-cas</id>
+	        <properties>
+	            <profiles.active>test-cas</profiles.active>
+	        </properties>
+	    </profile>
+	    <profile>
+	        <id>prod</id>
+	        <properties>
+	            <profiles.active>prod</profiles.active>
+	        </properties>
+	    </profile>
+	    <profile>
+			<id>dev</id>
+			<properties>
+				<profiles.active></profiles.active>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+	    </profile>
+	</profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -169,19 +178,19 @@
             </plugin>
         </plugins>
 
-<!--        <resources>-->
-<!--            <resource>-->
-<!--                <directory>src/main/resources</directory>-->
-<!--                <excludes>-->
-<!--                    <exclude>test/*</exclude>-->
-<!--                    <exclude>prod/*</exclude>-->
-<!--                    <exclude>test-cas/*</exclude>-->
-<!--                    <exclude>system.properties</exclude>-->
-<!--                </excludes>-->
-<!--            </resource>-->
-<!--            <resource>-->
-<!--                <directory>src/main/resources/${profiles.active}</directory>-->
-<!--            </resource>-->
-<!--        </resources>-->
+        <resources>
+           <resource>
+               <directory>src/main/resources</directory>
+               <excludes>
+                   <exclude>test/*</exclude>
+                   <exclude>prod/*</exclude>
+                   <exclude>test-cas/*</exclude>
+                   <exclude>system.properties</exclude>
+               </excludes>
+           </resource>
+           <resource>
+               <directory>src/main/resources/${profiles.active}</directory>
+           </resource>
+       </resources>
     </build>
 </project>
