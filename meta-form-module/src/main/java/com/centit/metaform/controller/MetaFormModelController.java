@@ -34,14 +34,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * MetaFormModel  Controller.
  * create by scaffold 2016-06-02
 
  * 通用模块管理null
 */
-
 
 @Controller
 @RequestMapping("/metaformmodel")
