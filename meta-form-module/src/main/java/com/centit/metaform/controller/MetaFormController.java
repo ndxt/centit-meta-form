@@ -765,6 +765,35 @@ public class MetaFormController extends BaseController {
         }
     }
 
+
+    @ApiOperation(value = "merge数据")
+    @RequestMapping(value = "/{modelId}/merge", method = RequestMethod.POST)
+    @WrapUpResponseBody
+    @JdbcTransaction
+    public Map<String, Object> mergeObjectWithChildren(@PathVariable String modelId,
+                                                      @RequestBody String jsonString,
+                                                      HttpServletRequest request) {
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        JSONObject object = JSON.parseObject(jsonString);
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+        Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
+        Map<String, Object> dbObject = dbObjectPk == null ? null :
+                metaObjectService.getObjectById(model.getTableId(), dbObjectPk);
+
+        if (dbObject == null) {
+            innerSaveObject(model, tableInfo, object, request);
+        } else {
+            innerUpdateObject(model, tableInfo, object, dbObject, request);
+        }
+
+        Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
+        if (tableInfo.isWriteOptLog()) {
+            OperationLogCenter.logNewObject(request,
+                    modelId, JSON.toJSONString(primaryKey), "merge", "保存新的数据对象（包括子对象）", object);
+        }
+        return primaryKey;
+    }
+
     /**
      * 提交工作流 ; 分两种情况
      * 一： 新建业务，操作流程为， 保存表单，提交流程，这时表单对应的表中flowInstId字段必然为空，所以:
