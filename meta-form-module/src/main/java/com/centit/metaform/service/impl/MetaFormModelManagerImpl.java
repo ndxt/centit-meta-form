@@ -34,13 +34,13 @@ import java.util.Map;
 /**
  * MetaFormModel  Service.
  * create by scaffold 2016-06-02
-
+ * <p>
  * 通用模块管理null
-*/
+ */
 @Service
 public class MetaFormModelManagerImpl
-        extends BaseEntityManagerImpl<MetaFormModel,java.lang.String, MetaFormModelDao>
-    implements MetaFormModelManager{
+        extends BaseEntityManagerImpl<MetaFormModel, java.lang.String, MetaFormModelDao>
+        implements MetaFormModelManager {
 
     public static final Log log = LogFactory.getLog(MetaFormModelManager.class);
 
@@ -52,17 +52,16 @@ public class MetaFormModelManagerImpl
 
 
     @Autowired
-    public void setMetaFormModelDao(MetaFormModelDao baseDao)
-    {
+    public void setMetaFormModelDao(MetaFormModelDao baseDao) {
         this.metaFormModelDao = baseDao;
         super.setBaseDao(this.metaFormModelDao);
     }
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED)
     public JSONArray listMetaFormModelsAsJson(
             String[] fields,
-            Map<String, Object> filterMap, PageDesc pageDesc){
+            Map<String, Object> filterMap, PageDesc pageDesc) {
 
         JSONArray resultArray =
                 baseDao.listObjectsAsJson(filterMap, pageDesc);
@@ -71,13 +70,13 @@ public class MetaFormModelManagerImpl
 
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRED)
-    public void saveNewMetaFormModel(MetaFormModel metaFormModel){
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void saveNewMetaFormModel(MetaFormModel metaFormModel) {
         super.saveNewObject(metaFormModel);
     }
 
     @Override
-    @Transactional(propagation=Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateMetaFormModel(MetaFormModel metaFormModel) {
         metaFormModelDao.updateObject(metaFormModel);
         metaFormModelDao.saveObjectReferences(metaFormModel);
@@ -86,13 +85,13 @@ public class MetaFormModelManagerImpl
     @Override
     public JSONArray addTableNameToList(JSONArray listObjects) {
         List<MetaTable> tableObjects = metaTableDao.listObjects();
-        if (listObjects != null && listObjects.size()>0) {
-            for (int i=0; i<listObjects.size(); i++) {
+        if (listObjects != null && listObjects.size() > 0) {
+            for (int i = 0; i < listObjects.size(); i++) {
                 JSONObject tempObj = listObjects.getJSONObject(i);
                 Long tableId = tempObj.getLong("tableId");
-                if (tableObjects != null && tableObjects.size()>0) {
-                    for (int j=0; j<tableObjects.size(); j++) {
-                        if (tableId != null &&tableId.equals(tableObjects.get(j).getTableId())) {
+                if (tableObjects != null && tableObjects.size() > 0) {
+                    for (int j = 0; j < tableObjects.size(); j++) {
+                        if (tableId != null && tableId.equals(tableObjects.get(j).getTableId())) {
                             tempObj.put("tableLabelName", tableObjects.get(j).getTableLabelName());
                             break;
                         }
@@ -113,40 +112,41 @@ public class MetaFormModelManagerImpl
 
     @Override
     @Transactional
-    public  JSONArray listFormModeAsJson(String[] fields, Map<String, Object> filterMap, PageDesc pageDesc) {
+    public JSONArray listFormModeAsJson(String[] fields, Map<String, Object> filterMap, PageDesc pageDesc) {
         TableMapInfo mapInfo = JpaMetadata.fetchTableMapInfo(MetaFormModel.class);
-        List<String> c=new ArrayList<>( );
-        if (fields !=null) {
+        List<String> c = new ArrayList<>();
+        if (fields != null) {
             c.addAll(Arrays.asList(fields));
         }
-        String sql ="select "+
-                ((c != null && c.size()>0)
+        String sql = "select " +
+                ((c != null && c.size() > 0)
                         ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a", true)
-                        : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a",1) ) +
-                ",b.TABLE_NAME,b.TABLE_LABEL_NAME "+
-                " from M_META_FORM_MODEL a left join F_MD_TABLE b on a.table_id=b.table_id "+
-                " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] "+
-                " [:tableId | and a.table_id = :tableId] "+
-                " [:modelType | and a.MODEL_TYPE = :modelType] "+
-                " [:flowOptType | and b.WORKFLOW_OPT_TYPE = :flowOptType ] "+
-                " [allFlowOpt | and b.WORKFLOW_OPT_TYPE <> '0' ] "+
-                " [:modelId | and a.MODEL_ID = :modelId ] "+
-                " [:(like)modelName | and a.model_name like :modelName]"+
-                " [:applicationId | and a.APPLICATION_ID = :applicationId ] ";
+                        : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a", 1)) +
+                ",b.TABLE_NAME,b.TABLE_LABEL_NAME " +
+                " from M_META_FORM_MODEL a left join F_MD_TABLE b on a.table_id=b.table_id " +
+                " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] " +
+                " [:tableId | and a.table_id = :tableId] " +
+                " [:modelType | and a.MODEL_TYPE = :modelType] " +
+                " [:flowOptType | and b.WORKFLOW_OPT_TYPE = :flowOptType ] " +
+                " [allFlowOpt | and b.WORKFLOW_OPT_TYPE <> '0' ] " +
+                " [:modelId | and a.MODEL_ID = :modelId ] " +
+                " [:(like)modelName | and a.model_name like :modelName]" +
+                " [:applicationId | and a.APPLICATION_ID = :applicationId ] " +
+                " [:ownGroup | and a.own_group = :ownGroup ] ";
         String orderBy = GeneralJsonObjectDao.fetchSelfOrderSql(sql, filterMap);
-        if(StringUtils.isNotBlank(orderBy)){
+        if (StringUtils.isNotBlank(orderBy)) {
             sql = sql + " order by "
                     + QueryUtils.cleanSqlStatement(orderBy);
         }
 
-        JSONArray listTables = DatabaseOptUtils.listObjectsByParamsDriverSqlAsJson(metaFormModelDao,sql,filterMap,pageDesc);
+        JSONArray listTables = DatabaseOptUtils.listObjectsByParamsDriverSqlAsJson(metaFormModelDao, sql, filterMap, pageDesc);
         return listTables;
     }
 
     @Override
     public MetaFormModel getObjectByIdAndFile(String filePath, String modelId) {
         try {
-            String metaModel=FileIOOpt.readStringFromFile(filePath+ File.separator+modelId+".json",
+            String metaModel = FileIOOpt.readStringFromFile(filePath + File.separator + modelId + ".json",
                     "UTF-8");
             return JSON.parseObject(metaModel, MetaFormModel.class);
         } catch (IOException e) {
