@@ -278,6 +278,8 @@ public class MetaFormModel implements java.io.Serializable {
             this.databaseCode = other.getDatabaseCode();
         if (other.getApplicationId()!=null)
             this.applicationId = other.getApplicationId();
+        if (other.getOwnGroup()!=null)
+            this.ownGroup = other.getOwnGroup();
         return this;
     }
 
