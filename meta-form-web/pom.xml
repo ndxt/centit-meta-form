@@ -26,7 +26,7 @@
 
         <dependency>
             <groupId>com.centit.framework</groupId>
-            <artifactId>framework-session-redis</artifactId>
+            <artifactId>framework-session-core</artifactId>
         </dependency>
 
         <dependency>

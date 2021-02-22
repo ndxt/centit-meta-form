@@ -21,6 +21,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.session.MapSessionRepository;
+import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 @ComponentScan(basePackages = {"com.centit"},
@@ -29,6 +33,7 @@ import org.springframework.context.annotation.Import;
         JdbcConfig.class,
         SpringSecurityDaoConfig.class,
         SpringSecurityCasConfig.class})
+@EnableSpringHttpSession
 public class ServiceConfig {
 
     @Bean(name = "passwordEncoder")
@@ -66,6 +71,10 @@ public class ServiceConfig {
         //notificationCenter.registerMessageSender("innerMsg",innerMessageManager);
 
         return notificationCenter;
+    }
+    @Bean
+    public MapSessionRepository sessionRepository() {
+        return new MapSessionRepository(new ConcurrentHashMap<>());
     }
 
 }
