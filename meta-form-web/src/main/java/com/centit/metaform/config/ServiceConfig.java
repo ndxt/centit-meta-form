@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
         SpringSecurityDaoConfig.class,
         SpringSecurityCasConfig.class})
 @EnableSpringHttpSession
+
 public class ServiceConfig {
 
     @Bean(name = "passwordEncoder")
