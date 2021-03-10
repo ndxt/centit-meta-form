@@ -649,18 +649,17 @@ public class MetaFormController extends BaseController {
 
     }
 
-    @ApiOperation(value = "新增表单数据带子表")
+    @ApiOperation(value = "merge表单数据带子表")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.POST)
     @WrapUpResponseBody
     @JdbcTransaction
-    public Map<String, Object> saveObjectWithChildren(@PathVariable String modelId,
+    public Map<String, Object> mergeObjectWithChildren(@PathVariable String modelId,
                                                       @RequestBody String jsonString,
                                                       HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        innerSaveObject(model, tableInfo, object, request);
-
+        innerMergeObject(model, tableInfo, object, request);
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if (tableInfo.isWriteOptLog()) {
             OperationLogCenter.logNewObject(request,
@@ -668,7 +667,28 @@ public class MetaFormController extends BaseController {
         }
         return primaryKey;
     }
-
+    @ApiOperation(value = "批量merge表单数据带子表")
+    @RequestMapping(value = "/{modelId}/batch", method = RequestMethod.POST)
+    @WrapUpResponseBody
+    @JdbcTransaction
+    public List<Map<String, Object>> batchMergeObjectWithChildren(@PathVariable String modelId,
+                                                      @RequestBody String jsonString,
+                                                      HttpServletRequest request) {
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        JSONArray jsonArray = JSON.parseArray(jsonString);
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+        List<Map<String, Object>> list = new ArrayList<>();
+        jsonArray.stream().forEach(object->{
+            innerMergeObject(model, tableInfo, (JSONObject) object, request);
+            Map<String, Object> primaryKey = tableInfo.fetchObjectPk((JSONObject)object);
+            if (tableInfo.isWriteOptLog()) {
+                OperationLogCenter.logNewObject(request,
+                        modelId, JSON.toJSONString(primaryKey), "save", "保存新的数据对象（包括子对象）", object);
+            }
+            list.add(primaryKey);
+        });
+        return list;
+    }
     @ApiOperation(value = "删除表单数据带子表")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.DELETE)
     @WrapUpResponseBody
@@ -765,17 +785,8 @@ public class MetaFormController extends BaseController {
         }
     }
 
-
-    @ApiOperation(value = "merge数据")
-    @RequestMapping(value = "/{modelId}/merge", method = RequestMethod.POST)
-    @WrapUpResponseBody
-    @JdbcTransaction
-    public Map<String, Object> mergeObjectWithChildren(@PathVariable String modelId,
-                                                      @RequestBody String jsonString,
-                                                      HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        JSONObject object = JSON.parseObject(jsonString);
-        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+    private void innerMergeObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
+                                 HttpServletRequest request) {
         Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
         Map<String, Object> dbObject = dbObjectPk == null ? null :
                 metaObjectService.getObjectById(model.getTableId(), dbObjectPk);
@@ -785,11 +796,22 @@ public class MetaFormController extends BaseController {
         } else {
             innerUpdateObject(model, tableInfo, object, dbObject, request);
         }
-
+    }
+    @ApiOperation(value = "新增数据")
+    @RequestMapping(value = "/{modelId}/add", method = RequestMethod.POST)
+    @WrapUpResponseBody
+    @JdbcTransaction
+    public Map<String, Object> addObjectWithChildren(@PathVariable String modelId,
+                                                      @RequestBody String jsonString,
+                                                      HttpServletRequest request) {
+        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        JSONObject object = JSON.parseObject(jsonString);
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+        innerSaveObject(model, tableInfo, object, request);
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if (tableInfo.isWriteOptLog()) {
             OperationLogCenter.logNewObject(request,
-                    modelId, JSON.toJSONString(primaryKey), "merge", "保存新的数据对象（包括子对象）", object);
+                    modelId, JSON.toJSONString(primaryKey), "add", "保存新的数据对象（包括子对象）", object);
         }
         return primaryKey;
     }
