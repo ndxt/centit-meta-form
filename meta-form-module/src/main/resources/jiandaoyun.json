@@ -1,0 +1,563 @@
+[
+    {
+        "entry": {
+            "_id": "5d0c2712389aaf0a3a96e4af",
+            "appId": "5d0c27060001a30a6c2e8131",
+            "entryId": "5d0c2712389aaf0a3a96e4ae",
+            "name": "出差申请",
+            "content": {
+                "type": "form",
+                "items": [
+                    {
+                        "widget": {
+                            "type": "user",
+                            "widgetName": "_widget_1561077522890",
+                            "enable": true,
+                            "visible": true,
+                            "allowBlank": true,
+                            "value": {
+                                "_id": "100000000000000000000001",
+                                "nickname": "当前用户"
+                            },
+                            "valueOption": 0
+                        },
+                        "description": null,
+                        "label": "申请人",
+                        "lineWidth": 6
+                    },
+                    {
+                        "widget": {
+                            "type": "text",
+                            "widgetName": "_widget_1561077522956",
+                            "enable": true,
+                            "visible": true,
+                            "allowBlank": true,
+                            "rely": {
+                                "widgets": [
+                                    "_widget_1561077522890"
+                                ],
+                                "ref": {
+                                    "formId": "5d0c280a42813b08847655eb",
+                                    "field": "_widget_1561077770410"
+                                },
+                                "data": {
+                                    "formId": "5d0c280a42813b08847655eb",
+                                    "field": "_widget_1561077770382"
+                                }
+                            },
+                            "value": null,
+                            "regex": "(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)"
+                        },
+                        "description": null,
+                        "label": "身份证号码（用于订票）",
+                        "lineWidth": 6
+                    },
+                    {
+                        "widget": {
+                            "type": "combo",
+                            "widgetName": "_widget_1561099941921",
+                            "enable": true,
+                            "visible": true,
+                            "allowBlank": true,
+                            "rely": null,
+                            "async": {
+                                "url": "/_/admin/data/distinct",
+                                "data": {
+                                    "formId": "5d0c280a42813b08847655eb",
+                                    "field": "_widget_1561077770440"
+                                }
+                            }
+                        },
+                        "description": null,
+                        "label": "下拉框",
+                        "lineWidth": 6
+                    },
+                    {
+                        "widget": {
+                            "type": "textarea",
+                            "widgetName": "_widget_1561077523095",
+                            "enable": true,
+                            "visible": true,
+                            "allowBlank": true
+                        },
+                        "description": null,
+                        "label": "事件说明",
+                        "lineWidth": 6
+                    },
+                    {
+                        "widget": {
+                            "type": "location",
+                            "widgetName": "_widget_1561080377995",
+                            "enable": true,
+                            "visible": true,
+                            "allowBlank": true,
+                            "adjustable": true,
+                            "radius": 500,
+                            "lnglatVisible": true
+                        },
+                        "description": null,
+                        "label": "定位",
+                        "lineWidth": 6
+                    },
+                    {
+                        "widget": {
+                            "type": "phone",
+                            "widgetName": "_widget_1561080378017",
+                            "enable": true,
+                            "visible": true,
+                            "allowBlank": true,
+                            "hasSmsVerify": false,
+                            "region": [
+                                "CN"
+                            ]
+                        },
+                        "description": null,
+                        "label": "手机",
+                        "lineWidth": 6
+                    },
+                    {
+                        "widget": {
+                            "type": "subform",
+                            "widgetName": "_widget_1561080378035",
+                            "enable": true,
+                            "visible": true,
+                            "allowBlank": true,
+                            "subform_create": true,
+                            "subform_edit": true,
+                            "subform_sort": false,
+                            "subform_delete": true,
+                            "items": [
+                                {
+                                    "label": "单行文本",
+                                    "widget": {
+                                        "type": "text",
+                                        "widgetName": "_widget_1561080378056",
+                                        "enable": true,
+                                        "visible": true,
+                                        "allowBlank": true
+                                    }
+                                },
+                                {
+                                    "label": "日期时间",
+                                    "widget": {
+                                        "type": "datetime",
+                                        "widgetName": "_widget_1561080378059",
+                                        "enable": true,
+                                        "visible": true,
+                                        "allowBlank": true,
+                                        "format": "yyyy-MM-dd"
+                                    }
+                                },
+                                {
+                                    "label": "下拉框",
+                                    "widget": {
+                                        "type": "combo",
+                                        "widgetName": "_widget_1561080378064",
+                                        "enable": true,
+                                        "visible": true,
+                                        "allowBlank": true,
+                                        "items": [
+                                            {
+                                                "value": "选项1",
+                                                "text": "选项1"
+                                            },
+                                            {
+                                                "value": "选项2",
+                                                "text": "选项2"
+                                            },
+                                            {
+                                                "value": "选项3",
+                                                "text": "选项3"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "label": "单选按钮组",
+                                    "widget": {
+                                        "type": "radiogroup",
+                                        "widgetName": "_widget_1561080378071",
+                                        "enable": true,
+                                        "visible": true,
+                                        "allowBlank": true,
+                                        "items": [
+                                            {
+                                                "text": "选项1",
+                                                "value": "选项1"
+                                            },
+                                            {
+                                                "text": "选项2",
+                                                "value": "选项2"
+                                            },
+                                            {
+                                                "text": "选项3",
+                                                "value": "选项3",
+                                                "selected": true
+                                            }
+                                        ],
+                                        "layout": "vertical"
+                                    }
+                                },
+                                {
+                                    "label": "复选框组",
+                                    "widget": {
+                                        "type": "checkboxgroup",
+                                        "widgetName": "_widget_1561080378081",
+                                        "enable": true,
+                                        "visible": true,
+                                        "allowBlank": true,
+                                        "items": [
+                                            {
+                                                "text": "选项1",
+                                                "value": "选项1",
+                                                "selected": true
+                                            },
+                                            {
+                                                "text": "选项2",
+                                                "value": "选项2",
+                                                "selected": true
+                                            },
+                                            {
+                                                "text": "选项3",
+                                                "value": "选项3",
+                                                "selected": true
+                                            }
+                                        ],
+                                        "layout": "vertical"
+                                    }
+                                }
+                            ]
+                        },
+                        "description": null,
+                        "label": "子表单",
+                        "lineWidth": 12
+                    }
+                ],
+                "validators": [],
+                "submitRule": 1,
+                "layout": "grid-2"
+            },
+            "type": "form",
+            "hasCoop": true,
+            "hasFlow": false,
+            "hasCache": true,
+            "hasExtParams": false,
+            "createTime": "2019-06-21T00:38:42.571Z",
+            "updateTime": "2019-06-21T06:53:38.794Z",
+            "theme": {
+                "mode": "system",
+                "system": "theme_4"
+            },
+            "flow": {}
+        },
+        "flow": {},
+        "authGroups": [
+            {
+                "name": "直接提交数据",
+                "dataPerms": {
+                    "read": true,
+                    "export": false,
+                    "create": true,
+                    "import": false,
+                    "update": false,
+                    "delete": false,
+                    "batch_print": false,
+                    "flow_read": false,
+                    "flow_create": false,
+                    "flow_close": false,
+                    "flow_transfer": false,
+                    "flow_activate": false,
+                    "flow_update": false,
+                    "flow_batch_print": false,
+                    "flow_export": false,
+                    "flow_delete": false
+                },
+                "optAuth": {},
+                "groupId": -1
+            }
+        ],
+        "bufferState": {},
+        "canSaveSignature": true
+    },
+    {
+        "field": "_widget_1561077770382",
+        "formId": "5d0c280a42813b08847655eb",
+        "filter": {
+            "cond": [
+                {
+                    "type": "user",
+                    "field": "_widget_1561077770410",
+                    "method": "in",
+                    "value": [
+                        "5b7f752d7ddae73a5d920bf2"
+                    ],
+                    "entryId": "5d0c280a42813b08847655eb"
+                }
+            ],
+            "rel": "and"
+        },
+        "appId": "5d0c27060001a30a6c2e8131",
+        "entryId": "5d0c2712389aaf0a3a96e4ae"
+    },
+    {
+        "header": [
+            {
+                "id": "5d0c2712389aaf0a3a96e4ae",
+                "text": "申请人",
+                "name": "_widget_1561077522890",
+                "type": "user"
+            },
+            {
+                "id": "5d0c2712389aaf0a3a96e4ae",
+                "text": "身份证号码（用于订票）",
+                "name": "_widget_1561077522956",
+                "type": "text",
+                "regex": "(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)"
+            },
+            {
+                "id": "5d0c2712389aaf0a3a96e4ae",
+                "text": "事件说明",
+                "name": "_widget_1561077523095",
+                "type": "textarea"
+            },
+            {
+                "id": "5d0c2712389aaf0a3a96e4ae",
+                "text": "定位",
+                "name": "_widget_1561080377995",
+                "type": "location",
+                "lnglatVisible": true
+            },
+            {
+                "id": "5d0c2712389aaf0a3a96e4ae",
+                "text": "手机",
+                "name": "_widget_1561080378017",
+                "type": "phone"
+            },
+            {
+                "id": "5d0c2712389aaf0a3a96e4ae",
+                "text": "子表单",
+                "name": "_widget_1561080378035",
+                "type": "subform",
+                "items": [
+                    {
+                        "id": "5d0c2712389aaf0a3a96e4ae",
+                        "text": "单行文本",
+                        "name": "_widget_1561080378056",
+                        "type": "text",
+                        "subform": "_widget_1561080378035"
+                    },
+                    {
+                        "id": "5d0c2712389aaf0a3a96e4ae",
+                        "text": "日期时间",
+                        "name": "_widget_1561080378059",
+                        "type": "datetime",
+                        "format": "yyyy-MM-dd",
+                        "subform": "_widget_1561080378035"
+                    },
+                    {
+                        "id": "5d0c2712389aaf0a3a96e4ae",
+                        "text": "下拉框",
+                        "name": "_widget_1561080378064",
+                        "type": "combo",
+                        "items": [
+                            {
+                                "value": "选项1",
+                                "text": "选项1"
+                            },
+                            {
+                                "value": "选项2",
+                                "text": "选项2"
+                            },
+                            {
+                                "value": "选项3",
+                                "text": "选项3"
+                            }
+                        ],
+                        "subform": "_widget_1561080378035"
+                    },
+                    {
+                        "id": "5d0c2712389aaf0a3a96e4ae",
+                        "text": "单选按钮组",
+                        "name": "_widget_1561080378071",
+                        "type": "radiogroup",
+                        "items": [
+                            {
+                                "text": "选项1",
+                                "value": "选项1"
+                            },
+                            {
+                                "text": "选项2",
+                                "value": "选项2"
+                            },
+                            {
+                                "text": "选项3",
+                                "value": "选项3",
+                                "selected": true
+                            }
+                        ],
+                        "subform": "_widget_1561080378035"
+                    },
+                    {
+                        "id": "5d0c2712389aaf0a3a96e4ae",
+                        "text": "复选框组",
+                        "name": "_widget_1561080378081",
+                        "type": "checkboxgroup",
+                        "items": [
+                            {
+                                "text": "选项1",
+                                "value": "选项1",
+                                "selected": true
+                            },
+                            {
+                                "text": "选项2",
+                                "value": "选项2",
+                                "selected": true
+                            },
+                            {
+                                "text": "选项3",
+                                "value": "选项3",
+                                "selected": true
+                            }
+                        ],
+                        "subform": "_widget_1561080378035"
+                    }
+                ]
+            },
+            {
+                "id": "5d0c2712389aaf0a3a96e4ae",
+                "name": "creator",
+                "type": "user",
+                "text": "提交人"
+            },
+            {
+                "id": "5d0c2712389aaf0a3a96e4ae",
+                "name": "createTime",
+                "type": "datetime",
+                "format": "yyyy-MM-dd HH:mm:ss",
+                "text": "提交时间"
+            },
+            {
+                "id": "5d0c2712389aaf0a3a96e4ae",
+                "name": "updateTime",
+                "type": "datetime",
+                "format": "yyyy-MM-dd HH:mm:ss",
+                "text": "更新时间"
+            }
+        ],
+        "data": [
+            {
+                "_id": "5d0c34f9f07bf30a4d24dea2",
+                "creator": {
+                    "_id": "5b7f752d7ddae73a5d920bf2",
+                    "name": "杨淮生"
+                },
+                "createTime": "2019-06-21T01:38:01.218Z",
+                "updateTime": "2019-06-21T01:38:01.218Z",
+                "_widget_1561077522890": {
+                    "_id": "5b7f752d7ddae73a5d920bf2",
+                    "name": "杨淮生"
+                },
+                "_widget_1561077522956": "320810234517872936",
+                "_widget_1561077523095": "又要出差",
+                "_widget_1561080377995": {},
+                "_widget_1561080378017": {
+                    "verified": false,
+                    "phone": "13833456421"
+                },
+                "_widget_1561080378035": [
+                    {
+                        "_widget_1561080378056": "测试字表",
+                        "_widget_1561080378059": "2019-06-12T16:00:00.000Z",
+                        "_widget_1561080378064": "选项1",
+                        "_widget_1561080378071": "选项3",
+                        "_widget_1561080378081": [
+                            "选项3"
+                        ]
+                    },
+                    {
+                        "_widget_1561080378056": "测试子表",
+                        "_widget_1561080378059": "2019-06-27T16:00:00.000Z",
+                        "_widget_1561080378064": "选项2",
+                        "_widget_1561080378071": "选项1",
+                        "_widget_1561080378081": [
+                            "选项1",
+                            "选项3"
+                        ]
+                    }
+                ],
+                "label": "杨淮生"
+            }
+        ]
+    },
+    {
+        "code": 0,
+        "data": {
+            "dataFilterSql": "",
+            "extendOptJs": "",
+            "formTemplate": "{\"type\":\"Form\",\"options\":{\"title\":\"忘打卡补录\",\"labelAlign\":\"left\",\"labelPosition\":\"right\",\"theme\":\"light\",\"labelWidth\":80,\"itemHeight\":32,\"db\":\"0000000284\",\"tableId\":\"UPfBoiUyRvypFg_2L-oZ8g\"},\"groups\":[{\"type\":\"FormGroup\",\"options\":{\"title\":\"\"},\"children\":[{\"type\":\"UserSelect\",\"name\":\"UserSelect\",\"options\":{\"label\":\"外带卡人员\",\"name\":\"userCode\",\"placeholder\":\"外带卡人员\"}},{\"type\":\"zpaDateInput\",\"name\":\"DateInput\",\"options\":{\"label\":\"打卡时间\",\"name\":\"checkTime\",\"readonly\":true,\"type\":\"datetime\"},\"value\":\"2019-06-13\"},{\"type\":\"zpaSwitch\",\"name\":\"Switch\",\"options\":{\"label\":\"审核通过\",\"name\":\"checkState\",\"readonly\":true}}]}],\"modelType\":\"N\"}",
+            "formTemplateJson": {
+                "options": {
+                    "labelAlign": "left",
+                    "labelPosition": "right",
+                    "itemHeight": 32,
+                    "tableId": "UPfBoiUyRvypFg_2L-oZ8g",
+                    "theme": "light",
+                    "labelWidth": 80,
+                    "title": "忘打卡补录",
+                    "db": "0000000284"
+                },
+                "groups": [
+                    {
+                        "children": [
+                            {
+                                "name": "UserSelect",
+                                "options": {
+                                    "name": "userCode",
+                                    "label": "外带卡人员",
+                                    "placeholder": "外带卡人员"
+                                },
+                                "type": "UserSelect"
+                            },
+                            {
+                                "name": "DateInput",
+                                "options": {
+                                    "readonly": true,
+                                    "name": "checkTime",
+                                    "label": "打卡时间",
+                                    "type": "datetime"
+                                },
+                                "type": "zpaDateInput",
+                                "value": "2019-06-13"
+                            },
+                            {
+                                "name": "Switch",
+                                "options": {
+                                    "readonly": true,
+                                    "name": "checkState",
+                                    "label": "审核通过"
+                                },
+                                "type": "zpaSwitch"
+                            }
+                        ],
+                        "options": {
+                            "title": ""
+                        },
+                        "type": "FormGroup"
+                    }
+                ],
+                "modelType": "N",
+                "type": "Form"
+            },
+            "lastModifyDate": "2019-06-13 09:27:13",
+            "metaFormModels": [],
+            "modeOptUrl": "",
+            "modelComment": "",
+            "modelId": "cSTJqG4FRaaQdg_2TT1DiA",
+            "modelName": "忘打卡补录",
+            "modelType": "N",
+            "recorder": "",
+            "tableId": "UPfBoiUyRvypFg_2L-oZ8g"
+        },
+        "message": "OK"
+    }
+]
