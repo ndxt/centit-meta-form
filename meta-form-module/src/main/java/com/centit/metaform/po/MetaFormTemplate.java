@@ -16,7 +16,7 @@ import javax.persistence.*;
  */
 @Data
 @Entity
-@Table(name = "M_MATE_FORM_TEMPLATE")
+@Table(name = "M_META_FORM_TEMPLATE")
 public class MetaFormTemplate implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
