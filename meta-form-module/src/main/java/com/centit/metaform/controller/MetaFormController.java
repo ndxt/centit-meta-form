@@ -171,10 +171,10 @@ public class MetaFormController extends BaseController {
 
         String sql = model.getDataFilterSql();
         if (StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select", new Lexer(sql).getAWord())) {
-            if(WebOptUtils.getCurrentUserInfo(request)==null) {
-                throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                        "用户没有登录或者超时，请重新登录！");
-            }
+//            if(WebOptUtils.getCurrentUserInfo(request)==null) {
+//                throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+//                        "用户没有登录或者超时，请重新登录！");
+//            }
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceData(params);
