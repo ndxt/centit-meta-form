@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
         JdbcConfig.class,
         SpringSecurityDaoConfig.class,
         SpringSecurityCasConfig.class})
-@EnableSpringHttpSession
+//@EnableSpringHttpSession
 
 public class ServiceConfig {
 
@@ -73,9 +73,9 @@ public class ServiceConfig {
 
         return notificationCenter;
     }
-    @Bean
-    public MapSessionRepository sessionRepository() {
-        return new MapSessionRepository(new ConcurrentHashMap<>());
-    }
+//    @Bean
+//    public MapSessionRepository sessionRepository() {
+//        return new MapSessionRepository(new ConcurrentHashMap<>());
+//    }
 
 }
