@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaFormModelDao;
+import com.centit.metaform.dao.MetaFormModelPublishDao;
 import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.MetaFormModelPublish;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.dao.MetaTableDao;
 import com.centit.product.metadata.po.MetaTable;
@@ -19,6 +21,7 @@ import com.centit.support.file.FileIOOpt;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -46,6 +49,9 @@ public class MetaFormModelManagerImpl
 
     @Autowired
     private MetaFormModelDao metaFormModelDao;
+
+    @Autowired
+    private MetaFormModelPublishDao metaFormModelPublishDao;
 
     @Autowired
     private MetaTableDao metaTableDao;
@@ -122,7 +128,7 @@ public class MetaFormModelManagerImpl
                 ((c != null && c.size() > 0)
                         ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a", true)
                         : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a", 1)) +
-                ",b.TABLE_NAME,b.TABLE_LABEL_NAME " +
+                ",b.TABLE_NAME,b.TABLE_LABEL_NAME, a.form_state" +
                 " from M_META_FORM_MODEL a left join F_MD_TABLE b on a.table_id=b.table_id " +
                 " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] " +
                 " [:tableId | and a.table_id = :tableId] " +
@@ -155,6 +161,17 @@ public class MetaFormModelManagerImpl
         return null;
     }
 
+    @Override
+    public void publishMetaFormModel(MetaFormModel metaFormModel) {
+        MetaFormModelPublish modelPublish = new MetaFormModelPublish();
+        BeanUtils.copyProperties(metaFormModel, modelPublish);
+        metaFormModelPublishDao.mergeObject(modelPublish);
+    }
 
+    @Override
+    public void deleteObjectById(String modelId) {
+        metaFormModelDao.deleteObjectById(modelId);
+        metaFormModelPublishDao.deleteObjectById(modelId);
+    }
 }
 
