@@ -135,15 +135,15 @@ public class MetaFormController extends BaseController {
                                              HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         MetaRelation relation = null;
-        if(StringUtils.isNotBlank(relationName) && !"default".equals(relationName)) {
+        if (StringUtils.isNotBlank(relationName) && !"default".equals(relationName)) {
             relation = metaDataService.getMetaRelationByName(model.getTableId(), relationName);
         }
-        if(relation == null) {
+        if (relation == null) {
             relation = metaDataService.getMetaRelationById(model.getRelationId());
         }
-        if(relation == null) {
-           throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION,
-                   "找不到对应的关联字表信息");
+        if (relation == null) {
+            throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                    "找不到对应的关联字表信息");
         }
         Map<String, Object> parameters = collectRequestParameters(request);
         Map<String, Object> parentObject = metaObjectService
@@ -160,7 +160,7 @@ public class MetaFormController extends BaseController {
     }
 
     private JSONArray queryObjects(MetaFormModel model, PageDesc pageDesc,
-                                               String[] fields, HttpServletRequest request) {
+                                   String[] fields, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
 
         //String optId = FieldType.mapClassName(table.getTableName());
@@ -205,14 +205,14 @@ public class MetaFormController extends BaseController {
                 model.getTableId(), extFilter, params, fields, pageDesc);
     }
 
-    private JSONArray mapListPoToDto(JSONArray ja ) {
-        if(ja == null){
+    private JSONArray mapListPoToDto(JSONArray ja) {
+        if (ja == null) {
             return null;
         }
 
         JSONArray jsonArray = new JSONArray(ja.size());
         for (Object json : ja) {
-            if(json instanceof Map) {
+            if (json instanceof Map) {
                 jsonArray.add(mapPoToDto((Map<String, Object>) json));
             } else {
                 jsonArray.add(json);
@@ -229,7 +229,7 @@ public class MetaFormController extends BaseController {
                                                String[] fields, HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         //MetaFormModel model1=metaFormModelManager.getObjectByIdAndFile("D:\\D\\Projects\\RunData\\2019-12-24 153156",modelId);
-        if(model!=null) {
+        if (model != null) {
             JSONArray ja = queryObjects(model, pageDesc, fields, request);
             return PageQueryResult.createJSONArrayResult(ja, pageDesc);
         } else {
@@ -256,14 +256,14 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public PageQueryResult<Object> listObjectsWithChildren(@PathVariable String modelId, PageDesc pageDesc,
-                                                     String [] fields,
-                                                     String [] parents, String [] children,
-                                                     HttpServletRequest request) {
+                                                           String[] fields,
+                                                           String[] parents, String[] children,
+                                                           HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        if(model != null) {
+        if (model != null) {
             MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
             JSONArray ja = queryObjects(model, pageDesc, fields, request);
-            for(Object obj : ja){
+            for (Object obj : ja) {
                 metaObjectService.fetchObjectParentAndChildren(tableInfo, (JSONObject) obj,
                         parents, children);
             }
@@ -277,30 +277,30 @@ public class MetaFormController extends BaseController {
     @RequestMapping(value = "/{modelId}/export", method = RequestMethod.GET)
     @JdbcTransaction
     public void exportObjects(@PathVariable String modelId, PageDesc pageDesc,
-                               String jsonString,
+                              String jsonString,
                               HttpServletRequest request,
                               HttpServletResponse response) throws IOException {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        Map<String,String> columnName=null;
-        if(null!=jsonString){
-            columnName=new LinkedHashMap<>();
-           String[] a= StringUtils.split(jsonString,";");
-           for(int i=0;i<a.length;i++){
-               String[] a0=StringUtils.split(a[i],",");
-               columnName.put(a0[0],a0[1]);
-           }
+        Map<String, String> columnName = null;
+        if (null != jsonString) {
+            columnName = new LinkedHashMap<>();
+            String[] a = StringUtils.split(jsonString, ";");
+            for (int i = 0; i < a.length; i++) {
+                String[] a0 = StringUtils.split(a[i], ",");
+                columnName.put(a0[0], a0[1]);
+            }
         }
 
         JSONArray ja = queryObjects(model, pageDesc, null, request);
-        if(ja == null || ja.isEmpty()){
+        if (ja == null || ja.isEmpty()) {
             throw new ObjectException(ResponseData.ERROR_NOT_FOUND, "没有查询到任务数据！");
         }
         List<String> property;//= new ArrayList<>();
         List<String> header = new ArrayList<>();
-        if(null!=columnName){
-            property=new ArrayList<>(columnName.keySet());
-            Collections.addAll(header,columnName.values().toArray(new String[0]));
-        }else {
+        if (null != columnName) {
+            property = new ArrayList<>(columnName.keySet());
+            Collections.addAll(header, columnName.values().toArray(new String[0]));
+        } else {
             MetaTable table = metaDataCache.getTableInfo(model.getTableId());
             Map<String, Object> firstRow = (Map<String, Object>) ja.get(0);
             property = new ArrayList<>(firstRow.keySet());
@@ -313,9 +313,9 @@ public class MetaFormController extends BaseController {
             }
         }
         InputStream excelStream = ExcelExportUtil.generateExcelStream(ja,
-                CollectionsOpt.listToArray(header),  CollectionsOpt.listToArray(property));
+                CollectionsOpt.listToArray(header), CollectionsOpt.listToArray(property));
         String fileName = URLEncoder.encode(model.getModelName(), "UTF-8") +
-                pageDesc.getRowStart()+"-"+pageDesc.getRowEnd()+"-" +pageDesc.getTotalRows() +
+                pageDesc.getRowStart() + "-" + pageDesc.getRowEnd() + "-" + pageDesc.getTotalRows() +
                 ".xlsx";
         response.setContentType(FileType.mapExtNameToMimeType("xlsx"));
         response.setHeader("Content-disposition", "attachment; filename=" + fileName);
@@ -335,7 +335,7 @@ public class MetaFormController extends BaseController {
     @JdbcTransaction
     public PageQueryResult<Map<String, Object>> searchObject(@PathVariable String modelId,
                                                              HttpServletRequest request, PageDesc pageDesc) {
-        if(esObjectSearcher==null){
+        if (esObjectSearcher == null) {
             throw new ObjectException(ObjectException.SYSTEM_CONFIG_ERROR, "没有正确配置Elastic Search");
         }
         Map<String, Object> queryParam = collectRequestParameters(request);
@@ -375,7 +375,7 @@ public class MetaFormController extends BaseController {
 
     private void saveFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request) {
         //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if (esObjectIndexer!=null && metaTable != null &&
+        if (esObjectIndexer != null && metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
@@ -392,7 +392,7 @@ public class MetaFormController extends BaseController {
 
     private void deleteFulltextIndex(Map<String, Object> obj, String tableId) {
         MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if (esObjectIndexer!=null && metaTable != null &&
+        if (esObjectIndexer != null && metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
@@ -407,7 +407,7 @@ public class MetaFormController extends BaseController {
 
     private void updataFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request) {
         //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if (esObjectIndexer!=null && metaTable != null &&
+        if (esObjectIndexer != null && metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
@@ -427,7 +427,7 @@ public class MetaFormController extends BaseController {
     private void checkUpdateTimeStamp(Map<String, Object> dbObject, Map<String, Object> object) {
         Object oldDate = dbObject.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
         Object newDate = object.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
-        if (newDate==null || oldDate==null) return;
+        if (newDate == null || oldDate == null) return;
         if (!DatetimeOpt.equalOnSecond(DatetimeOpt.castObjectToDate(oldDate), DatetimeOpt.castObjectToDate(newDate))) {
             throw new ObjectException(CollectionsOpt.createHashMap(
                     "yourTimeStamp", newDate, "databaseTimeStamp", oldDate),
@@ -475,9 +475,9 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         Map<String, Object> params = collectRequestParameters(request);
         JSONObject object = JSON.parseObject(jsonString);
-        int ireturn =metaObjectService.updateObjectsByProperties(model.getTableId(), object, params);
-        if (ireturn==0){
-           return ResponseData.makeErrorMessage("无对应sql生成");
+        int ireturn = metaObjectService.updateObjectsByProperties(model.getTableId(), object, params);
+        if (ireturn == 0) {
+            return ResponseData.makeErrorMessage("无对应sql生成");
         } else {
             return ResponseData.makeSuccessResponse();
         }
@@ -521,13 +521,13 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> getObjectWithChildren(@PathVariable String modelId,
-                                                     String [] fields,
-                                                     String [] parents, String [] children,
+                                                     String[] fields,
+                                                     String[] parents, String[] children,
                                                      HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        if(model.getTableId()==null) return null;
+        if (model.getTableId() == null) return null;
         MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
-        if (tableInfo==null) return null;
+        if (tableInfo == null) return null;
         Map<String, Object> parameters = collectRequestParameters(request);
         if ("C".equals(tableInfo.getTableType())) {
             if (tableInfo.countPkColumn() != 1) {
@@ -547,8 +547,8 @@ public class MetaFormController extends BaseController {
             }
         }
 
-        Map<String, Object> objectMap = (fields != null && fields.length>0) ||
-                (parents != null && parents.length>0) || (children != null && children.length>0) ?
+        Map<String, Object> objectMap = (fields != null && fields.length > 0) ||
+                (parents != null && parents.length > 0) || (children != null && children.length > 0) ?
                 metaObjectService.getObjectWithChildren(
                         model.getTableId(), parameters, fields, parents, children)
                 : metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
@@ -654,8 +654,8 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> mergeObjectWithChildren(@PathVariable String modelId,
-                                                      @RequestBody String jsonString,
-                                                      HttpServletRequest request) {
+                                                       @RequestBody String jsonString,
+                                                       HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
@@ -667,20 +667,21 @@ public class MetaFormController extends BaseController {
         }
         return primaryKey;
     }
+
     @ApiOperation(value = "批量merge表单数据带子表")
     @RequestMapping(value = "/{modelId}/batch", method = RequestMethod.POST)
     @WrapUpResponseBody
     @JdbcTransaction
     public List<Map<String, Object>> batchMergeObjectWithChildren(@PathVariable String modelId,
-                                                      @RequestBody String jsonString,
-                                                      HttpServletRequest request) {
+                                                                  @RequestBody String jsonString,
+                                                                  HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         JSONArray jsonArray = JSON.parseArray(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         List<Map<String, Object>> list = new ArrayList<>();
-        jsonArray.stream().forEach(object->{
+        jsonArray.stream().forEach(object -> {
             innerMergeObject(model, tableInfo, (JSONObject) object, request);
-            Map<String, Object> primaryKey = tableInfo.fetchObjectPk((JSONObject)object);
+            Map<String, Object> primaryKey = tableInfo.fetchObjectPk((JSONObject) object);
             if (tableInfo.isWriteOptLog()) {
                 OperationLogCenter.logNewObject(request,
                         modelId, JSON.toJSONString(primaryKey), "save", "保存新的数据对象（包括子对象）", object);
@@ -689,6 +690,7 @@ public class MetaFormController extends BaseController {
         });
         return list;
     }
+
     @ApiOperation(value = "删除表单数据带子表")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.DELETE)
     @WrapUpResponseBody
@@ -786,7 +788,7 @@ public class MetaFormController extends BaseController {
     }
 
     private void innerMergeObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
-                                 HttpServletRequest request) {
+                                  HttpServletRequest request) {
         Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
         Map<String, Object> dbObject = dbObjectPk == null ? null :
                 metaObjectService.getObjectById(model.getTableId(), dbObjectPk);
@@ -797,13 +799,14 @@ public class MetaFormController extends BaseController {
             innerUpdateObject(model, tableInfo, object, dbObject, request);
         }
     }
+
     @ApiOperation(value = "新增数据")
     @RequestMapping(value = "/{modelId}/add", method = RequestMethod.POST)
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> addObjectWithChildren(@PathVariable String modelId,
-                                                      @RequestBody String jsonString,
-                                                      HttpServletRequest request) {
+                                                     @RequestBody String jsonString,
+                                                     HttpServletRequest request) {
         MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
@@ -852,12 +855,12 @@ public class MetaFormController extends BaseController {
             object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstId);
         }
         String userCode = fetchExtendParam("currentOperatorUserCode", object, request);
-        if(userCode.equals("")){
-            userCode=StringBaseOpt.castObjectToString(object.get("userCode"),"");
+        if (userCode.equals("")) {
+            userCode = StringBaseOpt.castObjectToString(object.get("userCode"), "");
         }
         String unitCode = fetchExtendParam("currentOperatorUnitCode", object, request);
-        if(unitCode.equals("")){
-            unitCode=StringBaseOpt.castObjectToString(object.get("unitCode"),"");
+        if (unitCode.equals("")) {
+            unitCode = StringBaseOpt.castObjectToString(object.get("unitCode"), "");
         }
         if (dbObject == null) {
             innerSaveObject(model, tableInfo, object, request);

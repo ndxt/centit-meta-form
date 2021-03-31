@@ -43,18 +43,18 @@ public class DataOptUtilsController {
         String tempFilePath = SystemTempFileUtils.getTempFilePath(token, size);
         try {
             long uploadSize = UploadDownloadUtils.uploadRange(tempFilePath, fileInfo.getRight(), token, size, request);
-            if(uploadSize>0){
+            if (uploadSize > 0) {
                 //上传到临时区成功
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("objList", ExcelImportUtil.loadMapFromExcelSheet(tempFilePath,0,0,2));
-                JsonResultUtils.writeSingleDataJson(jsonObject,response);
+                jsonObject.put("objList", ExcelImportUtil.loadMapFromExcelSheet(tempFilePath, 0, 0, 2));
+                JsonResultUtils.writeSingleDataJson(jsonObject, response);
                 //FileSystemOpt.deleteFile(tempFilePath);
-            }else {
+            } else {
                 JsonResultUtils.writeOriginalJson(UploadDownloadUtils.
-                        makeRangeUploadJson(uploadSize, token, token +"_"+size).toJSONString(), response);
+                        makeRangeUploadJson(uploadSize, token, token + "_" + size).toJSONString(), response);
             }
 
-        }catch (ObjectException e){
+        } catch (ObjectException e) {
             logger.error(e.getMessage(), e);
             JsonResultUtils.writeHttpErrorMessage(e.getExceptionCode(),
                     e.getMessage(), response);
