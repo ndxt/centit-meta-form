@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Data
 @Entity
-@Table(name = "M_META_FORM_MODEL_UNPUBLISH")
+@Table(name = "M_META_FORM_MODEL_EDIT")
 public class MetaFormModelEdit implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -116,12 +116,9 @@ public class MetaFormModelEdit implements java.io.Serializable {
     @ApiModelProperty(value = "所属分组")
     @Column(name = "own_group")
     private String ownGroup;
-    // 表单状态 A 草稿（未发布）  E 已发布
-    public static final String FORM_STATE_DRAFT = "A";
-    public static final String FORM_STATE_PUBLISHED = "E";
-    @ApiModelProperty(value = "表单状态 A未发布 E已发布")
-    @Column(name = "form_state")
-    private String formState;
+    @ApiModelProperty(value = "发布时间")
+    @Column(name = "PUBLISH_DATE")
+    private Date publishDate;
 
     @OneToMany(targetEntity = MetaFormModelEdit.class, mappedBy = "metaFormModel",
             orphanRemoval = true,

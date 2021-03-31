@@ -38,19 +38,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * MetaFormModel  Controller.
- * create by scaffold 2016-06-02
- * <p>
- * 通用模块管理null
+ * 编辑的表单管理（未发布表单）
  */
-
 @Controller
 @RequestMapping("/edit/metaformmodel")
 @Api(value = "未发布的自定义表单管理", tags = "未发布的自定义表单管理")
 public class MetaFormModelEditController extends BaseController {
-
-    @Autowired
-    private MetaFormModelManager metaFormModelMag;
 
     @Autowired
     private MetaFormModelEditManager metaFormModelEditManager;
@@ -68,7 +61,7 @@ public class MetaFormModelEditController extends BaseController {
      * @return {data:[]}
      */
     @ApiOperation(value = "条件查询未发布所有通用模块(可查询工作流相关模块)")
-    @RequestMapping(value = "/unpublish", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @WrapUpResponseBody
     public PageQueryResult unPublishFormModelList(String[] field, String optType, PageDesc pageDesc, HttpServletRequest request) {
         Map<String, Object> searchColumn = collectRequestParameters(request);
@@ -92,7 +85,7 @@ public class MetaFormModelEditController extends BaseController {
     }
 
     @ApiOperation(value = "查询单个未发布的通用模块,其中keyProps为其主表对应的主键字段名称数组", response = MetaFormModel.class)
-    @RequestMapping(value = "/unpublish/{modelId}", method = {RequestMethod.GET})
+    @RequestMapping(value = "/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
     public ObjectAppendProperties<MetaFormModelEdit> getEditMetaFormModel(@PathVariable String modelId) {
         MetaFormModelEdit metaFormModel = metaFormModelEditManager.getObjectById(modelId);
@@ -131,7 +124,6 @@ public class MetaFormModelEditController extends BaseController {
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         metaFormModel.setRecorder(usercode);
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
-        metaFormModel.setFormState(MetaFormModelEdit.FORM_STATE_DRAFT);
         metaFormModelEditManager.saveNewObject(metaFormModel);
         return metaFormModel.getModelId();
     }
@@ -169,7 +161,6 @@ public class MetaFormModelEditController extends BaseController {
         /*metaFormModel.setFormTemplate(JSON
                 JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
-        metaFormModel.setFormState(MetaFormModelEdit.FORM_STATE_DRAFT);
         metaFormModelEditManager.updateMetaFormModelEdit(metaFormModel);
         return metaFormModel.getLastModifyDate();
     }
@@ -191,11 +182,11 @@ public class MetaFormModelEditController extends BaseController {
         if (metaFormModelEdit == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
         }
-        if (!MetaFormModelEdit.FORM_STATE_DRAFT.equals(metaFormModelEdit.getFormState())) {
+        if (!metaFormModelEdit.getLastModifyDate().after(metaFormModelEdit.getPublishDate())) {
             return ResponseData.makeErrorMessage("表单已发布，请勿重复发布！");
         }
-        metaFormModelEdit.setFormState(MetaFormModelEdit.FORM_STATE_PUBLISHED);
-        metaFormModelEdit.setLastModifyDate(new Date());
+        metaFormModelEdit.setPublishDate(new Date());
+        metaFormModelEdit.setLastModifyDate(metaFormModelEdit.getLastModifyDate());
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         if (usercode != null) {
             metaFormModelEdit.setRecorder(usercode);
@@ -207,83 +198,4 @@ public class MetaFormModelEditController extends BaseController {
         return ResponseData.makeSuccessResponse("发布成功！");
     }
 
-
-    @ApiOperation(value = "获取模板内容")
-    @RequestMapping(value = "/{modelId}/template", method = {RequestMethod.GET})
-    @ApiImplicitParams({@ApiImplicitParam(
-            name = "modelId", value = "表单模块id",
-            required = true, paramType = "path", dataType = "String"
-    ), @ApiImplicitParam(
-            name = "type", value = "表单类型， m、mo、mobile为移动表单，其他的默认返回pc表单 ",
-            paramType = "query", dataType = "String"
-    )})
-    @WrapUpResponseBody
-    public JSONObject getFormTemplate(@PathVariable String modelId, String type,
-                                      HttpServletRequest request) {
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        boolean isFromMobile = StringUtils.isBlank(type) ? WebOptUtils.isFromMobile(request)
-                : StringUtils.equalsAnyIgnoreCase(type, "m", "mo", "mobile");
-        if (isFromMobile) {
-            //获取移动页面定义，如果没有单独设置就用pc页面
-            JSONObject model = metaFormModel.getMobileFormTemplate();
-            if (model != null) {
-                return model;
-            }
-        }
-        return metaFormModel.getFormTemplate();
-    }
-
-    @ApiOperation(value = "修改模板内容")
-    @RequestMapping(value = "/{modelId}/template", method = {RequestMethod.PUT})
-    @ApiImplicitParams({@ApiImplicitParam(
-            name = "modelId", value = "表单模块id",
-            required = true, paramType = "path", dataType = "String"
-    ), @ApiImplicitParam(
-            name = "formTemplate", value = "表单类型， m、mo、mobile为更改移动表单，其他的默认更改pc表单",
-            required = true, paramType = "body", dataType = "String"
-    ), @ApiImplicitParam(
-            name = "type", value = "表单类型， m、mo、mobile为更改移动表单，其他的默认更改pc表单",
-            paramType = "query", dataType = "String"
-    )})
-    @WrapUpResponseBody
-    public void updateFormTemplate(@PathVariable String modelId,
-                                   @RequestBody JSONObject formTemplate,
-                                   String type) {
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        if (StringUtils.equalsAnyIgnoreCase(type, "m", "mo", "mobile")) {
-            metaFormModel.setMobileFormTemplate(formTemplate);
-        } else {
-            metaFormModel.setFormTemplate(formTemplate);
-        }
-        metaFormModelMag.updateMetaFormModel(metaFormModel);
-    }
-
-    @ApiOperation(value = "修改模板事件操作")
-    @RequestMapping(value = "/{modelId}/optjs", method = {RequestMethod.PUT})
-    @WrapUpResponseBody
-    public void updateFormOptJs(@PathVariable String modelId,
-                                @RequestBody String formOptjs) {
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(formOptjs));
-        metaFormModelMag.updateMetaFormModel(metaFormModel);
-    }
-
-    @ApiOperation(value = "删除模板事件操作")
-    @RequestMapping(value = "/{modelId}/optjs", method = {RequestMethod.DELETE})
-    @WrapUpResponseBody
-    public void deleteFormOptJs(@PathVariable String modelId) {
-        metaFormModelMag.deleteFormOptJs(modelId);
-    }
-
-    @ApiOperation(value = "修改模板与流程关联")
-    @RequestMapping(value = "/{modelId}/flow", method = {RequestMethod.PUT})
-    @WrapUpResponseBody
-    public void updateFormFlow(@PathVariable String modelId,
-                               @RequestBody String relFlowCode) {
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        metaFormModel.setRelFlowCode(
-                StringUtils.substring(
-                        StringEscapeUtils.unescapeHtml4(relFlowCode), 0, 64));
-        metaFormModelMag.updateMetaFormModel(metaFormModel);
-    }
 }
