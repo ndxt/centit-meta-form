@@ -11,15 +11,17 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * 自定义表单，发布后的表单
+ * 自定义表单，未发布的表单
  */
 @Data
 @Entity
-@Table(name = "M_META_FORM_MODEL_PUBLISH")
-public class MetaFormModelPublish implements java.io.Serializable {
+@Table(name = "M_META_FORM_MODEL_UNPUBLISH")
+public class MetaFormModelEdit implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "模块代码", hidden = true)
@@ -114,12 +116,18 @@ public class MetaFormModelPublish implements java.io.Serializable {
     @ApiModelProperty(value = "所属分组")
     @Column(name = "own_group")
     private String ownGroup;
+    // 表单状态 A 草稿（未发布）  E 已发布
+    public static final String FORM_STATE_DRAFT = "A";
+    public static final String FORM_STATE_PUBLISHED = "E";
+    @ApiModelProperty(value = "表单状态 A未发布 E已发布")
+    @Column(name = "form_state")
+    private String formState;
 
-    @OneToMany(targetEntity = MetaFormModelPublish.class, mappedBy = "metaFormModel",
+    @OneToMany(targetEntity = MetaFormModelEdit.class, mappedBy = "metaFormModel",
             orphanRemoval = true,
             cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "MODEL_CODE", referencedColumnName = "MODEL_CODE")
-    private Set<MetaFormModelPublish> childFormModels;
+    private Set<MetaFormModelEdit> childFormModels;
 
     @Transient
     private String relationName;
@@ -129,10 +137,10 @@ public class MetaFormModelPublish implements java.io.Serializable {
     }
 
 
-    public MetaFormModelPublish() {
+    public MetaFormModelEdit() {
     }
 
-    public MetaFormModelPublish(
+    public MetaFormModelEdit(
             String modelId
             , String modelName) {
         this.modelId = modelId;
@@ -140,25 +148,25 @@ public class MetaFormModelPublish implements java.io.Serializable {
     }
 
 
-    public Set<MetaFormModelPublish> getMetaFormModels() {
+    public Set<MetaFormModelEdit> getMetaFormModels() {
         if (this.childFormModels == null) {
             this.childFormModels = new HashSet<>();
         }
         return this.childFormModels;
     }
 
-    public void setMetaFormModels(Set<MetaFormModelPublish> metaFormModels) {
+    public void setMetaFormModels(Set<MetaFormModelEdit> metaFormModels) {
         this.childFormModels = metaFormModels;
     }
 
-    public void addMetaFormModel(MetaFormModelPublish metaFormModel) {
+    public void addMetaFormModel(MetaFormModelEdit metaFormModel) {
         if (this.childFormModels == null) {
             this.childFormModels = new HashSet<>();
         }
         this.childFormModels.add(metaFormModel);
     }
 
-    public void removeMetaFormModel(MetaFormModelPublish metaFormModel) {
+    public void removeMetaFormModel(MetaFormModelEdit metaFormModel) {
         if (this.childFormModels == null) {
             return;
         }
