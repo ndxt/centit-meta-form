@@ -1,7 +1,6 @@
 package com.centit.metaform.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
@@ -9,8 +8,8 @@ import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.po.MetaFormModel;
-import com.centit.metaform.po.MetaFormModelEdit;
-import com.centit.metaform.service.MetaFormModelEditManager;
+import com.centit.metaform.po.MetaFormModelDraft;
+import com.centit.metaform.service.MetaFormModelDraftManager;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
@@ -18,12 +17,9 @@ import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,15 +37,12 @@ import java.util.Map;
  * 编辑的表单管理（未发布表单）
  */
 @Controller
-@RequestMapping("/edit/metaformmodel")
+@RequestMapping("/draft/metaformmodel")
 @Api(value = "未发布的自定义表单管理", tags = "未发布的自定义表单管理")
-public class MetaFormModelEditController extends BaseController {
+public class MetaFormModelDraftController extends BaseController {
 
     @Autowired
-    private MetaFormModelEditManager metaFormModelEditManager;
-
-    @Autowired
-    private MetaFormModelManager metaFormModelManager;
+    private MetaFormModelDraftManager metaFormModelDraftManager;
 
     @Autowired
     private MetaDataCache metaDataCache;
@@ -66,7 +59,7 @@ public class MetaFormModelEditController extends BaseController {
     @ApiOperation(value = "条件查询未发布所有通用模块(可查询工作流相关模块)")
     @RequestMapping(method = RequestMethod.GET)
     @WrapUpResponseBody
-    public PageQueryResult unPublishFormModelList(String[] field, String optType, PageDesc pageDesc, HttpServletRequest request) {
+    public PageQueryResult draftFormModelList(String[] field, String optType, PageDesc pageDesc, HttpServletRequest request) {
         Map<String, Object> searchColumn = collectRequestParameters(request);
 
         if (optType != null) {
@@ -79,7 +72,7 @@ public class MetaFormModelEditController extends BaseController {
                 searchColumn.put("allFlowOpt", "all");
             }
         }
-        JSONArray listObjects = metaFormModelEditManager.listFormModeAsJson(field, searchColumn, pageDesc);
+        JSONArray listObjects = metaFormModelDraftManager.listFormModeAsJson(field, searchColumn, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
             return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
         } else {
@@ -90,8 +83,8 @@ public class MetaFormModelEditController extends BaseController {
     @ApiOperation(value = "查询单个未发布的通用模块,其中keyProps为其主表对应的主键字段名称数组", response = MetaFormModel.class)
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
-    public ObjectAppendProperties<MetaFormModelEdit> getEditMetaFormModel(@PathVariable String modelId) {
-        MetaFormModelEdit metaFormModel = metaFormModelEditManager.getMetaFormModelEditById(modelId);
+    public ObjectAppendProperties<MetaFormModelDraft> getDraftMetaFormModel(@PathVariable String modelId) {
+        MetaFormModelDraft metaFormModel = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
         List<String> pkCols = new ArrayList<>(6);
         if (metaFormModel.getTableId() != null && !"".equals(metaFormModel.getTableId())) {
             MetaTable tableInfo = this.metaDataCache.getTableInfo(metaFormModel.getTableId());
@@ -123,11 +116,11 @@ public class MetaFormModelEditController extends BaseController {
     @ApiOperation(value = "新增通用模块")
     @RequestMapping(method = {RequestMethod.POST})
     @WrapUpResponseBody
-    public String createMetaFormModel(@RequestBody MetaFormModelEdit metaFormModel, HttpServletRequest request) {
+    public String createMetaFormModel(@RequestBody MetaFormModelDraft metaFormModel, HttpServletRequest request) {
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         metaFormModel.setRecorder(usercode);
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
-        metaFormModelEditManager.saveMetaFormModelEdit(metaFormModel);
+        metaFormModelDraftManager.saveMetaFormModelDraft(metaFormModel);
         return metaFormModel.getModelId();
     }
 
@@ -140,7 +133,7 @@ public class MetaFormModelEditController extends BaseController {
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
     public void deleteMetaFormModel(@PathVariable String modelId) {
-        metaFormModelEditManager.deleteMetaFormModelEditById(modelId);
+        metaFormModelDraftManager.deleteMetaFormModelDraftById(modelId);
     }
 
     /**
@@ -153,8 +146,8 @@ public class MetaFormModelEditController extends BaseController {
     @ApiOperation(value = "编辑未发布的通用模块")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.PUT})
     @WrapUpResponseBody
-    public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModelEdit metaFormModel) {
-//        MetaFormModelEdit oldMetaForm = metaFormModelEditManager.getObjectById(modelId);
+    public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModelDraft metaFormModel) {
+//        MetaFormModelDraft oldMetaForm = metaFormModelDraftManager.getObjectById(modelId);
 //        if(!DatetimeOpt.equalOnSecond(oldMetaForm.getLastModifyDate(),metaFormModel.getLastModifyDate())){
 //            throw new ObjectException(CollectionsOpt.createHashMap(
 //                    "yourTimeStamp", metaFormModel.getLastModifyDate(), "databaseTimeStamp", oldMetaForm.getLastModifyDate()),
@@ -164,7 +157,7 @@ public class MetaFormModelEditController extends BaseController {
         /*metaFormModel.setFormTemplate(JSON
                 JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
-        metaFormModelEditManager.updateMetaFormModelEdit(metaFormModel);
+        metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModel);
         return metaFormModel.getLastModifyDate();
     }
 
@@ -181,24 +174,24 @@ public class MetaFormModelEditController extends BaseController {
     @WrapUpResponseBody
     public ResponseData publishMetaFormModel(@PathVariable String modelId, HttpServletRequest request) {
         // 获取草稿状态的表单
-        MetaFormModelEdit metaFormModelEdit = metaFormModelEditManager.getMetaFormModelEditById(modelId);
-        if (metaFormModelEdit == null) {
+        MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
+        if (metaFormModelDraft == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
         }
-        if (metaFormModelEdit.getLastModifyDate() != null && metaFormModelEdit.getPublishDate() != null &&
-                !metaFormModelEdit.getLastModifyDate().after(metaFormModelEdit.getPublishDate())) {
+        if (metaFormModelDraft.getLastModifyDate() != null && metaFormModelDraft.getPublishDate() != null &&
+                !metaFormModelDraft.getLastModifyDate().after(metaFormModelDraft.getPublishDate())) {
             return ResponseData.makeErrorMessage("表单已发布，请勿重复发布！");
         }
-        metaFormModelEdit.setPublishDate(new Date());
-        metaFormModelEdit.setLastModifyDate(metaFormModelEdit.getLastModifyDate());
+        metaFormModelDraft.setPublishDate(new Date());
+        metaFormModelDraft.setLastModifyDate(metaFormModelDraft.getLastModifyDate());
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         if (usercode != null) {
-            metaFormModelEdit.setRecorder(usercode);
+            metaFormModelDraft.setRecorder(usercode);
         }
         // 发布表单
-        metaFormModelEditManager.publishMetaFormModel(metaFormModelEdit);
+        metaFormModelDraftManager.publishMetaFormModel(metaFormModelDraft);
         // 更新编辑表单状态为已发布，更新时间和操作人
-        metaFormModelEditManager.updateMetaFormModelEdit(metaFormModelEdit);
+        metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModelDraft);
         return ResponseData.makeSuccessResponse("发布成功！");
     }
 

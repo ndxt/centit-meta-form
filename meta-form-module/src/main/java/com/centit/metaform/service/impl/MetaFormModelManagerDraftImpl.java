@@ -2,12 +2,11 @@ package com.centit.metaform.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.jdbc.dao.DatabaseOptUtils;
-import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaFormModelDao;
-import com.centit.metaform.dao.MetaFormModelEditDao;
+import com.centit.metaform.dao.MetaFormModelDraftDao;
 import com.centit.metaform.po.MetaFormModel;
-import com.centit.metaform.po.MetaFormModelEdit;
-import com.centit.metaform.service.MetaFormModelEditManager;
+import com.centit.metaform.po.MetaFormModelDraft;
+import com.centit.metaform.service.MetaFormModelDraftManager;
 import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
 import com.centit.support.database.orm.JpaMetadata;
 import com.centit.support.database.orm.TableMapInfo;
@@ -26,10 +25,10 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MetaFormModelManagerEditImpl implements MetaFormModelEditManager {
+public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager {
 
     @Autowired
-    private MetaFormModelEditDao metaFormModelEditDao;
+    private MetaFormModelDraftDao metaFormModelDraftDao;
 
     @Autowired
     private MetaFormModelDao metaFormModelDao;
@@ -47,7 +46,7 @@ public class MetaFormModelManagerEditImpl implements MetaFormModelEditManager {
                         ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a", true)
                         : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a", 1)) +
                 ",b.TABLE_NAME,b.TABLE_LABEL_NAME " +
-                " from M_META_FORM_MODEL_EDIT a left join F_MD_TABLE b on a.table_id=b.table_id " +
+                " from M_META_FORM_MODEL_DRAFT a left join F_MD_TABLE b on a.table_id=b.table_id " +
                 " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] " +
                 " [:tableId | and a.table_id = :tableId] " +
                 " [:modelType | and a.MODEL_TYPE = :modelType] " +
@@ -63,37 +62,37 @@ public class MetaFormModelManagerEditImpl implements MetaFormModelEditManager {
                     + QueryUtils.cleanSqlStatement(orderBy);
         }
 
-        JSONArray listTables = DatabaseOptUtils.listObjectsByParamsDriverSqlAsJson(metaFormModelEditDao, sql, filterMap, pageDesc);
+        JSONArray listTables = DatabaseOptUtils.listObjectsByParamsDriverSqlAsJson(metaFormModelDraftDao, sql, filterMap, pageDesc);
         return listTables;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void updateMetaFormModelEdit(MetaFormModelEdit metaFormModel) {
-        metaFormModelEditDao.mergeObject(metaFormModel);
-        metaFormModelEditDao.saveObjectReferences(metaFormModel);
+    public void updateMetaFormModelDraft(MetaFormModelDraft metaFormModel) {
+        metaFormModelDraftDao.mergeObject(metaFormModel);
+        metaFormModelDraftDao.saveObjectReferences(metaFormModel);
     }
 
     @Override
-    public void publishMetaFormModel(MetaFormModelEdit metaFormModelEdit) {
+    public void publishMetaFormModel(MetaFormModelDraft metaFormModelDraft) {
         MetaFormModel metaFormModel = new MetaFormModel();
-        BeanUtils.copyProperties(metaFormModelEdit, metaFormModel);
+        BeanUtils.copyProperties(metaFormModelDraft, metaFormModel);
         metaFormModelDao.mergeObject(metaFormModel);
     }
 
     @Override
-    public MetaFormModelEdit getMetaFormModelEditById(String modelId) {
-        return metaFormModelEditDao.getObjectById(modelId);
+    public MetaFormModelDraft getMetaFormModelDraftById(String modelId) {
+        return metaFormModelDraftDao.getObjectById(modelId);
     }
 
     @Override
-    public void saveMetaFormModelEdit(MetaFormModelEdit metaFormModel) {
-        metaFormModelEditDao.mergeObject(metaFormModel);
+    public void saveMetaFormModelDraft(MetaFormModelDraft metaFormModel) {
+        metaFormModelDraftDao.mergeObject(metaFormModel);
     }
 
     @Override
-    public void deleteMetaFormModelEditById(String modelId) {
-        metaFormModelEditDao.deleteObjectById(modelId);
+    public void deleteMetaFormModelDraftById(String modelId) {
+        metaFormModelDraftDao.deleteObjectById(modelId);
     }
 
 

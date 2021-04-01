@@ -20,8 +20,8 @@ import java.util.Set;
  */
 @Data
 @Entity
-@Table(name = "M_META_FORM_MODEL_EDIT")
-public class MetaFormModelEdit implements java.io.Serializable {
+@Table(name = "M_META_FORM_MODEL_DRAFT")
+public class MetaFormModelDraft implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "模块代码", hidden = true)
@@ -120,11 +120,11 @@ public class MetaFormModelEdit implements java.io.Serializable {
     @Column(name = "PUBLISH_DATE")
     private Date publishDate;
 
-    @OneToMany(targetEntity = MetaFormModelEdit.class, mappedBy = "metaFormModel",
+    @OneToMany(targetEntity = MetaFormModelDraft.class, mappedBy = "metaFormModel",
             orphanRemoval = true,
             cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "MODEL_CODE", referencedColumnName = "MODEL_CODE")
-    private Set<MetaFormModelEdit> childFormModels;
+    private Set<MetaFormModelDraft> childFormModels;
 
     @Transient
     private String relationName;
@@ -134,10 +134,10 @@ public class MetaFormModelEdit implements java.io.Serializable {
     }
 
 
-    public MetaFormModelEdit() {
+    public MetaFormModelDraft() {
     }
 
-    public MetaFormModelEdit(
+    public MetaFormModelDraft(
             String modelId
             , String modelName) {
         this.modelId = modelId;
@@ -145,25 +145,25 @@ public class MetaFormModelEdit implements java.io.Serializable {
     }
 
 
-    public Set<MetaFormModelEdit> getMetaFormModels() {
+    public Set<MetaFormModelDraft> getMetaFormModels() {
         if (this.childFormModels == null) {
             this.childFormModels = new HashSet<>();
         }
         return this.childFormModels;
     }
 
-    public void setMetaFormModels(Set<MetaFormModelEdit> metaFormModels) {
+    public void setMetaFormModels(Set<MetaFormModelDraft> metaFormModels) {
         this.childFormModels = metaFormModels;
     }
 
-    public void addMetaFormModel(MetaFormModelEdit metaFormModel) {
+    public void addMetaFormModel(MetaFormModelDraft metaFormModel) {
         if (this.childFormModels == null) {
             this.childFormModels = new HashSet<>();
         }
         this.childFormModels.add(metaFormModel);
     }
 
-    public void removeMetaFormModel(MetaFormModelEdit metaFormModel) {
+    public void removeMetaFormModel(MetaFormModelDraft metaFormModel) {
         if (this.childFormModels == null) {
             return;
         }
