@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MetaFormModelManagerEditImpl extends BaseEntityManagerImpl<MetaFormModelEdit, String, MetaFormModelEditDao>
-        implements MetaFormModelEditManager {
+public class MetaFormModelManagerEditImpl implements MetaFormModelEditManager {
 
     @Autowired
     private MetaFormModelEditDao metaFormModelEditDao;
@@ -47,7 +46,7 @@ public class MetaFormModelManagerEditImpl extends BaseEntityManagerImpl<MetaForm
                 ((c != null && c.size() > 0)
                         ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a", true)
                         : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a", 1)) +
-                ",b.TABLE_NAME,b.TABLE_LABEL_NAME, form_state " +
+                ",b.TABLE_NAME,b.TABLE_LABEL_NAME " +
                 " from M_META_FORM_MODEL_EDIT a left join F_MD_TABLE b on a.table_id=b.table_id " +
                 " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] " +
                 " [:tableId | and a.table_id = :tableId] " +
@@ -80,6 +79,21 @@ public class MetaFormModelManagerEditImpl extends BaseEntityManagerImpl<MetaForm
         MetaFormModel metaFormModel = new MetaFormModel();
         BeanUtils.copyProperties(metaFormModelEdit, metaFormModel);
         metaFormModelDao.mergeObject(metaFormModel);
+    }
+
+    @Override
+    public MetaFormModelEdit getMetaFormModelEditById(String modelId) {
+        return metaFormModelEditDao.getObjectById(modelId);
+    }
+
+    @Override
+    public void saveMetaFormModelEdit(MetaFormModelEdit metaFormModel) {
+        metaFormModelEditDao.mergeObject(metaFormModel);
+    }
+
+    @Override
+    public void deleteMetaFormModelEditById(String modelId) {
+        metaFormModelEditDao.deleteObjectById(modelId);
     }
 
 

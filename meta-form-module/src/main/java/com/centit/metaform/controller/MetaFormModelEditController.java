@@ -49,6 +49,9 @@ public class MetaFormModelEditController extends BaseController {
     private MetaFormModelEditManager metaFormModelEditManager;
 
     @Autowired
+    private MetaFormModelManager metaFormModelManager;
+
+    @Autowired
     private MetaDataCache metaDataCache;
 
     /**
@@ -88,7 +91,7 @@ public class MetaFormModelEditController extends BaseController {
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
     public ObjectAppendProperties<MetaFormModelEdit> getEditMetaFormModel(@PathVariable String modelId) {
-        MetaFormModelEdit metaFormModel = metaFormModelEditManager.getObjectById(modelId);
+        MetaFormModelEdit metaFormModel = metaFormModelEditManager.getMetaFormModelEditById(modelId);
         List<String> pkCols = new ArrayList<>(6);
         if (metaFormModel.getTableId() != null && !"".equals(metaFormModel.getTableId())) {
             MetaTable tableInfo = this.metaDataCache.getTableInfo(metaFormModel.getTableId());
@@ -124,7 +127,7 @@ public class MetaFormModelEditController extends BaseController {
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         metaFormModel.setRecorder(usercode);
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
-        metaFormModelEditManager.saveNewObject(metaFormModel);
+        metaFormModelEditManager.saveMetaFormModelEdit(metaFormModel);
         return metaFormModel.getModelId();
     }
 
@@ -137,7 +140,7 @@ public class MetaFormModelEditController extends BaseController {
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
     public void deleteMetaFormModel(@PathVariable String modelId) {
-        metaFormModelEditManager.deleteObjectById(modelId);
+        metaFormModelEditManager.deleteMetaFormModelEditById(modelId);
     }
 
     /**
@@ -178,11 +181,12 @@ public class MetaFormModelEditController extends BaseController {
     @WrapUpResponseBody
     public ResponseData publishMetaFormModel(@PathVariable String modelId, HttpServletRequest request) {
         // 获取草稿状态的表单
-        MetaFormModelEdit metaFormModelEdit = metaFormModelEditManager.getObjectById(modelId);
+        MetaFormModelEdit metaFormModelEdit = metaFormModelEditManager.getMetaFormModelEditById(modelId);
         if (metaFormModelEdit == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
         }
-        if (!metaFormModelEdit.getLastModifyDate().after(metaFormModelEdit.getPublishDate())) {
+        if (metaFormModelEdit.getLastModifyDate() != null && metaFormModelEdit.getPublishDate() != null &&
+                !metaFormModelEdit.getLastModifyDate().after(metaFormModelEdit.getPublishDate())) {
             return ResponseData.makeErrorMessage("表单已发布，请勿重复发布！");
         }
         metaFormModelEdit.setPublishDate(new Date());

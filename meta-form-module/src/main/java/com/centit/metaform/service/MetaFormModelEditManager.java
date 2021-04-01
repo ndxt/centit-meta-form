@@ -7,11 +7,17 @@ import com.centit.support.database.utils.PageDesc;
 
 import java.util.Map;
 
-public interface MetaFormModelEditManager extends BaseEntityManager<MetaFormModelEdit, String> {
+public interface MetaFormModelEditManager {
 
     JSONArray listFormModeAsJson(String[] fields, Map<String, Object> filterMap, PageDesc pageDesc);
 
     void updateMetaFormModelEdit(MetaFormModelEdit metaFormModel);
 
     void publishMetaFormModel(MetaFormModelEdit metaFormModel);
+
+    MetaFormModelEdit getMetaFormModelEditById(String modelId);
+
+    void saveMetaFormModelEdit(MetaFormModelEdit metaFormModel);
+
+    void deleteMetaFormModelEditById(String modelId);
 }
