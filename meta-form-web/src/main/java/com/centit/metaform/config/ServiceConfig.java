@@ -73,6 +73,7 @@ public class ServiceConfig {
 
         return notificationCenter;
     }
+
 //    @Bean
 //    public MapSessionRepository sessionRepository() {
 //        return new MapSessionRepository(new ConcurrentHashMap<>());
