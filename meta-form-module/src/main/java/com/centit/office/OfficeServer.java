@@ -494,7 +494,9 @@ public class OfficeServer extends HttpServlet {
                     mTemplate = MsgObj.GetMsgByName("TEMPLATE");                        //取得模板文档类型
                     //本段处理是否调用文档时打开模版，还是套用模版时打开模版。
                     MsgObj.MsgTextClear();//清除文本信息
-                    if (MsgObj.MsgFileLoad(mFilePath + "Document" + File.separator + mTemplate)) { //从服务器文件夹中调入模板文档
+                    String filePath = mFilePath + "Document" + File.separator + mTemplate;
+                    System.out.println("加载模板 LOADTEMPLATE" + filePath);
+                    if (MsgObj.MsgFileLoad(filePath)) { //从服务器文件夹中调入模板文档
                         System.out.println(mTemplate + "文档已经转换成功");                              //清除错误信息
                     }
 
