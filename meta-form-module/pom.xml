@@ -115,6 +115,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.centit.product</groupId>
+            <artifactId>fileserver-client</artifactId>
+            <version>3.2-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 </project>
