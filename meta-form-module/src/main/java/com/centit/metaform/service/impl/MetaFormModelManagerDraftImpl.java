@@ -36,7 +36,7 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
     @Override
     @Transactional
     public JSONArray listFormModeAsJson(String[] fields, Map<String, Object> filterMap, PageDesc pageDesc) {
-        TableMapInfo mapInfo = JpaMetadata.fetchTableMapInfo(MetaFormModel.class);
+        TableMapInfo mapInfo = JpaMetadata.fetchTableMapInfo(MetaFormModelDraft.class);
         List<String> c = new ArrayList<>();
         if (fields != null) {
             c.addAll(Arrays.asList(fields));
