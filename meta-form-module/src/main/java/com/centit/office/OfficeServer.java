@@ -392,9 +392,9 @@ public class OfficeServer extends HttpServlet {
                         }
                     } else {
                         System.out.println("ExtParam:" + ExtParam);
-                        if (MsgObj.MsgFileLoad(mFilePath + "\\Document\\" + mFileName)) {
+                        if (MsgObj.MsgFileLoad(mFilePath + "Document" + File.separator + mFileName)) {
                             MsgObj.MsgTextClear();
-                            System.out.println("文件路径：" + mFilePath + "\\Document\\" + mFileName);
+                            System.out.println("文件路径：" + mFilePath + "Document" + File.separator + mFileName);
                             //MsgObj.SetMsgByName("string1", "测试 内容");
                             System.out.println(mFileName + "文档已经加载");
                         }
@@ -451,9 +451,9 @@ public class OfficeServer extends HttpServlet {
                     mRecordID = MsgObj.GetMsgByName("RECORDID");                        //取得文档编号
                     mFileName = MsgObj.GetMsgByName("FILENAME");//取得文档名称
                     MsgObj.MsgTextClear();//清除文本信息
-                    mFilePath = mFilePath + "\\Document";
+                    mFilePath = mFilePath + File.separator + "Document";
                     MsgObj.MakeDirectory(mFilePath);
-                    if (MsgObj.MsgFileSave(mFilePath + "\\" + mFileName)) {
+                    if (MsgObj.MsgFileSave(mFilePath + File.separator + mFileName)) {
                         System.out.println(mRecordID + "文档已经转换成功");
                     }
 
@@ -465,14 +465,14 @@ public class OfficeServer extends HttpServlet {
                     MsgObj.MsgTextClear();//清除文本信息
                     System.out.println("mDirectory==" + mDirectory);
                     if (mDirectory.equalsIgnoreCase("")) {
-                        mFilePath = mFilePath + "\\HTML";
+                        mFilePath = mFilePath + File.separator + "HTML";
                     } else {
-                        mFilePath = mFilePath + "\\HTML\\" + mDirectory;
+                        mFilePath = mFilePath + File.separator + "HTML" + File.separator + mDirectory;
                         System.out.println("mFilePath===" + mFilePath);
                     }
                     MsgObj.MakeDirectory(mFilePath);
                     System.out.println("开始MsgFileSave" + mFilePath);
-                    if (MsgObj.MsgFileSave(mFilePath + "\\" + mFileName)) {
+                    if (MsgObj.MsgFileSave(mFilePath + File.separator + mFileName)) {
                         System.out.println(mRecordID + "文档已经保存成功");
                     }
                 } else if (mOption.equalsIgnoreCase("SAVEIMAGE")) {                     //下面的代码为将OFFICE存为HTML图片页面
@@ -480,12 +480,12 @@ public class OfficeServer extends HttpServlet {
                     mDirectory = MsgObj.GetMsgByName("DIRECTORY");                      //取得目录名称
                     MsgObj.MsgTextClear();
                     if (mDirectory.trim().equalsIgnoreCase("")) {
-                        mFilePath = mFilePath + "\\HTMLIMAGE";
+                        mFilePath = mFilePath + File.separator + "HTMLIMAGE";
                     } else {
-                        mFilePath = mFilePath + "\\HTMLIMAGE\\" + mDirectory;
+                        mFilePath = mFilePath + File.separator + "HTMLIMAGE" + File.separator + mDirectory;
                     }
                     MsgObj.MakeDirectory(mFilePath);                                    //创建路径
-                    if (MsgObj.MsgFileSave(mFilePath + "\\" + mFileName)) {             //保存HTML文件
+                    if (MsgObj.MsgFileSave(mFilePath + File.separator + mFileName)) {             //保存HTML文件
                         System.out.println(mRecordID + "文档已经保存成功");               //设置状态信息
                     } else {
                         System.out.println("保存HTML图片失败!");
@@ -494,7 +494,7 @@ public class OfficeServer extends HttpServlet {
                     mTemplate = MsgObj.GetMsgByName("TEMPLATE");                        //取得模板文档类型
                     //本段处理是否调用文档时打开模版，还是套用模版时打开模版。
                     MsgObj.MsgTextClear();//清除文本信息
-                    if (MsgObj.MsgFileLoad(mFilePath + File.separator + "Document" + File.separator + mTemplate)) { //从服务器文件夹中调入模板文档
+                    if (MsgObj.MsgFileLoad(mFilePath + "Document" + File.separator + mTemplate)) { //从服务器文件夹中调入模板文档
                         System.out.println(mTemplate + "文档已经转换成功");                              //清除错误信息
                     }
 
@@ -502,7 +502,7 @@ public class OfficeServer extends HttpServlet {
                     mTemplate = MsgObj.GetMsgByName("TEMPLATE");//取得模板名称
                     System.out.println(mTemplate + "模板上传中");
                     MsgObj.MsgTextClear();//清除文本信息
-                    if (MsgObj.MsgFileSave(mFilePath + "\\Document\\" + mTemplate)) {
+                    if (MsgObj.MsgFileSave(mFilePath + "Document" + File.separator + mTemplate)) {
                         System.out.println(mTemplate + "模板保存成功");
                     }
                 } else if (mOption.equalsIgnoreCase("INSERTFILE")) {                  //下面的代码为打开服务器数据库里的模板文件
@@ -510,7 +510,7 @@ public class OfficeServer extends HttpServlet {
                     mTemplate = MsgObj.GetMsgByName("TEMPLATE");//取得模板名称
                     System.out.println(mTemplate + "模板上传中");
                     MsgObj.MsgTextClear();//清除文本信息
-                    if (MsgObj.MsgFileLoad(mFilePath + "\\Document\\" + mTemplate)) {
+                    if (MsgObj.MsgFileLoad(mFilePath + "Document" + File.separator + mTemplate)) {
                         System.out.println(mRecordID + "模板保存成功");
                     }
                 } else if (mOption.equalsIgnoreCase("LOADBOOKMARKS")) {                 //下面的代码为取得文档标签
@@ -529,22 +529,22 @@ public class OfficeServer extends HttpServlet {
                     mRecordID = MsgObj.GetMsgByName("RECORDID");                 //取得文档编号
                     mRemoteFile = MsgObj.GetMsgByName("REMOTEFILE");                //取得远程文件名称
                     MsgObj.MsgTextClear();//清除文本信息
-                    System.out.println(mFilePath + "\\Document\\" + mRemoteFile);
-                    if (MsgObj.MsgFileLoad(mFilePath + "\\Document\\" + mRemoteFile)) {
+                    System.out.println(mFilePath + "Document" + File.separator + mRemoteFile);
+                    if (MsgObj.MsgFileLoad(mFilePath + "Document" + File.separator + mRemoteFile)) {
                         System.out.println(mRemoteFile + "文档已经下载");
                     }
                 } else if (mOption.equalsIgnoreCase("PUTFILE")) {
                     System.out.println("开始下载文档");
                     mRemoteFile = MsgObj.GetMsgByName("REMOTEFILE");                //取得远程文件名称
                     MsgObj.MsgTextClear();//清除文本信息
-                    System.out.println(mFilePath + "\\Document\\" + mRemoteFile);
-                    if (MsgObj.MsgFileSave(mFilePath + "\\Document\\" + mRemoteFile)) {
+                    System.out.println(mFilePath + "Document" + File.separator + mRemoteFile);
+                    if (MsgObj.MsgFileSave(mFilePath + "Document" + File.separator + mRemoteFile)) {
                         System.out.println(mRemoteFile + "文档已经上传成功");
                     }
                 } else if (mOption.equalsIgnoreCase("DELFILE")) {
                     mRemoteFile = MsgObj.GetMsgByName("REMOTEFILE");                //取得远程文件名称
                     MsgObj.MsgTextClear();                                    //清除文本信息
-                    if (MsgObj.DelFile(mFilePath + "\\Document\\" + mRemoteFile)) {                            //删除文档
+                    if (MsgObj.DelFile(mFilePath + "Document" + File.separator + mRemoteFile)) {                            //删除文档
                         System.out.println("删除文件成功");
                     } else {
                         System.out.println("删除文件失败");                            //设置错误信息
@@ -590,7 +590,7 @@ public class OfficeServer extends HttpServlet {
                 } else if (mOption.equalsIgnoreCase("INSERTIMAGE")) {                   //下面的代码为插入服务器图片
                     mRecordID = MsgObj.GetMsgByName("RECORDID");                        //取得文档编号
                     mImageName = MsgObj.GetMsgByName("IMAGENAME");                      //图片名
-                    mFilePath = mFilePath + "\\Document\\" + mImageName;                //图片在服务器的完整路径
+                    mFilePath = mFilePath + "Document" + File.separator + mImageName;                //图片在服务器的完整路径
                     MsgObj.MsgTextClear();
                     if (MsgObj.MsgFileLoad(mFilePath)) {                                //调入图片
                         System.out.println("插入图片成功!");
@@ -622,7 +622,7 @@ public class OfficeServer extends HttpServlet {
 //                    String recordID = this.mRecordID;
         byte[] fileBody = this.MsgObj.MsgFileBody();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(fileBody);//将文件二进制数组转换为流
-        FileOutputStream outputStream = new FileOutputStream(mFilePath + "Document\\" + mFileName + extName);
+        FileOutputStream outputStream = new FileOutputStream(mFilePath + "Document" + File.separator + mFileName + extName);
         byte[] by = new byte[1024];
         int len = 0;
         while ((len = inputStream.read(by)) != -1) {
@@ -632,10 +632,9 @@ public class OfficeServer extends HttpServlet {
         inputStream.close();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("multipart/form-data"));
-                    /*Map<String, Object> form = new LinkedMultiValueMap<>();
-                    form.add("file", new FileSystemResource(mFilePath + "Document\\" + mFileName + extName));*/
+
         Map<String, Object> form = new LinkedMultiValueMap();
-        form.put("file", new FileSystemResource(mFilePath + "Document\\" + mFileName + extName));
+        form.put("file", new FileSystemResource(mFilePath + "Document" + File.separator + mFileName + extName));
         String post = new RestTemplate().postForEntity(saveUrl, new HttpEntity<>(form, headers), String.class).getBody();
         JSONObject postJson = JSONObject.parseObject(post);
         if (0 == (int) postJson.get("code")) {
@@ -647,7 +646,7 @@ public class OfficeServer extends HttpServlet {
                 sysDocumentModule.setFileName(mFileName);
                 sysDocumentModuleService.updateObject(sysDocumentModule);
             }*/
-            File file = new File(mFilePath + "Document\\" + mFileName + extName);
+            File file = new File(mFilePath + "Document" + File.separator + mFileName + extName);
             if (file.exists()) {
                 file.delete(); //删除文件
             }
