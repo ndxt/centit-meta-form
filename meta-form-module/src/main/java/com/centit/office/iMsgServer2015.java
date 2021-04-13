@@ -321,11 +321,12 @@ public class iMsgServer2015 {
      * @throws IOException
      * @deprecated:将文件的二进制数据设置到信息包中
      */
-    public void Send(HttpServletResponse response, int codec) throws IOException {
+    public void Send(HttpServletResponse response, int codec, String fileId) throws IOException {
         try {
             String getJsonStr = GetHashToJson();
             response.reset();
             response.setHeader("RName", new String(getJsonStr.getBytes("gb2312"), "ISO8859-1"));
+            response.setHeader("fileId", fileId);
             if (mFileBody.length != 0) {
                 response.setCharacterEncoding("utf-8");
                 response.setContentType("application/x-msdownload;charset=utf-8");

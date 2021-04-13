@@ -359,6 +359,7 @@ public class OfficeServer extends HttpServlet {
         mFilePath = request.getSession().getServletContext().getRealPath("");       //取得服务器路径
 
         String htmlHttp = "";
+        String fileId = "";
         try {
             if (request.getMethod().equalsIgnoreCase("POST")) {//判断请求方式
                 MsgObj.setSendType("JSON");
@@ -443,6 +444,7 @@ public class OfficeServer extends HttpServlet {
                         File f = new File(outputFile);
                         FileInfo uploadFile = fileClient.uploadFile(fileInfo, f);
                         System.out.println("通过文件服务器，文件上传  文件名：" + uploadFile.getFileName() + "  fileServer： " + fileServerUrl + "  fileId: " + uploadFile.getFileId() + "  fileMd5: " + uploadFile.getFileMd5());
+                        fileId = uploadFile.getFileId();
                         response.setHeader("fileId", uploadFile.getFileId());
 
                     }
@@ -605,7 +607,7 @@ public class OfficeServer extends HttpServlet {
                 int codec = 0;
                 if (htmlHttp == "BASE64")
                     codec = 1;
-                MsgObj.Send(response, codec);
+                MsgObj.Send(response, codec, fileId);
             }
         } catch (Exception e) {
             e.printStackTrace();
