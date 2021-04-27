@@ -37,14 +37,14 @@ import java.util.Map;
 /**
  * MetaFormModel  Controller.
  * create by scaffold 2016-06-02
-
+ * <p>
  * 通用模块管理null
-*/
+ */
 
 @Controller
 @RequestMapping("/metaformmodel")
-@Api(value = "自定义表单管理", tags = "自定义表单管理")
-public class MetaFormModelController extends BaseController{
+@Api(value = "已发布的自定义表单管理", tags = "已发布的自定义表单管理")
+public class MetaFormModelController extends BaseController {
     //private static final Log logger = LogFactory.getLog(MetaFormModelController.class);
 
     @Autowired
@@ -52,25 +52,25 @@ public class MetaFormModelController extends BaseController{
 
     @Autowired
     private MetaDataCache metaDataCache;
+
     /**
      * 查询所有   通用模块管理  列表
      *
      * @param field    json中只保存需要的属性名
-     * @param pageDesc  分页信息
+     * @param pageDesc 分页信息
      * @param request  {@link HttpServletRequest}
      * @return {data:[]}
      */
-    @ApiOperation(value = "查询所有通用模块")
+    @ApiOperation(value = "查询所有已发布的通用模块")
     @RequestMapping(method = RequestMethod.GET)
     @WrapUpResponseBody
     public PageQueryResult list(String[] field, PageDesc pageDesc, HttpServletRequest request) {
         Map<String, Object> searchColumn = collectRequestParameters(request);
-        JSONArray listObjects = metaFormModelMag.listFormModeAsJson(field,searchColumn, pageDesc);
+        JSONArray listObjects = metaFormModelMag.listFormModeAsJson(field, searchColumn, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
-           return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
-        }
-        else{
-            return PageQueryResult.createJSONArrayResult(listObjects,pageDesc,MetaFormModel.class);
+            return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
+        } else {
+            return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, MetaFormModel.class);
         }
     }
 
@@ -79,44 +79,45 @@ public class MetaFormModelController extends BaseController{
      *
      * @param field    json中只保存需要的属性名
      * @param optType  flow 查找和流程关联的业务， node查找和节点关联的业务， all查找所有相关业务
-     * @param pageDesc  分页信息
+     * @param pageDesc 分页信息
      * @param request  {@link HttpServletRequest}
      * @return {data:[]}
      */
-    @ApiOperation(value = "查询工作流相关模块")
-    @RequestMapping(value = "/workflow",method = RequestMethod.GET)
+    @ApiOperation(value = "查询已发布的工作流相关模块")
+    @RequestMapping(value = "/workflow", method = RequestMethod.GET)
     @WrapUpResponseBody
     public PageQueryResult listFlowModel(String[] field, String optType, PageDesc pageDesc, HttpServletRequest request) {
         Map<String, Object> searchColumn = collectRequestParameters(request);
-        if("flow".equalsIgnoreCase(optType)){
-            searchColumn.put("flowOptType","1");
-        } else if("node".equalsIgnoreCase(optType)){
-            searchColumn.put("flowOptType","2");
+        if ("flow".equalsIgnoreCase(optType)) {
+            searchColumn.put("flowOptType", "1");
+        } else if ("node".equalsIgnoreCase(optType)) {
+            searchColumn.put("flowOptType", "2");
         } else {
-            searchColumn.put("allFlowOpt","all");
+            searchColumn.put("allFlowOpt", "all");
         }
 
-        JSONArray listObjects = metaFormModelMag.listFormModeAsJson(field,searchColumn, pageDesc);
+        JSONArray listObjects = metaFormModelMag.listFormModeAsJson(field, searchColumn, pageDesc);
         if (ArrayUtils.isNotEmpty(field)) {
             return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, field, MetaFormModel.class);
-        }
-        else{
-            return PageQueryResult.createJSONArrayResult(listObjects,pageDesc,MetaFormModel.class);
+        } else {
+            return PageQueryResult.createJSONArrayResult(listObjects, pageDesc, MetaFormModel.class);
         }
     }
+
     /**
      * 查询单个  通用模块管理
-
-     * @param modelId  Model_Id
+     *
+     * @param modelId Model_Id
      * @return {data:{}}
      */
-    @ApiOperation(value = "查询单个通用模块,其中keyProps为其主表对应的主键字段名称数组", response = MetaFormModel.class)
+    @ApiOperation(value = "查询单个已发布的通用模块,其中keyProps为其主表对应的主键字段名称数组", response = MetaFormModel.class)
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
     public ObjectAppendProperties<MetaFormModel> getMetaFormModel(@PathVariable String modelId) {
-        /*return*/ MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        /*return*/
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         List<String> pkCols = new ArrayList<>(6);
-        if (metaFormModel.getTableId()!=null && !"".equals(metaFormModel.getTableId())) {
+        if (metaFormModel.getTableId() != null && !"".equals(metaFormModel.getTableId())) {
             MetaTable tableInfo = this.metaDataCache.getTableInfo(metaFormModel.getTableId());
         /*if(tableInfo!=null && tableInfo.getPkFields()!=null && tableInfo.getPkFields().size()>0) {
             String[] pks = tableInfo.getPkFields().stream()
@@ -146,15 +147,15 @@ public class MetaFormModelController extends BaseController{
     /**
      * 新增 通用模块管理
      *
-     * @param metaFormModel  {@link MetaFormModel}
+     * @param metaFormModel {@link MetaFormModel}
      * @return
      */
     @ApiOperation(value = "新增通用模块")
     @RequestMapping(method = {RequestMethod.POST})
     @WrapUpResponseBody
     public String createMetaFormModel(@RequestBody MetaFormModel metaFormModel,
-        HttpServletRequest request) {
-        MetaFormModel model=new MetaFormModel();
+                                      HttpServletRequest request) {
+        MetaFormModel model = new MetaFormModel();
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         model.copyNotNullProperty(metaFormModel);
         model.setRecorder(usercode);
@@ -166,8 +167,8 @@ public class MetaFormModelController extends BaseController{
 
     /**
      * 删除单个  通用模块管理
-
-     * @param modelId  Model_Id
+     *
+     * @param modelId Model_Id
      */
     @ApiOperation(value = "删除单个通用模块")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
@@ -178,8 +179,9 @@ public class MetaFormModelController extends BaseController{
 
     /**
      * 新增或保存 通用模块管理
-     * @param modelId  Model_Id
-     * @param metaFormModel  {@link MetaFormModel}
+     *
+     * @param modelId       Model_Id
+     * @param metaFormModel {@link MetaFormModel}
      * @return
      */
     @ApiOperation(value = "编辑通用模块")
@@ -211,14 +213,14 @@ public class MetaFormModelController extends BaseController{
     )})
     @WrapUpResponseBody
     public JSONObject getFormTemplate(@PathVariable String modelId, String type,
-                HttpServletRequest request) {
+                                      HttpServletRequest request) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        boolean isFromMobile = StringUtils.isBlank(type)? WebOptUtils.isFromMobile(request)
-                :StringUtils.equalsAnyIgnoreCase(type, "m","mo","mobile");
-        if(isFromMobile){
+        boolean isFromMobile = StringUtils.isBlank(type) ? WebOptUtils.isFromMobile(request)
+                : StringUtils.equalsAnyIgnoreCase(type, "m", "mo", "mobile");
+        if (isFromMobile) {
             //获取移动页面定义，如果没有单独设置就用pc页面
             JSONObject model = metaFormModel.getMobileFormTemplate();
-            if(model != null){
+            if (model != null) {
                 return model;
             }
         }
@@ -242,7 +244,7 @@ public class MetaFormModelController extends BaseController{
                                    @RequestBody JSONObject formTemplate,
                                    String type) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        if(StringUtils.equalsAnyIgnoreCase(type, "m","mo","mobile")) {
+        if (StringUtils.equalsAnyIgnoreCase(type, "m", "mo", "mobile")) {
             metaFormModel.setMobileFormTemplate(formTemplate);
         } else {
             metaFormModel.setFormTemplate(formTemplate);
@@ -254,7 +256,7 @@ public class MetaFormModelController extends BaseController{
     @RequestMapping(value = "/{modelId}/optjs", method = {RequestMethod.PUT})
     @WrapUpResponseBody
     public void updateFormOptJs(@PathVariable String modelId,
-                                   @RequestBody String formOptjs) {
+                                @RequestBody String formOptjs) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(formOptjs));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
@@ -271,11 +273,11 @@ public class MetaFormModelController extends BaseController{
     @RequestMapping(value = "/{modelId}/flow", method = {RequestMethod.PUT})
     @WrapUpResponseBody
     public void updateFormFlow(@PathVariable String modelId,
-                                @RequestBody String relFlowCode) {
+                               @RequestBody String relFlowCode) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         metaFormModel.setRelFlowCode(
                 StringUtils.substring(
-                    StringEscapeUtils.unescapeHtml4(relFlowCode),0,64));
+                        StringEscapeUtils.unescapeHtml4(relFlowCode), 0, 64));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 }

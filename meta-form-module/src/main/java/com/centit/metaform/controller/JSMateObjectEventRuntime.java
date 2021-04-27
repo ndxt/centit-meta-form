@@ -40,7 +40,7 @@ public class JSMateObjectEventRuntime {
                                     DatabaseRunTime databaseRunTime,
                                     NotificationCenter notificationCenter,
                                     MetaFormModel model, MetaTable tableInfo,
-                                    HttpServletRequest request){
+                                    HttpServletRequest request) {
         this.metaObjectService = metaObjectService;
         this.databaseRunTime = databaseRunTime;
         this.notificationCenter = notificationCenter;
@@ -52,16 +52,17 @@ public class JSMateObjectEventRuntime {
 
     /**
      * 运行js事件
+     *
      * @param eventFunc 时间方法名称
-     * @param bizModel 业务数据对象
+     * @param bizModel  业务数据对象
      * @return 0 表示正常， &lg;0 表示报错， &gt;0 表示事件已经处理好所有任务，无需在做额外的数据库操作
      */
-    public int runEvent(String eventFunc, Map<String, Object> bizModel)  {
-        if(jsRuntimeContext == null){
+    public int runEvent(String eventFunc, Map<String, Object> bizModel) {
+        if (jsRuntimeContext == null) {
             jsRuntimeContext = new JSRuntimeContext();
         }
 
-        if(StringUtils.isNotBlank(javaScript)){
+        if (StringUtils.isNotBlank(javaScript)) {
             jsRuntimeContext.compileScript(javaScript);
         }
         this.bizModel = bizModel;
@@ -89,7 +90,7 @@ public class JSMateObjectEventRuntime {
         return this.databaseRunTime;
     }
 
-    public void setFlowVariable(String name, Object value){
+    public void setFlowVariable(String name, Object value) {
         String flowInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_INST_ID_PROP));
         try {
             flowEngine.saveFlowVariable(flowInstId, name,
@@ -99,7 +100,7 @@ public class JSMateObjectEventRuntime {
         }
     }
 
-    public void setFlowLocalVariable(String name, Object value){
+    public void setFlowLocalVariable(String name, Object value) {
         String nodeInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
         try {
             flowEngine.saveFlowNodeVariable(nodeInstId, name,
@@ -109,7 +110,7 @@ public class JSMateObjectEventRuntime {
         }
     }
 
-    public void setFlowWorkRole(String roleCode, String userCode){
+    public void setFlowWorkRole(String roleCode, String userCode) {
         String flowInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_INST_ID_PROP));
         try {
             flowEngine.assignFlowWorkTeam(flowInstId, roleCode,
@@ -119,7 +120,7 @@ public class JSMateObjectEventRuntime {
         }
     }
 
-    public void sendMessage(String sender,List<String> userCodes, String title, String msg){
+    public void sendMessage(String sender, List<String> userCodes, String title, String msg) {
         notificationCenter.sendMessage(sender, userCodes,
                 NoticeMessage.create().operation(metaModel.getModelId())
                         .tag(this.tableInfo.fetchObjectPkAsId(bizModel))
@@ -127,8 +128,8 @@ public class JSMateObjectEventRuntime {
                         .content(msg));
     }
 
-    public void sendUnitMessage(String sender,String unitCode, boolean includeSubUnit, String title, String msg){
-        if(unitCode==null) return;
+    public void sendUnitMessage(String sender, String unitCode, boolean includeSubUnit, String title, String msg) {
+        if (unitCode == null) return;
         notificationCenter.sendUnitMessage(sender, unitCode, includeSubUnit,
                 NoticeMessage.create().operation(metaModel.getModelId())
                         .tag(this.tableInfo.fetchObjectPkAsId(bizModel))
@@ -136,7 +137,7 @@ public class JSMateObjectEventRuntime {
                         .content(msg));
     }
 
-    public void submitOpt(){
+    public void submitOpt() {
         String nodeInstId = StringBaseOpt.castObjectToString(this.bizModel.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
         try {
             flowEngine.submitOpt(SubmitOptOptions.create().nodeInst(nodeInstId)
@@ -147,19 +148,19 @@ public class JSMateObjectEventRuntime {
         }
     }
 
-    public Object getRequestAttribute(String name){
+    public Object getRequestAttribute(String name) {
         Object pvalue = this.request.getAttribute(name);
-        if(pvalue == null || StringUtils.isBlank(StringBaseOpt.castObjectToString(pvalue))){
+        if (pvalue == null || StringUtils.isBlank(StringBaseOpt.castObjectToString(pvalue))) {
             pvalue = request.getParameter(name);
         }
         return pvalue;
     }
 
-    public Object getSessionAttribute(String name){
+    public Object getSessionAttribute(String name) {
         return this.request.getSession().getAttribute(name);
     }
 
-    public void setSessionAttribute(String name, Object value){
+    public void setSessionAttribute(String name, Object value) {
         this.request.getSession().setAttribute(name, value);
     }
 

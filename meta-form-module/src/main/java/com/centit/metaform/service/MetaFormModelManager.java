@@ -10,12 +10,11 @@ import java.util.Map;
 /**
  * MetaFormModel  Service.
  * create by scaffold 2016-06-02
-
+ * <p>
  * 通用模块管理null
-*/
+ */
 
-public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel,java.lang.String>
-{
+public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel, java.lang.String> {
 
     JSONArray listMetaFormModelsAsJson(
             String[] fields,
@@ -30,5 +29,6 @@ public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel,ja
     void deleteFormOptJs(String modelId);
 
     JSONArray listFormModeAsJson(String[] fields, Map<String, Object> filterMap, PageDesc pageDesc);
-    MetaFormModel getObjectByIdAndFile(String filePath,String modelId);
+
+    MetaFormModel getObjectByIdAndFile(String filePath, String modelId);
 }

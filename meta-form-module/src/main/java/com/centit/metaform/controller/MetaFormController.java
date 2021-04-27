@@ -13,6 +13,8 @@ import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.core.service.DataScopePowerManager;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.po.MetaFormModelDraft;
+import com.centit.metaform.service.MetaFormModelDraftManager;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.po.MetaColumn;
 import com.centit.product.metadata.po.MetaRelation;
@@ -53,12 +55,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,6 +75,9 @@ public class MetaFormController extends BaseController {
 
     @Autowired
     private MetaFormModelManager metaFormModelManager;
+
+    @Autowired
+    private MetaFormModelDraftManager metaFormModelDraftManager;
 
     @Autowired
     private MetaObjectService metaObjectService;
@@ -127,23 +130,27 @@ public class MetaFormController extends BaseController {
             name = "relationName", value = "字表关联关系名称，注意区分大小写。 " +
             "如果是作为子表模块使用的可以传default，这样会使用RELATION_ID属性获得关联关系",
             required = true, paramType = "path", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "isDraft", value = "表单状态（是否为草稿），true：查询草稿表单  false：查询已发布表单，默认为false，默认查询已发布的表单。",
+            dataType = "Boolean"
     )})
     @RequestMapping(value = "/{modelId}/tabulation/{relationName}", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
     public JSONArray listObjectsAsTabulation(@PathVariable String modelId, @PathVariable String relationName,
-                                             HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+                                             @RequestParam(required = false, defaultValue = "false") Boolean isDraft,HttpServletRequest request) {
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
         MetaRelation relation = null;
-        if(StringUtils.isNotBlank(relationName) && !"default".equals(relationName)) {
+        if (StringUtils.isNotBlank(relationName) && !"default".equals(relationName)) {
             relation = metaDataService.getMetaRelationByName(model.getTableId(), relationName);
         }
-        if(relation == null) {
+        if (relation == null) {
             relation = metaDataService.getMetaRelationById(model.getRelationId());
         }
-        if(relation == null) {
-           throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION,
-                   "找不到对应的关联字表信息");
+        if (relation == null) {
+            throw new ObjectException(ObjectException.DATA_NOT_FOUND_EXCEPTION,
+                    "找不到对应的关联字表信息");
         }
         Map<String, Object> parameters = collectRequestParameters(request);
         Map<String, Object> parentObject = metaObjectService
@@ -159,8 +166,26 @@ public class MetaFormController extends BaseController {
         return ja;
     }
 
+    /**
+     * @param modelId 模块代码
+     * @param isDraft 表单状态（是否为草稿），true：查询草稿表单  false：查询已发布表单
+     * @return
+     */
+    private MetaFormModel getMetaFormModel(String modelId, Boolean isDraft) {
+        if (isDraft) {
+            // 查询草稿表单
+            MetaFormModel model = new MetaFormModel();
+            MetaFormModelDraft modelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(StringUtils.trim(modelId));
+            BeanUtils.copyProperties(modelDraft, model);
+            return model;
+        } else {
+            // 查询已发布表单
+            return metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        }
+    }
+
     private JSONArray queryObjects(MetaFormModel model, PageDesc pageDesc,
-                                               String[] fields, HttpServletRequest request) {
+                                   String[] fields, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
 
         //String optId = FieldType.mapClassName(table.getTableName());
@@ -171,10 +196,10 @@ public class MetaFormController extends BaseController {
 
         String sql = model.getDataFilterSql();
         if (StringUtils.isNotBlank(sql) && StringUtils.equalsIgnoreCase("select", new Lexer(sql).getAWord())) {
-            if(WebOptUtils.getCurrentUserInfo(request)==null) {
-                throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
-                        "用户没有登录或者超时，请重新登录！");
-            }
+//            if(WebOptUtils.getCurrentUserInfo(request)==null) {
+//                throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,
+//                        "用户没有登录或者超时，请重新登录！");
+//            }
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
                     WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceData(params);
@@ -205,14 +230,14 @@ public class MetaFormController extends BaseController {
                 model.getTableId(), extFilter, params, fields, pageDesc);
     }
 
-    private JSONArray mapListPoToDto(JSONArray ja ) {
-        if(ja == null){
+    private JSONArray mapListPoToDto(JSONArray ja) {
+        if (ja == null) {
             return null;
         }
 
         JSONArray jsonArray = new JSONArray(ja.size());
         for (Object json : ja) {
-            if(json instanceof Map) {
+            if (json instanceof Map) {
                 jsonArray.add(mapPoToDto((Map<String, Object>) json));
             } else {
                 jsonArray.add(json);
@@ -225,11 +250,12 @@ public class MetaFormController extends BaseController {
     @RequestMapping(value = "/{modelId}/list", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
-    public PageQueryResult<Object> listObjects(@PathVariable String modelId, PageDesc pageDesc,
-                                               String[] fields, HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        //MetaFormModel model1=metaFormModelManager.getObjectByIdAndFile("D:\\D\\Projects\\RunData\\2019-12-24 153156",modelId);
-        if(model!=null) {
+    public PageQueryResult<Object> listObjects(@PathVariable String modelId, PageDesc pageDesc, String[] fields,
+                                               @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                               HttpServletRequest request) {
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
+        if (model != null) {
             JSONArray ja = queryObjects(model, pageDesc, fields, request);
             return PageQueryResult.createJSONArrayResult(ja, pageDesc);
         } else {
@@ -251,19 +277,23 @@ public class MetaFormController extends BaseController {
     ), @ApiImplicitParam(
             name = "children", value = "子表属性名列表，可以指定一个或者多个。 String[]",
             required = true, paramType = "query", dataTypeClass = String[].class
+    ), @ApiImplicitParam(
+            name = "isDraft", value = "表单状态（是否为草稿），true：查询草稿表单  false：查询已发布表单，默认为false，默认查询已发布的表单。",
+            dataType = "Boolean"
     )})
     @RequestMapping(value = "/{modelId}/listWithChildren", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
     public PageQueryResult<Object> listObjectsWithChildren(@PathVariable String modelId, PageDesc pageDesc,
-                                                     String [] fields,
-                                                     String [] parents, String [] children,
-                                                     HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        if(model != null) {
+                                                           String[] fields, String[] parents, String[] children,
+                                                           @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                                           HttpServletRequest request) {
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
+        if (model != null) {
             MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
             JSONArray ja = queryObjects(model, pageDesc, fields, request);
-            for(Object obj : ja){
+            for (Object obj : ja) {
                 metaObjectService.fetchObjectParentAndChildren(tableInfo, (JSONObject) obj,
                         parents, children);
             }
@@ -277,30 +307,32 @@ public class MetaFormController extends BaseController {
     @RequestMapping(value = "/{modelId}/export", method = RequestMethod.GET)
     @JdbcTransaction
     public void exportObjects(@PathVariable String modelId, PageDesc pageDesc,
-                               String jsonString,
+                              String jsonString,
+                              @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                               HttpServletRequest request,
                               HttpServletResponse response) throws IOException {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        Map<String,String> columnName=null;
-        if(null!=jsonString){
-            columnName=new LinkedHashMap<>();
-           String[] a= StringUtils.split(jsonString,";");
-           for(int i=0;i<a.length;i++){
-               String[] a0=StringUtils.split(a[i],",");
-               columnName.put(a0[0],a0[1]);
-           }
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
+        Map<String, String> columnName = null;
+        if (null != jsonString) {
+            columnName = new LinkedHashMap<>();
+            String[] a = StringUtils.split(jsonString, ";");
+            for (int i = 0; i < a.length; i++) {
+                String[] a0 = StringUtils.split(a[i], ",");
+                columnName.put(a0[0], a0[1]);
+            }
         }
 
         JSONArray ja = queryObjects(model, pageDesc, null, request);
-        if(ja == null || ja.isEmpty()){
+        if (ja == null || ja.isEmpty()) {
             throw new ObjectException(ResponseData.ERROR_NOT_FOUND, "没有查询到任务数据！");
         }
         List<String> property;//= new ArrayList<>();
         List<String> header = new ArrayList<>();
-        if(null!=columnName){
-            property=new ArrayList<>(columnName.keySet());
-            Collections.addAll(header,columnName.values().toArray(new String[0]));
-        }else {
+        if (null != columnName) {
+            property = new ArrayList<>(columnName.keySet());
+            Collections.addAll(header, columnName.values().toArray(new String[0]));
+        } else {
             MetaTable table = metaDataCache.getTableInfo(model.getTableId());
             Map<String, Object> firstRow = (Map<String, Object>) ja.get(0);
             property = new ArrayList<>(firstRow.keySet());
@@ -313,9 +345,9 @@ public class MetaFormController extends BaseController {
             }
         }
         InputStream excelStream = ExcelExportUtil.generateExcelStream(ja,
-                CollectionsOpt.listToArray(header),  CollectionsOpt.listToArray(property));
+                CollectionsOpt.listToArray(header), CollectionsOpt.listToArray(property));
         String fileName = URLEncoder.encode(model.getModelName(), "UTF-8") +
-                pageDesc.getRowStart()+"-"+pageDesc.getRowEnd()+"-" +pageDesc.getTotalRows() +
+                pageDesc.getRowStart() + "-" + pageDesc.getRowEnd() + "-" + pageDesc.getTotalRows() +
                 ".xlsx";
         response.setContentType(FileType.mapExtNameToMimeType("xlsx"));
         response.setHeader("Content-disposition", "attachment; filename=" + fileName);
@@ -329,19 +361,24 @@ public class MetaFormController extends BaseController {
     ), @ApiImplicitParam(
             name = "query", value = "检索关键字",
             required = true, paramType = "query", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "isDraft", value = "表单状态（是否为草稿），true：查询草稿表单  false：查询已发布表单，默认为false，默认查询已发布的表单。",
+            dataType = "Boolean"
     )})
     @RequestMapping(value = "/{modelId}/search", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
     public PageQueryResult<Map<String, Object>> searchObject(@PathVariable String modelId,
+                                                             @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                                              HttpServletRequest request, PageDesc pageDesc) {
-        if(esObjectSearcher==null){
+        if (esObjectSearcher == null) {
             throw new ObjectException(ObjectException.SYSTEM_CONFIG_ERROR, "没有正确配置Elastic Search");
         }
         Map<String, Object> queryParam = collectRequestParameters(request);
         Map<String, Object> searchQuery = new HashMap<>(10);
         String queryWord = StringBaseOpt.castObjectToString(queryParam.get("query"));
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
         searchQuery.put("optId", model.getTableId());
         Object user = queryParam.get("userCode");
         if (user != null) {
@@ -375,7 +412,7 @@ public class MetaFormController extends BaseController {
 
     private void saveFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request) {
         //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if (esObjectIndexer!=null && metaTable != null &&
+        if (esObjectIndexer != null && metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
@@ -392,7 +429,7 @@ public class MetaFormController extends BaseController {
 
     private void deleteFulltextIndex(Map<String, Object> obj, String tableId) {
         MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if (esObjectIndexer!=null && metaTable != null &&
+        if (esObjectIndexer != null && metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
@@ -407,7 +444,7 @@ public class MetaFormController extends BaseController {
 
     private void updataFulltextIndex(Map<String, Object> obj, MetaTable metaTable, HttpServletRequest request) {
         //MetaTable metaTable = metaDataCache.getTableInfo(tableId);
-        if (esObjectIndexer!=null && metaTable != null &&
+        if (esObjectIndexer != null && metaTable != null &&
                 ("T".equals(metaTable.getFulltextSearch())
                         // 用json格式保存在大字段中的内容不能用sql检索，必须用全文检索
                         || "C".equals(metaTable.getTableType()))) {
@@ -427,7 +464,7 @@ public class MetaFormController extends BaseController {
     private void checkUpdateTimeStamp(Map<String, Object> dbObject, Map<String, Object> object) {
         Object oldDate = dbObject.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
         Object newDate = object.get(MetaTable.UPDATE_CHECK_TIMESTAMP_PROP);
-        if (newDate==null || oldDate==null) return;
+        if (newDate == null || oldDate == null) return;
         if (!DatetimeOpt.equalOnSecond(DatetimeOpt.castObjectToDate(oldDate), DatetimeOpt.castObjectToDate(newDate))) {
             throw new ObjectException(CollectionsOpt.createHashMap(
                     "yourTimeStamp", newDate, "databaseTimeStamp", oldDate),
@@ -447,11 +484,16 @@ public class MetaFormController extends BaseController {
     ), @ApiImplicitParam(
             name = "jsonString", value = "需要修改的数据对象，一定要包括对象的主键或者工作流业务主键",
             required = true, paramType = "jsonString", dataType = "String"
+    ), @ApiImplicitParam(
+            name = "isDraft", value = "表单状态（是否为草稿），true：查询草稿表单  false：查询已发布表单，默认为false，默认查询已发布的表单。",
+            dataType = "Boolean"
     )})
     public void updateObjectPart(@PathVariable String modelId,
+                                 @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                  @RequestBody String jsonString, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
         JSONObject object = JSON.parseObject(jsonString);
         object.putAll(params);
         metaObjectService.updateObjectFields(model.getTableId(), params.keySet(), object);
@@ -471,13 +513,15 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public ResponseData batchUpdateObject(@PathVariable String modelId,
+                                          @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                           @RequestBody String jsonString, HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
         Map<String, Object> params = collectRequestParameters(request);
         JSONObject object = JSON.parseObject(jsonString);
-        int ireturn =metaObjectService.updateObjectsByProperties(model.getTableId(), object, params);
-        if (ireturn==0){
-           return ResponseData.makeErrorMessage("无对应sql生成");
+        int ireturn = metaObjectService.updateObjectsByProperties(model.getTableId(), object, params);
+        if (ireturn == 0) {
+            return ResponseData.makeErrorMessage("无对应sql生成");
         } else {
             return ResponseData.makeSuccessResponse();
         }
@@ -488,6 +532,7 @@ public class MetaFormController extends BaseController {
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> makeNewObject(@PathVariable String modelId,
+                                             @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                              HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
         JSONObject userDetails = WebOptUtils.getCurrentUserInfo(request);
@@ -495,7 +540,8 @@ public class MetaFormController extends BaseController {
             userDetails.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
         }
         parameters.put("currentUser", userDetails);
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
         Map<String, Object> newObject =
                 metaObjectService.makeNewObject(model.getTableId(), parameters);
         runJSEvent(model, newObject, "initNewObject", request);
@@ -516,18 +562,23 @@ public class MetaFormController extends BaseController {
     ), @ApiImplicitParam(
             name = "children", value = "子表属性名列表，可以指定一个或者多个。 String[]",
             required = true, paramType = "query", dataTypeClass = String[].class
+    ), @ApiImplicitParam(
+            name = "isDraft", value = "表单状态（是否为草稿），true：查询草稿表单  false：查询已发布表单，默认为false，默认查询已发布的表单。",
+            dataType = "Boolean"
     )})
     @RequestMapping(value = "/{modelId}", method = RequestMethod.GET)
     @WrapUpResponseBody
     @JdbcTransaction
     public Map<String, Object> getObjectWithChildren(@PathVariable String modelId,
-                                                     String [] fields,
-                                                     String [] parents, String [] children,
+                                                     String[] fields,
+                                                     String[] parents, String[] children,
+                                                     @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                                      HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        if(model.getTableId()==null) return null;
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
+        if (model.getTableId() == null) return null;
         MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
-        if (tableInfo==null) return null;
+        if (tableInfo == null) return null;
         Map<String, Object> parameters = collectRequestParameters(request);
         if ("C".equals(tableInfo.getTableType())) {
             if (tableInfo.countPkColumn() != 1) {
@@ -547,8 +598,8 @@ public class MetaFormController extends BaseController {
             }
         }
 
-        Map<String, Object> objectMap = (fields != null && fields.length>0) ||
-                (parents != null && parents.length>0) || (children != null && children.length>0) ?
+        Map<String, Object> objectMap = (fields != null && fields.length > 0) ||
+                (parents != null && parents.length > 0) || (children != null && children.length > 0) ?
                 metaObjectService.getObjectWithChildren(
                         model.getTableId(), parameters, fields, parents, children)
                 : metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
@@ -605,8 +656,10 @@ public class MetaFormController extends BaseController {
     @JdbcTransaction
     public void updateObjectWithChildren(@PathVariable String modelId,
                                          @RequestBody String jsonString,
+                                         @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                          HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         boolean writeLog = tableInfo.isWriteOptLog();
@@ -649,18 +702,19 @@ public class MetaFormController extends BaseController {
 
     }
 
-    @ApiOperation(value = "新增表单数据带子表")
+    @ApiOperation(value = "merge表单数据带子表")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.POST)
     @WrapUpResponseBody
     @JdbcTransaction
-    public Map<String, Object> saveObjectWithChildren(@PathVariable String modelId,
-                                                      @RequestBody String jsonString,
-                                                      HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+    public Map<String, Object> mergeObjectWithChildren(@PathVariable String modelId,
+                                                       @RequestBody String jsonString,
+                                                       @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                                       HttpServletRequest request) {
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        innerSaveObject(model, tableInfo, object, request);
-
+        innerMergeObject(model, tableInfo, object, request);
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if (tableInfo.isWriteOptLog()) {
             OperationLogCenter.logNewObject(request,
@@ -669,15 +723,41 @@ public class MetaFormController extends BaseController {
         return primaryKey;
     }
 
+    @ApiOperation(value = "批量merge表单数据带子表")
+    @RequestMapping(value = "/{modelId}/batch", method = RequestMethod.POST)
+    @WrapUpResponseBody
+    @JdbcTransaction
+    public List<Map<String, Object>> batchMergeObjectWithChildren(@PathVariable String modelId,
+                                                                  @RequestBody String jsonString,
+                                                                  @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                                                  HttpServletRequest request) {
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
+        JSONArray jsonArray = JSON.parseArray(jsonString);
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+        List<Map<String, Object>> list = new ArrayList<>();
+        jsonArray.stream().forEach(object -> {
+            innerMergeObject(model, tableInfo, (JSONObject) object, request);
+            Map<String, Object> primaryKey = tableInfo.fetchObjectPk((JSONObject) object);
+            if (tableInfo.isWriteOptLog()) {
+                OperationLogCenter.logNewObject(request,
+                        modelId, JSON.toJSONString(primaryKey), "save", "保存新的数据对象（包括子对象）", object);
+            }
+            list.add(primaryKey);
+        });
+        return list;
+    }
+
     @ApiOperation(value = "删除表单数据带子表")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.DELETE)
     @WrapUpResponseBody
     @JdbcTransaction
     public void deleteObjectWithChildren(@PathVariable String modelId,
+                                         @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                          HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         boolean writeLog = tableInfo.isWriteOptLog();
         Map<String, Object> dbObject = null;
@@ -765,17 +845,8 @@ public class MetaFormController extends BaseController {
         }
     }
 
-
-    @ApiOperation(value = "merge数据")
-    @RequestMapping(value = "/{modelId}/merge", method = RequestMethod.POST)
-    @WrapUpResponseBody
-    @JdbcTransaction
-    public Map<String, Object> mergeObjectWithChildren(@PathVariable String modelId,
-                                                      @RequestBody String jsonString,
-                                                      HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        JSONObject object = JSON.parseObject(jsonString);
-        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+    private void innerMergeObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
+                                  HttpServletRequest request) {
         Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
         Map<String, Object> dbObject = dbObjectPk == null ? null :
                 metaObjectService.getObjectById(model.getTableId(), dbObjectPk);
@@ -785,11 +856,25 @@ public class MetaFormController extends BaseController {
         } else {
             innerUpdateObject(model, tableInfo, object, dbObject, request);
         }
+    }
 
+    @ApiOperation(value = "新增数据")
+    @RequestMapping(value = "/{modelId}/add", method = RequestMethod.POST)
+    @WrapUpResponseBody
+    @JdbcTransaction
+    public Map<String, Object> addObjectWithChildren(@PathVariable String modelId,
+                                                     @RequestBody String jsonString,
+                                                     @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                                     HttpServletRequest request) {
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
+        JSONObject object = JSON.parseObject(jsonString);
+        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+        innerSaveObject(model, tableInfo, object, request);
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if (tableInfo.isWriteOptLog()) {
             OperationLogCenter.logNewObject(request,
-                    modelId, JSON.toJSONString(primaryKey), "merge", "保存新的数据对象（包括子对象）", object);
+                    modelId, JSON.toJSONString(primaryKey), "add", "保存新的数据对象（包括子对象）", object);
         }
         return primaryKey;
     }
@@ -814,8 +899,10 @@ public class MetaFormController extends BaseController {
     @JdbcTransaction
     public Map<String, Object> submitFlow(@PathVariable String modelId,
                                           @RequestBody String jsonString,
+                                          @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                           HttpServletRequest request) {
-        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
+        MetaFormModel model = getMetaFormModel(modelId, isDraft);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
@@ -830,12 +917,12 @@ public class MetaFormController extends BaseController {
             object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstId);
         }
         String userCode = fetchExtendParam("currentOperatorUserCode", object, request);
-        if(userCode.equals("")){
-            userCode=StringBaseOpt.castObjectToString(object.get("userCode"),"");
+        if (userCode.equals("")) {
+            userCode = StringBaseOpt.castObjectToString(object.get("userCode"), "");
         }
         String unitCode = fetchExtendParam("currentOperatorUnitCode", object, request);
-        if(unitCode.equals("")){
-            unitCode=StringBaseOpt.castObjectToString(object.get("unitCode"),"");
+        if (unitCode.equals("")) {
+            unitCode = StringBaseOpt.castObjectToString(object.get("unitCode"), "");
         }
         if (dbObject == null) {
             innerSaveObject(model, tableInfo, object, request);
