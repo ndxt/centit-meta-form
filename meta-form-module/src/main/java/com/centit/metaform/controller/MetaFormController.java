@@ -187,10 +187,10 @@ public class MetaFormController extends BaseController {
     private JSONArray queryObjects(MetaFormModel model, PageDesc pageDesc,
                                    String[] fields, HttpServletRequest request) {
         Map<String, Object> params = collectRequestParameters(request);//convertSearchColumn(request);
-
+        String topUnit = WebOptUtils.getCurrentTopUnit(request);
         //String optId = FieldType.mapClassName(table.getTableName());
         List<String> filters = queryDataScopeFilter.listUserDataFiltersByOptIdAndMethod(
-                WebOptUtils.getCurrentUserCode(request), model.getModelId(), "list");
+                topUnit, WebOptUtils.getCurrentUserCode(request), model.getModelId(), "list");
 
         //MetaTable tableInfo = this.metaDataCache.getTableInfo(model.getTableId());
 
@@ -201,7 +201,7 @@ public class MetaFormController extends BaseController {
 //                        "用户没有登录或者超时，请重新登录！");
 //            }
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
-                    WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
+                    WebOptUtils.getCurrentUserInfo(request), topUnit, WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceData(params);
             QueryAndNamedParams qap = dataPowerFilter.translateQuery(sql, filters);
             return metaObjectService.pageQueryObjects(
@@ -216,7 +216,7 @@ public class MetaFormController extends BaseController {
         if (filters != null) {
             MetaTable table = metaDataCache.getTableInfo(model.getTableId());
             DataPowerFilter dataPowerFilter = queryDataScopeFilter.createUserDataPowerFilter(
-                    WebOptUtils.getCurrentUserInfo(request), WebOptUtils.getCurrentUnitCode(request));
+                    WebOptUtils.getCurrentUserInfo(request), topUnit, WebOptUtils.getCurrentUnitCode(request));
             dataPowerFilter.addSourceData(params);
             Map<String, String> tableAlias = new HashMap<>(3);
             tableAlias.put(table.getTableName(), "");
