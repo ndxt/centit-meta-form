@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="FacetManager">
-    <facet type="Spring" name="Spring">
-      <configuration />
-    </facet>
-  </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
@@ -17,16 +12,27 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: com.centit.product:database-metadata:5.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.product:centit-dde-transaction:5.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba:druid:1.1.18" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.1.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: com.centit.product:database-design:5.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.product:fileserver-utils:3.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.product:fileserver-utils:5.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-fileupload:commons-fileupload:1.3.3" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.juniversalchardet:juniversalchardet:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: com.centit.product:centit-workflow-core:5.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-database:2.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.support:centit-compiler:2.3-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.h2database:h2:1.4.196" level="project" />
     <orderEntry type="library" name="Maven: com.centit.framework:centit-persistence-extend:5.1-SNAPSHOT" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.sun:tools:1.8">
+        <CLASSES>
+          <root url="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_291.jdk/Contents/Home/jre/../lib/tools.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: com.centit.support:centit-database-transaction:2.3-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.centit.support:centit-es-client:5.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.6.0" level="project" />
@@ -202,7 +208,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:rt:1.8">
         <CLASSES>
-          <root url="jar:///opt/develop/jvm/jdk1.8.0_201/jre/lib/rt.jar!/" />
+          <root url="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_291.jdk/Contents/Home/jre/lib/rt.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -211,7 +217,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:jce:1.8">
         <CLASSES>
-          <root url="jar:///opt/develop/jvm/jdk1.8.0_201/jre/lib/jce.jar!/" />
+          <root url="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_291.jdk/Contents/Home/jre/lib/jce.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -268,15 +274,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.1.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.1.5.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.2" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: com.sun:tools:1.8">
-        <CLASSES>
-          <root url="jar:///opt/develop/jvm/jdk1.8.0_201/lib/tools.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
@@ -285,7 +282,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.centit.framework:centit-persistence-flyway-plugin:5.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.flywaydb:flyway-core:4.2.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:5.1.5.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.product:fileserver-client:3.2-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.centit.product:fileserver-adapter:3.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.product:fileserver-client:5.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.centit.product:fileserver-adapter:5.1-SNAPSHOT" level="project" />
   </component>
 </module>
