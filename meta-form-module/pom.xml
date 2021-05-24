@@ -37,11 +37,6 @@
 
         <dependency>
             <groupId>com.centit.support</groupId>
-            <artifactId>centit-database-transaction</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.centit.support</groupId>
             <artifactId>centit-es-client</artifactId>
             <version>${centit.search.version}</version>
         </dependency>
@@ -63,12 +58,7 @@
             <artifactId>framework-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.centit.support</groupId>
-            <artifactId>centit-database-datasource</artifactId>
-        </dependency>
-
-        <dependency>
+         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>

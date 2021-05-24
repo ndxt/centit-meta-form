@@ -23,6 +23,7 @@ import com.centit.product.metadata.service.DatabaseRunTime;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.product.metadata.service.MetaDataService;
 import com.centit.product.metadata.service.MetaObjectService;
+import com.centit.product.metadata.transaction.MetadataJdbcTransaction;
 import com.centit.search.document.ObjectDocument;
 import com.centit.search.service.Impl.ESIndexer;
 import com.centit.search.service.Impl.ESSearcher;
@@ -33,7 +34,6 @@ import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.compiler.Lexer;
 import com.centit.support.compiler.Pretreatment;
-import com.centit.support.database.transaction.JdbcTransaction;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.support.database.utils.PersistenceException;
 import com.centit.support.database.utils.QueryAndNamedParams;
@@ -136,7 +136,7 @@ public class MetaFormController extends BaseController {
     )})
     @RequestMapping(value = "/{modelId}/tabulation/{relationName}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public JSONArray listObjectsAsTabulation(@PathVariable String modelId, @PathVariable String relationName,
                                              @RequestParam(required = false, defaultValue = "false") Boolean isDraft,HttpServletRequest request) {
 //        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
@@ -249,7 +249,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "分页查询表单数据列表，传入自定义表单模块id")
     @RequestMapping(value = "/{modelId}/list", method = RequestMethod.GET)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public PageQueryResult<Object> listObjects(@PathVariable String modelId, PageDesc pageDesc, String[] fields,
                                                @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                                HttpServletRequest request) {
@@ -283,7 +283,7 @@ public class MetaFormController extends BaseController {
     )})
     @RequestMapping(value = "/{modelId}/listWithChildren", method = RequestMethod.GET)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public PageQueryResult<Object> listObjectsWithChildren(@PathVariable String modelId, PageDesc pageDesc,
                                                            String[] fields, String[] parents, String[] children,
                                                            @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
@@ -305,7 +305,7 @@ public class MetaFormController extends BaseController {
 
     @ApiOperation(value = "导出表单数据列表可分页，传入自定义表单模块id")
     @RequestMapping(value = "/{modelId}/export", method = RequestMethod.GET)
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public void exportObjects(@PathVariable String modelId, PageDesc pageDesc,
                               String jsonString,
                               @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
@@ -367,7 +367,7 @@ public class MetaFormController extends BaseController {
     )})
     @RequestMapping(value = "/{modelId}/search", method = RequestMethod.GET)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public PageQueryResult<Map<String, Object>> searchObject(@PathVariable String modelId,
                                                              @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                                              HttpServletRequest request, PageDesc pageDesc) {
@@ -477,7 +477,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "修改表单指定字段;需要修改的字段在url中用参数拼接")
     @RequestMapping(value = "/{modelId}/change", method = RequestMethod.PUT)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     @ApiImplicitParams({@ApiImplicitParam(
             name = "modelId", value = "表单模块id",
             required = true, paramType = "path", dataType = "String"
@@ -511,7 +511,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "批量修改数据库表数据；过滤条件在参数中拼接，规则同查询参数")
     @RequestMapping(value = "/{modelId}/batch", method = RequestMethod.PUT)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public ResponseData batchUpdateObject(@PathVariable String modelId,
                                           @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                           @RequestBody String jsonString, HttpServletRequest request) {
@@ -530,7 +530,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "获取一个数据带子表，主键作为参数以key-value形式提交")
     @RequestMapping(value = "/{modelId}/new", method = RequestMethod.GET)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public Map<String, Object> makeNewObject(@PathVariable String modelId,
                                              @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                              HttpServletRequest request) {
@@ -568,7 +568,7 @@ public class MetaFormController extends BaseController {
     )})
     @RequestMapping(value = "/{modelId}", method = RequestMethod.GET)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public Map<String, Object> getObjectWithChildren(@PathVariable String modelId,
                                                      String[] fields,
                                                      String[] parents, String[] children,
@@ -653,7 +653,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "修改表单数据带子表")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.PUT)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public void updateObjectWithChildren(@PathVariable String modelId,
                                          @RequestBody String jsonString,
                                          @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
@@ -705,7 +705,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "merge表单数据带子表")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.POST)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public Map<String, Object> mergeObjectWithChildren(@PathVariable String modelId,
                                                        @RequestBody String jsonString,
                                                        @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
@@ -726,7 +726,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "批量merge表单数据带子表")
     @RequestMapping(value = "/{modelId}/batch", method = RequestMethod.POST)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public List<Map<String, Object>> batchMergeObjectWithChildren(@PathVariable String modelId,
                                                                   @RequestBody String jsonString,
                                                                   @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
@@ -751,7 +751,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "删除表单数据带子表")
     @RequestMapping(value = "/{modelId}", method = RequestMethod.DELETE)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public void deleteObjectWithChildren(@PathVariable String modelId,
                                          @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                          HttpServletRequest request) {
@@ -861,7 +861,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "新增数据")
     @RequestMapping(value = "/{modelId}/add", method = RequestMethod.POST)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public Map<String, Object> addObjectWithChildren(@PathVariable String modelId,
                                                      @RequestBody String jsonString,
                                                      @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
@@ -896,7 +896,7 @@ public class MetaFormController extends BaseController {
     @ApiOperation(value = "提交工作流")
     @RequestMapping(value = "/{modelId}/submit", method = RequestMethod.POST)
     @WrapUpResponseBody
-    @JdbcTransaction
+    @MetadataJdbcTransaction
     public Map<String, Object> submitFlow(@PathVariable String modelId,
                                           @RequestBody String jsonString,
                                           @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
