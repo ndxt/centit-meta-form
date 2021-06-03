@@ -571,7 +571,7 @@ public class MetaFormController extends BaseController {
     @MetadataJdbcTransaction
     public Map<String, Object> getObjectWithChildren(@PathVariable String modelId,
                                                      String[] fields,
-                                                     String[] parents, String[] children,
+                                                     String[] parents, String[] children,Integer withChildrenDeep,
                                                      @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
                                                      HttpServletRequest request) {
 //        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
@@ -602,7 +602,7 @@ public class MetaFormController extends BaseController {
                 (parents != null && parents.length > 0) || (children != null && children.length > 0) ?
                 metaObjectService.getObjectWithChildren(
                         model.getTableId(), parameters, fields, parents, children)
-                : metaObjectService.getObjectWithChildren(model.getTableId(), parameters, 1);
+                : metaObjectService.getObjectWithChildren(model.getTableId(), parameters, withChildrenDeep==null?1:withChildrenDeep);
 
         if ("C".equals(tableInfo.getTableType())) {
             return mapPoToDto(objectMap);
@@ -634,7 +634,7 @@ public class MetaFormController extends BaseController {
     }
 
     private void innerUpdateObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
-                                   Map<String, Object> dbObject, HttpServletRequest request) {
+                                   Map<String, Object> dbObject, HttpServletRequest request,Integer withChildrenDeep) {
         Map<String, Object> po = object;
         if ("C".equals(tableInfo.getTableType())) {
             po = mapDtoToPo(object);
@@ -644,7 +644,7 @@ public class MetaFormController extends BaseController {
             checkUpdateTimeStamp(dbObject, po);
         }
         if (runJSEvent(model, po, "beforeUpdate", request) == 0) {
-            metaObjectService.updateObjectWithChildren(model.getTableId(), object);
+            metaObjectService.updateObjectWithChildren(model.getTableId(), object,withChildrenDeep==null?1:withChildrenDeep);
         }
         // 更改索引
         updataFulltextIndex(object, tableInfo, request);
@@ -657,6 +657,7 @@ public class MetaFormController extends BaseController {
     public void updateObjectWithChildren(@PathVariable String modelId,
                                          @RequestBody String jsonString,
                                          @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                         Integer withChildrenDeep,
                                          HttpServletRequest request) {
 //        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         MetaFormModel model = getMetaFormModel(modelId, isDraft);
@@ -667,7 +668,7 @@ public class MetaFormController extends BaseController {
         if (writeLog || tableInfo.isUpdateCheckTimeStamp()) {
             dbObject = metaObjectService.getObjectWithChildren(model.getTableId(), object, 1);
         }
-        innerUpdateObject(model, tableInfo, object, dbObject, request);
+        innerUpdateObject(model, tableInfo, object, dbObject, request,withChildrenDeep);
 
         if (writeLog) {
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
@@ -677,7 +678,7 @@ public class MetaFormController extends BaseController {
     }
 
     private void innerSaveObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
-                                 HttpServletRequest request) {
+                                 HttpServletRequest request,Integer withChildrenDeep) {
         // 大字段 表格 只保存主键和 jsonObjectField 字段
         Map<String, Object> po = object;
         if ("C".equals(tableInfo.getTableType())) {
@@ -694,7 +695,7 @@ public class MetaFormController extends BaseController {
         parameters.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
 
         if (runJSEvent(model, po, "beforeSave", request) == 0) {
-            metaObjectService.saveObjectWithChildren(model.getTableId(), po, parameters);
+            metaObjectService.saveObjectWithChildren(model.getTableId(), po, parameters,withChildrenDeep==null?1:withChildrenDeep);
         }
 
         // 添加索引
@@ -709,12 +710,13 @@ public class MetaFormController extends BaseController {
     public Map<String, Object> mergeObjectWithChildren(@PathVariable String modelId,
                                                        @RequestBody String jsonString,
                                                        @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+            Integer withChildrenDeep,
                                                        HttpServletRequest request) {
 //        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         MetaFormModel model = getMetaFormModel(modelId, isDraft);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        innerMergeObject(model, tableInfo, object, request);
+        innerMergeObject(model, tableInfo, object, request,withChildrenDeep);
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if (tableInfo.isWriteOptLog()) {
             OperationLogCenter.logNewObject(request,
@@ -730,6 +732,7 @@ public class MetaFormController extends BaseController {
     public List<Map<String, Object>> batchMergeObjectWithChildren(@PathVariable String modelId,
                                                                   @RequestBody String jsonString,
                                                                   @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                                                  Integer  withChildrenDeep,
                                                                   HttpServletRequest request) {
 //        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         MetaFormModel model = getMetaFormModel(modelId, isDraft);
@@ -737,7 +740,7 @@ public class MetaFormController extends BaseController {
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
         List<Map<String, Object>> list = new ArrayList<>();
         jsonArray.stream().forEach(object -> {
-            innerMergeObject(model, tableInfo, (JSONObject) object, request);
+            innerMergeObject(model, tableInfo, (JSONObject) object, request,withChildrenDeep);
             Map<String, Object> primaryKey = tableInfo.fetchObjectPk((JSONObject) object);
             if (tableInfo.isWriteOptLog()) {
                 OperationLogCenter.logNewObject(request,
@@ -754,6 +757,7 @@ public class MetaFormController extends BaseController {
     @MetadataJdbcTransaction
     public void deleteObjectWithChildren(@PathVariable String modelId,
                                          @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                         Integer withChildrenDeep,
                                          HttpServletRequest request) {
         Map<String, Object> parameters = collectRequestParameters(request);
 //        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
@@ -766,7 +770,7 @@ public class MetaFormController extends BaseController {
         }
 
         if (runJSEvent(model, parameters, "beforeDelete", request) == 0) {
-            metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters);
+            metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters,withChildrenDeep);
         }
         // 删除索引
         deleteFulltextIndex(parameters, model.getTableId());
@@ -846,15 +850,15 @@ public class MetaFormController extends BaseController {
     }
 
     private void innerMergeObject(MetaFormModel model, MetaTable tableInfo, JSONObject object,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request,Integer withChildrenDeep) {
         Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
         Map<String, Object> dbObject = dbObjectPk == null ? null :
                 metaObjectService.getObjectById(model.getTableId(), dbObjectPk);
 
         if (dbObject == null) {
-            innerSaveObject(model, tableInfo, object, request);
+            innerSaveObject(model, tableInfo, object, request,withChildrenDeep);
         } else {
-            innerUpdateObject(model, tableInfo, object, dbObject, request);
+            innerUpdateObject(model, tableInfo, object, dbObject, request,withChildrenDeep);
         }
     }
 
@@ -865,12 +869,13 @@ public class MetaFormController extends BaseController {
     public Map<String, Object> addObjectWithChildren(@PathVariable String modelId,
                                                      @RequestBody String jsonString,
                                                      @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                                     Integer withChildrenDeep,
                                                      HttpServletRequest request) {
 //        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         MetaFormModel model = getMetaFormModel(modelId, isDraft);
         JSONObject object = JSON.parseObject(jsonString);
         MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        innerSaveObject(model, tableInfo, object, request);
+        innerSaveObject(model, tableInfo, object, request,withChildrenDeep);
         Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
         if (tableInfo.isWriteOptLog()) {
             OperationLogCenter.logNewObject(request,
@@ -900,6 +905,7 @@ public class MetaFormController extends BaseController {
     public Map<String, Object> submitFlow(@PathVariable String modelId,
                                           @RequestBody String jsonString,
                                           @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
+                                          Integer withChildrenDeep,
                                           HttpServletRequest request) {
 //        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         MetaFormModel model = getMetaFormModel(modelId, isDraft);
@@ -925,9 +931,9 @@ public class MetaFormController extends BaseController {
             unitCode = StringBaseOpt.castObjectToString(object.get("unitCode"), "");
         }
         if (dbObject == null) {
-            innerSaveObject(model, tableInfo, object, request);
+            innerSaveObject(model, tableInfo, object, request,withChildrenDeep);
         } else {
-            innerUpdateObject(model, tableInfo, object, dbObject, request);
+            innerUpdateObject(model, tableInfo, object, dbObject, request,withChildrenDeep);
         }
 
         if (runJSEvent(model, object, "beforeSubmit", request) != 0) {
