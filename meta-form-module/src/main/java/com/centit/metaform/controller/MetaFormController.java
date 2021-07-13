@@ -770,7 +770,7 @@ public class MetaFormController extends BaseController {
         }
 
         if (runJSEvent(model, parameters, "beforeDelete", request) == 0) {
-            metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters,withChildrenDeep);
+            metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters,withChildrenDeep==null?1:withChildrenDeep);
         }
         // 删除索引
         deleteFulltextIndex(parameters, model.getTableId());
