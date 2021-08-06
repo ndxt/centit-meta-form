@@ -291,7 +291,7 @@ public class MetaFormController extends BaseController {
 //        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
         MetaFormModel model = getMetaFormModel(modelId, isDraft);
         if (model != null) {
-            MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
+            MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
             JSONArray ja = queryObjects(model, pageDesc, fields, request);
             for (Object obj : ja) {
                 metaObjectService.fetchObjectParentAndChildren(tableInfo, (JSONObject) obj,
