@@ -10,7 +10,7 @@
     </parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.centit.product</groupId>
-	<version>5.1-SNAPSHOT</version>
+	<version>5.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 	<artifactId>centit-meta-form</artifactId>
 	<name>com.centit.product:centit-meta-form</name>
@@ -72,9 +72,7 @@
         <module>meta-form-module</module>
         <module>meta-form-view</module>
         <module>meta-form-web</module>
-        <module>meta-form-mongodb-plugin</module>
     </modules>
-
 
     <build>
         <plugins>
