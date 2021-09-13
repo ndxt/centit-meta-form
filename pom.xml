@@ -6,7 +6,7 @@
     <parent>
         <artifactId>framework-snapshot-dependencies</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>5.1-SNAPSHOT</version>
+        <version>5.2-SNAPSHOT</version>
     </parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.centit.product</groupId>
@@ -21,10 +21,10 @@
         <jdk.version>1.8</jdk.version>
         <jaxen.version>1.1.6</jaxen.version>
         <mongodb.version>3.11.2</mongodb.version>
-        <workflow.version>5.1-SNAPSHOT</workflow.version>
-        <common.module.version>5.1-SNAPSHOT</common.module.version>
+        <workflow.version>5.2-SNAPSHOT</workflow.version>
+        <common.module.version>5.2-SNAPSHOT</common.module.version>
         <metadata.commons.version>5.2-SNAPSHOT</metadata.commons.version>
-        <centit.search.version>5.1-SNAPSHOT</centit.search.version>
+        <centit.search.version>5.2-SNAPSHOT</centit.search.version>
     </properties>
 
     <licenses>
