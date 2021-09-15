@@ -113,9 +113,15 @@ public class MetaFormModel implements java.io.Serializable {
     @ApiModelProperty(value = "数据库ID")
     @DictionaryMap(value = "databaseInfo", fieldName = "databaseName")
     private String databaseCode;
-    @ApiModelProperty(value = "业务模块代码")
-    @Column(name = "APPLICATION_ID")
-    private String applicationId;
+
+    @ApiModelProperty(value = "应用id")
+    @Column(name = "os_id")
+    private String osId;
+
+    @ApiModelProperty(value = "所属业务")
+    @Column(name = "OPT_ID")
+    private String optId;
+
     @ApiModelProperty(value = "所属分组")
     @Column(name = "own_group")
     private String ownGroup;
@@ -244,7 +250,8 @@ public class MetaFormModel implements java.io.Serializable {
         this.relFlowCode = other.getRelFlowCode();
         this.modeOptUrl = other.getModeOptUrl();
         this.databaseCode = other.getDatabaseCode();
-        this.applicationId = other.getApplicationId();
+        this.osId = other.getOsId();
+        this.optId = other.getOptId();
         return this;
     }
 
@@ -279,10 +286,12 @@ public class MetaFormModel implements java.io.Serializable {
             this.modeOptUrl = other.getModeOptUrl();
         if (other.getDatabaseCode() != null)
             this.databaseCode = other.getDatabaseCode();
-        if (other.getApplicationId() != null)
-            this.applicationId = other.getApplicationId();
+        if (other.getOsId() != null)
+            this.osId = other.getOsId();
         if (other.getOwnGroup() != null)
             this.ownGroup = other.getOwnGroup();
+        if (other.getOptId()!=null)
+            this.optId=other.getOptId();
         return this;
     }
 

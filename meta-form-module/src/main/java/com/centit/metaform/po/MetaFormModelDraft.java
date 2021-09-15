@@ -110,9 +110,15 @@ public class MetaFormModelDraft implements java.io.Serializable {
     @ApiModelProperty(value = "数据库ID")
     @DictionaryMap(value = "databaseInfo", fieldName = "databaseName")
     private String databaseCode;
-    @ApiModelProperty(value = "业务模块代码")
-    @Column(name = "APPLICATION_ID")
-    private String applicationId;
+
+    @ApiModelProperty(value = "应用id")
+    @Column(name = "os_id")
+    private String osId;
+
+    @ApiModelProperty(value = "所属业务")
+    @Column(name = "OPT_ID")
+    private String optId;
+
     @ApiModelProperty(value = "所属分组")
     @Column(name = "own_group")
     private String ownGroup;
