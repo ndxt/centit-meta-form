@@ -104,13 +104,6 @@
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.centit.product</groupId>
-            <artifactId>fileserver-client</artifactId>
-            <version>5.2-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
 
 </project>
