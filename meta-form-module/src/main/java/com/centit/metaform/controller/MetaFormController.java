@@ -92,9 +92,6 @@ public class MetaFormController extends BaseController {
     private MetaDataCache metaDataCache;
 
     @Autowired
-    private FlowEngine flowEngine;
-
-    @Autowired
     private DataScopePowerManager queryDataScopeFilter;
 
     @Autowired
@@ -106,21 +103,6 @@ public class MetaFormController extends BaseController {
     @Autowired(required = false)
     private ESSearcher esObjectSearcher;
 
-    private int runJSEvent(MetaFormModel model, Map<String, Object> object,
-                           String event, HttpServletRequest request) {
-        if (StringUtils.isBlank(model.getExtendOptJs())) {
-            return 0;
-        }
-        MetaTable tableInfo = metaDataCache.getTableInfoAll(model.getTableId());
-        JSMateObjectEventRuntime jsMateObjectEvent = new JSMateObjectEventRuntime(
-                metaObjectService, databaseRunTime, notificationCenter, model, tableInfo, request);
-        jsMateObjectEvent.setFlowEngine(flowEngine);
-        int ret = jsMateObjectEvent.runEvent(event, object);
-        if (ret < 0) {
-            throw new ObjectException(ret, "外部事件" + event + "运行异常" + model.getExtendOptJs());
-        }
-        return ret;
-    }
 
     @ApiOperation(value = "查询作为子表表单数据列表，不分页；传入的参数为父表的主键")
     @ApiImplicitParams({@ApiImplicitParam(
@@ -544,7 +526,6 @@ public class MetaFormController extends BaseController {
         MetaFormModel model = getMetaFormModel(modelId, isDraft);
         Map<String, Object> newObject =
                 metaObjectService.makeNewObject(model.getTableId(), parameters);
-        runJSEvent(model, newObject, "initNewObject", request);
         return newObject;
     }
 
@@ -643,9 +624,6 @@ public class MetaFormController extends BaseController {
         if (tableInfo.isUpdateCheckTimeStamp()) {
             checkUpdateTimeStamp(dbObject, po);
         }
-        if (runJSEvent(model, po, "beforeUpdate", request) == 0) {
-            metaObjectService.updateObjectWithChildren(model.getTableId(), object,withChildrenDeep==null?1:withChildrenDeep);
-        }
         // 更改索引
         updataFulltextIndex(object, tableInfo, request);
     }
@@ -693,11 +671,6 @@ public class MetaFormController extends BaseController {
         Map<String, Object> parameters = collectRequestParameters(request);
         parameters.put("currentUser", userDetails);
         parameters.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
-
-        if (runJSEvent(model, po, "beforeSave", request) == 0) {
-            metaObjectService.saveObjectWithChildren(model.getTableId(), po, parameters,withChildrenDeep==null?1:withChildrenDeep);
-        }
-
         // 添加索引
         saveFulltextIndex(object, tableInfo, request);
 
@@ -767,10 +740,6 @@ public class MetaFormController extends BaseController {
         Map<String, Object> dbObject = null;
         if (writeLog) {
             dbObject = metaObjectService.getObjectById(model.getTableId(), parameters);
-        }
-
-        if (runJSEvent(model, parameters, "beforeDelete", request) == 0) {
-            metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters,withChildrenDeep==null?1:withChildrenDeep);
         }
         // 删除索引
         deleteFulltextIndex(parameters, model.getTableId());
@@ -883,130 +852,4 @@ public class MetaFormController extends BaseController {
         }
         return primaryKey;
     }
-
-    /**
-     * 提交工作流 ; 分两种情况
-     * 一： 新建业务，操作流程为， 保存表单，提交流程，这时表单对应的表中flowInstId字段必然为空，所以:
-     * 1,创建流程,获取流程实例编号回填到这个表单中
-     * 2,提交首节点，进入下一个节点(这个操作同时在流程引擎中执行)
-     * 二： 提交节点，操作流程如下:
-     * 1, 从工作流引擎中获得待办列表,通过这个待办列表进入节点实例
-     * 2, 进入节点实例分两种情况,新建表单或者修改表单,无论是那种情况表单中都有两个字段flowInstId和nodeInstId
-     * 3, 保存表单
-     * 4, 提交表单
-     *
-     * @param modelId    模块id
-     * @param jsonString 模块对象对应的主键
-     */
-    @ApiOperation(value = "提交工作流")
-    @RequestMapping(value = "/{modelId}/submit", method = RequestMethod.POST)
-    @WrapUpResponseBody
-    @MetadataJdbcTransaction
-    public Map<String, Object> submitFlow(@PathVariable String modelId,
-                                          @RequestBody String jsonString,
-                                          @RequestParam(required = false, defaultValue = "false") Boolean isDraft,
-                                          Integer withChildrenDeep,
-                                          HttpServletRequest request) {
-//        MetaFormModel model = metaFormModelManager.getObjectById(StringUtils.trim(modelId));
-        MetaFormModel model = getMetaFormModel(modelId, isDraft);
-        JSONObject object = JSON.parseObject(jsonString);
-        MetaTable tableInfo = metaDataCache.getTableInfo(model.getTableId());
-        Map<String, Object> dbObjectPk = tableInfo.fetchObjectPk(object);
-        Map<String, Object> dbObject = dbObjectPk == null ? null :
-                metaObjectService.getObjectById(model.getTableId(), dbObjectPk);
-        // 如果是节点提交 应该有节点实例号
-        String nodeInstId = fetchExtendParam("nodeInstId", object, request);
-        if (StringUtils.isBlank(nodeInstId)) {
-            nodeInstId = StringBaseOpt.castObjectToString(object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
-        } else {
-            //和流程过程对应的 表单 要写入 节点实例号
-            object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstId);
-        }
-        String userCode = fetchExtendParam("currentOperatorUserCode", object, request);
-        if (userCode.equals("")) {
-            userCode = StringBaseOpt.castObjectToString(object.get("userCode"), "");
-        }
-        String unitCode = fetchExtendParam("currentOperatorUnitCode", object, request);
-        if (unitCode.equals("")) {
-            unitCode = StringBaseOpt.castObjectToString(object.get("unitCode"), "");
-        }
-        if (dbObject == null) {
-            innerSaveObject(model, tableInfo, object, request,withChildrenDeep);
-        } else {
-            innerUpdateObject(model, tableInfo, object, dbObject, request,withChildrenDeep);
-        }
-
-        if (runJSEvent(model, object, "beforeSubmit", request) != 0) {
-            throw new ObjectException("beforeSubmit 执行错误！" + jsonString);
-        }
-
-        Object flowInstId = object.get("flowInstId");
-        if (flowInstId == null || StringUtils.isBlank(flowInstId.toString())) {
-            // create flow instance
-            try {
-                String flowCode = fetchExtendParam("flowCode", object, request);
-                if (StringUtils.isBlank(flowCode)) {
-                    flowCode = model.getRelFlowCode();
-                }
-                if (StringUtils.isBlank(flowCode)) {
-                    throw new ObjectException(model, "找不到对应的流程");
-                }
-                String flowOptTitle = fetchExtendParam("titleTemplate", object, request);
-                if (StringUtils.isBlank(flowOptTitle)) {
-                    flowOptTitle = model.getFlowOptTitle();
-                }
-                dbObjectPk = tableInfo.fetchObjectPk(object);
-
-                CreateFlowOptions options = CreateFlowOptions.create().flow(flowCode)
-                        .user(userCode)
-                        .unit(unitCode)
-                        .optName(Pretreatment.mapTemplateString(flowOptTitle, object))
-                        .optTag(dbObjectPk.size() == 1 ? StringBaseOpt.castObjectToString(dbObjectPk.values().iterator().next())
-                                : JSON.toJSONString(dbObjectPk));
-
-                fetchWorkflowVariables(options, model, object);
-
-                FlowInstance flowInstance = flowEngine.createInstance(options);
-
-                object.put(MetaTable.WORKFLOW_INST_ID_PROP, flowInstance.getFlowInstId());
-                NodeInstance nodeInstance = flowInstance.getFirstNodeInstance();
-                if (nodeInstance != null) {
-                    object.put(MetaTable.WORKFLOW_NODE_INST_ID_PROP, nodeInstance.getNodeInstId());
-                }
-                metaObjectService.updateObjectFields(model.getTableId(),
-                        CollectionsOpt.createList(
-                                MetaTable.WORKFLOW_INST_ID_PROP,
-                                MetaTable.WORKFLOW_NODE_INST_ID_PROP), object);
-
-
-                runJSEvent(model, object, "afterCreateFlow", request);
-            } catch (Exception e) {
-                throw new ObjectException(e);
-            }
-        } else {
-            if (StringUtils.isBlank(nodeInstId)) {
-                throw new ObjectException(WorkflowException.NodeInstNotFound, "找不到对应的节点实例号！" + jsonString);
-            }
-            SubmitOptOptions options = SubmitOptOptions.create().nodeInst(nodeInstId)
-                    .user(userCode)
-                    .unit(unitCode);
-            fetchWorkflowVariables(options, model, object);
-            // submit flow
-            /*Map<String, Object> s = */
-            flowEngine.submitOpt(options);
-            runJSEvent(model, object, "afterSubmit", request);
-        }
-
-
-        Map<String, Object> primaryKey = tableInfo.fetchObjectPk(object);
-        if (tableInfo.isWriteOptLog()) {
-            OperationLogCenter.logNewObject(request,
-                    modelId, JSON.toJSONString(primaryKey), "submit", "提交流程", object);
-        }
-
-        return CollectionsOpt.createHashMap(
-                MetaTable.WORKFLOW_INST_ID_PROP, object.get(MetaTable.WORKFLOW_INST_ID_PROP),
-                MetaTable.WORKFLOW_NODE_INST_ID_PROP, object.get(MetaTable.WORKFLOW_NODE_INST_ID_PROP));
-    }
-
 }

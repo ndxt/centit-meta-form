@@ -115,7 +115,7 @@ public class MetaFormModel implements java.io.Serializable {
     private String databaseCode;
 
     @ApiModelProperty(value = "应用id")
-    @Column(name = "os_id")
+    @Column(name = "OS_ID")
     private String osId;
 
     @ApiModelProperty(value = "所属业务")
@@ -129,14 +129,6 @@ public class MetaFormModel implements java.io.Serializable {
     @Column(name = "PUBLISH_DATE")
     private Date publishDate;
 
-    @OneToMany(targetEntity = MetaFormModel.class, mappedBy = "metaFormModel",
-            orphanRemoval = true,
-            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "MODEL_CODE", referencedColumnName = "MODEL_CODE")
-//    @OneToMany(mappedBy="parentModelCode",fetch = FetchType.EAGER)
-//    @JoinColumn(name = "MODEL_CODE", referencedColumnName = "PARENT_MODEL_CODE")
-//    @OrderBy(value="displayOrder asc")
-    private Set<MetaFormModel> childFormModels;
 
     @Transient
     private String relationName;
@@ -161,79 +153,6 @@ public class MetaFormModel implements java.io.Serializable {
         this.modelName = modelName;
     }
 
-
-    public Set<MetaFormModel> getMetaFormModels() {
-        if (this.childFormModels == null) {
-            this.childFormModels = new HashSet<>();
-        }
-        return this.childFormModels;
-    }
-
-    public void setMetaFormModels(Set<MetaFormModel> metaFormModels) {
-        this.childFormModels = metaFormModels;
-    }
-
-    public void addMetaFormModel(MetaFormModel metaFormModel) {
-        if (this.childFormModels == null) {
-            this.childFormModels = new HashSet<>();
-        }
-        this.childFormModels.add(metaFormModel);
-    }
-
-    public void removeMetaFormModel(MetaFormModel metaFormModel) {
-        if (this.childFormModels == null) {
-            return;
-        }
-        this.childFormModels.remove(metaFormModel);
-    }
-
-    /**
-     * 替换子类对象数组，这个函数主要是考虑hibernate中的对象的状态，以避免对象状态不一致的问题
-     */
-    public void replaceMetaFormModels(Set<MetaFormModel> set) {
-        List<MetaFormModel> newObjs = new ArrayList<MetaFormModel>();
-        for (MetaFormModel p : set) {
-            if (p == null)
-                continue;
-            MetaFormModel newdt = new MetaFormModel();
-            newdt.copyNotNullProperty(p);
-            newObjs.add(newdt);
-        }
-        //delete
-        boolean found = false;
-        Set<MetaFormModel> oldObjs = new HashSet<>();
-        oldObjs.addAll(getMetaFormModels());
-
-        for (Iterator<MetaFormModel> it = oldObjs.iterator(); it.hasNext(); ) {
-            MetaFormModel odt = it.next();
-            found = false;
-            for (MetaFormModel newdt : newObjs) {
-                if (odt.getModelId().equals(newdt.getModelId())) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-                removeMetaFormModel(odt);
-        }
-        oldObjs.clear();
-        //insert or update
-        for (MetaFormModel newdt : newObjs) {
-            found = false;
-            for (Iterator<MetaFormModel> it = getMetaFormModels().iterator();
-                 it.hasNext(); ) {
-                MetaFormModel odt = it.next();
-                if (odt.getModelId().equals(newdt.getModelId())) {
-                    odt.copy(newdt);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-                addMetaFormModel(newdt);
-        }
-    }
-
     public MetaFormModel copy(MetaFormModel other) {
         this.setModelId(other.getModelId());
         this.tableId = other.getTableId();
@@ -245,7 +164,6 @@ public class MetaFormModel implements java.io.Serializable {
         this.lastModifyDate = other.getLastModifyDate();
         this.recorder = other.getRecorder();
         this.extendOptJs = other.getExtendOptJs();
-        this.childFormModels = other.getMetaFormModels();
         this.dataFilterSql = other.getDataFilterSql();
         this.relFlowCode = other.getRelFlowCode();
         this.modeOptUrl = other.getModeOptUrl();
@@ -274,8 +192,6 @@ public class MetaFormModel implements java.io.Serializable {
             this.lastModifyDate = other.getLastModifyDate();
         if (other.getRecorder() != null)
             this.recorder = other.getRecorder();
-        if (other.getMetaFormModels() != null)
-            this.childFormModels = other.getMetaFormModels();
         if (other.getExtendOptJs() != null)
             this.extendOptJs = other.getExtendOptJs();
         if (other.getRelFlowCode() != null)
@@ -290,8 +206,8 @@ public class MetaFormModel implements java.io.Serializable {
             this.osId = other.getOsId();
         if (other.getOwnGroup() != null)
             this.ownGroup = other.getOwnGroup();
-        if (other.getOptId()!=null)
-            this.optId=other.getOptId();
+        if (other.getOptId() != null)
+            this.optId = other.getOptId();
         return this;
     }
 

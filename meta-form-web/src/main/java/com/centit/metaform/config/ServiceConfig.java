@@ -6,7 +6,6 @@ import com.centit.framework.config.SpringSecurityCasConfig;
 import com.centit.framework.config.SpringSecurityDaoConfig;
 import com.centit.framework.core.service.DataScopePowerManager;
 import com.centit.framework.core.service.impl.DataScopePowerManagerImpl;
-import com.centit.framework.ip.app.config.IPOrStaticAppSystemBeanConfig;
 import com.centit.framework.jdbc.config.JdbcConfig;
 import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.security.model.CentitPasswordEncoder;
@@ -21,15 +20,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.session.MapSessionRepository;
-import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 @ComponentScan(basePackages = {"com.centit"},
     excludeFilters = @ComponentScan.Filter(value = org.springframework.stereotype.Controller.class))
-@Import({IPOrStaticAppSystemBeanConfig.class,
+@Import({
         JdbcConfig.class,
         SpringSecurityDaoConfig.class,
         SpringSecurityCasConfig.class})
@@ -38,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServiceConfig {
 
     @Bean(name = "passwordEncoder")
-    public CentitPasswordEncoder centitPasswordEncoder(){
+    public StandardPasswordEncoderImpl passwordEncoder() {
         return new StandardPasswordEncoderImpl();
     }
 
