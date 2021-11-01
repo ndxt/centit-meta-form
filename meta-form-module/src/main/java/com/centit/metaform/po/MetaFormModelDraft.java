@@ -119,9 +119,9 @@ public class MetaFormModelDraft implements java.io.Serializable {
     @Column(name = "OPT_ID")
     private String optId;
 
-    @ApiModelProperty(value = "所属分组")
+   /* @ApiModelProperty(value = "所属分组")
     @Column(name = "own_group")
-    private String ownGroup;
+    private String ownGroup;*/
     @ApiModelProperty(value = "发布时间")
     @Column(name = "PUBLISH_DATE")
     private Date publishDate;

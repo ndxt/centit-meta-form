@@ -122,9 +122,9 @@ public class MetaFormModel implements java.io.Serializable {
     @Column(name = "OPT_ID")
     private String optId;
 
-    @ApiModelProperty(value = "所属分组")
+   /* @ApiModelProperty(value = "所属分组")
     @Column(name = "own_group")
-    private String ownGroup;
+    private String ownGroup;*/
     @ApiModelProperty(value = "发布时间")
     @Column(name = "PUBLISH_DATE")
     private Date publishDate;
@@ -204,8 +204,8 @@ public class MetaFormModel implements java.io.Serializable {
             this.databaseCode = other.getDatabaseCode();
         if (other.getOsId() != null)
             this.osId = other.getOsId();
-        if (other.getOwnGroup() != null)
-            this.ownGroup = other.getOwnGroup();
+        /*if (other.getOwnGroup() != null)
+            this.ownGroup = other.getOwnGroup();*/
         if (other.getOptId() != null)
             this.optId = other.getOptId();
         return this;
