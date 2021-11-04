@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
-import com.centit.metaform.po.MetaFormTemplate;
+import com.centit.metaform.dubbo.api.po.MetaFormTemplate;
 import com.centit.metaform.service.MetaFormTemplateService;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;

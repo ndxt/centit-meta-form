@@ -1,7 +1,7 @@
 package com.centit.metaform.dao;
 
 import com.centit.framework.jdbc.dao.BaseDaoImpl;
-import com.centit.metaform.po.MetaFormTemplate;
+import com.centit.metaform.dubbo.api.po.MetaFormTemplate;
 import org.springframework.stereotype.Repository;
 
 /**

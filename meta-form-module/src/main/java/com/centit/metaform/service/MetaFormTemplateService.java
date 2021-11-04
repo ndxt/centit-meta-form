@@ -1,7 +1,7 @@
 package com.centit.metaform.service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.centit.metaform.po.MetaFormTemplate;
+import com.centit.metaform.dubbo.api.po.MetaFormTemplate;
 import com.centit.support.database.utils.PageDesc;
 
 import java.util.Map;
