@@ -1,7 +1,7 @@
 package com.centit.metaform.service;
 
 import com.centit.framework.jdbc.service.BaseEntityManager;
-import com.centit.metaform.dubbo.api.po.MetaFormModel;
+import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 
 /**
  * MetaFormModel  Service.
@@ -10,5 +10,5 @@ import com.centit.metaform.dubbo.api.po.MetaFormModel;
  * 通用模块管理null
  */
 
-public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel, java.lang.String> , com.centit.metaform.dubbo.api.MetaFormModelManager {
+public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel, java.lang.String> , com.centit.metaform.dubbo.adapter.MetaFormModelManager {
 }

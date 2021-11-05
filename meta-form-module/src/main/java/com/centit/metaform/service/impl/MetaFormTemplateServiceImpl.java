@@ -2,7 +2,7 @@ package com.centit.metaform.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.centit.metaform.dao.MetaFormTemplateDao;
-import com.centit.metaform.dubbo.api.po.MetaFormTemplate;
+import com.centit.metaform.dubbo.adapter.po.MetaFormTemplate;
 import com.centit.metaform.service.MetaFormTemplateService;
 import com.centit.support.database.utils.PageDesc;
 import org.springframework.beans.factory.annotation.Autowired;

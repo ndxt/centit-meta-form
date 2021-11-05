@@ -1,4 +1,4 @@
-package com.centit.metaform.dubbo.api.po;
+package com.centit.metaform.dubbo.adapter.po;
 
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.core.dao.DictionaryMap;
@@ -12,22 +12,25 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * 自定义表单，未发布的表单
+ * create by scaffold 2016-06-02
+ * <p>
+ * <p>
+ * 通用模块管理null
  */
 @Data
 @Entity
-@Table(name = "M_META_FORM_MODEL_DRAFT")
-public class MetaFormModelDraft implements java.io.Serializable {
+@Table(name = "M_META_FORM_MODEL")
+public class MetaFormModel implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "模块代码", hidden = true)
     @Id
     @Column(name = "MODEL_ID")
+    //@GeneratedValue(generator = "paymentableGenerator")
     @ValueGenerator(strategy = GeneratorType.UUID22)
+    //@GenericGenerator(name = "paymentableGenerator", strategy = "assigned")
     private String modelId;
 
     @ApiModelProperty(value = "表ID")
@@ -112,7 +115,7 @@ public class MetaFormModelDraft implements java.io.Serializable {
     private String databaseCode;
 
     @ApiModelProperty(value = "应用id")
-    @Column(name = "os_id")
+    @Column(name = "OS_ID")
     private String osId;
 
     @ApiModelProperty(value = "所属业务")
@@ -126,54 +129,86 @@ public class MetaFormModelDraft implements java.io.Serializable {
     @Column(name = "PUBLISH_DATE")
     private Date publishDate;
 
-    @OneToMany(targetEntity = MetaFormModelDraft.class, mappedBy = "metaFormModel",
-            orphanRemoval = true,
-            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "MODEL_CODE", referencedColumnName = "MODEL_CODE")
-    private Set<MetaFormModelDraft> childFormModels;
 
     @Transient
     private String relationName;
 
     public String getRelationName() {
+        /*if (relationId != null && !"".equals(relationId)) {
+            relationName = this.modelName;
+        }*/
         return relationName;
     }
 
-
-    public MetaFormModelDraft() {
+    // Constructors
+    /* default constructor */
+    public MetaFormModel() {
     }
 
-    public MetaFormModelDraft(
+    /* minimal constructor */
+    public MetaFormModel(
             String modelId
             , String modelName) {
         this.modelId = modelId;
         this.modelName = modelName;
     }
 
-
-    public Set<MetaFormModelDraft> getMetaFormModels() {
-        if (this.childFormModels == null) {
-            this.childFormModels = new HashSet<>();
-        }
-        return this.childFormModels;
+    public MetaFormModel copy(MetaFormModel other) {
+        this.setModelId(other.getModelId());
+        this.tableId = other.getTableId();
+        this.modelComment = other.getModelComment();
+        this.modelName = other.getModelName();
+        this.modelType = other.getModelType();
+        this.formTemplate = other.getFormTemplate();
+        this.mobileFormTemplate = other.getMobileFormTemplate();
+        this.lastModifyDate = other.getLastModifyDate();
+        this.recorder = other.getRecorder();
+        this.extendOptJs = other.getExtendOptJs();
+        this.dataFilterSql = other.getDataFilterSql();
+        this.relFlowCode = other.getRelFlowCode();
+        this.modeOptUrl = other.getModeOptUrl();
+        this.databaseCode = other.getDatabaseCode();
+        this.osId = other.getOsId();
+        this.optId = other.getOptId();
+        return this;
     }
 
-    public void setMetaFormModels(Set<MetaFormModelDraft> metaFormModels) {
-        this.childFormModels = metaFormModels;
-    }
-
-    public void addMetaFormModel(MetaFormModelDraft metaFormModel) {
-        if (this.childFormModels == null) {
-            this.childFormModels = new HashSet<>();
-        }
-        this.childFormModels.add(metaFormModel);
-    }
-
-    public void removeMetaFormModel(MetaFormModelDraft metaFormModel) {
-        if (this.childFormModels == null) {
-            return;
-        }
-        this.childFormModels.remove(metaFormModel);
+    public MetaFormModel copyNotNullProperty(MetaFormModel other) {
+        if (other.getModelId() != null)
+            this.setModelId(other.getModelId());
+        if (other.getTableId() != null)
+            this.tableId = other.getTableId();
+        if (other.getModelComment() != null)
+            this.modelComment = other.getModelComment();
+        if (other.getModelName() != null)
+            this.modelName = other.getModelName();
+        if (other.getModelType() != null)
+            this.modelType = other.getModelType();
+        if (other.getFormTemplate() != null)
+            this.formTemplate = other.getFormTemplate();
+        if (other.getMobileFormTemplate() != null)
+            this.mobileFormTemplate = other.getMobileFormTemplate();
+        if (other.getLastModifyDate() != null)
+            this.lastModifyDate = other.getLastModifyDate();
+        if (other.getRecorder() != null)
+            this.recorder = other.getRecorder();
+        if (other.getExtendOptJs() != null)
+            this.extendOptJs = other.getExtendOptJs();
+        if (other.getRelFlowCode() != null)
+            this.relFlowCode = other.getRelFlowCode();
+        if (null != other.getDataFilterSql())
+            this.dataFilterSql = other.getDataFilterSql();
+        if (other.getModeOptUrl() != null)
+            this.modeOptUrl = other.getModeOptUrl();
+        if (other.getDatabaseCode() != null)
+            this.databaseCode = other.getDatabaseCode();
+        if (other.getOsId() != null)
+            this.osId = other.getOsId();
+        /*if (other.getOwnGroup() != null)
+            this.ownGroup = other.getOwnGroup();*/
+        if (other.getOptId() != null)
+            this.optId = other.getOptId();
+        return this;
     }
 
 }

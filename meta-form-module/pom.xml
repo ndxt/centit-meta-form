@@ -91,7 +91,7 @@
         </dependency>
         <dependency>
             <groupId>com.centit.product</groupId>
-            <artifactId>meta-form-dubbo-api</artifactId>
+            <artifactId>meta-form-dubbo-adapter</artifactId>
             <version>${project.version}</version>
         </dependency>
 

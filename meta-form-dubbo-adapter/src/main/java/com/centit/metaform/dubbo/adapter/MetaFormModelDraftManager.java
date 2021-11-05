@@ -1,7 +1,7 @@
-package com.centit.metaform.dubbo.api;
+package com.centit.metaform.dubbo.adapter;
 
 import com.alibaba.fastjson.JSONArray;
-import com.centit.metaform.dubbo.api.po.MetaFormModelDraft;
+import com.centit.metaform.dubbo.adapter.po.MetaFormModelDraft;
 import com.centit.support.database.utils.PageDesc;
 
 import java.util.Map;

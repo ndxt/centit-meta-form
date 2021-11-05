@@ -1,4 +1,4 @@
-package com.centit.metaform.dubbo.api.po;
+package com.centit.metaform.dubbo.adapter.po;
 
 import com.alibaba.fastjson.JSONObject;
 import com.centit.support.database.orm.GeneratorType;

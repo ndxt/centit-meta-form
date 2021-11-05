@@ -9,7 +9,7 @@
 	 http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!-- 生成远程服务代理，可以和本地bean一样使用; init默认false，即懒加载，可改为ture(饥饿加载)-->
-    <dubbo:reference  protocol="dubbo" id="metaFormModelManager" interface="com.centit.metaform.dubbo.api.MetaFormModelManager"  timeout="100000"   check="false" init="false"/>
+    <dubbo:reference  protocol="dubbo" id="metaFormModelManager" interface="com.centit.metaform.dubbo.adapter.MetaFormModelManager"  timeout="100000"   check="false" init="false"/>
     <!-- 指定请求服务地址 url="hessian://192.168.137.56:8087"-->
-    <dubbo:reference  protocol="dubbo"  id="metaFormModelDraftManager" interface="com.centit.metaform.dubbo.api.MetaFormModelDraftManager"   timeout="100000"  check="false" init="false"/>
+    <dubbo:reference  protocol="dubbo"  id="metaFormModelDraftManager" interface="com.centit.metaform.dubbo.adapter.MetaFormModelDraftManager"   timeout="100000"  check="false" init="false"/>
 </beans>
