@@ -1,6 +1,7 @@
 package com.centit.metaform.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
@@ -10,6 +11,7 @@ import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModelDraft;
 import com.centit.metaform.service.MetaFormModelDraftManager;
+import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.CollectionsOpt;
@@ -21,10 +23,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -45,6 +45,9 @@ public class MetaFormModelDraftController extends BaseController {
 
     @Autowired
     private MetaDataCache metaDataCache;
+
+    @Autowired
+    private MetaFormModelManager metaFormModelManager;
 
     /**
      * 查询 可以和流程关联的 模块 列表
@@ -193,5 +196,18 @@ public class MetaFormModelDraftController extends BaseController {
         metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModelDraft);
         return ResponseData.makeSuccessResponse("发布成功！");
     }
+
+    @ApiOperation(value = "修改表单所属业务模块")
+    @PutMapping(value = "/batchUpdateOptId")
+    @Transactional
+    public JSONObject batchUpdateOptId(String optId , @RequestBody List<String> modelIds) {
+        int[] metaFormModelDraftArr = metaFormModelDraftManager.batchUpdateOptId(optId, modelIds);
+        int[] metaFormModelArr = metaFormModelManager.batchUpdateOptId(optId, modelIds);
+        JSONObject result = new JSONObject();
+        result.put("metaFormModelDraftArr",metaFormModelDraftArr);
+        result.put("metaFormModelArr",metaFormModelArr);
+        return result;
+    }
+
 
 }

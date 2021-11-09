@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModelDraft;
 import com.centit.support.database.utils.PageDesc;
 
+import java.util.List;
 import java.util.Map;
 
 public interface MetaFormModelDraftManager {
@@ -19,4 +20,6 @@ public interface MetaFormModelDraftManager {
     void saveMetaFormModelDraft(MetaFormModelDraft metaFormModel);
 
     void deleteMetaFormModelDraftById(String modelId);
+
+    int[] batchUpdateOptId(String optId, List<String> modleIds);
 }

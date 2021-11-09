@@ -15,10 +15,13 @@ import com.centit.support.database.utils.QueryUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -93,6 +96,24 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
     @Override
     public void deleteMetaFormModelDraftById(String modelId) {
         metaFormModelDraftDao.deleteObjectById(modelId);
+    }
+
+    @Override
+    public int[] batchUpdateOptId(String optId, List<String> modleIds) {
+        String sql="UPDATE M_META_FORM_MODEL_DRAFT SET OPT_ID=? WHERE MODEL_ID = ? ";
+        int[] metaFormArr = metaFormModelDraftDao.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setString(1, optId);
+                ps.setString(2, modleIds.get(i));
+            }
+
+            @Override
+            public int getBatchSize() {
+                return modleIds.size();
+            }
+        });
+        return metaFormArr;
     }
 
 
