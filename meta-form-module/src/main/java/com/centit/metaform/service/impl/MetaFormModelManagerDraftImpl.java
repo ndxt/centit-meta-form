@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Service("metaFormModelManagerDraftImpl")
 public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager {
 
     @Autowired

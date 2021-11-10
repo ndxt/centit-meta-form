@@ -41,7 +41,7 @@ import java.util.Map;
  * <p>
  * 通用模块管理null
  */
-@Service
+@Service("metaFormModelManagerImpl")
 public class MetaFormModelManagerImpl
         extends BaseEntityManagerImpl<MetaFormModel, java.lang.String, MetaFormModelDao>
         implements BaseEntityManager<MetaFormModel, String>, MetaFormModelManager {
