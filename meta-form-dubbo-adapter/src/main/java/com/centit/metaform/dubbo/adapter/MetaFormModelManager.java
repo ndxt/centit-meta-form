@@ -1,6 +1,7 @@
 package com.centit.metaform.dubbo.adapter;
 
 import com.alibaba.fastjson.JSONArray;
+import com.centit.framework.jdbc.service.BaseEntityManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.support.database.utils.PageDesc;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  * 通用模块管理null
  */
 
-public interface MetaFormModelManager {
+public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel, String> {
 
     JSONArray listMetaFormModelsAsJson(String[] fields, Map<String, Object> filterMap, PageDesc pageDesc);
 

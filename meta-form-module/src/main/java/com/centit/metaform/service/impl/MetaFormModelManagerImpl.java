@@ -4,10 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.jdbc.dao.DatabaseOptUtils;
+import com.centit.framework.jdbc.service.BaseEntityManager;
 import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
 import com.centit.metaform.dao.MetaFormModelDao;
+import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
-import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.product.metadata.dao.MetaTableDao;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
@@ -43,7 +44,7 @@ import java.util.Map;
 @Service
 public class MetaFormModelManagerImpl
         extends BaseEntityManagerImpl<MetaFormModel, java.lang.String, MetaFormModelDao>
-        implements MetaFormModelManager {
+        implements BaseEntityManager<MetaFormModel, String>, MetaFormModelManager {
 
     public static final Log log = LogFactory.getLog(MetaFormModelManager.class);
 
