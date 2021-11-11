@@ -72,9 +72,9 @@
         <module>meta-form-module</module>
         <module>meta-form-view</module>
         <module>meta-form-web</module>
+        <module>meta-form-dubbo-adapter</module>
         <module>meta-form-dubbo-server-config</module>
         <module>meta-form-dubbo-client-config</module>
-        <module>meta-form-dubbo-adapter</module>
     </modules>
 
     <build>
