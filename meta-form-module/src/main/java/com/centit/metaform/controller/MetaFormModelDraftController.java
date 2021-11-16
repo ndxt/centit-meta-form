@@ -8,13 +8,17 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
+import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.metaform.dubbo.adapter.MetaFormModelDraftManager;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModelDraft;
+import com.centit.product.adapter.api.WorkGroupManager;
+import com.centit.product.adapter.po.WorkGroup;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.common.ObjectException;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
@@ -27,10 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 编辑的表单管理（未发布表单）
@@ -48,6 +49,9 @@ public class MetaFormModelDraftController extends BaseController {
 
     @Autowired
     private MetaFormModelManager metaFormModelManager;
+
+    @Autowired
+    private WorkGroupManager workGroupManager;
 
     /**
      * 查询 可以和流程关联的 模块 列表
@@ -131,10 +135,16 @@ public class MetaFormModelDraftController extends BaseController {
      *
      * @param modelId Model_Id
      */
-    @ApiOperation(value = "删除单个未发布的通用模块")
-    @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
+    @ApiOperation(value = "删除单个通用模块")
+    @RequestMapping(value = "/{osId}/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
-    public void deleteMetaFormModel(@PathVariable String modelId) {
+    public void deleteMetaFormModel(@PathVariable String osId,@PathVariable String modelId,HttpServletRequest request) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("groupId",osId);
+        List<WorkGroup> workGroups = workGroupManager.listWorkGroup(param, null);
+        if (MetaFormModelController.notHaveAuth(workGroups)){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         metaFormModelDraftManager.deleteMetaFormModelDraftById(modelId);
     }
 

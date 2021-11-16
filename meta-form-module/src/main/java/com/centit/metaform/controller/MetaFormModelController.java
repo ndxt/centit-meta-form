@@ -2,16 +2,22 @@ package com.centit.metaform.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
+import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
+import com.centit.product.adapter.api.WorkGroupManager;
+import com.centit.product.adapter.po.WorkGroup;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.StringBaseOpt;
+import com.centit.support.common.ObjectException;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
@@ -29,10 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * MetaFormModel  Controller.
@@ -52,6 +55,9 @@ public class MetaFormModelController extends BaseController {
 
     @Autowired
     private MetaDataCache metaDataCache;
+
+    @Autowired
+    private WorkGroupManager workGroupManager;
 
     /**
      * 查询所有   通用模块管理  列表
@@ -165,15 +171,37 @@ public class MetaFormModelController extends BaseController {
         return model.getModelId();
     }
 
+    public static boolean notHaveAuth(List<WorkGroup> workGroups) {
+        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
+        if (StringBaseOpt.isNvl(loginUser)) {
+            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
+        }
+        if (StringBaseOpt.isNvl(loginUser)) {
+            return true;
+        }
+        for (WorkGroup workGroup : workGroups) {
+            if (workGroup.getWorkGroupParameter().getUserCode().equals(loginUser)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * 删除单个  通用模块管理
      *
      * @param modelId Model_Id
      */
     @ApiOperation(value = "删除单个通用模块")
-    @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{osId}/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
-    public void deleteMetaFormModel(@PathVariable String modelId) {
+    public void deleteMetaFormModel(@PathVariable String osId,@PathVariable String modelId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("groupId",osId);
+        List<WorkGroup> workGroups = workGroupManager.listWorkGroup(param, null);
+        if (notHaveAuth(workGroups)){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         metaFormModelMag.deleteObjectById(modelId);
     }
 
