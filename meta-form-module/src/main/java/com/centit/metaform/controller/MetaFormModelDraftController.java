@@ -8,13 +8,11 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
-import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.metaform.dubbo.adapter.MetaFormModelDraftManager;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModelDraft;
 import com.centit.product.adapter.api.WorkGroupManager;
-import com.centit.product.adapter.po.WorkGroup;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.CollectionsOpt;
@@ -31,7 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 编辑的表单管理（未发布表单）
@@ -126,6 +127,9 @@ public class MetaFormModelDraftController extends BaseController {
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         metaFormModel.setRecorder(usercode);
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId())){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         metaFormModelDraftManager.saveMetaFormModelDraft(metaFormModel);
         return metaFormModel.getModelId();
     }
@@ -166,6 +170,9 @@ public class MetaFormModelDraftController extends BaseController {
         /*metaFormModel.setFormTemplate(JSON
                 JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId())){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModel);
         return metaFormModel.getLastModifyDate();
     }
@@ -184,6 +191,9 @@ public class MetaFormModelDraftController extends BaseController {
     public ResponseData publishMetaFormModel(@PathVariable String modelId, HttpServletRequest request) {
         // 获取草稿状态的表单
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId())){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         if (metaFormModelDraft == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
         }

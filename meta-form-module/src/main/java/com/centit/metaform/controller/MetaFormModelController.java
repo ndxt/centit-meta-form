@@ -8,15 +8,12 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
-import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.product.adapter.api.WorkGroupManager;
-import com.centit.product.adapter.po.WorkGroup;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
@@ -35,7 +32,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * MetaFormModel  Controller.
@@ -161,6 +161,9 @@ public class MetaFormModelController extends BaseController {
     @WrapUpResponseBody
     public String createMetaFormModel(@RequestBody MetaFormModel metaFormModel,
                                       HttpServletRequest request) {
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId())){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         MetaFormModel model = new MetaFormModel();
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         model.copyNotNullProperty(metaFormModel);
@@ -207,6 +210,9 @@ public class MetaFormModelController extends BaseController {
         /*metaFormModel.setFormTemplate(JSON
                 JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId())){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         metaFormModelMag.updateMetaFormModel(metaFormModel);
         return metaFormModel.getLastModifyDate();
     }
@@ -253,6 +259,9 @@ public class MetaFormModelController extends BaseController {
                                    @RequestBody JSONObject formTemplate,
                                    String type) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId())){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         if (StringUtils.equalsAnyIgnoreCase(type, "m", "mo", "mobile")) {
             metaFormModel.setMobileFormTemplate(formTemplate);
         } else {
@@ -267,6 +276,9 @@ public class MetaFormModelController extends BaseController {
     public void updateFormOptJs(@PathVariable String modelId,
                                 @RequestBody String formOptjs) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId())){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(formOptjs));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
@@ -284,6 +296,9 @@ public class MetaFormModelController extends BaseController {
     public void updateFormFlow(@PathVariable String modelId,
                                @RequestBody String relFlowCode) {
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId())){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+        }
         metaFormModel.setRelFlowCode(
                 StringUtils.substring(
                         StringEscapeUtils.unescapeHtml4(relFlowCode), 0, 64));
