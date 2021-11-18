@@ -8,6 +8,7 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
+import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.metaform.dubbo.adapter.MetaFormModelDraftManager;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
@@ -16,6 +17,7 @@ import com.centit.product.adapter.api.WorkGroupManager;
 import com.centit.product.metadata.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
@@ -127,7 +129,11 @@ public class MetaFormModelDraftController extends BaseController {
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         metaFormModel.setRecorder(usercode);
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId())){
+        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
+        if (StringBaseOpt.isNvl(loginUser)) {
+            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
+        }
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
         }
         metaFormModelDraftManager.saveMetaFormModelDraft(metaFormModel);
@@ -143,7 +149,11 @@ public class MetaFormModelDraftController extends BaseController {
     @RequestMapping(value = "/{osId}/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
     public void deleteMetaFormModel(@PathVariable String osId,@PathVariable String modelId,HttpServletRequest request) {
-        if (!workGroupManager.loginUserIsExistWorkGroup(osId)){
+        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
+        if (StringBaseOpt.isNvl(loginUser)) {
+            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
+        }
+        if (!workGroupManager.loginUserIsExistWorkGroup(osId,loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
         }
         metaFormModelDraftManager.deleteMetaFormModelDraftById(modelId);
@@ -170,7 +180,11 @@ public class MetaFormModelDraftController extends BaseController {
         /*metaFormModel.setFormTemplate(JSON
                 JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId())){
+        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
+        if (StringBaseOpt.isNvl(loginUser)) {
+            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
+        }
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
         }
         metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModel);
@@ -189,9 +203,13 @@ public class MetaFormModelDraftController extends BaseController {
     @RequestMapping(value = "/publish/{modelId}", method = {RequestMethod.POST})
     @WrapUpResponseBody
     public ResponseData publishMetaFormModel(@PathVariable String modelId, HttpServletRequest request) {
+        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
+        if (StringBaseOpt.isNvl(loginUser)) {
+            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
+        }
         // 获取草稿状态的表单
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId())){
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
         }
         if (metaFormModelDraft == null) {
