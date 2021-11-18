@@ -139,10 +139,7 @@ public class MetaFormModelDraftController extends BaseController {
     @RequestMapping(value = "/{osId}/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
     public void deleteMetaFormModel(@PathVariable String osId,@PathVariable String modelId,HttpServletRequest request) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("groupId",osId);
-        List<WorkGroup> workGroups = workGroupManager.listWorkGroup(param, null);
-        if (MetaFormModelController.notHaveAuth(workGroups)){
+        if (!workGroupManager.loginUserIsExistWorkGroup(osId)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
         }
         metaFormModelDraftManager.deleteMetaFormModelDraftById(modelId);
