@@ -32,4 +32,6 @@ public interface MetaFormModelManager extends BaseEntityManager<MetaFormModel, S
     MetaFormModel getObjectByIdAndFile(String filePath, String modelId);
 
     int[] batchUpdateOptId(String optId, List<String> modleIds);
+
+    List listModelByOptId(String optId);
 }

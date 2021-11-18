@@ -46,6 +46,7 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel, java.lang.Strin
         filterField.put("lastModifyDate", CodeBook.EQUAL_HQL_ID);
         filterField.put("recorder", CodeBook.EQUAL_HQL_ID);
         filterField.put("databaseCode", CodeBook.EQUAL_HQL_ID);
+        filterField.put("(splitforin)optids", "opt_id in (:optids)");
         return filterField;
     }
 

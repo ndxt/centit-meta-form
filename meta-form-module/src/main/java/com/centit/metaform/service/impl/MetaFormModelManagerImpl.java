@@ -3,14 +3,20 @@ package com.centit.metaform.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.centit.framework.common.WebOptUtils;
+import com.centit.framework.components.CodeRepositoryUtil;
+import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import com.centit.framework.jdbc.service.BaseEntityManager;
 import com.centit.framework.jdbc.service.BaseEntityManagerImpl;
+import com.centit.framework.model.basedata.IOptInfo;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.product.metadata.dao.MetaTableDao;
 import com.centit.product.metadata.po.MetaTable;
+import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
 import com.centit.support.database.orm.JpaMetadata;
 import com.centit.support.database.orm.TableMapInfo;
@@ -30,10 +36,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * MetaFormModel  Service.
@@ -178,5 +182,31 @@ public class MetaFormModelManagerImpl
     }
 
 
+    @Override
+    public List listModelByOptId(String optId) {
+        optId = getOptIdWithCommon(optId);
+        List<MetaFormModel> metaFormModelList = metaFormModelDao.listObjects(CollectionsOpt.createHashMap("optids", optId));
+        return metaFormModelList.stream().map(metaFormModel -> {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("modelId", metaFormModel.getModelId());
+            map.put("modelName", metaFormModel.getModelName());
+            return map;
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据optId获取包含通用模板的optId字符串
+     * @param optId
+     * @return
+     */
+    private String getOptIdWithCommon(String optId) {
+        String topUnit = WebOptUtils.getCurrentTopUnit(RequestThreadLocal.getLocalThreadWrapperRequest());
+        IOptInfo commonOptInfo = CodeRepositoryUtil.getCommonOptId(topUnit, optId);
+        if (commonOptInfo != null) {
+            String commonOptId = commonOptInfo.getOptId();
+            return StringBaseOpt.concat(optId, ",", commonOptId);
+        }
+        return optId;
+    }
 }
 

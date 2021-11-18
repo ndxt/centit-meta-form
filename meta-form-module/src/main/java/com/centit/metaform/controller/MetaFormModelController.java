@@ -304,4 +304,10 @@ public class MetaFormModelController extends BaseController {
                         StringEscapeUtils.unescapeHtml4(relFlowCode), 0, 64));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
+    @ApiOperation(value = "根据optId获取模板名和模块id")
+    @RequestMapping(value = "/metaform/{optId}", method = {RequestMethod.GET})
+    @WrapUpResponseBody
+    public ResponseData listModelByOptId(@PathVariable String optId) {
+        return ResponseData.makeResponseData(metaFormModelMag.listModelByOptId(optId));
+    }
 }
