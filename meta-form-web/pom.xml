@@ -11,6 +11,10 @@
     <packaging>war</packaging>
     <artifactId>meta-form-web</artifactId>
 
+    <properties>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.centit.product</groupId>
