@@ -34,10 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * MetaFormModel  Controller.
@@ -167,8 +164,11 @@ public class MetaFormModelController extends BaseController {
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
+        if (StringUtils.isBlank(loginUser)){
+            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY, "您未登录！");
+        }
         if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
-            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         MetaFormModel model = new MetaFormModel();
         String usercode = WebOptUtils.getCurrentUnitCode(request);
@@ -193,8 +193,11 @@ public class MetaFormModelController extends BaseController {
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
+        if (StringUtils.isBlank(loginUser)){
+            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY, "您未登录！");
+        }
         if (!workGroupManager.loginUserIsExistWorkGroup(osId,loginUser)){
-            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelMag.deleteObjectById(modelId);
     }
@@ -224,8 +227,11 @@ public class MetaFormModelController extends BaseController {
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
+        if (StringUtils.isBlank(loginUser)){
+            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY,"您未登录！");
+        }
         if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
-            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelMag.updateMetaFormModel(metaFormModel);
         return metaFormModel.getLastModifyDate();
@@ -277,8 +283,11 @@ public class MetaFormModelController extends BaseController {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        if (StringUtils.isBlank(loginUser)){
+            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY,"您未登录！");
+        }
         if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
-            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         if (StringUtils.equalsAnyIgnoreCase(type, "m", "mo", "mobile")) {
             metaFormModel.setMobileFormTemplate(formTemplate);
@@ -297,9 +306,12 @@ public class MetaFormModelController extends BaseController {
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
+        if (StringUtils.isBlank(loginUser)){
+            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY,"您未登录！");
+        }
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
-            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(formOptjs));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
@@ -321,9 +333,12 @@ public class MetaFormModelController extends BaseController {
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
+        if (StringUtils.isBlank(loginUser)){
+            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY, "您未登录！");
+        }
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
-            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您未登录或没有权限！");
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModel.setRelFlowCode(
                 StringUtils.substring(
