@@ -135,7 +135,7 @@ public class MetaFormModelDraftController extends BaseController {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
         if (StringUtils.isBlank(loginUser)){
-            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY, "您未登录！");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
         if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
@@ -158,7 +158,7 @@ public class MetaFormModelDraftController extends BaseController {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
         if (StringUtils.isBlank(loginUser)){
-            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY, "您未登录！");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
         if (!workGroupManager.loginUserIsExistWorkGroup(osId,loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
@@ -192,7 +192,7 @@ public class MetaFormModelDraftController extends BaseController {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
         if (StringUtils.isBlank(loginUser)){
-            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY, "您未登录！");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
         if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
@@ -218,7 +218,7 @@ public class MetaFormModelDraftController extends BaseController {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
         if (StringUtils.isBlank(loginUser)){
-            throw new ObjectException(ResponseData.HTTP_MOVE_TEMPORARILY, "您未登录！");
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
         // 获取草稿状态的表单
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
