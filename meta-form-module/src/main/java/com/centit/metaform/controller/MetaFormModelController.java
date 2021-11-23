@@ -186,9 +186,9 @@ public class MetaFormModelController extends BaseController {
      * @param modelId Model_Id
      */
     @ApiOperation(value = "删除单个通用模块")
-    @RequestMapping(value = "/{osId}/{modelId}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
-    public void deleteMetaFormModel(@PathVariable String osId,@PathVariable String modelId) {
+    public void deleteMetaFormModel(@PathVariable String modelId) {
         String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
@@ -196,7 +196,8 @@ public class MetaFormModelController extends BaseController {
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!workGroupManager.loginUserIsExistWorkGroup(osId,loginUser)){
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelMag.deleteObjectById(modelId);
