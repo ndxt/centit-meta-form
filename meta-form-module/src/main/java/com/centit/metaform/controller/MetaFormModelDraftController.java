@@ -9,6 +9,7 @@ import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.filter.RequestThreadLocal;
+import com.centit.metaform.dao.MetaFormModelDraftParam;
 import com.centit.metaform.dubbo.adapter.MetaFormModelDraftManager;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
@@ -245,9 +246,9 @@ public class MetaFormModelDraftController extends BaseController {
     @ApiOperation(value = "修改表单所属业务模块")
     @PutMapping(value = "/batchUpdateOptId")
     @Transactional
-    public JSONObject batchUpdateOptId(@RequestBody String optId , @RequestBody String[] modelIds) {
-        int[] metaFormModelDraftArr = metaFormModelDraftManager.batchUpdateOptId(optId, Arrays.asList(modelIds));
-        int[] metaFormModelArr = metaFormModelManager.batchUpdateOptId(optId, Arrays.asList(modelIds));
+    public JSONObject batchUpdateOptId( @RequestBody MetaFormModelDraftParam metaFormModelDraftParam) {
+        int[] metaFormModelDraftArr = metaFormModelDraftManager.batchUpdateOptId(metaFormModelDraftParam.getOptId(), Arrays.asList(metaFormModelDraftParam.getModelIds()));
+        int[] metaFormModelArr = metaFormModelManager.batchUpdateOptId(metaFormModelDraftParam.getOptId(), Arrays.asList(metaFormModelDraftParam.getModelIds()));
         JSONObject result = new JSONObject();
         result.put("metaFormModelDraftArr",metaFormModelDraftArr);
         result.put("metaFormModelArr",metaFormModelArr);
