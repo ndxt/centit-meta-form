@@ -32,10 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 编辑的表单管理（未发布表单）
@@ -248,9 +245,9 @@ public class MetaFormModelDraftController extends BaseController {
     @ApiOperation(value = "修改表单所属业务模块")
     @PutMapping(value = "/batchUpdateOptId")
     @Transactional
-    public JSONObject batchUpdateOptId(String optId , @RequestBody List<String> modelIds) {
-        int[] metaFormModelDraftArr = metaFormModelDraftManager.batchUpdateOptId(optId, modelIds);
-        int[] metaFormModelArr = metaFormModelManager.batchUpdateOptId(optId, modelIds);
+    public JSONObject batchUpdateOptId(@RequestBody String optId , @RequestBody String[] modelIds) {
+        int[] metaFormModelDraftArr = metaFormModelDraftManager.batchUpdateOptId(optId, Arrays.asList(modelIds));
+        int[] metaFormModelArr = metaFormModelManager.batchUpdateOptId(optId, Arrays.asList(modelIds));
         JSONObject result = new JSONObject();
         result.put("metaFormModelDraftArr",metaFormModelDraftArr);
         result.put("metaFormModelArr",metaFormModelArr);
