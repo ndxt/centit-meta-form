@@ -245,6 +245,7 @@ public class MetaFormModelDraftController extends BaseController {
 
     @ApiOperation(value = "修改表单所属业务模块")
     @PutMapping(value = "/batchUpdateOptId")
+    @ResponseBody
     @Transactional
     public JSONObject batchUpdateOptId( @RequestBody MetaFormModelDraftParam metaFormModelDraftParam) {
         int[] metaFormModelDraftArr = metaFormModelDraftManager.batchUpdateOptId(metaFormModelDraftParam.getOptId(), Arrays.asList(metaFormModelDraftParam.getModelIds()));
