@@ -13,4 +13,6 @@
 
     <dubbo:service interface="com.centit.metaform.dubbo.adapter.MetaFormModelDraftManager" ref="metaFormModelManagerDraftImpl" protocol="dubbo"/>
 
+    <dubbo:service interface="com.centit.product.dubbo.adapter.MetaOptRelationService" ref="metaOptRelationServiceAdapterImpl" protocol="dubbo"/>
+
 </beans>
