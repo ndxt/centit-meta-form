@@ -618,6 +618,7 @@ public class MetaFormController extends BaseController {
         if (tableInfo.isUpdateCheckTimeStamp()) {
             checkUpdateTimeStamp(dbObject, po);
         }
+        metaObjectService.updateObjectWithChildren(model.getTableId(), object,withChildrenDeep==null?1:withChildrenDeep);
         // 更改索引
         updataFulltextIndex(object, tableInfo, request);
     }
@@ -666,6 +667,7 @@ public class MetaFormController extends BaseController {
         parameters.put("currentUser", userDetails);
         parameters.put("currentUnitCode", WebOptUtils.getCurrentUnitCode(request));
         // 添加索引
+        metaObjectService.saveObjectWithChildren(model.getTableId(), po, parameters,withChildrenDeep==null?1:withChildrenDeep);
         saveFulltextIndex(object, tableInfo, request);
 
     }
@@ -735,6 +737,7 @@ public class MetaFormController extends BaseController {
         if (writeLog) {
             dbObject = metaObjectService.getObjectById(model.getTableId(), parameters);
         }
+        metaObjectService.deleteObjectWithChildren(model.getTableId(), parameters,withChildrenDeep==null?1:withChildrenDeep);
         // 删除索引
         deleteFulltextIndex(parameters, model.getTableId());
 
