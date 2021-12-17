@@ -140,7 +140,7 @@ public class MetaFormModelManagerImpl
                 " [:modelId | and a.MODEL_ID = :modelId ] " +
                 " [:(like)modelName | and a.model_name like :modelName]" +
                 " [:applicationId | and a.APPLICATION_ID = :applicationId ] " +
-                " [:optId | and a.OPT_ID = :optId ] ";
+                " [:optId | and a.OPT_ID = :optId ]  [:osId | and a.os_id = :osId ] ";
         String orderBy = GeneralJsonObjectDao.fetchSelfOrderSql(sql, filterMap);
         if (StringUtils.isNotBlank(orderBy)) {
             sql = sql + " order by "
