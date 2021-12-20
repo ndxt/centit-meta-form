@@ -13,5 +13,5 @@
 
     <dubbo:reference id="metaFormModelDraftManager" interface="com.centit.metaform.dubbo.adapter.MetaFormModelDraftManager" init="false"/>
 
-    <dubbo:reference id="metaOptRelationService" interface="com.centit.product.dubbo.adapter.MetaOptRelationService" init="false"/>
+    <dubbo:reference id="metadataManageService" interface="com.centit.product.adapter.api.MetadataManageService" init="false"/>
 </beans>

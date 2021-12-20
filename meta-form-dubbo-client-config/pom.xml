@@ -28,6 +28,11 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.centit.product</groupId>
+            <artifactId>database-metadata-dubbo-adapter</artifactId>
+            <version>${centit.framework.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
