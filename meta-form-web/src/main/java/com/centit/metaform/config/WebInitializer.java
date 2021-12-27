@@ -44,12 +44,6 @@ public class WebInitializer implements WebApplicationInitializer {
         WebConfig.registerSpringSecurityFilter(servletContext,servletUrlPatterns);
         //registerOpenSessionInViewFilter(servletContext);
 
-        Properties properties = PropertiesReader.getClassPathProperties("/system.properties");
-        String jdbcUrl = properties.getProperty("jdbc.url");
-
-        if(jdbcUrl.startsWith("jdbc:h2")){
-            WebConfig.initializeH2Console(servletContext);
-        }
     }
 
 }
