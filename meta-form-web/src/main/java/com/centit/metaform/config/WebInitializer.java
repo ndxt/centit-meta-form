@@ -8,6 +8,7 @@ import com.centit.framework.config.SystemSpringMvcConfig;
 import com.centit.framework.config.WebConfig;
 import com.centit.support.algorithm.CollectionsOpt;
 import lombok.SneakyThrows;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.WebApplicationInitializer;
 
@@ -87,7 +88,7 @@ public class WebInitializer implements WebApplicationInitializer {
                 //优先使用配置文件中的属性
                 for (String key : keys) {
                     String value = properties.getProperty(key);
-                    if (StringUtils.isNotBlank(value)){
+                    if (StringUtils.isBlank(MapUtils.getString(map,key)) && StringUtils.isNotBlank(value)){
                         map.put(key,value);
                     }
                 }
