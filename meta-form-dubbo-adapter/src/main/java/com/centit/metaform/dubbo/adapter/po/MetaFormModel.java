@@ -129,6 +129,9 @@ public class MetaFormModel implements java.io.Serializable {
     @Column(name = "PUBLISH_DATE")
     private Date publishDate;
 
+    @Column(name = "SOURCE_ID")
+    @ApiModelProperty(value = "模板来源")
+    private String sourceId;
 
     @Transient
     private String relationName;
