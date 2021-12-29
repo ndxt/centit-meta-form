@@ -1,6 +1,7 @@
 package com.centit.metaform.dubbo.adapter.po;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.centit.framework.core.dao.DictionaryMap;
 import com.centit.support.database.orm.GeneratorCondition;
 import com.centit.support.database.orm.GeneratorTime;
@@ -131,6 +132,7 @@ public class MetaFormModel implements java.io.Serializable {
 
     @Column(name = "SOURCE_ID")
     @ApiModelProperty(value = "模板来源")
+    @JSONField(serialize = false)
     private String sourceId;
 
     @Transient
