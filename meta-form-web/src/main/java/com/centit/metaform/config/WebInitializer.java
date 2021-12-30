@@ -27,7 +27,7 @@ public class WebInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
 
-        findProperties(CollectionsOpt.createList("login.dao.enable","login.cas.enable"));
+        appendSystemProperties(CollectionsOpt.createList("login.dao.enable","login.cas.enable"));
 
         String [] servletUrlPatterns = {"/system/*","/metadata/*","/metaform/*","/dbdesign/*"};
         WebConfig.registerSpringConfig(servletContext, ServiceConfig.class);
@@ -62,10 +62,9 @@ public class WebInitializer implements WebApplicationInitializer {
     /**
      * 查找配置，优先从system.properties中获取，如果没有从nacos中获取
      * @param keys 需要被提前查找的key
-     * @throws IOException
      * @throws NacosException
      */
-    private void findProperties(List<String> keys) throws IOException, NacosException {
+    private void appendSystemProperties(List<String> keys) throws  NacosException {
         HashMap<String, Object> map = new HashMap<>();
         for (String key : keys) {
             String value = SysParametersUtils.getStringValue(key);
@@ -82,9 +81,12 @@ public class WebInitializer implements WebApplicationInitializer {
             ConfigService configService = NacosFactory.createConfigService(nacosProperties);
             String content = configService.getConfig(dataId, group, 60000);
             if (StringUtils.isNotBlank(content)){
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes());
                 Properties properties = new Properties();
-                properties.load(inputStream);
+                try (ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes())){
+                    properties.load(inputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 //优先使用配置文件中的属性
                 for (String key : keys) {
                     String value = properties.getProperty(key);
