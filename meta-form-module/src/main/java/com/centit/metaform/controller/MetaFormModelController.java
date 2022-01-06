@@ -118,35 +118,8 @@ public class MetaFormModelController extends BaseController {
     @ApiOperation(value = "查询单个已发布的通用模块,其中keyProps为其主表对应的主键字段名称数组", response = MetaFormModel.class)
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
-    public ObjectAppendProperties<MetaFormModel> getMetaFormModel(@PathVariable String modelId) {
-        /*return*/
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        List<String> pkCols = new ArrayList<>(6);
-        if (metaFormModel.getTableId() != null && !"".equals(metaFormModel.getTableId())) {
-            MetaTable tableInfo = this.metaDataCache.getTableInfo(metaFormModel.getTableId());
-        /*if(tableInfo!=null && tableInfo.getPkFields()!=null && tableInfo.getPkFields().size()>0) {
-            String[] pks = tableInfo.getPkFields().stream()
-                    .map(TableField::getPropertyName)
-                    .toArray(String[]::new);*/
-            if (tableInfo != null) {
-                //if(tableInfo.getPkFields()!=null) {
-                for (TableField field : tableInfo.getPkFields()) {
-                    pkCols.add(field.getPropertyName());
-                }
-                if (!"0".equals(tableInfo.getWorkFlowOptType())) {
-                    pkCols.add(MetaTable.WORKFLOW_INST_ID_PROP);
-                    pkCols.add(MetaTable.WORKFLOW_NODE_INST_ID_PROP);
-                }
-                if ("C".equals(tableInfo.getTableType())) {
-                    pkCols.add("_id");
-                }
-                if ("C".equals(tableInfo.getTableType()) || tableInfo.isFulltextSearch()) {
-                    pkCols.add("optTag");
-                }
-            }
-        }
-        return ObjectAppendProperties.create(metaFormModel,
-                CollectionsOpt.createHashMap("keyProps", pkCols));
+    public MetaFormModel getMetaFormModel(@PathVariable String modelId) {
+        return metaFormModelMag.getObjectById(modelId);
     }
 
     /**
@@ -174,8 +147,6 @@ public class MetaFormModelController extends BaseController {
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         model.copyNotNullProperty(metaFormModel);
         model.setRecorder(usercode);
-        /*model.setFormTemplate(StringEscapeUtils.unescapeHtml4(model.getFormTemplate()));*/
-        model.setExtendOptJs(StringEscapeUtils.unescapeHtml4(model.getExtendOptJs()));
         metaFormModelMag.saveNewMetaFormModel(model);
         return model.getModelId();
     }
@@ -214,16 +185,7 @@ public class MetaFormModelController extends BaseController {
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.PUT})
     @WrapUpResponseBody
     public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel) {
-        MetaFormModel oldMetaForm = metaFormModelMag.getObjectById(modelId);
-//        if(!DatetimeOpt.equalOnSecond(oldMetaForm.getLastModifyDate(),metaFormModel.getLastModifyDate())){
-//            throw new ObjectException(CollectionsOpt.createHashMap(
-//                    "yourTimeStamp", metaFormModel.getLastModifyDate(), "databaseTimeStamp", oldMetaForm.getLastModifyDate()),
-//                    PersistenceException.DATABASE_OUT_SYNC_EXCEPTION, "已有其他人更新过该表单，请重新打开后提交。");
-//        }
         metaFormModel.setModelId(modelId);
-        /*metaFormModel.setFormTemplate(JSON
-                JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
-        metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
         String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
@@ -314,7 +276,6 @@ public class MetaFormModelController extends BaseController {
         if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
-        metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(formOptjs));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 
@@ -341,9 +302,6 @@ public class MetaFormModelController extends BaseController {
         if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
-        metaFormModel.setRelFlowCode(
-                StringUtils.substring(
-                        StringEscapeUtils.unescapeHtml4(relFlowCode), 0, 64));
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
     @ApiOperation(value = "根据optId获取模板名和模块id")

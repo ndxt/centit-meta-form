@@ -91,34 +91,8 @@ public class MetaFormModelDraftController extends BaseController {
     @ApiOperation(value = "查询单个未发布的通用模块,其中keyProps为其主表对应的主键字段名称数组", response = MetaFormModel.class)
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
-    public ObjectAppendProperties<MetaFormModelDraft> getDraftMetaFormModel(@PathVariable String modelId) {
-        MetaFormModelDraft metaFormModel = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
-        List<String> pkCols = new ArrayList<>(6);
-        if (metaFormModel.getTableId() != null && !"".equals(metaFormModel.getTableId())) {
-            MetaTable tableInfo = this.metaDataCache.getTableInfo(metaFormModel.getTableId());
-        /*if(tableInfo!=null && tableInfo.getPkFields()!=null && tableInfo.getPkFields().size()>0) {
-            String[] pks = tableInfo.getPkFields().stream()
-                    .map(TableField::getPropertyName)
-                    .toArray(String[]::new);*/
-            if (tableInfo != null) {
-                //if(tableInfo.getPkFields()!=null) {
-                for (TableField field : tableInfo.getPkFields()) {
-                    pkCols.add(field.getPropertyName());
-                }
-                if (!"0".equals(tableInfo.getWorkFlowOptType())) {
-                    pkCols.add(MetaTable.WORKFLOW_INST_ID_PROP);
-                    pkCols.add(MetaTable.WORKFLOW_NODE_INST_ID_PROP);
-                }
-                if ("C".equals(tableInfo.getTableType())) {
-                    pkCols.add("_id");
-                }
-                if ("C".equals(tableInfo.getTableType()) || tableInfo.isFulltextSearch()) {
-                    pkCols.add("optTag");
-                }
-            }
-        }
-        return ObjectAppendProperties.create(metaFormModel,
-                CollectionsOpt.createHashMap("keyProps", pkCols));
+    public MetaFormModelDraft getDraftMetaFormModel(@PathVariable String modelId) {
+        return metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
     }
 
     @ApiOperation(value = "新增通用模块")
@@ -127,7 +101,6 @@ public class MetaFormModelDraftController extends BaseController {
     public String createMetaFormModel(@RequestBody MetaFormModelDraft metaFormModel, HttpServletRequest request) {
         String usercode = WebOptUtils.getCurrentUnitCode(request);
         metaFormModel.setRecorder(usercode);
-        metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
         String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
@@ -175,16 +148,7 @@ public class MetaFormModelDraftController extends BaseController {
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.PUT})
     @WrapUpResponseBody
     public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModelDraft metaFormModel) {
-//        MetaFormModelDraft oldMetaForm = metaFormModelDraftManager.getObjectById(modelId);
-//        if(!DatetimeOpt.equalOnSecond(oldMetaForm.getLastModifyDate(),metaFormModel.getLastModifyDate())){
-//            throw new ObjectException(CollectionsOpt.createHashMap(
-//                    "yourTimeStamp", metaFormModel.getLastModifyDate(), "databaseTimeStamp", oldMetaForm.getLastModifyDate()),
-//                    PersistenceException.DATABASE_OUT_SYNC_EXCEPTION, "已有其他人更新过该表单，请重新打开后提交。");
-//        }
         metaFormModel.setModelId(modelId);
-        /*metaFormModel.setFormTemplate(JSON
-                JSONStringEscapeUtils.unescapeHtml4(metaFormModel.getFormTemplate()));*/
-        metaFormModel.setExtendOptJs(StringEscapeUtils.unescapeHtml4(metaFormModel.getExtendOptJs()));
         String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
