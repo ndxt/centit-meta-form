@@ -5,26 +5,21 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
-import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.product.adapter.api.WorkGroupManager;
-import com.centit.product.adapter.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
-import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
-import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * MetaFormModel  Controller.
@@ -260,50 +256,6 @@ public class MetaFormModelController extends BaseController {
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 
-    @ApiOperation(value = "修改模板事件操作")
-    @RequestMapping(value = "/{modelId}/optjs", method = {RequestMethod.PUT})
-    @WrapUpResponseBody
-    public void updateFormOptJs(@PathVariable String modelId,
-                                @RequestBody String formOptjs) {
-        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (StringBaseOpt.isNvl(loginUser)) {
-            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
-        }
-        if (StringUtils.isBlank(loginUser)){
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录！");
-        }
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
-            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
-        }
-        metaFormModelMag.updateMetaFormModel(metaFormModel);
-    }
-
-    @ApiOperation(value = "删除模板事件操作")
-    @RequestMapping(value = "/{modelId}/optjs", method = {RequestMethod.DELETE})
-    @WrapUpResponseBody
-    public void deleteFormOptJs(@PathVariable String modelId) {
-        metaFormModelMag.deleteFormOptJs(modelId);
-    }
-
-    @ApiOperation(value = "修改模板与流程关联")
-    @RequestMapping(value = "/{modelId}/flow", method = {RequestMethod.PUT})
-    @WrapUpResponseBody
-    public void updateFormFlow(@PathVariable String modelId,
-                               @RequestBody String relFlowCode) {
-        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (StringBaseOpt.isNvl(loginUser)) {
-            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
-        }
-        if (StringUtils.isBlank(loginUser)){
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
-        }
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
-            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
-        }
-        metaFormModelMag.updateMetaFormModel(metaFormModel);
-    }
     @ApiOperation(value = "根据optId获取模板名和模块id")
     @RequestMapping(value = "/metaform/{optId}", method = {RequestMethod.GET})
     @WrapUpResponseBody

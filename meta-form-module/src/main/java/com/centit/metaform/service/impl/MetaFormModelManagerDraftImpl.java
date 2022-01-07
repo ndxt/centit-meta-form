@@ -48,13 +48,9 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
                 ((c != null && c.size() > 0)
                         ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a", true)
                         : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a", 1)) +
-                ",b.TABLE_NAME,b.TABLE_LABEL_NAME " +
-                " from M_META_FORM_MODEL_DRAFT a left join F_MD_TABLE b on a.table_id=b.table_id " +
-                " where 1=1 [:dataBaseCode| and b.DATABASE_CODE = :dataBaseCode ] " +
-                " [:tableId | and a.table_id = :tableId] " +
+                " from M_META_FORM_MODEL_DRAFT a " +
+                " where 1=1 " +
                 " [:modelType | and a.MODEL_TYPE = :modelType] " +
-                " [:flowOptType | and b.WORKFLOW_OPT_TYPE = :flowOptType ] " +
-                " [allFlowOpt | and b.WORKFLOW_OPT_TYPE <> '0' ] " +
                 " [:modelId | and a.MODEL_ID = :modelId ] " +
                 " [:(like)modelName | and a.model_name like :modelName]" +
                 " [:applicationId | and a.APPLICATION_ID = :applicationId ] " +
@@ -64,7 +60,6 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
             sql = sql + " order by "
                     + QueryUtils.cleanSqlStatement(orderBy);
         }
-
         JSONArray listTables = DatabaseOptUtils.listObjectsByParamsDriverSqlAsJson(metaFormModelDraftDao, sql, filterMap, pageDesc);
         return listTables;
     }
@@ -100,7 +95,7 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
 
     @Override
     public int[] batchUpdateOptId(String optId, List<String> modleIds) {
-        String sql="UPDATE M_META_FORM_MODEL_DRAFT SET OPT_ID=? WHERE MODEL_ID = ? ";
+        String sql = "UPDATE M_META_FORM_MODEL_DRAFT SET OPT_ID=? WHERE MODEL_ID = ? ";
         int[] metaFormArr = metaFormModelDraftDao.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -115,7 +110,5 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
         });
         return metaFormArr;
     }
-
-
 }
 
