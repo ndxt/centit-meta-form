@@ -5,27 +5,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.centit.framework.common.ResponseData;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
-import com.centit.framework.core.controller.ObjectAppendProperties;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.filter.RequestThreadLocal;
+import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.metaform.dao.MetaFormModelDraftParam;
 import com.centit.metaform.dubbo.adapter.MetaFormModelDraftManager;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModelDraft;
-import com.centit.product.adapter.api.WorkGroupManager;
-import com.centit.product.adapter.po.MetaTable;
 import com.centit.product.metadata.service.MetaDataCache;
-import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
-import com.centit.support.database.metadata.TableField;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,8 +48,7 @@ public class MetaFormModelDraftController extends BaseController {
     private MetaFormModelManager metaFormModelManager;
 
     @Autowired
-    private WorkGroupManager workGroupManager;
-
+    private PlatformEnvironment platformEnvironment;
     /**
      * 查询 可以和流程关联的 模块 列表
      *
@@ -108,7 +102,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelDraftManager.saveMetaFormModelDraft(metaFormModel);
@@ -131,7 +125,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!workGroupManager.loginUserIsExistWorkGroup(osId,loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(osId,loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelDraftManager.deleteMetaFormModelDraftById(modelId);
@@ -156,7 +150,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModel);
@@ -175,16 +169,16 @@ public class MetaFormModelDraftController extends BaseController {
     @RequestMapping(value = "/publish/{modelId}", method = {RequestMethod.POST})
     @WrapUpResponseBody
     public ResponseData publishMetaFormModel(@PathVariable String modelId, HttpServletRequest request) {
-        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
+        String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringBaseOpt.isNvl(loginUser)) {
-            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
+            loginUser = WebOptUtils.getRequestFirstOneParameter(request, "userCode");
         }
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
         // 获取草稿状态的表单
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         if (metaFormModelDraft == null) {

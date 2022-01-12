@@ -50,13 +50,6 @@
 
         <dependency>
             <groupId>com.centit.product</groupId>
-            <artifactId>work-group-dubbo-client-config</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.centit.product</groupId>
             <artifactId>meta-form-dubbo-server-config</artifactId>
             <version>${project.version}</version>
         </dependency>

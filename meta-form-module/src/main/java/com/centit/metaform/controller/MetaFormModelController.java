@@ -8,9 +8,9 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.filter.RequestThreadLocal;
+import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
-import com.centit.product.adapter.api.WorkGroupManager;
 import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
@@ -52,8 +52,7 @@ public class MetaFormModelController extends BaseController {
     private MetaDataCache metaDataCache;
 
     @Autowired
-    private WorkGroupManager workGroupManager;
-
+    private PlatformEnvironment platformEnvironment;
     /**
      * 查询所有   通用模块管理  列表
      *
@@ -136,7 +135,7 @@ public class MetaFormModelController extends BaseController {
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         MetaFormModel model = new MetaFormModel();
@@ -164,7 +163,7 @@ public class MetaFormModelController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelMag.deleteObjectById(modelId);
@@ -189,7 +188,7 @@ public class MetaFormModelController extends BaseController {
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录！");
         }
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelMag.updateMetaFormModel(metaFormModel);
@@ -245,7 +244,7 @@ public class MetaFormModelController extends BaseController {
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN,"您未登录！");
         }
-        if (!workGroupManager.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         if (StringUtils.equalsAnyIgnoreCase(type, "m", "mo", "mobile")) {
