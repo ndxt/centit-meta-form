@@ -115,7 +115,7 @@ public class MetaFormModelDraftController extends BaseController {
      *
      * @param modelId Model_Id
      */
-    @ApiOperation(value = "删除单个通用模块",notes = "如果MetaFormModel也需要删除，传入参数MetaFormModel=true")
+    @ApiOperation(value = "删除单个通用模块",notes = "如果MetaFormModel也需要删除，传入参数deleteMetaFormModel=true")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
     public void deleteMetaFormModel(@PathVariable String modelId,HttpServletRequest request) {
