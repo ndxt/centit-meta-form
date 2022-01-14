@@ -266,7 +266,7 @@ public class MetaFormModelController extends BaseController {
         return ResponseData.makeResponseData(metaFormModelMag.listModelByOptId(optId));
     }
 
-    @ApiOperation(value = "验证模板是否存在")
+    @ApiOperation(value = "验证已发布的自定义表单是否存在")
     @RequestMapping(value = "/metaform/isexist/{modelId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
     public ResponseData checkMetaFormModelIsExist(@PathVariable String modelId) {

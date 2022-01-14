@@ -15,7 +15,6 @@ import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModelDraft;
 import com.centit.product.metadata.service.MetaDataCache;
-import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
@@ -117,9 +116,9 @@ public class MetaFormModelDraftController extends BaseController {
      * @param modelId Model_Id
      */
     @ApiOperation(value = "删除单个通用模块",notes = "如果MetaFormModel也需要删除，传入参数MetaFormModel=true")
-    @RequestMapping(value = "/{osId}/{modelId}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
-    public void deleteMetaFormModel(@PathVariable String osId,@PathVariable String modelId,HttpServletRequest request) {
+    public void deleteMetaFormModel(@PathVariable String modelId,HttpServletRequest request) {
         String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(request, "userCode");
@@ -127,7 +126,11 @@ public class MetaFormModelDraftController extends BaseController {
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!platformEnvironment.loginUserIsExistWorkGroup(osId,loginUser)){
+        MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
+        if (null == metaFormModelDraft){
+            throw new ObjectException("表单数据不存在!");
+        }
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         if (MapUtils.getBooleanValue(collectRequestParameters(request), "deleteMetaFormModel")){
