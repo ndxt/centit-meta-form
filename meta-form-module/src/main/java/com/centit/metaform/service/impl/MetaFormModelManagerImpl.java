@@ -130,6 +130,11 @@ public class MetaFormModelManagerImpl
         metaFormModelDao.deleteObjectById(modelId);
     }
 
+    @Override
+    public int countMetaFormModels(Map<String,Object> params) {
+        return metaFormModelDao.countObject(params);
+    }
+
     /**
      * 根据optId获取包含通用模板的optId字符串
      *

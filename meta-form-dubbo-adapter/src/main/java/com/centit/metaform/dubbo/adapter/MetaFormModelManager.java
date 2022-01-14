@@ -30,4 +30,6 @@ public interface MetaFormModelManager {
     MetaFormModel getObjectById(String modelId);
 
     void deleteObjectById(String modelId);
+
+    int countMetaFormModels(Map<String,Object> params);
 }

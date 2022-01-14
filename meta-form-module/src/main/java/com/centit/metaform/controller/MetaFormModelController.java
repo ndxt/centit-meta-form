@@ -12,6 +12,7 @@ import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.product.metadata.service.MetaDataCache;
+import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
@@ -163,6 +164,9 @@ public class MetaFormModelController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+        if (null == metaFormModel){
+            throw new ObjectException("表单数据不存在!");
+        }
         if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
@@ -260,5 +264,13 @@ public class MetaFormModelController extends BaseController {
     @WrapUpResponseBody
     public ResponseData listModelByOptId(@PathVariable String optId) {
         return ResponseData.makeResponseData(metaFormModelMag.listModelByOptId(optId));
+    }
+
+    @ApiOperation(value = "验证模板是否存在")
+    @RequestMapping(value = "/metaform/isexist/{modelId}", method = {RequestMethod.GET})
+    @WrapUpResponseBody
+    public ResponseData checkMetaFormModelIsExist(@PathVariable String modelId) {
+        int counts = metaFormModelMag.countMetaFormModels(CollectionsOpt.createHashMap("modelId", modelId));
+        return ResponseData.makeResponseData(counts>0);
     }
 }

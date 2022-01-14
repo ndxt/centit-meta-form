@@ -21,5 +21,7 @@ public interface MetaFormModelDraftManager {
 
     void deleteMetaFormModelDraftById(String modelId);
 
+    void deleteMetaFormModelDraftByIdWithMetaFormModel(String modelId);
+
     int[] batchUpdateOptId(String optId, List<String> modleIds);
 }

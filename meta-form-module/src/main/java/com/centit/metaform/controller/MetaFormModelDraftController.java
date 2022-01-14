@@ -15,11 +15,13 @@ import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModelDraft;
 import com.centit.product.metadata.service.MetaDataCache;
+import com.centit.support.algorithm.BooleanBaseOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,13 +116,13 @@ public class MetaFormModelDraftController extends BaseController {
      *
      * @param modelId Model_Id
      */
-    @ApiOperation(value = "删除单个通用模块")
+    @ApiOperation(value = "删除单个通用模块",notes = "如果MetaFormModel也需要删除，传入参数MetaFormModel=true")
     @RequestMapping(value = "/{osId}/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
     public void deleteMetaFormModel(@PathVariable String osId,@PathVariable String modelId,HttpServletRequest request) {
-        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
+        String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringBaseOpt.isNvl(loginUser)) {
-            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
+            loginUser = WebOptUtils.getRequestFirstOneParameter(request, "userCode");
         }
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
@@ -128,7 +130,11 @@ public class MetaFormModelDraftController extends BaseController {
         if (!platformEnvironment.loginUserIsExistWorkGroup(osId,loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
-        metaFormModelDraftManager.deleteMetaFormModelDraftById(modelId);
+        if (MapUtils.getBooleanValue(collectRequestParameters(request), "deleteMetaFormModel")){
+            metaFormModelDraftManager.deleteMetaFormModelDraftByIdWithMetaFormModel(modelId);
+        }else {
+            metaFormModelDraftManager.deleteMetaFormModelDraftById(modelId);
+        }
     }
 
     /**

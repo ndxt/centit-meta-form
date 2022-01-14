@@ -94,6 +94,14 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
     }
 
     @Override
+    @Transactional
+    public void deleteMetaFormModelDraftByIdWithMetaFormModel(String modelId) {
+        metaFormModelDraftDao.deleteObjectById(modelId);
+        metaFormModelDao.deleteObjectById(modelId);
+    }
+
+    @Override
+    @Transactional
     public int[] batchUpdateOptId(String optId, List<String> modleIds) {
         String sql = "UPDATE M_META_FORM_MODEL_DRAFT SET OPT_ID=? WHERE MODEL_ID = ? ";
         int[] metaFormArr = metaFormModelDraftDao.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
