@@ -94,8 +94,7 @@ public class MetaFormModelDraftController extends BaseController {
     @RequestMapping(method = {RequestMethod.POST})
     @WrapUpResponseBody
     public String createMetaFormModel(@RequestBody MetaFormModelDraft metaFormModel, HttpServletRequest request) {
-        String usercode = WebOptUtils.getCurrentUnitCode(request);
-        metaFormModel.setRecorder(usercode);
+
         String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
@@ -106,7 +105,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
-        metaFormModel.setRecorder(usercode);
+        metaFormModel.setRecorder(loginUser);
         metaFormModelDraftManager.saveMetaFormModelDraft(metaFormModel);
         return metaFormModel.getModelId();
     }
