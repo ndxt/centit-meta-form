@@ -106,6 +106,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
+        metaFormModel.setRecorder(usercode);
         metaFormModelDraftManager.saveMetaFormModelDraft(metaFormModel);
         return metaFormModel.getModelId();
     }
@@ -162,6 +163,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
+        metaFormModel.setRecorder(loginUser);
         metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModel);
         return metaFormModel.getLastModifyDate();
     }

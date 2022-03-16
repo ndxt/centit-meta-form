@@ -45,7 +45,7 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
             c.addAll(Arrays.asList(fields));
         }
         String sql = "select " +
-                ((c != null && c.size() > 0)
+                (c.size() > 0
                         ? GeneralJsonObjectDao.buildPartFieldSql(mapInfo, c, "a", true)
                         : GeneralJsonObjectDao.buildFieldSql(mapInfo, "a", 1)) +
                 " from M_META_FORM_MODEL_DRAFT a " +
@@ -53,7 +53,8 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
                 " [:modelType | and a.MODEL_TYPE = :modelType] " +
                 " [:modelId | and a.MODEL_ID = :modelId ] " +
                 " [:(like)modelName | and a.model_name like :modelName]" +
-                " [:applicationId | and a.APPLICATION_ID = :applicationId ] " +
+                " [ :osId | and a.os_id = :osId ] " +
+                " [ :recorder | and a.RECORDER = :recorder ] " +
                 " [:optId | and a.OPT_ID = :optId ] ";
         String orderBy = GeneralJsonObjectDao.fetchSelfOrderSql(sql, filterMap);
         if (StringUtils.isNotBlank(orderBy)) {
