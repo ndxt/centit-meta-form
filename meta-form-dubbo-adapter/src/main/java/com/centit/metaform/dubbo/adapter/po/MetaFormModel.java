@@ -97,6 +97,11 @@ public class MetaFormModel implements java.io.Serializable {
     @JSONField(serialize = false)
     private String sourceId;
 
+    @ApiModelProperty(value = "是否禁用（是否逻辑删除），T：禁用，F：启用（默认）")
+    @Column(name = "IS_VALID")
+    private Boolean isValid;
+
+
     public MetaFormModel copyNotNullProperty(MetaFormModel other) {
         if (other.getModelId() != null) {
             this.setModelId(other.getModelId());

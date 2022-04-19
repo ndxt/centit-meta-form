@@ -87,4 +87,8 @@ public class MetaFormModelDraft implements java.io.Serializable {
     @ApiModelProperty(value = "发布时间")
     @Column(name = "PUBLISH_DATE")
     private Date publishDate;
+
+    @ApiModelProperty(value = "是否禁用（是否逻辑删除），T：禁用，F：启用（默认）")
+    @Column(name = "IS_VALID")
+    private Boolean isValid;
 }

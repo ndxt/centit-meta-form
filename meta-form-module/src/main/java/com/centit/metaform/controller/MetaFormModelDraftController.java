@@ -179,21 +179,11 @@ public class MetaFormModelDraftController extends BaseController {
     @RequestMapping(value = "/publish/{modelId}", method = {RequestMethod.POST})
     @WrapUpResponseBody
     public ResponseData publishMetaFormModel(@PathVariable String modelId, HttpServletRequest request) {
-        String loginUser = WebOptUtils.getCurrentUserCode(request);
-        if (StringBaseOpt.isNvl(loginUser)) {
-            loginUser = WebOptUtils.getRequestFirstOneParameter(request, "userCode");
-        }
-        if (StringUtils.isBlank(loginUser)){
-            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
-        }
-        // 获取草稿状态的表单
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(),loginUser)){
-            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
-        }
         if (metaFormModelDraft == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
         }
+        loginUserPermissionCheck(metaFormModelDraft,request);
         if (metaFormModelDraft.getLastModifyDate() != null && metaFormModelDraft.getPublishDate() != null &&
                 !metaFormModelDraft.getLastModifyDate().after(metaFormModelDraft.getPublishDate())) {
             return ResponseData.makeErrorMessage("表单已发布，请勿重复发布！");
@@ -225,4 +215,41 @@ public class MetaFormModelDraftController extends BaseController {
     }
 
 
+    @ApiOperation(value = "修改表单数据可用状态(T:禁用，F:启用)")
+    @PutMapping(value = "/{modelId}/{validType}")
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseData updateValidStatus( @PathVariable String modelId,@PathVariable String validType,HttpServletRequest request) {
+        // 获取草稿状态的表单
+        MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
+        if (metaFormModelDraft == null) {
+            return ResponseData.makeErrorMessage("未查询到表单！");
+        }
+        loginUserPermissionCheck(metaFormModelDraft,request);
+        //启用  disableType 必须等于T 或者 F
+        if (!StringBaseOpt.isNvl(validType) && "F".equals(validType)){
+            metaFormModelDraftManager.updateValidStatus(modelId,validType);
+            metaFormModelManager.updateValidStatus(modelId,validType);
+        }else if(!StringBaseOpt.isNvl(validType) && "T".equals(validType)){//禁用
+            metaFormModelDraftManager.updateValidStatus(modelId,validType);
+            metaFormModelManager.updateValidStatus(modelId,validType);
+        }else {
+            return ResponseData.makeErrorMessage(ResponseData.HTTP_PRECONDITION_FAILED,"非法传参，参数必须为T或F,传入的参数为："+validType);
+        }
+        return  ResponseData.makeSuccessResponse();
+    }
+
+
+    private void loginUserPermissionCheck(MetaFormModelDraft metaFormModelDraft,HttpServletRequest request){
+        String loginUser = WebOptUtils.getCurrentUserCode(request);
+        if (StringBaseOpt.isNvl(loginUser)) {
+            loginUser = WebOptUtils.getRequestFirstOneParameter(request, "userCode");
+        }
+        if (StringUtils.isBlank(loginUser)){
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
+        }
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(),loginUser)){
+            throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
+        }
+    }
 }

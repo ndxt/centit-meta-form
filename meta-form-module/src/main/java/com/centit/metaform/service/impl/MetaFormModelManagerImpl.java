@@ -135,6 +135,12 @@ public class MetaFormModelManagerImpl
         return metaFormModelDao.countObject(params);
     }
 
+    @Override
+    public void updateValidStatus(String modelId,String validType) {
+        String sql ="UPDATE m_meta_form_model SET IS_VALID =? WHERE MODEL_ID =? ";
+        metaFormModelDao.getJdbcTemplate().update(sql, new Object[]{validType,modelId});
+    }
+
     /**
      * 根据optId获取包含通用模板的optId字符串
      *
