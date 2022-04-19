@@ -242,11 +242,14 @@ public class MetaFormModelDraftController extends BaseController {
     @ApiOperation(value = "批量物理删除数据")
     @PostMapping("batchDeleteByModelIds")
     @WrapUpResponseBody
-    public void batchDeleteByModelIds(@RequestBody String[] modelIds, String osId,HttpServletRequest request) {
+    public void batchDeleteByModelIds(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
+        JSONArray modelIds = jsonObject.getJSONArray("packetIds");
+        String osId = jsonObject.getString("osId");
         loginUserPermissionCheck(osId,request);
-        if (modelIds != null && modelIds.length > 0){
-            metaFormModelDraftManager.batchDeleteByIds(modelIds);
-            metaFormModelManager.batchDeleteByIds(modelIds);
+        if (modelIds != null && modelIds.size() > 0){
+            String[] ids = modelIds.toArray(new String[modelIds.size()]);
+            metaFormModelDraftManager.batchDeleteByIds(ids);
+            metaFormModelManager.batchDeleteByIds(ids);
         }
     }
 
