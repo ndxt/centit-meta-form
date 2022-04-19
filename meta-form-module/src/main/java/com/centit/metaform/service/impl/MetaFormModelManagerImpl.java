@@ -141,6 +141,20 @@ public class MetaFormModelManagerImpl
         metaFormModelDao.getJdbcTemplate().update(sql, new Object[]{validType,modelId});
     }
 
+    @Override
+    public void batchDeleteByIds(String[] modleIds) {
+        String delSql ="DELETE FROM m_meta_form_model WHERE MODEL_ID = ? ";
+        metaFormModelDao.getJdbcTemplate().batchUpdate(delSql,new BatchPreparedStatementSetter(){
+            public void setValues(PreparedStatement ps, int i)
+                    throws SQLException {
+                ps.setString(1, modleIds[i]);
+            }
+            public int getBatchSize() {
+                return modleIds.length;
+            }
+        });
+    }
+
     /**
      * 根据optId获取包含通用模板的optId字符串
      *

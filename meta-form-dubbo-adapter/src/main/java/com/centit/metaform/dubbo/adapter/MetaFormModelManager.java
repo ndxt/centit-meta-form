@@ -34,4 +34,6 @@ public interface MetaFormModelManager {
     int countMetaFormModels(Map<String,Object> params);
 
     void updateValidStatus(String modelId,String validType);
+
+    void batchDeleteByIds(String[] modleIds);
 }

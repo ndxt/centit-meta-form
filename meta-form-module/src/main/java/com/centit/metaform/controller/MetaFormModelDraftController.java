@@ -183,7 +183,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (metaFormModelDraft == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
         }
-        loginUserPermissionCheck(metaFormModelDraft,request);
+        loginUserPermissionCheck(metaFormModelDraft.getOsId(),request);
         if (metaFormModelDraft.getLastModifyDate() != null && metaFormModelDraft.getPublishDate() != null &&
                 !metaFormModelDraft.getLastModifyDate().after(metaFormModelDraft.getPublishDate())) {
             return ResponseData.makeErrorMessage("表单已发布，请勿重复发布！");
@@ -225,7 +225,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (metaFormModelDraft == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
         }
-        loginUserPermissionCheck(metaFormModelDraft,request);
+        loginUserPermissionCheck(metaFormModelDraft.getOsId(),request);
         //启用  disableType 必须等于T 或者 F
         if (!StringBaseOpt.isNvl(validType) && "F".equals(validType)){
             metaFormModelDraftManager.updateValidStatus(modelId,validType);
@@ -239,8 +239,21 @@ public class MetaFormModelDraftController extends BaseController {
         return  ResponseData.makeSuccessResponse();
     }
 
+    @ApiOperation(value = "批量物理删除数据")
+    @PostMapping("batchDeleteByModelIds")
+    @WrapUpResponseBody
+    public void batchDeleteByModelIds(@RequestBody String[] modelIds, String osId,HttpServletRequest request) {
+        loginUserPermissionCheck(osId,request);
+        if (modelIds != null && modelIds.length > 0){
+            metaFormModelDraftManager.batchDeleteByIds(modelIds);
+            metaFormModelManager.batchDeleteByIds(modelIds);
+        }
+    }
 
-    private void loginUserPermissionCheck(MetaFormModelDraft metaFormModelDraft,HttpServletRequest request){
+    private void loginUserPermissionCheck(String osId,HttpServletRequest request){
+        if (StringUtils.isBlank(osId)){
+            throw new ObjectException(ResponseData.ERROR_INTERNAL_SERVER_ERROR, "osId不能为空！");
+        }
         String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(request, "userCode");
@@ -248,7 +261,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (StringUtils.isBlank(loginUser)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(osId,loginUser)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
     }

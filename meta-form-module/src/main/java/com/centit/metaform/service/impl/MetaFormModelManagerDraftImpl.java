@@ -125,5 +125,19 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
         String sql ="UPDATE m_meta_form_model_draft SET IS_VALID =? WHERE MODEL_ID =? ";
         metaFormModelDraftDao.getJdbcTemplate().update(sql, new Object[]{validType,modelId});
     }
+
+    @Override
+    public void batchDeleteByIds(String[] modleIds) {
+        String delSql ="DELETE FROM m_meta_form_model_draft WHERE MODEL_ID = ? ";
+        metaFormModelDraftDao.getJdbcTemplate().batchUpdate(delSql,new BatchPreparedStatementSetter(){
+            public void setValues(PreparedStatement ps, int i)
+                    throws SQLException {
+                ps.setString(1, modleIds[i]);
+            }
+            public int getBatchSize() {
+                return modleIds.length;
+            }
+        });
+    }
 }
 

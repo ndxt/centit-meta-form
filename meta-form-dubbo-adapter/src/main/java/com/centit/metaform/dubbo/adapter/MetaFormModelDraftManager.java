@@ -26,4 +26,6 @@ public interface MetaFormModelDraftManager {
     int[] batchUpdateOptId(String optId, List<String> modleIds);
 
     void updateValidStatus(String modelId,String validType);
+
+    void batchDeleteByIds(String[] modleIds);
 }
