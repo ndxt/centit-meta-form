@@ -55,6 +55,7 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
                 " [:(like)modelName | and a.model_name like :modelName]" +
                 " [ :osId | and a.os_id = :osId ] " +
                 " [ :recorder | and a.RECORDER = :recorder ] " +
+                " [ :isValid | and a.IS_VALID = :isValid ] " +
                 " [:optId | and a.OPT_ID = :optId ] ";
         String orderBy = GeneralJsonObjectDao.fetchSelfOrderSql(sql, filterMap);
         if (StringUtils.isNotBlank(orderBy)) {
