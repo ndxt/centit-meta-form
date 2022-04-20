@@ -243,7 +243,7 @@ public class MetaFormModelDraftController extends BaseController {
     @PostMapping("batchDeleteByModelIds")
     @WrapUpResponseBody
     public void batchDeleteByModelIds(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
-        JSONArray modelIds = jsonObject.getJSONArray("packetIds");
+        JSONArray modelIds = jsonObject.getJSONArray("modelIds");
         String osId = jsonObject.getString("osId");
         loginUserPermissionCheck(osId,request);
         if (modelIds != null && modelIds.size() > 0){
