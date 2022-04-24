@@ -91,7 +91,7 @@ public class MetaFormModelManagerImpl
 
     @Override
     public int[] batchUpdateOptId(String optId, List<String> modleIds) {
-        String sql = "UPDATE M_META_FORM_MODEL SET OPT_ID=? WHERE MODEL_ID = ? ";
+        String sql = "UPDATE M_META_FORM_MODEL SET OPT_ID=?,IS_VALID ='F' WHERE MODEL_ID = ? ";
         int[] metaFormArr = metaFormModelDao.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -153,6 +153,13 @@ public class MetaFormModelManagerImpl
                 return modleIds.length;
             }
         });
+    }
+
+    @Override
+    public int clearTrashStand(String osId) {
+        String delSql ="DELETE FROM m_meta_form_model WHERE IS_VALID = 'T' AND OS_ID = ? ";
+        int delCount = DatabaseOptUtils.doExecuteSql(metaFormModelDao, delSql, new Object[]{osId});
+        return  delCount;
     }
 
     /**

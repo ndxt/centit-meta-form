@@ -19,6 +19,7 @@ import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -239,8 +240,12 @@ public class MetaFormModelDraftController extends BaseController {
         return  ResponseData.makeSuccessResponse();
     }
 
-    @ApiOperation(value = "批量物理删除数据")
+    @ApiOperation(value = "批量删除和清空回收站")
     @PostMapping("batchDeleteByModelIds")
+    @ApiImplicitParam(
+            name = "jsonObject",
+            value = "批量删除-参数：{modelIds:[\"modelId\"],osId:\"osId\"};清空回收站-参数：{osId:\"osId\"}"
+    )
     @WrapUpResponseBody
     public void batchDeleteByModelIds(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
         JSONArray modelIds = jsonObject.getJSONArray("modelIds");
@@ -250,6 +255,9 @@ public class MetaFormModelDraftController extends BaseController {
             String[] ids = modelIds.toArray(new String[modelIds.size()]);
             metaFormModelDraftManager.batchDeleteByIds(ids);
             metaFormModelManager.batchDeleteByIds(ids);
+        }else if (modelIds==null && !StringBaseOpt.isNvl(osId)){
+            metaFormModelDraftManager.clearTrashStand(osId);
+            metaFormModelManager.clearTrashStand(osId);
         }
     }
 

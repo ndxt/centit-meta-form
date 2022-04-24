@@ -105,7 +105,7 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
     @Override
     @Transactional
     public int[] batchUpdateOptId(String optId, List<String> modleIds) {
-        String sql = "UPDATE M_META_FORM_MODEL_DRAFT SET OPT_ID=? WHERE MODEL_ID = ? ";
+        String sql = "UPDATE M_META_FORM_MODEL_DRAFT SET OPT_ID=? ,IS_VALID ='F' WHERE MODEL_ID = ? ";
         int[] metaFormArr = metaFormModelDraftDao.getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -139,6 +139,13 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
                 return modleIds.length;
             }
         });
+    }
+
+    @Override
+    public int clearTrashStand(String osId) {
+        String delSql ="DELETE FROM m_meta_form_model_draft WHERE IS_VALID = 'T' AND OS_ID=? ";
+        int delCount = DatabaseOptUtils.doExecuteSql(metaFormModelDraftDao, delSql, new Object[]{osId});
+        return  delCount;
     }
 }
 

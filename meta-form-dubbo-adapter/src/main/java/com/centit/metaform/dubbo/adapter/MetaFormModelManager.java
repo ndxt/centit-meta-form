@@ -36,4 +36,6 @@ public interface MetaFormModelManager {
     void updateValidStatus(String modelId,String validType);
 
     void batchDeleteByIds(String[] modleIds);
+
+    int clearTrashStand(String osId);
 }
