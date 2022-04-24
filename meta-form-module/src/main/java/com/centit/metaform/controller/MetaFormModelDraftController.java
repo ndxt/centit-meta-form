@@ -255,7 +255,7 @@ public class MetaFormModelDraftController extends BaseController {
             String[] ids = modelIds.toArray(new String[modelIds.size()]);
             metaFormModelDraftManager.batchDeleteByIds(ids);
             metaFormModelManager.batchDeleteByIds(ids);
-        }else if (modelIds==null && !StringBaseOpt.isNvl(osId)){
+        }else if (!StringBaseOpt.isNvl(osId)){
             metaFormModelDraftManager.clearTrashStand(osId);
             metaFormModelManager.clearTrashStand(osId);
         }
