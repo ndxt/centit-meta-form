@@ -276,4 +276,29 @@ public class MetaFormModelDraftController extends BaseController {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
     }
+
+
+    @ApiOperation(value = "表单复制接口")
+    @PostMapping("/metaFormCopy")
+    @ApiImplicitParam(
+            name = "jsonObject",
+            value = "API复制接口-参数：{\"modelId\":\"\",\"modelName\":\"\",\"optId\":\"\"}"
+    )
+    @WrapUpResponseBody
+    public ResponseData metaFormCopy(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
+        String modelId = jsonObject.getString("modelId");
+        String modelName = jsonObject.getString("modelName");
+        String optId = jsonObject.getString("optId");
+        if (StringUtils.isBlank(modelId) || StringUtils.isBlank(modelName) || StringUtils.isBlank(optId)){
+            return ResponseData.makeErrorMessage("缺少参数，请检查请求参数是否正确！");
+        }
+        MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
+        if (metaFormModelDraft == null) return ResponseData.makeErrorMessage("复制的表单数据不存在！");
+        loginUserPermissionCheck(metaFormModelDraft.getOsId(),request);
+        metaFormModelDraft.setModelId(null);
+        metaFormModelDraft.setModelName(modelName);
+        metaFormModelDraft.setOptId(optId);
+        metaFormModelDraftManager.saveMetaFormModelDraft(metaFormModelDraft);
+        return ResponseData.successResponse;
+    }
 }
