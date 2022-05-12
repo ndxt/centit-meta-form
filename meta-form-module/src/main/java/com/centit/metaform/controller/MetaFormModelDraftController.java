@@ -282,11 +282,12 @@ public class MetaFormModelDraftController extends BaseController {
     @PostMapping("/metaFormCopy")
     @ApiImplicitParam(
             name = "jsonObject",
-            value = "API复制接口-参数：{\"modelId\":\"\",\"modelName\":\"\",\"optId\":\"\"}"
+            value = "API复制接口-参数：{\"modelId\":\"\",\"modelName\":\"\",\"osId\":\"\",\"optId\":\"\"}"
     )
     @WrapUpResponseBody
     public ResponseData metaFormCopy(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
         String modelId = jsonObject.getString("modelId");
+        String osId = jsonObject.getString("osId");
         String modelName = jsonObject.getString("modelName");
         String optId = jsonObject.getString("optId");
         if (StringUtils.isBlank(modelId) || StringUtils.isBlank(modelName) || StringUtils.isBlank(optId)){
@@ -295,6 +296,9 @@ public class MetaFormModelDraftController extends BaseController {
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
         if (metaFormModelDraft == null) return ResponseData.makeErrorMessage("复制的表单数据不存在！");
         loginUserPermissionCheck(metaFormModelDraft.getOsId(),request);
+        if (StringUtils.isNotBlank(osId)){
+            metaFormModelDraft.setOsId(osId);
+        }
         metaFormModelDraft.setModelId(null);
         metaFormModelDraft.setModelName(modelName);
         metaFormModelDraft.setOptId(optId);
