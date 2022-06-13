@@ -295,10 +295,8 @@ public class MetaFormModelDraftController extends BaseController {
         }
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
         if (metaFormModelDraft == null) return ResponseData.makeErrorMessage("复制的表单数据不存在！");
-        loginUserPermissionCheck(metaFormModelDraft.getOsId(),request);
-        if (StringUtils.isNotBlank(osId)){
-            metaFormModelDraft.setOsId(osId);
-        }
+        loginUserPermissionCheck(osId,request);
+        metaFormModelDraft.setOsId(osId);
         metaFormModelDraft.setModelId(null);
         metaFormModelDraft.setModelName(modelName);
         metaFormModelDraft.setOptId(optId);
