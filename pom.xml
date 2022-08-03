@@ -19,8 +19,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <jaxen.version>1.1.6</jaxen.version>
-        <mongodb.version>3.11.2</mongodb.version>
+        <mongodb.version>3.12.11</mongodb.version>
         <workflow.version>5.2-SNAPSHOT</workflow.version>
         <common.module.version>5.2-SNAPSHOT</common.module.version>
         <metadata.commons.version>5.2-SNAPSHOT</metadata.commons.version>
