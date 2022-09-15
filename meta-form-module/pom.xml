@@ -85,7 +85,11 @@
             <artifactId>meta-form-dubbo-adapter</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>${jaxen.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
