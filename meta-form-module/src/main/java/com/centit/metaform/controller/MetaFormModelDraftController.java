@@ -14,7 +14,6 @@ import com.centit.metaform.dubbo.adapter.MetaFormModelDraftManager;
 import com.centit.metaform.dubbo.adapter.MetaFormModelManager;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModelDraft;
-import com.centit.product.metadata.service.MetaDataCache;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
@@ -30,7 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 编辑的表单管理（未发布表单）
@@ -43,14 +44,13 @@ public class MetaFormModelDraftController extends BaseController {
     @Autowired
     private MetaFormModelDraftManager metaFormModelDraftManager;
 
-    @Autowired
-    private MetaDataCache metaDataCache;
 
     @Autowired
     private MetaFormModelManager metaFormModelManager;
 
     @Autowired
     private PlatformEnvironment platformEnvironment;
+
     /**
      * 查询 可以和流程关联的 模块 列表
      *
@@ -100,10 +100,10 @@ public class MetaFormModelDraftController extends BaseController {
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
-        if (StringUtils.isBlank(loginUser)){
+        if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModel.setRecorder(loginUser);
@@ -116,27 +116,27 @@ public class MetaFormModelDraftController extends BaseController {
      *
      * @param modelId Model_Id
      */
-    @ApiOperation(value = "删除单个通用模块",notes = "如果MetaFormModel也需要删除，传入参数deleteMetaFormModel=true")
+    @ApiOperation(value = "删除单个通用模块", notes = "如果MetaFormModel也需要删除，传入参数deleteMetaFormModel=true")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
-    public void deleteMetaFormModel(@PathVariable String modelId,HttpServletRequest request) {
+    public void deleteMetaFormModel(@PathVariable String modelId, HttpServletRequest request) {
         String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(request, "userCode");
         }
-        if (StringUtils.isBlank(loginUser)){
+        if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
-        if (null == metaFormModelDraft){
+        if (null == metaFormModelDraft) {
             throw new ObjectException("表单数据不存在!");
         }
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(), loginUser)) {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
-        if (MapUtils.getBooleanValue(collectRequestParameters(request), "deleteMetaFormModel")){
+        if (MapUtils.getBooleanValue(collectRequestParameters(request), "deleteMetaFormModel")) {
             metaFormModelDraftManager.deleteMetaFormModelDraftByIdWithMetaFormModel(modelId);
-        }else {
+        } else {
             metaFormModelDraftManager.deleteMetaFormModelDraftById(modelId);
         }
     }
@@ -157,10 +157,10 @@ public class MetaFormModelDraftController extends BaseController {
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
         }
-        if (StringUtils.isBlank(loginUser)){
+        if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(),loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModel.setRecorder(loginUser);
@@ -184,7 +184,7 @@ public class MetaFormModelDraftController extends BaseController {
         if (metaFormModelDraft == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
         }
-        loginUserPermissionCheck(metaFormModelDraft.getOsId(),request);
+        loginUserPermissionCheck(metaFormModelDraft.getOsId(), request);
         if (metaFormModelDraft.getLastModifyDate() != null && metaFormModelDraft.getPublishDate() != null &&
                 !metaFormModelDraft.getLastModifyDate().after(metaFormModelDraft.getPublishDate())) {
             return ResponseData.makeErrorMessage("表单已发布，请勿重复发布！");
@@ -206,12 +206,12 @@ public class MetaFormModelDraftController extends BaseController {
     @PutMapping(value = "/batchUpdateOptId")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    public ResponseData batchUpdateOptId( @RequestBody MetaFormModelDraftParam metaFormModelDraftParam) {
+    public ResponseData batchUpdateOptId(@RequestBody MetaFormModelDraftParam metaFormModelDraftParam) {
         int[] metaFormModelDraftArr = metaFormModelDraftManager.batchUpdateOptId(metaFormModelDraftParam.getOptId(), Arrays.asList(metaFormModelDraftParam.getModelIds()));
         int[] metaFormModelArr = metaFormModelManager.batchUpdateOptId(metaFormModelDraftParam.getOptId(), Arrays.asList(metaFormModelDraftParam.getModelIds()));
         JSONObject result = new JSONObject();
-        result.put("metaFormModelDraftArr",metaFormModelDraftArr);
-        result.put("metaFormModelArr",metaFormModelArr);
+        result.put("metaFormModelDraftArr", metaFormModelDraftArr);
+        result.put("metaFormModelArr", metaFormModelArr);
         return ResponseData.makeSuccessResponse(result.toJSONString());
     }
 
@@ -220,24 +220,24 @@ public class MetaFormModelDraftController extends BaseController {
     @PutMapping(value = "/{modelId}/{validType}")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    public ResponseData updateValidStatus( @PathVariable String modelId,@PathVariable String validType,HttpServletRequest request) {
+    public ResponseData updateValidStatus(@PathVariable String modelId, @PathVariable String validType, HttpServletRequest request) {
         // 获取草稿状态的表单
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
         if (metaFormModelDraft == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
         }
-        loginUserPermissionCheck(metaFormModelDraft.getOsId(),request);
+        loginUserPermissionCheck(metaFormModelDraft.getOsId(), request);
         //启用  disableType 必须等于T 或者 F
-        if (!StringBaseOpt.isNvl(validType) && "F".equals(validType)){
-            metaFormModelDraftManager.updateValidStatus(modelId,validType);
-            metaFormModelManager.updateValidStatus(modelId,validType);
-        }else if(!StringBaseOpt.isNvl(validType) && "T".equals(validType)){//禁用
-            metaFormModelDraftManager.updateValidStatus(modelId,validType);
-            metaFormModelManager.updateValidStatus(modelId,validType);
-        }else {
-            return ResponseData.makeErrorMessage(ResponseData.HTTP_PRECONDITION_FAILED,"非法传参，参数必须为T或F,传入的参数为："+validType);
+        if (!StringBaseOpt.isNvl(validType) && "F".equals(validType)) {
+            metaFormModelDraftManager.updateValidStatus(modelId, validType);
+            metaFormModelManager.updateValidStatus(modelId, validType);
+        } else if (!StringBaseOpt.isNvl(validType) && "T".equals(validType)) {//禁用
+            metaFormModelDraftManager.updateValidStatus(modelId, validType);
+            metaFormModelManager.updateValidStatus(modelId, validType);
+        } else {
+            return ResponseData.makeErrorMessage(ResponseData.HTTP_PRECONDITION_FAILED, "非法传参，参数必须为T或F,传入的参数为：" + validType);
         }
-        return  ResponseData.makeSuccessResponse();
+        return ResponseData.makeSuccessResponse();
     }
 
     @ApiOperation(value = "批量删除和清空回收站")
@@ -247,32 +247,32 @@ public class MetaFormModelDraftController extends BaseController {
             value = "批量删除-参数：{modelIds:[\"modelId\"],osId:\"osId\"};清空回收站-参数：{osId:\"osId\"}"
     )
     @WrapUpResponseBody
-    public void batchDeleteByModelIds(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
+    public void batchDeleteByModelIds(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
         JSONArray modelIds = jsonObject.getJSONArray("modelIds");
         String osId = jsonObject.getString("osId");
-        loginUserPermissionCheck(osId,request);
-        if (modelIds != null && modelIds.size() > 0){
+        loginUserPermissionCheck(osId, request);
+        if (modelIds != null && modelIds.size() > 0) {
             String[] ids = modelIds.toArray(new String[modelIds.size()]);
             metaFormModelDraftManager.batchDeleteByIds(ids);
             metaFormModelManager.batchDeleteByIds(ids);
-        }else if (!StringBaseOpt.isNvl(osId)){
+        } else if (!StringBaseOpt.isNvl(osId)) {
             metaFormModelDraftManager.clearTrashStand(osId);
             metaFormModelManager.clearTrashStand(osId);
         }
     }
 
-    private void loginUserPermissionCheck(String osId,HttpServletRequest request){
-        if (StringUtils.isBlank(osId)){
+    private void loginUserPermissionCheck(String osId, HttpServletRequest request) {
+        if (StringUtils.isBlank(osId)) {
             throw new ObjectException(ResponseData.ERROR_INTERNAL_SERVER_ERROR, "osId不能为空！");
         }
         String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringBaseOpt.isNvl(loginUser)) {
             loginUser = WebOptUtils.getRequestFirstOneParameter(request, "userCode");
         }
-        if (StringUtils.isBlank(loginUser)){
+        if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!platformEnvironment.loginUserIsExistWorkGroup(osId,loginUser)){
+        if (!platformEnvironment.loginUserIsExistWorkGroup(osId, loginUser)) {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
     }
@@ -285,17 +285,17 @@ public class MetaFormModelDraftController extends BaseController {
             value = "API复制接口-参数：{\"modelId\":\"\",\"modelName\":\"\",\"osId\":\"\",\"optId\":\"\"}"
     )
     @WrapUpResponseBody
-    public ResponseData metaFormCopy(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
+    public ResponseData metaFormCopy(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
         String modelId = jsonObject.getString("modelId");
         String osId = jsonObject.getString("osId");
         String modelName = jsonObject.getString("modelName");
         String optId = jsonObject.getString("optId");
-        if (StringUtils.isBlank(modelId) || StringUtils.isBlank(modelName) || StringUtils.isBlank(optId)){
+        if (StringUtils.isBlank(modelId) || StringUtils.isBlank(modelName) || StringUtils.isBlank(optId)) {
             return ResponseData.makeErrorMessage("缺少参数，请检查请求参数是否正确！");
         }
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
         if (metaFormModelDraft == null) return ResponseData.makeErrorMessage("复制的表单数据不存在！");
-        loginUserPermissionCheck(osId,request);
+        loginUserPermissionCheck(osId, request);
         metaFormModelDraft.setOsId(osId);
         metaFormModelDraft.setModelId(null);
         metaFormModelDraft.setModelName(modelName);

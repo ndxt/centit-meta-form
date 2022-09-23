@@ -24,25 +24,11 @@
             <version>${metadata.commons.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.centit.product</groupId>
-            <artifactId>centit-workflow-core</artifactId>
-            <version>${workflow.version}</version>
-        </dependency>
+
 
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>centit-persistence-extend</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.centit.support</groupId>
-            <artifactId>centit-es-client</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.centit.support</groupId>
-            <artifactId>centit-report-utils</artifactId>
         </dependency>
 
         <dependency>
