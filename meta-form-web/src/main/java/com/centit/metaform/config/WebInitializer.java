@@ -2,6 +2,7 @@ package com.centit.metaform.config;
 
 import com.centit.framework.config.SystemSpringMvcConfig;
 import com.centit.framework.config.WebConfig;
+import com.centit.framework.core.controller.MvcConfigUtil;
 import org.springframework.web.WebApplicationInitializer;
 
 import javax.servlet.ServletContext;
@@ -15,7 +16,7 @@ public class WebInitializer implements WebApplicationInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-
+        MvcConfigUtil.fastjsonGlobalConfig();
         String [] servletUrlPatterns = {"/system/*","/metadata/*","/metaform/*","/dbdesign/*"};
         WebConfig.registerSpringConfig(servletContext, ServiceConfig.class);
 
