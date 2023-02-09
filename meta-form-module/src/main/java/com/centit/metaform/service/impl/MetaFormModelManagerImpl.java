@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
  * create by scaffold 2016-06-02
  * <p>
  * 通用模块管理null
+ *
  * @author zhf
  */
 @Service("metaFormModelManagerImpl")
@@ -78,7 +79,8 @@ public class MetaFormModelManagerImpl
                 " [:(like)modelName | and a.model_name like :modelName]" +
                 " [:applicationId | and a.APPLICATION_ID = :applicationId ] " +
                 " [ :isValid | and a.IS_VALID = :isValid ] " +
-                " [:optId | and a.OPT_ID = :optId ]  [:osId | and a.os_id = :osId ] ";
+                " [:optId | and a.OPT_ID = :optId ]  [:osId | and a.os_id = :osId ] " +
+                " [:(like)apiId | and a.form_template like :apiId ] ";
         String orderBy = GeneralJsonObjectDao.fetchSelfOrderSql(sql, filterMap);
         if (StringUtils.isNotBlank(orderBy)) {
             sql = sql + " order by "
@@ -132,24 +134,25 @@ public class MetaFormModelManagerImpl
     }
 
     @Override
-    public int countMetaFormModels(Map<String,Object> params) {
+    public int countMetaFormModels(Map<String, Object> params) {
         return metaFormModelDao.countObject(params);
     }
 
     @Override
-    public void updateValidStatus(String modelId,String validType) {
-        String sql ="UPDATE m_meta_form_model SET IS_VALID =? WHERE MODEL_ID =? ";
-        metaFormModelDao.getJdbcTemplate().update(sql, new Object[]{validType,modelId});
+    public void updateValidStatus(String modelId, String validType) {
+        String sql = "UPDATE m_meta_form_model SET IS_VALID =? WHERE MODEL_ID =? ";
+        metaFormModelDao.getJdbcTemplate().update(sql, new Object[]{validType, modelId});
     }
 
     @Override
     public void batchDeleteByIds(String[] modleIds) {
-        String delSql ="DELETE FROM m_meta_form_model WHERE MODEL_ID = ? ";
-        metaFormModelDao.getJdbcTemplate().batchUpdate(delSql,new BatchPreparedStatementSetter(){
+        String delSql = "DELETE FROM m_meta_form_model WHERE MODEL_ID = ? ";
+        metaFormModelDao.getJdbcTemplate().batchUpdate(delSql, new BatchPreparedStatementSetter() {
             public void setValues(PreparedStatement ps, int i)
                     throws SQLException {
                 ps.setString(1, modleIds[i]);
             }
+
             public int getBatchSize() {
                 return modleIds.length;
             }
@@ -158,9 +161,9 @@ public class MetaFormModelManagerImpl
 
     @Override
     public int clearTrashStand(String osId) {
-        String delSql ="DELETE FROM m_meta_form_model WHERE IS_VALID = 'T' AND OS_ID = ? ";
+        String delSql = "DELETE FROM m_meta_form_model WHERE IS_VALID = 'T' AND OS_ID = ? ";
         int delCount = DatabaseOptUtils.doExecuteSql(metaFormModelDao, delSql, new Object[]{osId});
-        return  delCount;
+        return delCount;
     }
 
     /**
