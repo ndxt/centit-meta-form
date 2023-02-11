@@ -114,7 +114,7 @@ public class MetaFormModelManagerImpl
     @Override
     public List listModelByOptId(String optId) {
         optId = getOptIdWithCommon(optId);
-        List<MetaFormModel> metaFormModelList = metaFormModelDao.listObjects(CollectionsOpt.createHashMap("optids", optId));
+        List<MetaFormModel> metaFormModelList = metaFormModelDao.listObjectsByProperties(CollectionsOpt.createHashMap("optids", optId));
         return metaFormModelList.stream().map(metaFormModel -> {
             HashMap<String, Object> map = new HashMap<>();
             map.put("modelId", metaFormModel.getModelId());
@@ -135,7 +135,7 @@ public class MetaFormModelManagerImpl
 
     @Override
     public int countMetaFormModels(Map<String, Object> params) {
-        return metaFormModelDao.countObject(params);
+        return metaFormModelDao.countObjectByProperties(params);
     }
 
     @Override
