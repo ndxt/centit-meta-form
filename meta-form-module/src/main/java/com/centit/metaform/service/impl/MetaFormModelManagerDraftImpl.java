@@ -1,6 +1,6 @@
 package com.centit.metaform.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSONArray;
 import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.MetaFormModelDraftDao;

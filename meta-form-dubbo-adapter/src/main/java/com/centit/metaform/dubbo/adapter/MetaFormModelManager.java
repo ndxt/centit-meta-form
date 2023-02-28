@@ -1,6 +1,6 @@
 package com.centit.metaform.dubbo.adapter;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSONArray;
 import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
 import com.centit.support.database.utils.PageDesc;
 

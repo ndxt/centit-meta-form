@@ -1,6 +1,6 @@
 package com.centit.metaform.plugins;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson2.JSONArray;
 
 import java.util.Collection;
 import java.util.Map;
