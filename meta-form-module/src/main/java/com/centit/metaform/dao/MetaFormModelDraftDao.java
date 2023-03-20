@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -16,6 +17,8 @@ public class MetaFormModelDraftDao extends BaseDaoImpl<MetaFormModelDraft, Strin
 
     @Override
     public Map<String, String> getFilterField() {
-        return null;
+        Map<String, String> filterField = new HashMap<>();
+        filterField.put("(like)modelName", "(model_name like :modelName or model_id like :modelName)");
+        return  filterField;
     }
 }
