@@ -12,8 +12,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 自定义表单，未发布的表单
