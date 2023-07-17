@@ -9,9 +9,9 @@
 	 http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
     <!-- 声明需要暴露的服务接口 -->
 
-    <dubbo:service interface="com.centit.metaform.adapter.service.MetaFormModelManager" ref="metaFormModelManagerImpl" protocol="dubbo"/>
+    <dubbo:service interface="com.centit.metaform.service.MetaFormModelManager" ref="metaFormModelManagerImpl" protocol="dubbo"/>
 
-    <dubbo:service interface="com.centit.metaform.adapter.service.MetaFormModelDraftManager" ref="metaFormModelManagerDraftImpl" protocol="dubbo"/>
+    <dubbo:service interface="com.centit.metaform.service.MetaFormModelDraftManager" ref="metaFormModelManagerDraftImpl" protocol="dubbo"/>
 
     <dubbo:service interface="com.centit.product.metadata.api.MetadataManageService"  ref="metadataManageServiceImpl"  protocol="dubbo"/>
 </beans>

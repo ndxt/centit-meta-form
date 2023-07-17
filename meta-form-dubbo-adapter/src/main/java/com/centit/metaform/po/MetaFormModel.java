@@ -1,4 +1,4 @@
-package com.centit.metaform.adapter.po;
+package com.centit.metaform.po;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.annotation.JSONField;

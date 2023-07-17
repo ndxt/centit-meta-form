@@ -1,7 +1,7 @@
-package com.centit.metaform.adapter.service;
+package com.centit.metaform.service;
 
 import com.alibaba.fastjson2.JSONArray;
-import com.centit.metaform.adapter.po.MetaFormModelDraft;
+import com.centit.metaform.po.MetaFormModelDraft;
 import com.centit.support.database.utils.PageDesc;
 
 import java.util.List;

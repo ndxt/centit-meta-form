@@ -29,6 +29,18 @@
         </dependency>
 
         <dependency>
+            <groupId>com.centit.product</groupId>
+            <artifactId>meta-form-module</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.centit.product</groupId>
+            <artifactId>meta-form-rmdb</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-session-redis</artifactId>
         </dependency>
@@ -61,12 +73,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.centit.product</groupId>
-            <artifactId>meta-form-module</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
@@ -77,28 +83,31 @@
             <artifactId>ojdbc6</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.5</version>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <version>7.4.1.jre8</version>
         </dependency>
+
         <dependency>
             <groupId>com.shentong</groupId>
             <artifactId>shentongjdbc</artifactId>
             <version>4.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.dameng</groupId>
             <artifactId>DmJdbcDriver18</artifactId>
             <version>8.1.2.46</version>
         </dependency>
-
 
         <dependency>
             <groupId>javax.servlet</groupId>

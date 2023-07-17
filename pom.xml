@@ -74,6 +74,8 @@
         <module>meta-form-dubbo-adapter</module>
         <module>meta-form-dubbo-server-config</module>
         <module>meta-form-dubbo-client-config</module>
+        <module>meta-form-rmdb</module>
+        <module>meta-form-json</module>
     </modules>
 
     <build>

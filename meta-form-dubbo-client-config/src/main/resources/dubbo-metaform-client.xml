@@ -9,9 +9,9 @@
 	 http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <!-- 生成远程服务代理，可以和本地bean一样使用; init默认false，即懒加载，可改为ture(饥饿加载)-->
-    <dubbo:reference id="metaFormModelManager" interface="com.centit.metaform.adapter.service.MetaFormModelManager" init="false"/>
+    <dubbo:reference id="metaFormModelManager" interface="com.centit.metaform.service.MetaFormModelManager" init="false"/>
 
-    <dubbo:reference id="metaFormModelDraftManager" interface="com.centit.metaform.adapter.service.MetaFormModelDraftManager" init="false"/>
+    <dubbo:reference id="metaFormModelDraftManager" interface="com.centit.metaform.service.MetaFormModelDraftManager" init="false"/>
 
     <dubbo:reference id="metadataManageService" interface="com.centit.product.metadata.api.MetadataManageService" init="false"/>
 </beans>

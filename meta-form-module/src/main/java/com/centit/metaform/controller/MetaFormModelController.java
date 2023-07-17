@@ -9,8 +9,8 @@ import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.adapter.PlatformEnvironment;
-import com.centit.metaform.adapter.service.MetaFormModelManager;
-import com.centit.metaform.adapter.po.MetaFormModel;
+import com.centit.metaform.po.MetaFormModel;
+import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.support.algorithm.CollectionsOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
@@ -43,11 +43,9 @@ import java.util.Map;
 @RequestMapping("/metaformmodel")
 @Api(value = "已发布的自定义表单管理", tags = "已发布的自定义表单管理")
 public class MetaFormModelController extends BaseController {
-    //private static final Log logger = LogFactory.getLog(MetaFormModelController.class);
 
     @Autowired
     private MetaFormModelManager metaFormModelMag;
-
 
     @Autowired
     private PlatformEnvironment platformEnvironment;
