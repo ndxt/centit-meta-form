@@ -22,7 +22,7 @@
         <mongodb.version>3.12.11</mongodb.version>
         <workflow.version>5.3-SNAPSHOT</workflow.version>
         <common.module.version>5.3-SNAPSHOT</common.module.version>
-        <metadata.commons.version>5.4-SNAPSHOT</metadata.commons.version>
+        <metadata.commons.version>5.3-SNAPSHOT</metadata.commons.version>
         <centit.search.version>5.3-SNAPSHOT</centit.search.version>
     </properties>
 

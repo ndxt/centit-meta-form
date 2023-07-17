@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 
-@Repository
+@Repository("metaFormModelDraftDao")
 public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, String> implements MetaFormModelDraftDao {
 
     //public static final Logger logger = LoggerFactory.getLogger(MetaFormModelDraftDaoImpl.class);

@@ -4,15 +4,12 @@ import com.alibaba.fastjson2.JSONArray;
 import com.centit.metaform.dao.MetaFormModelDraftDao;
 import com.centit.metaform.po.MetaFormModelDraft;
 import com.centit.support.database.utils.PageDesc;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-
-@Repository
+@Repository("metaFormModelDraftDao")
 public class MetaFormModelDraftDaoImpl implements MetaFormModelDraftDao {
 
     //public static final Logger logger = LoggerFactory.getLogger(MetaFormModelDraftDaoImpl.class);

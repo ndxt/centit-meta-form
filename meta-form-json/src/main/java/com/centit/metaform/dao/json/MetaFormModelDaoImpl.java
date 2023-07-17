@@ -17,7 +17,7 @@ import java.util.Map;
  * 通用模块管理null
  */
 
-@Repository
+@Repository("metaFormModelDao")
 public class MetaFormModelDaoImpl implements MetaFormModelDao {
 
     @Override

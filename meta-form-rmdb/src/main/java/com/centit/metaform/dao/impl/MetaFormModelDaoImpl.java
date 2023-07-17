@@ -31,7 +31,7 @@ import java.util.*;
  * 通用模块管理null
  */
 
-@Repository
+@Repository("metaFormModelDao")
 public class MetaFormModelDaoImpl extends BaseDaoImpl<MetaFormModel, java.lang.String> implements MetaFormModelDao {
 
     //public static final Logger logger = LoggerFactory.getLogger(MetaFormModelDaoImpl.class);
