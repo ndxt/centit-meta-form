@@ -1,4 +1,4 @@
-package com.centit.metaform.dao;
+package com.centit.metaform.vo;
 
 
 public class MetaFormModelDraftParam {

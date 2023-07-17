@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.core.dao.CodeBook;
 import com.centit.framework.jdbc.dao.BaseDaoImpl;
 import com.centit.framework.jdbc.dao.DatabaseOptUtils;
-import com.centit.metaform.dubbo.adapter.po.MetaFormModel;
+import com.centit.metaform.adapter.po.MetaFormModel;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.database.utils.FieldType;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -68,9 +68,4 @@ public class MetaFormModelDao extends BaseDaoImpl<MetaFormModel, java.lang.Strin
         return columnList;
     }
 
-
-    /*public List<MetaFormModel> listFormByTable(String tableId) {
-        return listObjects("From MetaFormModel where mdTable.tableId = ?", tableId);
-        //return listObjects("From MetaFormModel where tableId = ?", tableId);
-    }*/
 }

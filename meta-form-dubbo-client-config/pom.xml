@@ -22,15 +22,17 @@
             <artifactId>framework-dubbo-client-config</artifactId>
             <version>${centit.framework.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.centit.product</groupId>
             <artifactId>meta-form-dubbo-adapter</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.centit.product</groupId>
-            <artifactId>meta-form-dubbo-adapter</artifactId>
-            <version>${centit.framework.version}</version>
+            <artifactId>centit-metadata-adapter</artifactId>
+            <version>${metadata.commons.version}</version>
         </dependency>
     </dependencies>
 
