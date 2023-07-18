@@ -91,7 +91,7 @@ public class MetaFormModelManagerImpl
 
     @Override
     public void updateValidStatus(String modelId, String validType) {
-        metaFormModelDao.updateValidStatus(validType, modelId);
+        metaFormModelDao.updateValidStatus(modelId, validType);
     }
 
     @Override

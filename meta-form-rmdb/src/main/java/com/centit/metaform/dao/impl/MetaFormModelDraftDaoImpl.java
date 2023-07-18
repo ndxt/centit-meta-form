@@ -79,9 +79,9 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
     }
 
     @Override
-    public void updateValidStatus(String modelId,String validType) {
+    public void updateValidStatus(String modelId, String validType) {
         String sql ="UPDATE m_meta_form_model_draft SET IS_VALID =? WHERE MODEL_ID =? ";
-        this.getJdbcTemplate().update(sql, new Object[]{validType,modelId});
+        this.getJdbcTemplate().update(sql, new Object[]{validType, modelId});
     }
 
     @Override

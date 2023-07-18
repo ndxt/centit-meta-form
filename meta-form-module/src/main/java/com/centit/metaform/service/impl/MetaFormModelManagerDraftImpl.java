@@ -91,7 +91,7 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
     @Override
     @Transactional
     public void updateValidStatus(String modelId,String validType) {
-        metaFormModelDraftDao.updateValidStatus(validType,modelId);
+        metaFormModelDraftDao.updateValidStatus(modelId, validType);
     }
 
     @Override
