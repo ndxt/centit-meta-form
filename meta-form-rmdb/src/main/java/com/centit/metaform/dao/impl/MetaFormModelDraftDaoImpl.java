@@ -87,7 +87,7 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
     @Override
     public void batchDeleteByIds(String[] modleIds) {
         String delSql ="DELETE FROM m_meta_form_model_draft WHERE MODEL_ID = ? ";
-        this.getJdbcTemplate().batchUpdate(delSql,new BatchPreparedStatementSetter(){
+        this.getJdbcTemplate().batchUpdate(delSql, new BatchPreparedStatementSetter(){
             public void setValues(PreparedStatement ps, int i)
                     throws SQLException {
                 ps.setString(1, modleIds[i]);

@@ -17,7 +17,7 @@ import java.util.Map;
 
 public interface MetaFormModelDao {
 
-    MetaFormModel getObjectById(Object tableId);
+    MetaFormModel getObjectById(Object modelId);
 
     void saveNewObject(MetaFormModel metaFormModel);
 

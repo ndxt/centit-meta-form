@@ -1,12 +1,22 @@
 package com.centit.metaform.dao.json;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.centit.framework.components.CodeRepositoryCache;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.po.MetaFormModel;
+import com.centit.support.common.CachedMap;
+import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,73 +30,106 @@ import java.util.Map;
 @Repository("metaFormModelDao")
 public class MetaFormModelDaoImpl implements MetaFormModelDao {
 
+    @Value("${app.home:./}")
+    private String appHome;
+
+    private CachedMap<String, MetaFormModel> metaTableCache =
+            new CachedMap<>(
+                    (modelId)->  this.loadMetaTable(modelId),
+                    CodeRepositoryCache.CACHE_EXPIRE_EVERY_DAY );
+
+    private MetaFormModel loadMetaTable(String modelId){
+        String pageFile = appHome + File.separator + "config" +
+                File.separator +  "pages" + File.separator + modelId +".json";
+        try {
+            JSONObject moduleJson = JSON.parseObject(new FileInputStream(pageFile));
+            MetaFormModel metaForm = moduleJson.toJavaObject(MetaFormModel.class);
+            return metaForm;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     @Override
-    public MetaFormModel getObjectById(Object tableId) {
-        return null;
+    public MetaFormModel getObjectById(Object modelId) {
+        return metaTableCache.getCachedValue((String) modelId);
     }
 
     @Override
     public void saveNewObject(MetaFormModel metaFormModel) {
-
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public int mergeObject(MetaFormModel metaFormModel) {
-        return 0;
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public int updateObject(MetaFormModel metaFormModel) {
-        return 0;
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public int deleteObjectById(Object id) {
-        return 0;
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public int saveObjectReferences(MetaFormModel metaFormModel) {
-        return 0;
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public List<Pair<String, String>> getSubModelPropertiesMap(Long parentTableId, Long childTableId) {
-        return null;
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public JSONArray listFormModeAsJson(String[] fields, Map<String, Object> filterMap, PageDesc pageDesc) {
-        return null;
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public int[] batchUpdateOptId(String optId, List<String> modleIds) {
-        return new int[0];
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public List<MetaFormModel> listObjectsByProperties(Map<String, Object> filterMap) {
-        return null;
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public int countObjectByProperties(Map<String, Object> filterMap) {
-        return 0;
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public int clearTrashStand(String osId) {
-        return 0;
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public void batchDeleteByIds(String[] modleIds) {
-
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 
     @Override
     public void updateValidStatus(String modelId, String validType) {
-
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
     }
 }
