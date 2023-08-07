@@ -4,9 +4,11 @@ import com.alibaba.nacos.api.annotation.NacosProperties;
 import com.alibaba.nacos.spring.context.annotation.config.EnableNacosConfig;
 import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySources;
+import com.centit.framework.components.impl.NotificationCenterImpl;
 import com.centit.framework.config.SpringSecurityCasConfig;
 import com.centit.framework.config.SpringSecurityDaoConfig;
 import com.centit.framework.jdbc.config.JdbcConfig;
+import com.centit.framework.model.adapter.NotificationCenter;
 import com.centit.framework.security.model.StandardPasswordEncoderImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,7 +22,6 @@ import org.springframework.context.annotation.Import;
         JdbcConfig.class,
         SpringSecurityDaoConfig.class,
         SpringSecurityCasConfig.class})
-//@EnableSpringHttpSession
 @EnableNacosConfig(globalProperties = @NacosProperties(serverAddr = "${nacos.server-addr}"))
 @NacosPropertySources({@NacosPropertySource(dataId = "${nacos.system-dataid}", groupId = "CENTIT", autoRefreshed = true)}
 )
@@ -31,10 +32,11 @@ public class ServiceConfig {
         return new StandardPasswordEncoderImpl();
     }
 
-
-//    @Bean
-//    public MapSessionRepository sessionRepository() {
-//        return new MapSessionRepository(new ConcurrentHashMap<>());
-//    }
-
+    @Bean
+    public NotificationCenter notificationCenter() {
+        NotificationCenterImpl notificationCenter = new NotificationCenterImpl();
+        notificationCenter.initDummyMsgSenders();
+        ///notificationCenter.registerMessageSender("innerMsg",innerMessageManager);
+        return notificationCenter;
+    }
 }
