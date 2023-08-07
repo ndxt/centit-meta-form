@@ -44,6 +44,7 @@
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-session-redis</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.centit.framework</groupId>
             <artifactId>framework-config</artifactId>

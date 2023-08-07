@@ -36,13 +36,11 @@ public class WebInitializer implements WebApplicationInitializer {
 
         WebConfig.registerRequestContextListener(servletContext);
         WebConfig.registerSingleSignOutHttpSessionListener(servletContext);
-//        WebConfig.registerResponseCorsFilter(servletContext);
         WebConfig.registerCharacterEncodingFilter(servletContext,servletUrlPatterns);
         WebConfig.registerHttpPutFormContentFilter(servletContext,servletUrlPatterns);
         WebConfig.registerHiddenHttpMethodFilter(servletContext,servletUrlPatterns);
         WebConfig.registerRequestThreadLocalFilter(servletContext);
         WebConfig.registerSpringSecurityFilter(servletContext,servletUrlPatterns);
-        //registerOpenSessionInViewFilter(servletContext);
 
     }
 
