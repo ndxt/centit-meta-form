@@ -7,12 +7,10 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
-import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.adapter.PlatformEnvironment;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.support.algorithm.CollectionsOpt;
-import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
@@ -125,20 +123,23 @@ public class MetaFormModelController extends BaseController {
     @WrapUpResponseBody
     public String createMetaFormModel(@RequestBody MetaFormModel metaFormModel,
                                       HttpServletRequest request) {
-        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (StringBaseOpt.isNvl(loginUser)) {
-            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
-        }
+        String loginUser = WebOptUtils.getCurrentUserCode(request);
+
+        /*if (StringUtils.isBlank(loginUser)) {
+            loginUser = WebOptUtils.getRequestFirstOneParameter(request, "userCode");
+        }*/
+
         if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
+
         if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         MetaFormModel model = new MetaFormModel();
-        String usercode = WebOptUtils.getCurrentUnitCode(request);
+
         model.copyNotNullProperty(metaFormModel);
-        model.setRecorder(usercode);
+        model.setRecorder(loginUser);
         metaFormModelMag.saveNewMetaFormModel(model);
         return model.getModelId();
     }
@@ -151,14 +152,12 @@ public class MetaFormModelController extends BaseController {
     @ApiOperation(value = "删除单个通用模块")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.DELETE})
     @WrapUpResponseBody
-    public void deleteMetaFormModel(@PathVariable String modelId) {
-        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (StringBaseOpt.isNvl(loginUser)) {
-            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
-        }
+    public void deleteMetaFormModel(@PathVariable String modelId, HttpServletRequest request) {
+        String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
+
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         if (null == metaFormModel) {
             throw new ObjectException("表单数据不存在!");
@@ -179,15 +178,14 @@ public class MetaFormModelController extends BaseController {
     @ApiOperation(value = "编辑通用模块")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.PUT})
     @WrapUpResponseBody
-    public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel) {
+    public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModel metaFormModel,
+                                    HttpServletRequest request) {
         metaFormModel.setModelId(modelId);
-        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (StringBaseOpt.isNvl(loginUser)) {
-            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
-        }
+        String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
+
         if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
@@ -235,15 +233,12 @@ public class MetaFormModelController extends BaseController {
     @WrapUpResponseBody
     public void updateFormTemplate(@PathVariable String modelId,
                                    @RequestBody JSONObject formTemplate,
-                                   String type) {
-        String loginUser = WebOptUtils.getCurrentUserCode(RequestThreadLocal.getLocalThreadWrapperRequest());
-        if (StringBaseOpt.isNvl(loginUser)) {
-            loginUser = WebOptUtils.getRequestFirstOneParameter(RequestThreadLocal.getLocalThreadWrapperRequest(), "userCode");
-        }
-        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
+                                   String type, HttpServletRequest request) {
+        String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
+        MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
         if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }

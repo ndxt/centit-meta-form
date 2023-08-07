@@ -1,29 +1,18 @@
 package com.centit.metaform.service.impl;
 
 import com.alibaba.fastjson2.JSONArray;
-import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.dao.MetaFormModelDraftDao;
-import com.centit.metaform.service.MetaFormModelDraftManager;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaFormModelDraft;
-import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
-import com.centit.support.database.orm.JpaMetadata;
-import com.centit.support.database.orm.TableMapInfo;
+import com.centit.metaform.service.MetaFormModelDraftManager;
 import com.centit.support.database.utils.PageDesc;
-import com.centit.support.database.utils.QueryUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
