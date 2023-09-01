@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
 import com.centit.framework.filter.RequestThreadLocal;
-import com.centit.framework.model.basedata.IOptInfo;
+import com.centit.framework.model.basedata.OptInfo;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
@@ -112,7 +112,7 @@ public class MetaFormModelManagerImpl
      */
     private String getOptIdWithCommon(String optId) {
         String topUnit = WebOptUtils.getCurrentTopUnit(RequestThreadLocal.getLocalThreadWrapperRequest());
-        IOptInfo commonOptInfo = CodeRepositoryUtil.getCommonOptId(topUnit, optId);
+        OptInfo commonOptInfo = CodeRepositoryUtil.getCommonOptId(topUnit, optId);
         if (commonOptInfo != null) {
             String commonOptId = commonOptInfo.getOptId();
             return StringBaseOpt.concat(optId, ",", commonOptId);
