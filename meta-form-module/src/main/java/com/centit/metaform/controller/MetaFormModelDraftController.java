@@ -13,6 +13,8 @@ import com.centit.metaform.po.MetaFormModelDraft;
 import com.centit.metaform.service.MetaFormModelDraftManager;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.metaform.vo.MetaFormModelDraftParam;
+import com.centit.product.oa.team.utils.ResourceBaseController;
+import com.centit.product.oa.team.utils.ResourceLock;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
@@ -38,7 +40,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/draft/metaformmodel")
 @Api(value = "未发布的自定义表单管理", tags = "未发布的自定义表单管理")
-public class MetaFormModelDraftController extends BaseController {
+public class MetaFormModelDraftController extends ResourceBaseController {
 
     @Autowired
     private MetaFormModelDraftManager metaFormModelDraftManager;
@@ -148,6 +150,9 @@ public class MetaFormModelDraftController extends BaseController {
     @WrapUpResponseBody
     public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModelDraft metaFormModel,
                                     HttpServletRequest request) {
+        //检查资源
+        ResourceLock.lockResource(modelId, WebOptUtils.getCurrentUserCode(request));
+
         metaFormModel.setModelId(modelId);
         String loginUser = WebOptUtils.getCurrentUserCode(request);
         if (StringUtils.isBlank(loginUser)) {
