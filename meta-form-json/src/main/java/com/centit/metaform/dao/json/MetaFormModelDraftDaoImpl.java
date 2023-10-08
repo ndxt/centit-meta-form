@@ -46,6 +46,11 @@ public class MetaFormModelDraftDaoImpl implements MetaFormModelDraftDao {
     }
 
     @Override
+    public JSONArray searchFormModeAsJson(String keyWords, String applicationId, String formType, PageDesc pageDesc) {
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "该方法在当前版本下没有实现，请联系研发人员!");
+    }
+    @Override
     public int[] batchUpdateOptId(String optId, List<String> modleIds) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
                 "该方法在当前版本下没有实现，请联系研发人员!");

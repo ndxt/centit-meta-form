@@ -19,6 +19,7 @@ import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -89,6 +90,19 @@ public class MetaFormModelDraftController extends ResourceBaseController {
     @WrapUpResponseBody
     public MetaFormModelDraft getDraftMetaFormModel(@PathVariable String modelId) {
         return metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
+    }
+
+    @ApiOperation(value = "查询单个未发布的通用模块,其中keyProps为其主表对应的主键字段名称数组", response = MetaFormModel.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "osId", type = "path", value = "应用id，applicationId"),
+            @ApiImplicitParam(name = "keyWords", type = "query", value = "检索关键字", required = true),
+            @ApiImplicitParam(name = "formType", type = "query", value = "表单类别，默认为pc，移动为mobile"),
+            @ApiImplicitParam(name = "pageDesc", type = "query", value = "分页信息",
+                    dataTypeClass = PageDesc.class)})
+    @RequestMapping(value = "/search/{osId}", method = {RequestMethod.GET})
+    @WrapUpResponseBody
+    public JSONArray searchMetaFormScript(@PathVariable String osId, String keyWords, String formType, PageDesc pageDesc) {
+        return metaFormModelDraftManager.searchFormModeAsJson(keyWords, osId, formType, pageDesc);
     }
 
     @ApiOperation(value = "新增通用模块")

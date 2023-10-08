@@ -5,6 +5,7 @@ import com.centit.framework.jdbc.dao.BaseDaoImpl;
 import com.centit.framework.jdbc.dao.DatabaseOptUtils;
 import com.centit.metaform.dao.MetaFormModelDraftDao;
 import com.centit.metaform.po.MetaFormModelDraft;
+import com.centit.support.compiler.Lexer;
 import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
 import com.centit.support.database.orm.JpaMetadata;
 import com.centit.support.database.orm.TableMapInfo;
@@ -57,6 +58,48 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
                     + QueryUtils.cleanSqlStatement(orderBy);
         }
         JSONArray listTables = DatabaseOptUtils.listObjectsByParamsDriverSqlAsJson(this, sql, filterMap, pageDesc);
+        return listTables;
+    }
+
+    public static String pretreatmentQueryWord(String strQuery){
+        Lexer lexer = new Lexer(strQuery);
+        String aWord = lexer.getAWord();
+        StringBuilder sQuery = new StringBuilder();
+        int words = 0;
+        while (StringUtils.isNotBlank(aWord)){
+            String sopt ="+";
+            while(StringUtils.equalsAny(aWord, "+", "-", ",", ".", "，", "。", "：", ":", "=", "—")){
+                if(StringUtils.equalsAny(aWord, "+","-")) {
+                    sopt = aWord;
+                }
+                aWord = lexer.getAWord();
+            }
+            if(StringUtils.isNotBlank(aWord)){
+                if(words>0){
+                    sQuery.append(" ");
+                }
+                sQuery.append(sopt).append(aWord);
+                words ++;
+            }
+            aWord = lexer.getAWord();
+        }
+        return sQuery.toString();
+    }
+
+    @Override
+    public JSONArray searchFormModeAsJson(String keyWords, String applicationId, String formType, PageDesc pageDesc) {
+        String sql = "select a.MODEL_ID, a.MODEL_NAME, a.MODEL_TAG, a.MODEL_COMMENT, a.os_id, " +
+                "a.OPT_ID from M_META_FORM_MODEL_DRAFT a " +
+                "where a.os_id = ?";
+        if("mobile".equals(formType)) {
+            sql = sql +
+                    " and match (a.MOBILE_FORM_TEMPLATE) against( ? IN BOOLEAN MODE)";
+        } else {
+            sql = sql +
+                    " and match (a.form_template) against( ? IN BOOLEAN MODE)";
+        }
+        JSONArray listTables = DatabaseOptUtils.listObjectsBySqlAsJson(
+                this, sql, new Object[]{applicationId, pretreatmentQueryWord(keyWords)}, pageDesc);
         return listTables;
     }
 

@@ -38,4 +38,5 @@ public interface MetaFormModelManager {
     void batchDeleteByIds(String[] modleIds);
 
     int clearTrashStand(String osId);
+
 }

@@ -94,5 +94,10 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
     public int clearTrashStand(String osId) {
         return  metaFormModelDraftDao.clearTrashStand(osId);
     }
+
+    @Override
+    public JSONArray searchFormModeAsJson(String keyWords, String applicationId, String formType, PageDesc pageDesc) {
+        return metaFormModelDraftDao.searchFormModeAsJson(keyWords, applicationId, formType, pageDesc);
+    }
 }
 

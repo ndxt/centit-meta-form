@@ -30,4 +30,6 @@ public interface MetaFormModelDraftManager {
     void batchDeleteByIds(String[] modleIds);
 
     int clearTrashStand(String osId);
+
+    JSONArray searchFormModeAsJson(String keyWords, String applicationId, String formType, PageDesc pageDesc);
 }
