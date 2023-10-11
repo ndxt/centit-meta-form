@@ -47,7 +47,7 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
                 " where 1=1 " +
                 " [:modelType | and a.MODEL_TYPE = :modelType] " +
                 " [:modelId | and a.MODEL_ID = :modelId ] " +
-                " [:(like)modelName | and a.model_name like :modelName]" +
+                " [:(like)modelName | and (model_name like :modelName or model_id like :modelName)]" +
                 " [ :osId | and a.os_id = :osId ] " +
                 " [ :recorder | and a.RECORDER = :recorder ] " +
                 " [ :isValid | and a.IS_VALID = :isValid ] " +
