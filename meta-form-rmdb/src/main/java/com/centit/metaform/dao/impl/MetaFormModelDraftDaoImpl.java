@@ -89,15 +89,14 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
     @Override
     public JSONArray searchFormModeAsJson(String keyWords, String applicationId, String formType, PageDesc pageDesc) {
         String sql = "select a.MODEL_ID, a.MODEL_NAME, a.MODEL_TAG, a.MODEL_COMMENT, a.os_id, " +
-                "a.OPT_ID from M_META_FORM_MODEL_DRAFT a " +
+                "a.OPT_ID, a.LAST_MODIFY_DATE from M_META_FORM_MODEL_DRAFT a " +
                 "where a.os_id = ?";
         if("mobile".equals(formType)) {
-            sql = sql +
-                    " and match (a.MOBILE_FORM_TEMPLATE) against( ? IN BOOLEAN MODE)";
+            sql = sql + " and match (a.MOBILE_FORM_TEMPLATE) against( ? IN BOOLEAN MODE)";
         } else {
-            sql = sql +
-                    " and match (a.form_template) against( ? IN BOOLEAN MODE)";
+            sql = sql + " and match (a.form_template) against( ? IN BOOLEAN MODE)";
         }
+        sql = sql + " order by a.LAST_MODIFY_DATE desc";
         JSONArray listTables = DatabaseOptUtils.listObjectsBySqlAsJson(
                 this, sql, new Object[]{applicationId, pretreatmentQueryWord(keyWords)}, pageDesc);
         return listTables;
