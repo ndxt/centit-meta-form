@@ -5,3 +5,5 @@ target
 D:
 node_modules
 */package-lock.json
+.DS_Store
+.classpath
