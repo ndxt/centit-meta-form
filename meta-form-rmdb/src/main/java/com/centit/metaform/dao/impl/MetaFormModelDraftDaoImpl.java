@@ -9,6 +9,7 @@ import com.centit.support.compiler.Lexer;
 import com.centit.support.database.jsonmaptable.GeneralJsonObjectDao;
 import com.centit.support.database.orm.JpaMetadata;
 import com.centit.support.database.orm.TableMapInfo;
+import com.centit.support.database.utils.DBType;
 import com.centit.support.database.utils.PageDesc;
 import com.centit.support.database.utils.QueryUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -88,6 +89,9 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
 
     @Override
     public JSONArray searchFormModeAsJson(String keyWords, String applicationId, String formType, PageDesc pageDesc) {
+        if(this.getDBtype() != DBType.MySql)
+            return new JSONArray();
+
         String sql = "select a.MODEL_ID, a.MODEL_NAME, a.MODEL_TAG, a.MODEL_COMMENT, a.os_id, " +
                 "a.OPT_ID, a.LAST_MODIFY_DATE from M_META_FORM_MODEL_DRAFT a " +
                 "where a.os_id = ?";
