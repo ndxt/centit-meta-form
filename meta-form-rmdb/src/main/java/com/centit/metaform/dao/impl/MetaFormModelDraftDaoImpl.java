@@ -93,7 +93,6 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
                 "a.OPT_ID, a.LAST_MODIFY_DATE from M_META_FORM_MODEL_DRAFT a " +
                 "where a.os_id = ?";
         if(this.getDBtype() == DBType.MySql) {
-
             if ("mobile".equals(formType)) {
                 sql = sql + " and match (a.MOBILE_FORM_TEMPLATE) against( ? IN BOOLEAN MODE)";
             } else {
@@ -104,18 +103,19 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
                     this, sql, new Object[]{applicationId, pretreatmentQueryWord(keyWords)}, pageDesc);
             return listTables;
         }
-        if(this.getDBtype() == DBType.Oracle) {
-            if ("mobile".equals(formType)) {
-                sql = sql + " and CONTAINS(a.MOBILE_FORM_TEMPLATE, ?, 1) > 0";
-            } else {
-                sql = sql + " and CONTAINS(a.form_template, ?, 1) > 0";
-            }
-            sql = sql + " order by a.LAST_MODIFY_DATE desc";
-            JSONArray listTables = DatabaseOptUtils.listObjectsBySqlAsJson(
-                    this, sql, new Object[]{applicationId, pretreatmentQueryWord(keyWords)}, pageDesc);
-            return listTables;
+        //if(this.getDBtype() == DBType.Oracle) {
+        // CONTAINS(a.MOBILE_FORM_TEMPLATE, ?, 1) > 0";
+        // CONTAINS(a.form_template, ?, 1) > 0";
+        if ("mobile".equals(formType)) {
+            sql = sql + " and a.MOBILE_FORM_TEMPLATE like ?";
+        } else {
+            sql = sql + " and a.form_template like ?";
         }
-        return new JSONArray();
+        sql = sql + " order by a.LAST_MODIFY_DATE desc";
+        JSONArray listTables = DatabaseOptUtils.listObjectsBySqlAsJson(
+                this, sql, new Object[]{applicationId, QueryUtils.getMatchString(keyWords)}, pageDesc);
+        return listTables;
+
     }
 
     @Override
