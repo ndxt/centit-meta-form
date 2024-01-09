@@ -164,7 +164,7 @@ public class MetaFormModelDraftController extends ResourceBaseController {
     public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModelDraft metaFormModel,
                                     HttpServletRequest request) {
         //检查资源
-        ResourceLock.lockResource(modelId, WebOptUtils.getCurrentUserCode(request));
+        ResourceLock.lockResource(modelId, WebOptUtils.getCurrentUserCode(request), request);
 
         metaFormModel.setModelId(modelId);
         String loginUser = WebOptUtils.getCurrentUserCode(request);
