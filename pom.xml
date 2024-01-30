@@ -2,15 +2,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
             http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <parent>
-        <artifactId>framework-snapshot-dependencies</artifactId>
         <groupId>com.centit.framework</groupId>
-        <version>5.4-SNAPSHOT</version>
+        <artifactId>centit-project-bulid-parent</artifactId>
+        <version>5.5-SNAPSHOT</version>
     </parent>
-	<modelVersion>4.0.0</modelVersion>
+
+    <modelVersion>4.0.0</modelVersion>
 	<groupId>com.centit.product</groupId>
-	<version>5.4-SNAPSHOT</version>
+	<version>${revision}</version>
     <packaging>pom</packaging>
 	<artifactId>centit-meta-form</artifactId>
 	<name>com.centit.product:centit-meta-form</name>
@@ -69,7 +69,7 @@
         <module>meta-form-module</module>
         <module>meta-form-view</module>
         <module>meta-form-web</module>
-        <module>meta-form-dubbo-adapter</module>
+        <module>meta-form-adapter</module>
         <module>meta-form-dubbo-server-config</module>
         <module>meta-form-dubbo-client-config</module>
         <module>meta-form-rmdb</module>

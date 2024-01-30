@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.centit.product</groupId>
         <artifactId>centit-meta-form</artifactId>
-        <version>5.4-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>meta-form-json</artifactId>
@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>com.centit.product</groupId>
-            <artifactId>meta-form-dubbo-adapter</artifactId>
+            <artifactId>meta-form-adapter</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
