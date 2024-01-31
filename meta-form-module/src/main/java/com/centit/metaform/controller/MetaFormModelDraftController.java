@@ -216,13 +216,15 @@ public class MetaFormModelDraftController extends ResourceBaseController {
         return ResponseData.makeSuccessResponse("发布成功！");
     }
 
-    @ApiOperation(value = "修改表单所属业务模块")
+    @ApiOperation(value = "批量逻辑删除业务表单（移到回收站），前端需要传入回收站的optId")
     @PutMapping(value = "/batchUpdateOptId")
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     public ResponseData batchUpdateOptId(@RequestBody MetaFormModelDraftParam metaFormModelDraftParam) {
-        int[] metaFormModelDraftArr = metaFormModelDraftManager.batchUpdateOptId(metaFormModelDraftParam.getOptId(), Arrays.asList(metaFormModelDraftParam.getModelIds()));
-        int[] metaFormModelArr = metaFormModelManager.batchUpdateOptId(metaFormModelDraftParam.getOptId(), Arrays.asList(metaFormModelDraftParam.getModelIds()));
+        int[] metaFormModelDraftArr = metaFormModelDraftManager.batchUpdateOptId(metaFormModelDraftParam.getOptId(),
+                Arrays.asList(metaFormModelDraftParam.getModelIds()));
+        int[] metaFormModelArr = metaFormModelManager.batchUpdateOptId(metaFormModelDraftParam.getOptId(),
+                Arrays.asList(metaFormModelDraftParam.getModelIds()));
         JSONObject result = new JSONObject();
         result.put("metaFormModelDraftArr", metaFormModelDraftArr);
         result.put("metaFormModelArr", metaFormModelArr);
