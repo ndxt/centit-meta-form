@@ -20,8 +20,6 @@
     <properties>
         <jdk.version>1.8</jdk.version>
         <mongodb.version>3.12.11</mongodb.version>
-        <workflow.version>5.4-SNAPSHOT</workflow.version>
-        <metadata.commons.version>5.4-SNAPSHOT</metadata.commons.version>
     </properties>
 
     <licenses>
