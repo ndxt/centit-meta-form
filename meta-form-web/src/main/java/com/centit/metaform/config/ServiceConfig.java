@@ -9,15 +9,23 @@ import com.centit.framework.config.SpringSecurityCasConfig;
 import com.centit.framework.config.SpringSecurityDaoConfig;
 import com.centit.framework.jdbc.config.JdbcConfig;
 import com.centit.framework.model.adapter.NotificationCenter;
+import com.centit.framework.model.adapter.PlatformEnvironment;
+import com.centit.framework.model.security.CentitUserDetailsService;
 import com.centit.framework.security.StandardPasswordEncoderImpl;
+import com.centit.framework.security.UserDetailsServiceImpl;
 import com.centit.search.service.ESServerConfig;
 import com.centit.support.algorithm.NumberBaseOpt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Configuration
 //@PropertySource("classpath:system.properties")
@@ -38,6 +46,32 @@ public class ServiceConfig {
     @Bean(name = "passwordEncoder")
     public StandardPasswordEncoderImpl passwordEncoder() {
         return new StandardPasswordEncoderImpl();
+    }
+
+
+    @Bean
+    public CentitUserDetailsService centitUserDetailsService(@Autowired PlatformEnvironment platformEnvironment) {
+        UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
+        userDetailsService.setPlatformEnvironment(platformEnvironment);
+        return userDetailsService;
+    }
+
+    @Bean
+    public CsrfTokenRepository csrfTokenRepository() {
+        return new HttpSessionCsrfTokenRepository();
+    }
+
+    @Bean
+    MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
+        ms.setBasename("classpath:i18n");
+        ms.setDefaultEncoding("UTF-8");
+        return ms;
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean validatorFactory() {
+        return new LocalValidatorFactoryBean();
     }
 
     @Bean
