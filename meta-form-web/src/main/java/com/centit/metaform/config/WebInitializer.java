@@ -24,8 +24,6 @@ public class WebInitializer implements WebApplicationInitializer {
                 "/system/*",
                 SystemSpringMvcConfig.class,SwaggerConfig.class);
 
-        WebConfig.registerAssertUserLoginFilter(servletContext, new String[]{"/metaform/*"});
-
         WebConfig.registerServletConfig(servletContext, "metaform",
                 "/metaform/*",
                 MetaformSpringMvcConfig.class,SwaggerConfig.class);
@@ -43,6 +41,7 @@ public class WebInitializer implements WebApplicationInitializer {
         WebConfig.registerHttpPutFormContentFilter(servletContext,servletUrlPatterns);
         WebConfig.registerHiddenHttpMethodFilter(servletContext,servletUrlPatterns);
         WebConfig.registerRequestThreadLocalFilter(servletContext);
+        WebConfig.registerAssertUserLoginFilter(servletContext, new String[]{"/metadata/*", "/dbdesign/*"});
         WebConfig.registerSpringSecurityFilter(servletContext,servletUrlPatterns);
 
     }
