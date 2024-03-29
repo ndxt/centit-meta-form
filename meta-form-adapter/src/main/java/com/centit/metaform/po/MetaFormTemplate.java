@@ -46,12 +46,12 @@ public class MetaFormTemplate implements java.io.Serializable {
 
     @ApiModelProperty(value = "模板类型：报表、门户、框架、表单")
     @Column(name = "TEMPLATE_TYPE")
-    @Length(max = 1, message = "字段长度不能大于{max}")
+    @Length(max = 1)
     private String templateType;
 
     @ApiModelProperty(value = "模板类别：公用，私有")
     @Column(name = "TEMPLATE_CATEGORY")
-    @Length(max = 1, message = "字段长度不能大于{max}")
+    @Length(max = 1)
     private String templateCategory;
 
     @ApiModelProperty(value = "私有应用")
