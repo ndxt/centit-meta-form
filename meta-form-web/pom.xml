@@ -66,15 +66,16 @@
 
         <dependency>
             <groupId>com.centit.framework</groupId>
-            <artifactId>framework-system-dubbo-client-config</artifactId>
+            <artifactId>framework-dubbo-config</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.centit.product</groupId>
-            <artifactId>meta-form-dubbo-server-config</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.centit.framework</groupId>
+            <artifactId>framework-system-dubbo-client-config</artifactId>
+            <version>${revision}</version>
         </dependency>
+
 
         <!--es 日志实现包-->
         <dependency>

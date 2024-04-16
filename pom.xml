@@ -67,7 +67,6 @@
         <module>meta-form-module</module>
         <module>meta-form-view</module>
         <module>meta-form-adapter</module>
-        <module>meta-form-dubbo-server-config</module>
         <module>meta-form-dubbo-client-config</module>
         <module>meta-form-rmdb</module>
         <module>meta-form-json</module>
