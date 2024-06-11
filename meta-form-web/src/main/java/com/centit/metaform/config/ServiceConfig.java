@@ -63,7 +63,7 @@ public class ServiceConfig implements EnvironmentAware {
     }
 
     @Bean
-    MessageSource messageSource() {
+    public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
         ms.setBasenames("classpath:i18n/messages", "classpath:org/springframework/security/messages");
         ms.setDefaultEncoding("UTF-8");
