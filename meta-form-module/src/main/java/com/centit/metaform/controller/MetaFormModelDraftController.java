@@ -7,12 +7,12 @@ import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.model.adapter.PlatformEnvironment;
+import com.centit.framework.model.basedata.WorkGroup;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.po.MetaFormModelDraft;
 import com.centit.metaform.service.MetaFormModelDraftManager;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.metaform.vo.MetaFormModelDraftParam;
-import com.centit.product.metadata.po.PendingMetaColumn;
 import com.centit.product.oa.team.utils.ResourceBaseController;
 import com.centit.product.oa.team.utils.ResourceLock;
 import com.centit.support.algorithm.StringBaseOpt;
@@ -23,6 +23,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -116,8 +118,8 @@ public class MetaFormModelDraftController extends ResourceBaseController {
         if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
+        List<WorkGroup> userGroups = platformEnvironment.listWorkGroup(metaFormModel.getOsId(), loginUser, null);
+        if(CollectionUtils.isEmpty(userGroups)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModel.setRecorder(loginUser);
@@ -143,7 +145,8 @@ public class MetaFormModelDraftController extends ResourceBaseController {
         if (null == metaFormModelDraft) {
             throw new ObjectException("表单数据不存在!");
         }
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModelDraft.getOsId(), loginUser)) {
+        List<WorkGroup> userGroups = platformEnvironment.listWorkGroup(metaFormModelDraft.getOsId(), loginUser, null);
+        if(CollectionUtils.isEmpty(userGroups)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         if (MapUtils.getBooleanValue(collectRequestParameters(request), "deleteMetaFormModel")) {
@@ -177,7 +180,8 @@ public class MetaFormModelDraftController extends ResourceBaseController {
         if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
+        List<WorkGroup> userGroups = platformEnvironment.listWorkGroup(metaFormModel.getOsId(), loginUser, null);
+        if(CollectionUtils.isEmpty(userGroups)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModel.setRecorder(loginUser);
@@ -291,8 +295,8 @@ public class MetaFormModelDraftController extends ResourceBaseController {
         if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-
-        if (!platformEnvironment.loginUserIsExistWorkGroup(osId, loginUser)) {
+        List<WorkGroup> userGroups = platformEnvironment.listWorkGroup(osId, loginUser, null);
+        if(CollectionUtils.isEmpty(userGroups)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
     }
