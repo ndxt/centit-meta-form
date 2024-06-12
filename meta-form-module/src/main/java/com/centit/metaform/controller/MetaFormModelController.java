@@ -8,6 +8,7 @@ import com.centit.framework.core.controller.BaseController;
 import com.centit.framework.core.controller.WrapUpResponseBody;
 import com.centit.framework.core.dao.PageQueryResult;
 import com.centit.framework.model.adapter.PlatformEnvironment;
+import com.centit.framework.model.basedata.WorkGroup;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.support.algorithm.CollectionsOpt;
@@ -17,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -132,8 +135,8 @@ public class MetaFormModelController extends BaseController {
         if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
+        List<WorkGroup> userGroups = platformEnvironment.listWorkGroup(metaFormModel.getOsId(), loginUser, null);
+        if(CollectionUtils.isEmpty(userGroups)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         MetaFormModel model = new MetaFormModel();
@@ -162,7 +165,8 @@ public class MetaFormModelController extends BaseController {
         if (null == metaFormModel) {
             throw new ObjectException("表单数据不存在!");
         }
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
+        List<WorkGroup> userGroups = platformEnvironment.listWorkGroup(metaFormModel.getOsId(), loginUser, null);
+        if(CollectionUtils.isEmpty(userGroups)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelMag.deleteObjectById(modelId);
@@ -185,8 +189,8 @@ public class MetaFormModelController extends BaseController {
         if (StringUtils.isBlank(loginUser)) {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
-
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
+        List<WorkGroup> userGroups = platformEnvironment.listWorkGroup(metaFormModel.getOsId(), loginUser, null);
+        if(CollectionUtils.isEmpty(userGroups)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModelMag.updateMetaFormModel(metaFormModel);
@@ -239,7 +243,8 @@ public class MetaFormModelController extends BaseController {
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "您未登录！");
         }
         MetaFormModel metaFormModel = metaFormModelMag.getObjectById(modelId);
-        if (!platformEnvironment.loginUserIsExistWorkGroup(metaFormModel.getOsId(), loginUser)) {
+        List<WorkGroup> userGroups = platformEnvironment.listWorkGroup(metaFormModel.getOsId(), loginUser, null);
+        if(CollectionUtils.isEmpty(userGroups)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         if (StringUtils.equalsAnyIgnoreCase(type, "m", "mo", "mobile")) {
