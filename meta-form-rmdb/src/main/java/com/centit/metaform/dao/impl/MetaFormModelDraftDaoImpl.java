@@ -94,28 +94,27 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
                 "where a.os_id = ?";
         if(this.getDBtype() == DBType.MySql) {
             if ("mobile".equals(formType)) {
-                sql = sql + " and match (a.MOBILE_FORM_TEMPLATE) against( ? IN BOOLEAN MODE)";
+                sql = sql + " and ( match(a.MOBILE_FORM_TEMPLATE) against( ? IN BOOLEAN MODE) " +
+                        "or match(a.STRUCTURE_FUNCTION) against( ? IN BOOLEAN MODE) )";
             } else {
-                sql = sql + " and match (a.form_template) against( ? IN BOOLEAN MODE)";
+                sql = sql + " and ( match(a.form_template) against( ? IN BOOLEAN MODE) " +
+                        "or match(a.STRUCTURE_FUNCTION) against( ? IN BOOLEAN MODE) )";
             }
             sql = sql + " order by a.LAST_MODIFY_DATE desc";
-            JSONArray listTables = DatabaseOptUtils.listObjectsBySqlAsJson(
-                    this, sql, new Object[]{applicationId, pretreatmentQueryWord(keyWords)}, pageDesc);
-            return listTables;
+            return DatabaseOptUtils.listObjectsBySqlAsJson(
+                    this, sql, new Object[]{applicationId, pretreatmentQueryWord(keyWords),
+                            pretreatmentQueryWord(keyWords)}, pageDesc);
         }
-        //if(this.getDBtype() == DBType.Oracle) {
-        // CONTAINS(a.MOBILE_FORM_TEMPLATE, ?, 1) > 0";
-        // CONTAINS(a.form_template, ?, 1) > 0";
+
         if ("mobile".equals(formType)) {
-            sql = sql + " and a.MOBILE_FORM_TEMPLATE like ?";
+            sql = sql + " and (a.MOBILE_FORM_TEMPLATE like ? or a.STRUCTURE_FUNCTION like ?)";
         } else {
-            sql = sql + " and a.form_template like ?";
+            sql = sql + " and (a.form_template like ? or a.STRUCTURE_FUNCTION like ?)";
         }
         sql = sql + " order by a.LAST_MODIFY_DATE desc";
-        JSONArray listTables = DatabaseOptUtils.listObjectsBySqlAsJson(
-                this, sql, new Object[]{applicationId, QueryUtils.getMatchString(keyWords)}, pageDesc);
-        return listTables;
-
+        return DatabaseOptUtils.listObjectsBySqlAsJson(
+                this, sql, new Object[]{ applicationId, QueryUtils.getMatchString(keyWords),
+                        QueryUtils.getMatchString(keyWords)}, pageDesc);
     }
 
     @Override

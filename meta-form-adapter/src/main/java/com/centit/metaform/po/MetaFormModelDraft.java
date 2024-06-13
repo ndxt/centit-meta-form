@@ -31,12 +31,12 @@ public class MetaFormModelDraft implements java.io.Serializable {
     @Deprecated
     @ApiModelProperty(value = "表单类型 C 卡片类型 R 日历类型 N 正常表单 S 子模块表单 L 列表表单 P 一对一子表表单 D 数据驱动表单（二阶表单）")
     @Column(name = "MODEL_TYPE")
-    @Length(max = 1, message = "字段长度不能大于{max}")
+    @Length(max = 1)
     private String modelType;
 
     @ApiModelProperty(value = "模块名称，如果是子摸快，这个字段名为 relationName ", required = true)
     @Column(name = "MODEL_NAME")
-    @Length(max = 200, message = "字段长度不能大于{max}")
+    @Length(max = 200)
     private String modelName;
 
     @ApiModelProperty(value = "模块标记")
@@ -65,13 +65,13 @@ public class MetaFormModelDraft implements java.io.Serializable {
 
     @ApiModelProperty(value = "更改人员")
     @Column(name = "RECORDER")
-    @Length(max = 8, message = "字段长度不能大于{max}")
+    @Length(max = 8)
     @DictionaryMap(fieldName = "recorderName", value = "userCode")
     private String recorder;
 
     @ApiModelProperty(value = "模块描述")
     @Column(name = "MODEL_COMMENT")
-    @Length(max = 256, message = "字段长度不能大于{max}")
+    @Length(max = 256)
     private String modelComment;
 
     @ApiModelProperty(value = "应用id")

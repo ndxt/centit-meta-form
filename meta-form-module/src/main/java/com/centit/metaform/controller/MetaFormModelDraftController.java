@@ -12,11 +12,13 @@ import com.centit.metaform.po.MetaFormModelDraft;
 import com.centit.metaform.service.MetaFormModelDraftManager;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.metaform.vo.MetaFormModelDraftParam;
+import com.centit.product.metadata.po.PendingMetaColumn;
 import com.centit.product.oa.team.utils.ResourceBaseController;
 import com.centit.product.oa.team.utils.ResourceLock;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
+import com.centit.support.security.SecurityOptUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -155,16 +157,20 @@ public class MetaFormModelDraftController extends ResourceBaseController {
      * 新增或保存 通用模块管理
      *
      * @param modelId       Model_Id
-     * @param metaFormModel {@link MetaFormModel}
+     * @param modelJsonStr {@link MetaFormModel}
      * @return
      */
     @ApiOperation(value = "编辑未发布的通用模块")
     @RequestMapping(value = "/{modelId}", method = {RequestMethod.PUT})
     @WrapUpResponseBody
-    public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody MetaFormModelDraft metaFormModel,
+    public Date updateMetaFormModel(@PathVariable String modelId, @RequestBody String modelJsonStr,
                                     HttpServletRequest request) {
         //检查资源
         ResourceLock.lockResource(modelId, WebOptUtils.getCurrentUserCode(request), request);
+        //自适应加密传输
+        MetaFormModelDraft metaFormModel = JSONObject.parseObject(
+                SecurityOptUtils.decodeSecurityString(modelJsonStr),
+                MetaFormModelDraft.class);
 
         metaFormModel.setModelId(modelId);
         String loginUser = WebOptUtils.getCurrentUserCode(request);

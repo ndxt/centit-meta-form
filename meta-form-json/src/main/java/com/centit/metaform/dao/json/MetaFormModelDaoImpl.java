@@ -57,78 +57,78 @@ public class MetaFormModelDaoImpl implements MetaFormModelDao {
     @Override
     public void saveNewObject(MetaFormModel metaFormModel) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public int mergeObject(MetaFormModel metaFormModel) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public int updateObject(MetaFormModel metaFormModel) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public int deleteObjectById(Object id) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public int saveObjectReferences(MetaFormModel metaFormModel) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public List<Pair<String, String>> getSubModelPropertiesMap(Long parentTableId, Long childTableId) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public JSONArray listFormModeAsJson(String[] fields, Map<String, Object> filterMap, PageDesc pageDesc) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public int[] batchUpdateOptId(String optId, List<String> modleIds) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public List<MetaFormModel> listObjectsByProperties(Map<String, Object> filterMap) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public int countObjectByProperties(Map<String, Object> filterMap) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public int clearTrashStand(String osId) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public void batchDeleteByIds(String[] modleIds) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 
     @Override
     public void updateValidStatus(String modelId, String validType) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
-                "该方法在当前版本下没有实现，请联系研发人员!");
+                "Runtime 运行时环境，不支持元数据的修改!");
     }
 }
