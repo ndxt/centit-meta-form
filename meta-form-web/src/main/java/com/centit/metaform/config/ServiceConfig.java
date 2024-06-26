@@ -23,9 +23,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 @Configuration
 @PropertySource("classpath:system.properties")
+@EnableWebSecurity
 @ComponentScan(basePackages = {"com.centit"},
         excludeFilters = @ComponentScan.Filter(value = org.springframework.stereotype.Controller.class))
 @Import({
