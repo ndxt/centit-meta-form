@@ -15,6 +15,7 @@ import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.metaform.vo.MetaFormModelDraftParam;
 import com.centit.product.oa.team.utils.ResourceBaseController;
 import com.centit.product.oa.team.utils.ResourceLock;
+import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.algorithm.StringBaseOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
@@ -123,6 +124,7 @@ public class MetaFormModelDraftController extends ResourceBaseController {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModel.setRecorder(loginUser);
+        metaFormModel.setLastModifyDate(DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate()));
         metaFormModelDraftManager.saveMetaFormModelDraft(metaFormModel);
         return metaFormModel.getModelId();
     }
@@ -185,6 +187,8 @@ public class MetaFormModelDraftController extends ResourceBaseController {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModel.setRecorder(loginUser);
+        Date updateTime = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
+        metaFormModel.setLastModifyDate(updateTime);
         metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModel);
         return metaFormModel.getLastModifyDate();
     }
@@ -205,7 +209,6 @@ public class MetaFormModelDraftController extends ResourceBaseController {
         if(StringUtils.isBlank(userCode)){
             throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "获取当前用户信息失败，原因可能是用户没登录，或者session已失效！");
         }
-
         MetaFormModelDraft metaFormModelDraft = metaFormModelDraftManager.getMetaFormModelDraftById(modelId);
         if (metaFormModelDraft == null) {
             return ResponseData.makeErrorMessage("未查询到表单！");
@@ -215,8 +218,9 @@ public class MetaFormModelDraftController extends ResourceBaseController {
                 !metaFormModelDraft.getLastModifyDate().after(metaFormModelDraft.getPublishDate())) {
             return ResponseData.makeErrorMessage("表单已发布，请勿重复发布！");
         }
-        metaFormModelDraft.setPublishDate(new Date());
-        metaFormModelDraft.setLastModifyDate(metaFormModelDraft.getLastModifyDate());
+        Date publishDate = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
+        metaFormModelDraft.setPublishDate(publishDate);
+        metaFormModelDraft.setLastModifyDate(publishDate);
 
         metaFormModelDraft.setRecorder(userCode);
         // 发布表单
@@ -324,6 +328,8 @@ public class MetaFormModelDraftController extends ResourceBaseController {
         metaFormModelDraft.setModelId(null);
         metaFormModelDraft.setModelName(modelName);
         metaFormModelDraft.setOptId(optId);
+        metaFormModelDraft.setPublishDate(null);
+        metaFormModelDraft.setLastModifyDate(DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate()));
         metaFormModelDraftManager.saveMetaFormModelDraft(metaFormModelDraft);
         return ResponseData.successResponse;
     }

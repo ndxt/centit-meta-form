@@ -3,8 +3,6 @@ package com.centit.metaform.po;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.centit.framework.core.dao.DictionaryMap;
-import com.centit.support.database.orm.GeneratorCondition;
-import com.centit.support.database.orm.GeneratorTime;
 import com.centit.support.database.orm.GeneratorType;
 import com.centit.support.database.orm.ValueGenerator;
 import io.swagger.annotations.ApiModelProperty;
@@ -66,7 +64,6 @@ public class MetaFormModel implements java.io.Serializable {
 
     @ApiModelProperty(value = "更改时间")
     @Column(name = "LAST_MODIFY_DATE")
-    @ValueGenerator(strategy = GeneratorType.FUNCTION, occasion = GeneratorTime.NEW_UPDATE, condition = GeneratorCondition.ALWAYS, value = "today()")
     private Date lastModifyDate;
 
     @ApiModelProperty(value = "更改人员")
