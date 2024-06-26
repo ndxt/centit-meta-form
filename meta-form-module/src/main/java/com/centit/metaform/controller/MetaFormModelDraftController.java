@@ -221,7 +221,6 @@ public class MetaFormModelDraftController extends ResourceBaseController {
         Date publishDate = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
         metaFormModelDraft.setPublishDate(publishDate);
         metaFormModelDraft.setLastModifyDate(publishDate);
-
         metaFormModelDraft.setRecorder(userCode);
         // 发布表单
         metaFormModelDraftManager.publishMetaFormModel(metaFormModelDraft);

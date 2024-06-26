@@ -12,6 +12,7 @@ import com.centit.framework.model.basedata.WorkGroup;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.metaform.service.MetaFormModelManager;
 import com.centit.support.algorithm.CollectionsOpt;
+import com.centit.support.algorithm.DatetimeOpt;
 import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
 import io.swagger.annotations.Api;
@@ -140,9 +141,11 @@ public class MetaFormModelController extends BaseController {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         MetaFormModel model = new MetaFormModel();
-
         model.copyNotNullProperty(metaFormModel);
         model.setRecorder(loginUser);
+        Date publishDate = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
+        model.setPublishDate(publishDate);
+        model.setLastModifyDate(publishDate);
         metaFormModelMag.saveNewMetaFormModel(model);
         return model.getModelId();
     }
@@ -193,6 +196,9 @@ public class MetaFormModelController extends BaseController {
         if(CollectionUtils.isEmpty(userGroups)){
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
+        Date publishDate = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
+        metaFormModel.setPublishDate(publishDate);
+        metaFormModel.setLastModifyDate(publishDate);
         metaFormModelMag.updateMetaFormModel(metaFormModel);
         return metaFormModel.getLastModifyDate();
     }
@@ -252,6 +258,9 @@ public class MetaFormModelController extends BaseController {
         } else {
             metaFormModel.setFormTemplate(formTemplate);
         }
+        Date publishDate = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
+        metaFormModel.setPublishDate(publishDate);
+        metaFormModel.setLastModifyDate(publishDate);
         metaFormModelMag.updateMetaFormModel(metaFormModel);
     }
 
