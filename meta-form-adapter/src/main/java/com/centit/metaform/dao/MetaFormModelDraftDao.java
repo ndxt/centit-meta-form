@@ -27,5 +27,9 @@ public interface MetaFormModelDraftDao {
 
     int clearTrashStand(String osId);
 
+    void updatePublishDate(MetaFormModelDraft metaFormModelDraft);
+
+    List<MetaFormModelDraft> listNeedPublishDataPacket(String osId);
+
     JSONArray searchFormModeAsJson(String keyWords, String applicationId, String formType, PageDesc pageDesc);
 }

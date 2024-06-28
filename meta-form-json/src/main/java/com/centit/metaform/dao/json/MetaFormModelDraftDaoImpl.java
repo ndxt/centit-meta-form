@@ -7,6 +7,7 @@ import com.centit.support.common.ObjectException;
 import com.centit.support.database.utils.PageDesc;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -72,5 +73,16 @@ public class MetaFormModelDraftDaoImpl implements MetaFormModelDraftDao {
     public int clearTrashStand(String osId) {
         throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
                 "Runtime 运行时环境，不支持元数据的修改!");
+    }
+
+    @Override
+    public void updatePublishDate(MetaFormModelDraft metaFormModelDraft) {
+        throw new ObjectException(ObjectException.FUNCTION_NOT_SUPPORT,
+                "Runtime 运行时环境，不支持元数据的修改!");
+    }
+
+    @Override
+    public List<MetaFormModelDraft> listNeedPublishDataPacket(String osId) {
+        return null;
     }
 }

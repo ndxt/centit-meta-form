@@ -187,8 +187,6 @@ public class MetaFormModelDraftController extends ResourceBaseController {
             throw new ObjectException(ResponseData.HTTP_NON_AUTHORITATIVE_INFORMATION, "您没有权限！");
         }
         metaFormModel.setRecorder(loginUser);
-        Date updateTime = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
-        metaFormModel.setLastModifyDate(updateTime);
         metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModel);
         return metaFormModel.getLastModifyDate();
     }
@@ -218,14 +216,23 @@ public class MetaFormModelDraftController extends ResourceBaseController {
                 !metaFormModelDraft.getLastModifyDate().after(metaFormModelDraft.getPublishDate())) {
             return ResponseData.makeErrorMessage("表单已发布，请勿重复发布！");
         }
-        Date publishDate = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
-        metaFormModelDraft.setPublishDate(publishDate);
-        metaFormModelDraft.setLastModifyDate(publishDate);
-        metaFormModelDraft.setRecorder(userCode);
         // 发布表单
         metaFormModelDraftManager.publishMetaFormModel(metaFormModelDraft);
-        // 更新编辑表单状态为已发布，更新时间和操作人
-        metaFormModelDraftManager.updateMetaFormModelDraft(metaFormModelDraft);
+        return ResponseData.makeSuccessResponse("发布成功！");
+    }
+
+
+    @ApiOperation(value = "批量发布应用表单")
+    @RequestMapping(value = "/batchPublish/{osId}", method = {RequestMethod.POST})
+    @WrapUpResponseBody
+    public ResponseData batchPublishMetaFormByOs(@PathVariable String osId, HttpServletRequest request) {
+        String userCode = WebOptUtils.getCurrentUserCode(request);
+        if(StringUtils.isBlank(userCode)){
+            throw new ObjectException(ResponseData.ERROR_USER_NOT_LOGIN, "获取当前用户信息失败，原因可能是用户没登录，或者session已失效！");
+        }
+        loginUserPermissionCheck(osId, request);
+        // 发布表单
+        metaFormModelDraftManager.batchPublishMetaForm(osId);
         return ResponseData.makeSuccessResponse("发布成功！");
     }
 

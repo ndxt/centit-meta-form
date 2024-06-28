@@ -36,6 +36,8 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateMetaFormModelDraft(MetaFormModelDraft metaFormModel) {
+        Date updateTime = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
+        metaFormModel.setLastModifyDate(updateTime);
         metaFormModelDraftDao.mergeObject(metaFormModel);
         metaFormModelDraftDao.saveObjectReferences(metaFormModel);
     }
@@ -43,9 +45,24 @@ public class MetaFormModelManagerDraftImpl implements MetaFormModelDraftManager 
     @Override
     @Transactional
     public void publishMetaFormModel(MetaFormModelDraft metaFormModelDraft) {
+        Date publishDate = DatetimeOpt.truncateToSecond(DatetimeOpt.currentUtilDate());
+        metaFormModelDraft.setPublishDate(publishDate);
         MetaFormModel metaFormModel = new MetaFormModel();
         BeanUtils.copyProperties(metaFormModelDraft, metaFormModel);
         metaFormModelDao.mergeObject(metaFormModel);
+        metaFormModelDraftDao.updatePublishDate(metaFormModelDraft);
+    }
+
+    @Override
+    @Transactional
+    public void batchPublishMetaForm(String osId) {
+        List<MetaFormModelDraft> modelDrafts = metaFormModelDraftDao.listNeedPublishDataPacket(osId);
+        if(modelDrafts == null || modelDrafts.isEmpty()) {
+            return;
+        }
+        for(MetaFormModelDraft modelDraft : modelDrafts) {
+            publishMetaFormModel(modelDraft);
+        }
     }
 
     @Override

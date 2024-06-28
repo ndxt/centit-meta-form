@@ -161,4 +161,18 @@ public class MetaFormModelDraftDaoImpl extends BaseDaoImpl<MetaFormModelDraft, S
         int delCount = DatabaseOptUtils.doExecuteSql(this, delSql, new Object[]{osId});
         return  delCount;
     }
+
+    @Override
+    public void updatePublishDate(MetaFormModelDraft metaFormModelDraft) {
+        String sql ="UPDATE m_meta_form_model_draft SET PUBLISH_DATE =? WHERE MODEL_ID =?";
+        this.getJdbcTemplate().update(sql,
+                new Object[]{metaFormModelDraft.getPublishDate(), metaFormModelDraft.getModelId()});
+    }
+
+    @Override
+    public List<MetaFormModelDraft> listNeedPublishDataPacket(String osId) {
+        return this.listObjectsByFilter(
+                " where os_id = ? and LAST_MODIFY_DATE > PUBLISH_DATE",
+                new Object[]{osId});
+    }
 }
