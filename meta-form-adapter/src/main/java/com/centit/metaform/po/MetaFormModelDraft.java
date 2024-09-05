@@ -2,6 +2,7 @@ package com.centit.metaform.po;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.centit.framework.core.dao.DictionaryMap;
+import com.centit.support.database.orm.GeneratorTime;
 import com.centit.support.database.orm.GeneratorType;
 import com.centit.support.database.orm.ValueGenerator;
 import io.swagger.annotations.ApiModelProperty;
@@ -85,5 +86,6 @@ public class MetaFormModelDraft implements java.io.Serializable {
 
     @ApiModelProperty(value = "是否禁用（是否逻辑删除），T：禁用，F：启用（默认）")
     @Column(name = "IS_VALID")
+    @ValueGenerator(strategy = GeneratorType.CONSTANT, occasion = GeneratorTime.NEW, value = "F")
     private Boolean isValid;
 }
