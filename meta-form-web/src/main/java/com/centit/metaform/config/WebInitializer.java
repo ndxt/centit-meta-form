@@ -22,16 +22,16 @@ public class WebInitializer implements WebApplicationInitializer {
 
         WebConfig.registerServletConfig(servletContext, "system",
                 "/system/*",
-                SystemSpringMvcConfig.class,SwaggerConfig.class);
+                SystemSpringMvcConfig.class);
         WebConfig.registerServletConfig(servletContext, "metaform",
                 "/metaform/*",
-                MetaformSpringMvcConfig.class,SwaggerConfig.class);
+                MetaformSpringMvcConfig.class);
         WebConfig.registerServletConfig(servletContext, "metadata",
                 "/metadata/*",
-                MetaDataSpringMvcConfig.class,SwaggerConfig.class);
+                MetaDataSpringMvcConfig.class);
         WebConfig.registerServletConfig(servletContext, "dbdesign",
                 "/dbdesign/*",
-                DBDesignSpringMvcConfig.class,SwaggerConfig.class);
+                DBDesignSpringMvcConfig.class);
 
 
         WebConfig.registerRequestContextListener(servletContext);
