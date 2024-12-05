@@ -26,7 +26,7 @@ public interface MetaFormModelManager {
 
     int[] batchUpdateOptId(String optId, List<String> modleIds);
 
-    public List<HashMap<String, Object>> listModelByOptId(String topUnit, String optId);
+    List<HashMap<String, Object>> listModelByOptId(String topUnit, String optId);
 
     MetaFormModel getObjectById(String modelId);
 
