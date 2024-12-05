@@ -1,9 +1,7 @@
 package com.centit.metaform.service.impl;
 
 import com.alibaba.fastjson2.JSONArray;
-import com.centit.framework.common.WebOptUtils;
 import com.centit.framework.components.CodeRepositoryUtil;
-import com.centit.framework.filter.RequestThreadLocal;
 import com.centit.framework.model.basedata.OptInfo;
 import com.centit.metaform.dao.MetaFormModelDao;
 import com.centit.metaform.po.MetaFormModel;
@@ -63,8 +61,8 @@ public class MetaFormModelManagerImpl
 
 
     @Override
-    public List listModelByOptId(String optId) {
-        optId = getOptIdWithCommon(optId);
+    public List<HashMap<String, Object>> listModelByOptId(String topUnit, String optId) {
+        optId = getOptIdWithCommon(topUnit, optId);
         List<MetaFormModel> metaFormModelList = metaFormModelDao.listObjectsByProperties(CollectionsOpt.createHashMap("optids", optId));
         return metaFormModelList.stream().map(metaFormModel -> {
             HashMap<String, Object> map = new HashMap<>();
@@ -110,8 +108,7 @@ public class MetaFormModelManagerImpl
      * @param optId
      * @return
      */
-    private String getOptIdWithCommon(String optId) {
-        String topUnit = WebOptUtils.getCurrentTopUnit(RequestThreadLocal.getLocalThreadWrapperRequest());
+    private String getOptIdWithCommon(String topUnit, String optId) {
         OptInfo commonOptInfo = CodeRepositoryUtil.getCommonOptId(topUnit, optId);
         if (commonOptInfo != null) {
             String commonOptId = commonOptInfo.getOptId();

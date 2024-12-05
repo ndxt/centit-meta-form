@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.centit.metaform.po.MetaFormModel;
 import com.centit.support.database.utils.PageDesc;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public interface MetaFormModelManager {
 
     int[] batchUpdateOptId(String optId, List<String> modleIds);
 
-    List listModelByOptId(String optId);
+    public List<HashMap<String, Object>> listModelByOptId(String topUnit, String optId);
 
     MetaFormModel getObjectById(String modelId);
 

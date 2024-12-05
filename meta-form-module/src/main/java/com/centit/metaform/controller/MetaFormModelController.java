@@ -267,8 +267,9 @@ public class MetaFormModelController extends BaseController {
     @ApiOperation(value = "根据optId获取模板名和模块id")
     @RequestMapping(value = "/metaform/{optId}", method = {RequestMethod.GET})
     @WrapUpResponseBody
-    public ResponseData listModelByOptId(@PathVariable String optId) {
-        return ResponseData.makeResponseData(metaFormModelMag.listModelByOptId(optId));
+    public ResponseData listModelByOptId(@PathVariable String optId, HttpServletRequest request) {
+        return ResponseData.makeResponseData(metaFormModelMag.listModelByOptId(
+                WebOptUtils.getCurrentTopUnit(request), optId));
     }
 
     @ApiOperation(value = "验证已发布的自定义表单是否存在")
