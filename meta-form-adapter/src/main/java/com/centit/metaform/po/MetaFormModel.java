@@ -98,6 +98,10 @@ public class MetaFormModel implements java.io.Serializable {
     @Column(name = "IS_VALID")
     private Boolean isValid;
 
+    @ApiModelProperty(value = "标签")
+    @Column(name = "FORM_TAG")
+    @Length(max = 200)
+    private String formTag;
 
     public MetaFormModel copyNotNullProperty(MetaFormModel other) {
         if (other.getModelId() != null) {
@@ -135,6 +139,9 @@ public class MetaFormModel implements java.io.Serializable {
         }
         if (other.getOptId() != null) {
             this.optId = other.getOptId();
+        }
+        if (other.getFormTag() != null) {
+            this.formTag = other.getFormTag();
         }
         return this;
     }

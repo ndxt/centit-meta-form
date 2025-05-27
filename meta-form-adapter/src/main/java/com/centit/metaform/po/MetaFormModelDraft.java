@@ -88,4 +88,9 @@ public class MetaFormModelDraft implements java.io.Serializable {
     @Column(name = "IS_VALID")
     @ValueGenerator(strategy = GeneratorType.CONSTANT, occasion = GeneratorTime.NEW, value = "F")
     private Boolean isValid;
+
+    @ApiModelProperty(value = "标签")
+    @Column(name = "FORM_TAG")
+    @Length(max = 200)
+    private String formTag;
 }
