@@ -6,7 +6,6 @@ import com.centit.support.database.metadata.SimpleTableField;
 import com.centit.support.database.utils.FieldType;
 import com.centit.support.security.AESSecurityUtils;
 import com.centit.support.xml.XMLObject;
-
 import javax.crypto.Cipher;
 import java.security.GeneralSecurityException;
 
@@ -23,7 +22,7 @@ public class TestJSON {
         pc.setColumnComment("存储对象的大字段");
         JSONObject obj =(JSONObject) JSON.toJSON(pc);
         System.out.println(obj.toJSONString());
-        System.out.println(XMLObject.jsonObjectToXMLString(obj));
+        System.out.println(XMLObject.objectToXMLString(obj));
 
     }
 
